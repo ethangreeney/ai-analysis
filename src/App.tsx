@@ -144,6 +144,31 @@ function MapChart({
 
   const labels = useMemo(() => placeLabels(models, xy, innerW), [models]);
 
+  // Pareto frontier on (intelligence ↑, latency ↓): models that no other
+  // model beats on both axes. Sweep from fastest to slowest, keeping any
+  // point that raises the running-best intelligence.
+  const frontier = useMemo(() => {
+    const sweep = [...models].sort(
+      (a, b) => a.e2eLatency - b.e2eLatency || b.intelligence - a.intelligence,
+    );
+    const keep: Model[] = [];
+    let bestIntel = -Infinity;
+    for (const m of sweep) {
+      if (m.intelligence > bestIntel) {
+        keep.push(m);
+        bestIntel = m.intelligence;
+      }
+    }
+    return keep.sort((a, b) => a.intelligence - b.intelligence);
+  }, [models]);
+
+  const frontierPath = frontier
+    .map((m, i) => {
+      const { x, y } = xy(m);
+      return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(" ");
+
   const ordered = [...models].sort((a, b) => {
     if (a.slug === hoveredSlug) return 1;
     if (b.slug === hoveredSlug) return -1;
@@ -283,6 +308,21 @@ function MapChart({
           INTELLIGENCE INDEX
         </text>
 
+        {/* Pareto frontier — guide line through non-dominated points */}
+        {frontier.length > 1 && (
+          <path
+            d={frontierPath}
+            fill="none"
+            stroke="#9b9b9b"
+            strokeWidth={1.25}
+            strokeDasharray="3 3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity={hoveredSlug ? 0.15 : 0.55}
+            style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
+          />
+        )}
+
         {/* Dots */}
         {ordered.map((m) => {
           const { x, y, r } = xy(m);
@@ -342,6 +382,35 @@ function MapChart({
         })}
       </g>
     </svg>
+  );
+}
+
+function FrontierLegend() {
+  return (
+    <div className="relative group flex items-center gap-2 cursor-help">
+      <svg width="32" height="6" className="shrink-0" aria-hidden>
+        <line
+          x1="1"
+          y1="3"
+          x2="31"
+          y2="3"
+          stroke="#9b9b9b"
+          strokeWidth="1.25"
+          strokeDasharray="3 3"
+          strokeLinecap="round"
+        />
+      </svg>
+      <span className="text-[11px] text-ink-700 underline decoration-dotted decoration-ink-300 underline-offset-[3px]">
+        Pareto frontier
+      </span>
+      <div
+        className="invisible opacity-0 group-hover:visible group-hover:opacity-100 absolute top-full right-0 mt-2 w-64 bg-white border border-ink-100 rounded-lg px-3 py-2 text-[11px] text-ink-700 leading-snug z-30 transition-opacity duration-150"
+        style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)" }}
+      >
+        Models on this line aren't beaten by any other on <em>both</em> intelligence and
+        speed. Dots below-left are dominated — there's another model that wins on both axes.
+      </div>
+    </div>
   );
 }
 
@@ -572,7 +641,10 @@ export default function App() {
             <TabBtn id="chart" label="Map" />
             <TabBtn id="detail" label="Detail" />
           </div>
-          <CostLegend />
+          <div className="flex items-center gap-6">
+            <FrontierLegend />
+            <CostLegend />
+          </div>
         </div>
 
         <main className="flex-1 min-h-0 mt-3 relative">
