@@ -547,10 +547,9 @@ export default function App() {
             <h1 className="text-2xl md:text-[28px] font-light tracking-tight text-ink-900 leading-tight">
               Smart, fast, and cheap.
             </h1>
-            <p className="mt-1.5 text-[13px] text-ink-500 max-w-2xl leading-snug">
-              Up is smarter. Right is faster. Colour is cost — blue cheap, red
-              expensive. The dot you want is up, right, and as blue as your budget
-              allows.
+            <p className="mt-1.5 text-[13px] text-ink-500 max-w-3xl leading-snug">
+              Up is smarter. Right is faster. Blue is cheap, red is expensive.
+              Pick the highest, rightmost dot your budget allows.
             </p>
           </div>
           <div className="text-right shrink-0">
