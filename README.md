@@ -2,6 +2,8 @@
 
 A chart for comparing frontier AI models on the three things that actually matter: intelligence, end-to-end latency, and real cost to run.
 
+![screenshot](docs/screenshot.png)
+
 ## Why
 
 The existing AI comparison charts are all a bit off. They use token price as a stand-in for cost, which hides how much reasoning models really burn through on a task. Or they treat speed as tokens-per-second, which doesn't capture the wait you actually feel. So this one uses the numbers Artificial Analysis publishes for both: cost-to-run across the AA Intelligence Index suite, and median end-to-end response time per query.
