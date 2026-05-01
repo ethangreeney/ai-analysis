@@ -27,6 +27,10 @@ const snapshot = data as Snapshot;
 const fmtCost = (c: number) =>
   c >= 1000 ? `$${(c / 1000).toFixed(1)}k` : c >= 100 ? `$${Math.round(c)}` : `$${c.toFixed(0)}`;
 
+const isPositiveFinite = (value: number) => Number.isFinite(value) && value > 0;
+const isChartableModel = (m: Model) =>
+  isPositiveFinite(m.intelligence) && isPositiveFinite(m.costToRun) && isPositiveFinite(m.e2eLatency);
+
 interface Tier {
   label: string;
   min: number;
@@ -71,6 +75,7 @@ function placeLabels(
   models: Model[],
   xy: (m: Model) => { x: number; y: number; r: number },
   innerW: number,
+  innerH: number,
 ): Placed[] {
   const cands = models
     .map((m) => {
@@ -81,15 +86,42 @@ function placeLabels(
     })
     .sort((a, b) => a.baseY - b.baseY);
   const placed: Placed[] = [];
-  const minGap = 13;
+  const labelH = 13;
+  const labelPad = 4;
+  const rectFor = (item: Omit<Placed, "slug">) => {
+    const w = item.text.length * 6.2;
+    return {
+      x1: item.anchor === "start" ? item.x : item.x - w,
+      x2: item.anchor === "start" ? item.x + w : item.x,
+      y1: item.y - labelH / 2,
+      y2: item.y + labelH / 2,
+    };
+  };
+  const overlaps = (a: ReturnType<typeof rectFor>, b: ReturnType<typeof rectFor>) =>
+    a.x1 - labelPad < b.x2 &&
+    a.x2 + labelPad > b.x1 &&
+    a.y1 - labelPad < b.y2 &&
+    a.y2 + labelPad > b.y1;
+
   for (const c of cands) {
-    let y = c.baseY;
-    for (const p of placed) {
-      if (p.anchor !== c.anchor) continue;
-      if (Math.abs(p.x - c.x) > 90) continue;
-      if (Math.abs(p.y - y) < minGap) y = p.y + minGap;
+    const offsets = [0, 14, -14, 28, -28, 42, -42, 56, -56, 70, -70];
+    let y = Math.max(8, Math.min(innerH - 8, c.baseY));
+
+    for (const offset of offsets) {
+      const candidateY = Math.max(8, Math.min(innerH - 8, c.baseY + offset));
+      const rect = rectFor({ ...c, y: candidateY });
+      if (!placed.some((p) => overlaps(rect, rectFor(p)))) {
+        y = candidateY;
+        break;
+      }
     }
-    placed.push({ slug: c.slug, x: c.x, y, anchor: c.anchor, text: c.text });
+    placed.push({
+      slug: c.slug,
+      x: c.x,
+      y: Math.max(8, Math.min(innerH - 8, y)),
+      anchor: c.anchor,
+      text: c.text,
+    });
   }
   return placed;
 }
@@ -103,6 +135,7 @@ function MapChart({
   onHover: (slug: string | null) => void;
   hoveredSlug: string | null;
 }) {
+  const chartModels = useMemo(() => models.filter(isChartableModel), [models]);
   const W = 1280;
   const H = 720;
   const M = { top: 28, right: 60, bottom: 56, left: 110 };
@@ -117,15 +150,21 @@ function MapChart({
   // Log fits the user-felt cost of waiting (perception is roughly logarithmic;
   // the UX thresholds 1s / 10s / 1min are each an order of magnitude apart),
   // matches industry convention, and keeps the right-side cluster legible.
-  const latMin = Math.min(...models.map((m) => m.e2eLatency));
-  const latMax = Math.max(...models.map((m) => m.e2eLatency));
-  const xScale = scaleLog().domain([latMax * 1.1, latMin * 0.9]).range([0, innerW]);
+  const latencies = chartModels.map((m) => m.e2eLatency);
+  const latMin = latencies.length ? Math.min(...latencies) : 1;
+  const latMax = latencies.length ? Math.max(...latencies) : 10;
+  const latLow = latMin === latMax ? latMin * 0.8 : latMin * 0.9;
+  const latHigh = latMin === latMax ? latMax * 1.2 : latMax * 1.1;
+  const xScale = scaleLog().domain([latHigh, latLow]).range([0, innerW]);
 
   // Cost → color via log scale. Multiplicative cost differences map to even
   // perceptual color steps, matching how budgets are felt.
-  const costMin = Math.min(...models.map((m) => m.costToRun));
-  const costMax = Math.max(...models.map((m) => m.costToRun));
-  const costNorm = scaleLog().domain([costMin * 0.9, costMax * 1.1]).range([0, 1]).clamp(true);
+  const costs = chartModels.map((m) => m.costToRun);
+  const costMin = costs.length ? Math.min(...costs) : 1;
+  const costMax = costs.length ? Math.max(...costs) : 10;
+  const costLow = costMin === costMax ? costMin * 0.8 : costMin * 0.9;
+  const costHigh = costMin === costMax ? costMax * 1.2 : costMax * 1.1;
+  const costNorm = scaleLog().domain([costLow, costHigh]).range([0, 1]).clamp(true);
 
   // Constant dot size — color and position carry the load. Frontier dots get a
   // touch more prominence via a small size bump so high-intel reads first.
@@ -142,13 +181,13 @@ function MapChart({
     r: sizeScale(m.intelligence),
   });
 
-  const labels = useMemo(() => placeLabels(models, xy, innerW), [models]);
+  const labels = useMemo(() => placeLabels(chartModels, xy, innerW, innerH), [chartModels]);
 
   // Pareto frontier on (intelligence ↑, latency ↓): models that no other
   // model beats on both axes. Sweep from fastest to slowest, keeping any
   // point that raises the running-best intelligence.
   const frontier = useMemo(() => {
-    const sweep = [...models].sort(
+    const sweep = [...chartModels].sort(
       (a, b) => a.e2eLatency - b.e2eLatency || b.intelligence - a.intelligence,
     );
     const keep: Model[] = [];
@@ -160,7 +199,7 @@ function MapChart({
       }
     }
     return keep.sort((a, b) => a.intelligence - b.intelligence);
-  }, [models]);
+  }, [chartModels]);
 
   const frontierPath = frontier
     .map((m, i) => {
@@ -169,7 +208,7 @@ function MapChart({
     })
     .join(" ");
 
-  const ordered = [...models].sort((a, b) => {
+  const ordered = [...chartModels].sort((a, b) => {
     if (a.slug === hoveredSlug) return 1;
     if (b.slug === hoveredSlug) return -1;
     return a.intelligence - b.intelligence;
@@ -357,7 +396,7 @@ function MapChart({
 
         {/* Labels */}
         {labels.map((l) => {
-          const m = models.find((x) => x.slug === l.slug)!;
+              const m = chartModels.find((x) => x.slug === l.slug)!;
           const isHovered = hoveredSlug === l.slug;
           const isOther = hoveredSlug !== null && !isHovered;
           const tier = tierFor(m.intelligence);
@@ -568,12 +607,6 @@ function HoverCard({ m }: { m: Model }) {
         <span className="text-ink-900 text-right">${m.costToRun.toFixed(0)}</span>
         <span className="text-ink-500">E2E latency</span>
         <span className="text-ink-900 text-right">{m.e2eLatency.toFixed(1)} s</span>
-        <span className="text-ink-500">Reasoning time</span>
-        <span className="text-ink-900 text-right">{m.reasoningTime.toFixed(1)} s</span>
-        <span className="text-ink-500">$ / 1M tok (3:1)</span>
-        <span className="text-ink-900 text-right">${m.pricePerMillion.toFixed(2)}</span>
-        <span className="text-ink-500">Output speed</span>
-        <span className="text-ink-900 text-right">{m.outputTokensPerSecond.toFixed(0)} tok/s</span>
       </div>
     </div>
   );
@@ -586,12 +619,13 @@ type Tab = "chart" | "detail";
 export default function App() {
   const [tab, setTab] = useState<Tab>("chart");
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const models = useMemo(() => snapshot.models.filter(isChartableModel), []);
   const fetchedDate = new Date(snapshot.fetchedAt).toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
-  const hovered = hoveredSlug ? snapshot.models.find((m) => m.slug === hoveredSlug) : null;
+  const hovered = hoveredSlug ? models.find((m) => m.slug === hoveredSlug) : null;
 
   const TabBtn = ({ id, label }: { id: Tab; label: string }) => (
     <button
@@ -626,7 +660,7 @@ export default function App() {
               Updated {fetchedDate}
             </div>
             <div className="text-[10px] tracking-wide text-ink-300 uppercase">
-              Source: Artificial Analysis · {snapshot.models.length} models
+              Source: Artificial Analysis · {models.length} models
             </div>
           </div>
         </header>
@@ -651,7 +685,7 @@ export default function App() {
           {tab === "chart" && (
             <div className="h-full w-full relative">
               <MapChart
-                models={snapshot.models}
+                models={models}
                 onHover={setHoveredSlug}
                 hoveredSlug={hoveredSlug}
               />
@@ -660,7 +694,7 @@ export default function App() {
           )}
           {tab === "detail" && (
             <MetricStrip
-              models={snapshot.models}
+              models={models}
               hoveredSlug={hoveredSlug}
               onHover={setHoveredSlug}
             />

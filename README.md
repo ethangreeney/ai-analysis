@@ -21,4 +21,4 @@ npm run fetch          # pull latest model numbers
 npm run dev            # opens the chart in your browser
 ```
 
-The curated model list lives at the top of `scripts/fetch-models.ts`. Edit the slugs there and re-run `npm run fetch` to swap models in or out.
+The pinned model list lives at the top of `scripts/fetch-models.ts`. `npm run fetch` also scans the Artificial Analysis homepage Highlights cards and auto-adds any highlighted models that have complete chart metrics. Rows with missing cost or latency are skipped so they cannot break the log-scaled chart.

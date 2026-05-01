@@ -17,40 +17,47 @@ config();
 
 const API_URL = "https://artificialanalysis.ai/api/v2/data/llms/models";
 const SCRAPE_URL = "https://artificialanalysis.ai/models/gpt-5-5-medium"; // any model page works
+const HIGHLIGHTS_URL = "https://artificialanalysis.ai/";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_PATH = resolve(__dirname, "..", "src", "data", "models.json");
 
-// Curated set keyed by AA slug. The slug uniquely identifies the variant
-// (reasoning level + effort), unlike model names which can be ambiguous.
-// Edit freely.
-const CURATED_SLUGS: { slug: string; displayName?: string }[] = [
+interface ModelSeed {
+  slug: string;
+  displayName?: string;
+  source: "pinned" | "highlight";
+}
+
+// Pinned set keyed by AA slug. The slug uniquely identifies the variant
+// (reasoning level + effort), unlike model names which can be ambiguous. The
+// fetcher also auto-adds any homepage Highlights models not listed here.
+const PINNED_SLUGS: ModelSeed[] = [
   // OpenAI
-  { slug: "gpt-5-5", displayName: "GPT-5.5 · xhigh" },
-  { slug: "gpt-5-5-high", displayName: "GPT-5.5 · high" },
-  { slug: "gpt-5-5-medium", displayName: "GPT-5.5 · medium" },
-  { slug: "gpt-5-5-low", displayName: "GPT-5.5 · low" },
-  { slug: "gpt-5-5-non-reasoning", displayName: "GPT-5.5 · base" },
-  { slug: "gpt-5-4", displayName: "GPT-5.4 · xhigh" },
-  { slug: "gpt-5-4-mini", displayName: "GPT-5.4 mini" },
+  { slug: "gpt-5-5", displayName: "GPT-5.5 · xhigh", source: "pinned" },
+  { slug: "gpt-5-5-high", displayName: "GPT-5.5 · high", source: "pinned" },
+  { slug: "gpt-5-5-medium", displayName: "GPT-5.5 · medium", source: "pinned" },
+  { slug: "gpt-5-5-low", displayName: "GPT-5.5 · low", source: "pinned" },
+  { slug: "gpt-5-5-non-reasoning", displayName: "GPT-5.5 · base", source: "pinned" },
+  { slug: "gpt-5-4", displayName: "GPT-5.4 · xhigh", source: "pinned" },
+  { slug: "gpt-5-4-mini", displayName: "GPT-5.4 mini", source: "pinned" },
   // Anthropic
-  { slug: "claude-opus-4-7", displayName: "Claude Opus 4.7" },
-  { slug: "claude-opus-4-7-non-reasoning", displayName: "Opus 4.7 · base" },
-  { slug: "claude-sonnet-4-6-adaptive", displayName: "Claude Sonnet 4.6" },
-  { slug: "claude-4-5-haiku-reasoning", displayName: "Claude 4.5 Haiku" },
+  { slug: "claude-opus-4-7", displayName: "Claude Opus 4.7", source: "pinned" },
+  { slug: "claude-opus-4-7-non-reasoning", displayName: "Opus 4.7 · base", source: "pinned" },
+  { slug: "claude-sonnet-4-6-adaptive", displayName: "Claude Sonnet 4.6", source: "pinned" },
+  { slug: "claude-4-5-haiku-reasoning", displayName: "Claude 4.5 Haiku", source: "pinned" },
   // Google
-  { slug: "gemini-3-1-pro-preview", displayName: "Gemini 3.1 Pro" },
-  { slug: "gemini-3-flash-reasoning", displayName: "Gemini 3 Flash" },
-  { slug: "gemini-3-1-flash-lite-preview", displayName: "Gemini 3.1 Flash-Lite" },
+  { slug: "gemini-3-1-pro-preview", displayName: "Gemini 3.1 Pro", source: "pinned" },
+  { slug: "gemini-3-flash-reasoning", displayName: "Gemini 3 Flash", source: "pinned" },
+  { slug: "gemini-3-1-flash-lite-preview", displayName: "Gemini 3.1 Flash-Lite", source: "pinned" },
   // xAI
-  { slug: "grok-4-20", displayName: "Grok 4.20" },
+  { slug: "grok-4-20", displayName: "Grok 4.20", source: "pinned" },
   // Open weights / international frontier
-  { slug: "deepseek-v4-pro", displayName: "DeepSeek V4 Pro" },
-  { slug: "deepseek-v4-flash", displayName: "DeepSeek V4 Flash" },
-  { slug: "deepseek-v3-2-reasoning", displayName: "DeepSeek V3.2" },
-  { slug: "qwen3-6-max", displayName: "Qwen3.6 Max" },
-  { slug: "kimi-k2-6", displayName: "Kimi K2.6" },
-  { slug: "glm-5-1", displayName: "GLM-5.1" },
-  { slug: "llama-4-maverick", displayName: "Llama 4 Maverick" },
+  { slug: "deepseek-v4-pro", displayName: "DeepSeek V4 Pro", source: "pinned" },
+  { slug: "deepseek-v4-flash", displayName: "DeepSeek V4 Flash", source: "pinned" },
+  { slug: "deepseek-v3-2-reasoning", displayName: "DeepSeek V3.2", source: "pinned" },
+  { slug: "qwen3-6-max", displayName: "Qwen3.6 Max", source: "pinned" },
+  { slug: "kimi-k2-6", displayName: "Kimi K2.6", source: "pinned" },
+  { slug: "glm-5-1", displayName: "GLM-5.1", source: "pinned" },
+  { slug: "llama-4-maverick", displayName: "Llama 4 Maverick", source: "pinned" },
 ];
 
 interface ScrapedRow {
@@ -178,6 +185,73 @@ function scrapeModels(html: string): Map<string, ScrapedRow> {
   return result;
 }
 
+function decodeHtml(text: string): string {
+  return text
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+function scrapeHighlightSeeds(html: string): ModelSeed[] {
+  const seeds = new Map<string, ModelSeed>();
+  const listRe =
+    /<ol class="sr-only" aria-label="(?:Intelligence|Speed|Price) models">([\s\S]*?)<\/ol>/g;
+  const linkRe = /<a tabindex="-1" href="\/models\/([^"]+)">([^<]+)<\/a>/g;
+  let list: RegExpExecArray | null;
+
+  while ((list = listRe.exec(html)) !== null) {
+    linkRe.lastIndex = 0;
+    let link: RegExpExecArray | null;
+    while ((link = linkRe.exec(list[1])) !== null) {
+      const slug = link[1];
+      if (!seeds.has(slug)) {
+        seeds.set(slug, {
+          slug,
+          displayName: decodeHtml(link[2]).replace(/\s+/g, " ").trim(),
+          source: "highlight",
+        });
+      }
+    }
+  }
+
+  return [...seeds.values()];
+}
+
+async function fetchHighlightSeeds(): Promise<ModelSeed[]> {
+  try {
+    console.log(`scraping ${HIGHLIGHTS_URL} for homepage Highlights ...`);
+    const res = await fetch(HIGHLIGHTS_URL);
+    if (!res.ok) throw new Error(`highlights ${res.status}`);
+    const seeds = scrapeHighlightSeeds(await res.text());
+    console.log(`found ${seeds.length} highlighted model slugs`);
+    return seeds;
+  } catch (e) {
+    console.warn("[warn] could not scrape homepage Highlights:", e);
+    return [];
+  }
+}
+
+function buildModelSeeds(highlightSeeds: ModelSeed[]): ModelSeed[] {
+  const seeds = new Map<string, ModelSeed>();
+  for (const seed of PINNED_SLUGS) seeds.set(seed.slug, seed);
+
+  const added: string[] = [];
+  for (const seed of highlightSeeds) {
+    if (seeds.has(seed.slug)) continue;
+    seeds.set(seed.slug, seed);
+    added.push(seed.slug);
+  }
+
+  if (added.length) console.log(`auto-added highlighted models: ${added.join(", ")}`);
+  return [...seeds.values()];
+}
+
+function positiveFinite(value: number | undefined): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
 async function main() {
   const apiKey = process.env.AA_API_KEY;
   if (!apiKey) throw new Error("AA_API_KEY missing in .env");
@@ -197,6 +271,7 @@ async function main() {
   const html = await scrapeRes.text();
   const scraped = scrapeModels(html);
   console.log(`scraped ${scraped.size} model entries`);
+  const modelSeeds = buildModelSeeds(await fetchHighlightSeeds());
 
   // Build slug → API entry index. Note: API "slug" is the parent model slug,
   // shared across reasoning variants. We need name-based matching for variants.
@@ -204,12 +279,24 @@ async function main() {
 
   const out: Model[] = [];
   const missing: string[] = [];
-  for (const { slug, displayName } of CURATED_SLUGS) {
+  const invalid: string[] = [];
+  for (const { slug, displayName } of modelSeeds) {
     const sc = scraped.get(slug);
     if (!sc) {
       missing.push(slug);
       continue;
     }
+    const badFields = [
+      positiveFinite(sc.intelligence) ? null : "intelligence",
+      positiveFinite(sc.costToRun) ? null : "costToRun",
+      positiveFinite(sc.e2eLatencyTotal) ? null : "e2eLatency",
+    ].filter((field): field is string => field !== null);
+
+    if (badFields.length) {
+      invalid.push(`${slug} (${badFields.join(", ")})`);
+      continue;
+    }
+
     // Try to match an API entry by intelligence (closest to scraped intelligence)
     // among entries whose API slug is a prefix of the AA slug. This pairs e.g.
     // AA slug "gpt-5-5-medium" with the API entry whose name contains "(medium)"
@@ -242,6 +329,7 @@ async function main() {
   }
 
   if (missing.length) console.warn("[warn] missing slugs:", missing.join(", "));
+  if (invalid.length) console.warn("[warn] skipped rows with invalid chart metrics:", invalid.join(", "));
   console.log(`built ${out.length} model rows`);
 
   mkdirSync(dirname(OUT_PATH), { recursive: true });
