@@ -9,9 +9,11 @@
  * Run with: npm run fetch
  */
 import { config } from "dotenv";
-import { writeFileSync, mkdirSync } from "node:fs";
+import { spawn } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { chromium } from "playwright";
 
 config();
 
@@ -19,7 +21,9 @@ const API_URL = "https://artificialanalysis.ai/api/v2/data/llms/models";
 const SCRAPE_URL = "https://artificialanalysis.ai/models/gpt-5-5-medium"; // any model page works
 const HIGHLIGHTS_URL = "https://artificialanalysis.ai/";
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT_PATH = resolve(__dirname, "..");
 const OUT_PATH = resolve(__dirname, "..", "src", "data", "models.json");
+const SCREENSHOT_PATH = resolve(ROOT_PATH, "docs", "screenshot.png");
 
 interface ModelSeed {
   slug: string;
@@ -252,6 +256,83 @@ function positiveFinite(value: number | undefined): value is number {
   return typeof value === "number" && Number.isFinite(value) && value > 0;
 }
 
+function runCommand(command: string, args: string[]): Promise<void> {
+  return new Promise((resolvePromise, reject) => {
+    const child = spawn(command, args, { cwd: ROOT_PATH, stdio: "inherit" });
+    child.on("error", reject);
+    child.on("exit", (code) => {
+      if (code === 0) resolvePromise();
+      else reject(new Error(`${command} ${args.join(" ")} exited with ${code}`));
+    });
+  });
+}
+
+async function ensurePlaywrightChromium(): Promise<void> {
+  if (existsSync(chromium.executablePath())) return;
+  console.log("installing Playwright Chromium for headless screenshots ...");
+  await runCommand("npx", ["playwright", "install", "chromium"]);
+}
+
+function builtHtmlForScreenshot(): string {
+  let html = readFileSync(resolve(ROOT_PATH, "dist", "index.html"), "utf8");
+
+  html = html.replace(
+    /<link[^>]+rel="stylesheet"[^>]+href="\.?\/?([^"]+)"[^>]*>/g,
+    (tag, href: string) =>
+      /^https?:/.test(href)
+        ? tag
+        : `<style>${readFileSync(resolve(ROOT_PATH, "dist", href), "utf8")}</style>`,
+  );
+
+  html = html.replace(
+    /<script[^>]+type="module"[^>]+src="\.?\/?([^"]+)"[^>]*><\/script>/g,
+    (tag, src: string) =>
+      /^https?:/.test(src)
+        ? tag
+        : `<script type="module">${readFileSync(resolve(ROOT_PATH, "dist", src), "utf8")}</script>`,
+  );
+
+  return html;
+}
+
+async function captureScreenshot(outPath: string): Promise<void> {
+  mkdirSync(dirname(outPath), { recursive: true });
+  await ensurePlaywrightChromium();
+  const browser = await chromium.launch({
+    headless: true,
+    args: [
+      "--disable-background-networking",
+      "--disable-extensions",
+      "--disable-sync",
+      "--hide-scrollbars",
+      "--no-default-browser-check",
+      "--no-first-run",
+    ],
+  });
+
+  try {
+    const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
+    await page.setContent(builtHtmlForScreenshot(), { waitUntil: "networkidle" });
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForSelector("svg", { timeout: 10_000 });
+    await page.screenshot({
+      path: outPath,
+      fullPage: false,
+    });
+  } finally {
+    await browser.close();
+  }
+}
+
+async function refreshScreenshot(): Promise<void> {
+  console.log("building app for screenshot ...");
+  await runCommand("npm", ["run", "build", "--", "--base=./"]);
+
+  console.log(`capturing screenshot ${SCREENSHOT_PATH} ...`);
+  await captureScreenshot(SCREENSHOT_PATH);
+  console.log(`wrote ${SCREENSHOT_PATH}`);
+}
+
 async function main() {
   const apiKey = process.env.AA_API_KEY;
   if (!apiKey) throw new Error("AA_API_KEY missing in .env");
@@ -338,6 +419,8 @@ async function main() {
     JSON.stringify({ fetchedAt: new Date().toISOString(), models: out }, null, 2),
   );
   console.log(`wrote ${OUT_PATH}`);
+
+  await refreshScreenshot();
 }
 
 main().catch((e) => {

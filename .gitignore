@@ -1,6 +1,11 @@
 .env
+.env.local
 node_modules/
 dist/
 .DS_Store
 src/data/models.json
 tsconfig.tsbuildinfo
+*.log
+coverage/
+playwright-report/
+test-results/

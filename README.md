@@ -17,8 +17,8 @@ The existing AI comparison charts are all a bit off. They use token price as a s
 ```sh
 npm install
 cp .env.example .env   # paste your Artificial Analysis API key
-npm run fetch          # pull latest model numbers
+npm run fetch          # pull latest model numbers and refresh docs/screenshot.png
 npm run dev            # opens the chart in your browser
 ```
 
-The pinned model list lives at the top of `scripts/fetch-models.ts`. `npm run fetch` also scans the Artificial Analysis homepage Highlights cards and auto-adds any highlighted models that have complete chart metrics. Rows with missing cost or latency are skipped so they cannot break the log-scaled chart.
+The pinned model list lives at the top of `scripts/fetch-models.ts`. `npm run fetch` also scans the Artificial Analysis homepage Highlights cards, auto-adds any highlighted models that have complete chart metrics, and regenerates the README screenshot. Rows with missing cost or latency are skipped so they cannot break the log-scaled chart.
