@@ -24,6 +24,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_PATH = resolve(__dirname, "..");
 const OUT_PATH = resolve(__dirname, "..", "src", "data", "models.json");
 const SCREENSHOT_PATH = resolve(ROOT_PATH, "docs", "screenshot.png");
+const SCREENSHOT_VIEWPORT = { width: 1600, height: 1000 };
+const SCREENSHOT_DEVICE_SCALE = 2;
 
 interface ModelSeed {
   slug: string;
@@ -311,7 +313,10 @@ async function captureScreenshot(outPath: string): Promise<void> {
   });
 
   try {
-    const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
+    const page = await browser.newPage({
+      viewport: SCREENSHOT_VIEWPORT,
+      deviceScaleFactor: SCREENSHOT_DEVICE_SCALE,
+    });
     await page.setContent(builtHtmlForScreenshot(), { waitUntil: "networkidle" });
     await page.evaluate(() => document.fonts.ready);
     await page.waitForSelector("svg", { timeout: 10_000 });
