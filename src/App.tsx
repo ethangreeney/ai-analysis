@@ -71,25 +71,31 @@ interface Placed {
   text: string;
 }
 
+const labelWidth = (text: string) => text.length * 6.2;
+const labelBlockWidth = (m: Model) => Math.max(labelWidth(m.displayName), labelWidth(fmtCost(m.costToRun)));
+
 function placeLabels(
   models: Model[],
   xy: (m: Model) => { x: number; y: number; r: number },
   innerW: number,
   innerH: number,
+  obstacleModels = models,
 ): Placed[] {
   const cands = models
     .map((m) => {
       const { x, y, r } = xy(m);
       const anchor: "start" | "end" = x + r + 130 < innerW ? "start" : "end";
-      const off = anchor === "start" ? r + 6 : -(r + 6);
+      const off = anchor === "start" ? r + 8 : -(r + 8);
       return { slug: m.slug, x: x + off, y, anchor, text: m.displayName, baseY: y };
     })
     .sort((a, b) => a.baseY - b.baseY);
   const placed: Placed[] = [];
-  const labelH = 13;
+  const labelH = 24;
   const labelPad = 4;
+  const dotPad = 3;
   const rectFor = (item: Omit<Placed, "slug">) => {
-    const w = item.text.length * 6.2;
+    const model = models.find((m) => m.slug === (item as Placed).slug);
+    const w = model ? labelBlockWidth(model) : labelWidth(item.text);
     return {
       x1: item.anchor === "start" ? item.x : item.x - w,
       x2: item.anchor === "start" ? item.x + w : item.x,
@@ -97,6 +103,15 @@ function placeLabels(
       y2: item.y + labelH / 2,
     };
   };
+  const dotRects = obstacleModels.map((m) => {
+    const { x, y, r } = xy(m);
+    return {
+      x1: x - r - dotPad,
+      x2: x + r + dotPad,
+      y1: y - r - dotPad,
+      y2: y + r + dotPad,
+    };
+  });
   const overlaps = (a: ReturnType<typeof rectFor>, b: ReturnType<typeof rectFor>) =>
     a.x1 - labelPad < b.x2 &&
     a.x2 + labelPad > b.x1 &&
@@ -104,13 +119,16 @@ function placeLabels(
     a.y2 + labelPad > b.y1;
 
   for (const c of cands) {
-    const offsets = [0, 14, -14, 28, -28, 42, -42, 56, -56, 70, -70];
-    let y = Math.max(8, Math.min(innerH - 8, c.baseY));
+    const offsets = [0, 18, -18, 36, -36, 54, -54, 72, -72, 90, -90];
+    let y = Math.max(12, Math.min(innerH - 12, c.baseY));
 
     for (const offset of offsets) {
-      const candidateY = Math.max(8, Math.min(innerH - 8, c.baseY + offset));
+      const candidateY = Math.max(12, Math.min(innerH - 12, c.baseY + offset));
       const rect = rectFor({ ...c, y: candidateY });
-      if (!placed.some((p) => overlaps(rect, rectFor(p)))) {
+      if (
+        !placed.some((p) => overlaps(rect, rectFor(p))) &&
+        !dotRects.some((dot) => overlaps(rect, dot))
+      ) {
         y = candidateY;
         break;
       }
@@ -118,7 +136,7 @@ function placeLabels(
     placed.push({
       slug: c.slug,
       x: c.x,
-      y: Math.max(8, Math.min(innerH - 8, y)),
+      y: Math.max(12, Math.min(innerH - 12, y)),
       anchor: c.anchor,
       text: c.text,
     });
@@ -166,9 +184,7 @@ function MapChart({
   const costHigh = costMin === costMax ? costMax * 1.2 : costMax * 1.1;
   const costNorm = scaleLog().domain([costLow, costHigh]).range([0, 1]).clamp(true);
 
-  // Constant dot size — color and position carry the load. Frontier dots get a
-  // touch more prominence via a small size bump so high-intel reads first.
-  const sizeScale = scaleLinear().domain([intelMin, intelMax]).range([5, 10]).clamp(true);
+  const sizeScale = scaleLinear().domain([intelMin, intelMax]).range([7, 12]).clamp(true);
 
   const opacityFor = (intel: number) => {
     const t = (intel - intelMin) / (intelMax - intelMin);
@@ -181,7 +197,10 @@ function MapChart({
     r: sizeScale(m.intelligence),
   });
 
-  const labels = useMemo(() => placeLabels(chartModels, xy, innerW, innerH), [chartModels]);
+  const labels = useMemo(
+    () => placeLabels(chartModels, xy, innerW, innerH, chartModels),
+    [chartModels],
+  );
 
   // Pareto frontier on (intelligence ↑, latency ↓): models that no other
   // model beats on both axes. Sweep from fastest to slowest, keeping any
@@ -352,12 +371,12 @@ function MapChart({
           <path
             d={frontierPath}
             fill="none"
-            stroke="#9b9b9b"
-            strokeWidth={1.25}
-            strokeDasharray="3 3"
+            stroke="#bdbdbd"
+            strokeWidth={1.1}
+            strokeDasharray="5 5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            opacity={hoveredSlug ? 0.15 : 0.55}
+            opacity={hoveredSlug ? 0.1 : 0.36}
             style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
           />
         )}
@@ -365,7 +384,8 @@ function MapChart({
         {/* Dots */}
         {ordered.map((m) => {
           const { x, y, r } = xy(m);
-          const c = costColor(costNorm(m.costToRun));
+          const costT = costNorm(m.costToRun);
+          const c = costColor(costT);
           const isHovered = hoveredSlug === m.slug;
           const isOther = hoveredSlug !== null && !isHovered;
           const baseOp = opacityFor(m.intelligence);
@@ -385,38 +405,85 @@ function MapChart({
                 cy={y}
                 r={r}
                 fill={c}
-                fillOpacity={op}
+                fillOpacity={isOther ? op : 0.88}
                 stroke={stroke}
-                strokeWidth={strokeW}
+                strokeWidth={isHovered ? strokeW : 1.6}
                 style={{ transition: "all 200ms ease-out" }}
               />
             </g>
           );
         })}
 
+        {/* Label stems */}
+        {labels.map((l) => {
+          const m = chartModels.find((x) => x.slug === l.slug)!;
+          const { x, y, r } = xy(m);
+          const costT = costNorm(m.costToRun);
+          const c = costColor(costT);
+          const isHovered = hoveredSlug === l.slug;
+          const isOther = hoveredSlug !== null && !isHovered;
+          const dir = l.anchor === "start" ? 1 : -1;
+          const fromX = x + dir * (r + 3);
+          const toX = l.anchor === "start" ? l.x - 5 : l.x + 5;
+
+          return (
+            <path
+              key={`stem-${l.slug}`}
+              d={`M${fromX.toFixed(1)},${y.toFixed(1)} L${toX.toFixed(1)},${l.y.toFixed(1)}`}
+              fill="none"
+              stroke={c}
+              strokeWidth={isHovered ? 1.3 : 1}
+              strokeLinecap="round"
+              opacity={isOther ? 0.08 : isHovered ? 0.58 : 0.34}
+              style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
+            />
+          );
+        })}
+
         {/* Labels */}
         {labels.map((l) => {
               const m = chartModels.find((x) => x.slug === l.slug)!;
+          const costT = costNorm(m.costToRun);
+          const c = costColor(costT);
           const isHovered = hoveredSlug === l.slug;
           const isOther = hoveredSlug !== null && !isHovered;
           const tier = tierFor(m.intelligence);
           const baseOp = isHovered ? 1 : tier.emphasis;
-          const op = isOther ? 0.12 : baseOp;
+          const op = isOther ? 0.12 : Math.max(0.72, baseOp);
           return (
-            <text
-              key={`lbl-${l.slug}`}
-              x={l.x}
-              y={l.y}
-              textAnchor={l.anchor}
-              dominantBaseline="middle"
-              fontSize={isHovered ? 12 : 11}
-              fontWeight={isHovered ? 600 : 500}
-              fill={isHovered ? "#0a0a0a" : "#3a3a3a"}
-              fillOpacity={op}
-              style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
-            >
-              {l.text}
-            </text>
+            <g key={`lbl-${l.slug}`} style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}>
+              <text
+                x={l.x}
+                y={l.y - 4}
+                textAnchor={l.anchor}
+                dominantBaseline="middle"
+                fontSize={isHovered ? 12 : 11}
+                fontWeight={isHovered ? 600 : 500}
+                fill={isHovered ? "#0a0a0a" : "#2f2f2f"}
+                fillOpacity={op}
+                stroke="#ffffff"
+                strokeWidth={3}
+                paintOrder="stroke"
+              >
+                {l.text}
+              </text>
+              <text
+                x={l.x}
+                y={l.y + 8}
+                textAnchor={l.anchor}
+                dominantBaseline="middle"
+                fontSize={isHovered ? 10.5 : 9.5}
+                fontWeight={800}
+                fill={c}
+                fillOpacity={isOther ? 0.12 : 0.92}
+                stroke="#ffffff"
+                strokeWidth={3}
+                paintOrder="stroke"
+                style={{ fontVariantNumeric: "tabular-nums" }}
+              >
+                {fmtCost(m.costToRun)}
+              </text>
+            </g>
           );
         })}
       </g>
