@@ -329,6 +329,26 @@ async function captureScreenshot(outPath: string): Promise<void> {
   }
 }
 
+function openScreenshot(outPath: string): Promise<void> {
+  if (process.env.CI || process.platform !== "darwin") {
+    console.log(`open ${outPath} to view the screenshot`);
+    return Promise.resolve();
+  }
+
+  return new Promise((resolvePromise) => {
+    const child = spawn("open", [outPath], { stdio: "ignore" });
+    child.on("error", (error) => {
+      console.warn("[warn] could not open screenshot:", error);
+      resolvePromise();
+    });
+    child.on("exit", (code) => {
+      if (code === 0) console.log("opened screenshot");
+      else console.warn(`[warn] could not open screenshot, open exited with ${code}`);
+      resolvePromise();
+    });
+  });
+}
+
 async function refreshScreenshot(): Promise<void> {
   console.log("building app for screenshot ...");
   await runCommand("npm", ["run", "build", "--", "--base=./"]);
@@ -336,6 +356,7 @@ async function refreshScreenshot(): Promise<void> {
   console.log(`capturing screenshot ${SCREENSHOT_PATH} ...`);
   await captureScreenshot(SCREENSHOT_PATH);
   console.log(`wrote ${SCREENSHOT_PATH}`);
+  await openScreenshot(SCREENSHOT_PATH);
 }
 
 async function main() {
