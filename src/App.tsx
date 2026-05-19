@@ -1,5 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { scaleLinear, scaleLog } from "d3-scale";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import data from "./data/models.json";
 import { colorFor } from "./providerStyle";
 
@@ -31,6 +33,25 @@ const isPositiveFinite = (value: number) => Number.isFinite(value) && value > 0;
 const isChartableModel = (m: Model) =>
   isPositiveFinite(m.intelligence) && isPositiveFinite(m.costToRun) && isPositiveFinite(m.e2eLatency);
 
+function trueParetoFrontier(models: Model[]): Model[] {
+  return models
+    .filter((m) => {
+      return !models.some((other) => {
+        if (other.slug === m.slug) return false;
+        const atLeastAsSmart = other.intelligence >= m.intelligence;
+        const atLeastAsFast = other.e2eLatency <= m.e2eLatency;
+        const atLeastAsCheap = other.costToRun <= m.costToRun;
+        const strictlyBetter =
+          other.intelligence > m.intelligence ||
+          other.e2eLatency < m.e2eLatency ||
+          other.costToRun < m.costToRun;
+
+        return atLeastAsSmart && atLeastAsFast && atLeastAsCheap && strictlyBetter;
+      });
+    })
+    .sort((a, b) => b.intelligence - a.intelligence);
+}
+
 interface Tier {
   label: string;
   min: number;
@@ -55,6 +76,8 @@ function tierFor(intel: number): Tier {
 const COST_COLD = [29, 96, 165]; // saturated deep blue (cheap)
 const COST_MID = [222, 195, 138]; // warm sand (mid)
 const COST_HOT = [185, 50, 38]; // saturated deep red (expensive)
+const FRONTIER_3D_COLOR = "#087a5a";
+const DOMINATED_3D_COLOR = "#d9d6cf";
 function costColor(t: number): string {
   const u = Math.max(0, Math.min(1, t));
   const lerp = (a: number[], b: number[], k: number) =>
@@ -507,14 +530,14 @@ function FrontierLegend() {
         />
       </svg>
       <span className="text-[11px] text-ink-700 underline decoration-dotted decoration-ink-300 underline-offset-[3px]">
-        Pareto frontier
+        2D frontier
       </span>
       <div
         className="invisible opacity-0 group-hover:visible group-hover:opacity-100 absolute top-full right-0 mt-2 w-64 bg-white border border-ink-100 rounded-lg px-3 py-2 text-[11px] text-ink-700 leading-snug z-30 transition-opacity duration-150"
         style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)" }}
       >
-        Models on this line aren't beaten by any other on <em>both</em> intelligence and
-        speed. Dots below-left are dominated — there's another model that wins on both axes.
+        This line only uses intelligence and speed. The 3D tab marks the true frontier
+        after cost is included as a third optimization axis.
       </div>
     </div>
   );
@@ -534,6 +557,351 @@ function CostLegend() {
         }}
       />
       <span className="text-[11px] text-ink-700">expensive</span>
+    </div>
+  );
+}
+
+// True 3D Pareto view -------------------------------------------------------
+
+function makeTextSprite(text: string, color = "#0a0a0a") {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d")!;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = 420 * dpr;
+  canvas.height = 72 * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.font = "500 24px Inter, ui-sans-serif, system-ui, sans-serif";
+  ctx.textBaseline = "middle";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = "rgba(255,255,255,0.92)";
+  ctx.lineWidth = 7;
+  ctx.strokeText(text, 10, 36);
+  ctx.fillStyle = color;
+  ctx.fillText(text, 10, 36);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const material = new THREE.SpriteMaterial({
+    map: texture,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false,
+  });
+  const sprite = new THREE.Sprite(material);
+  sprite.scale.set(1.08, 0.19, 1);
+  return sprite;
+}
+
+function axisLabel(text: string, position: THREE.Vector3) {
+  const label = makeTextSprite(text, "#3a3a3a");
+  label.position.copy(position);
+  label.scale.set(0.92, 0.16, 1);
+  return label;
+}
+
+function frontierEnvelopeGeometry(points: THREE.Vector3[], x0: number, x1: number, z0: number, z1: number) {
+  const steps = 18;
+  const positions: number[] = [];
+  const indices: number[] = [];
+  const vertexIndex = new Map<string, number>();
+  const yAt = (x: number, z: number) => {
+    const candidates = points.filter((p) => p.x >= x && p.z >= z);
+    if (!candidates.length) return null;
+    return Math.max(...candidates.map((p) => p.y));
+  };
+  const getVertex = (ix: number, iz: number) => {
+    const key = `${ix}:${iz}`;
+    const existing = vertexIndex.get(key);
+    if (existing !== undefined) return existing;
+
+    const x = x0 + ((x1 - x0) * ix) / steps;
+    const z = z0 + ((z1 - z0) * iz) / steps;
+    const y = yAt(x, z);
+    if (y === null) return null;
+
+    const idx = positions.length / 3;
+    positions.push(x, y, z);
+    vertexIndex.set(key, idx);
+    return idx;
+  };
+
+  for (let ix = 0; ix < steps; ix += 1) {
+    for (let iz = 0; iz < steps; iz += 1) {
+      const a = getVertex(ix, iz);
+      const b = getVertex(ix + 1, iz);
+      const c = getVertex(ix + 1, iz + 1);
+      const d = getVertex(ix, iz + 1);
+      if (a === null || b === null || c === null || d === null) continue;
+      indices.push(a, b, c, a, c, d);
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positions), 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function ThreeFrontierChart({
+  models,
+  onHover,
+  hoveredSlug,
+}: {
+  models: Model[];
+  onHover: (slug: string | null) => void;
+  hoveredSlug: string | null;
+}) {
+  const hostRef = useRef<HTMLDivElement | null>(null);
+  const hoveredRef = useRef<string | null>(hoveredSlug);
+  const onHoverRef = useRef(onHover);
+  const [frontierCount, setFrontierCount] = useState(0);
+
+  useEffect(() => {
+    hoveredRef.current = hoveredSlug;
+  }, [hoveredSlug]);
+
+  useEffect(() => {
+    onHoverRef.current = onHover;
+  }, [onHover]);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return undefined;
+
+    const chartModels = models.filter(isChartableModel);
+    const frontierSlugs = new Set(trueParetoFrontier(chartModels).map((m) => m.slug));
+    setFrontierCount(frontierSlugs.size);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color("#fbfbfa");
+
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(0.35, 3.15, 7.45);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.domElement.style.display = "block";
+    host.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.target.set(0, 0, 0);
+    controls.minDistance = 4;
+    controls.maxDistance = 12;
+
+    scene.add(new THREE.AmbientLight("#ffffff", 1.95));
+    const keyLight = new THREE.DirectionalLight("#ffffff", 1.7);
+    keyLight.position.set(4, 7, 5);
+    scene.add(keyLight);
+
+    const bounds = {
+      x: 5.6,
+      y: 3.8,
+      z: 4.4,
+    };
+    const intelExtent = [
+      Math.min(...chartModels.map((m) => m.intelligence)),
+      Math.max(...chartModels.map((m) => m.intelligence)),
+    ] as const;
+    const latencyExtent = [
+      Math.min(...chartModels.map((m) => m.e2eLatency)),
+      Math.max(...chartModels.map((m) => m.e2eLatency)),
+    ] as const;
+    const costExtent = [
+      Math.min(...chartModels.map((m) => m.costToRun)),
+      Math.max(...chartModels.map((m) => m.costToRun)),
+    ] as const;
+    const intelScale = scaleLinear().domain([intelExtent[0] - 2, intelExtent[1] + 2]).range([-bounds.y / 2, bounds.y / 2]);
+    const latencyScale = scaleLog().domain([latencyExtent[1] * 1.12, latencyExtent[0] * 0.88]).range([-bounds.x / 2, bounds.x / 2]);
+    const costScale = scaleLog().domain([costExtent[1] * 1.12, costExtent[0] * 0.88]).range([-bounds.z / 2, bounds.z / 2]);
+    const positionFor = (m: Model) =>
+      new THREE.Vector3(latencyScale(m.e2eLatency), intelScale(m.intelligence), costScale(m.costToRun));
+
+    const frame = new THREE.Group();
+    scene.add(frame);
+    const gridMaterial = new THREE.LineBasicMaterial({ color: "#e5e5e1", transparent: true, opacity: 0.55 });
+    const axisMaterial = new THREE.LineBasicMaterial({ color: "#8f8f8a", transparent: true, opacity: 0.84 });
+    const addLine = (a: THREE.Vector3, b: THREE.Vector3, material = gridMaterial) => {
+      const geometry = new THREE.BufferGeometry().setFromPoints([a, b]);
+      const line = new THREE.Line(geometry, material);
+      frame.add(line);
+      return line;
+    };
+
+    const x0 = -bounds.x / 2;
+    const x1 = bounds.x / 2;
+    const y0 = -bounds.y / 2;
+    const y1 = bounds.y / 2;
+    const z0 = -bounds.z / 2;
+    const z1 = bounds.z / 2;
+    for (let i = 0; i <= 5; i += 1) {
+      const x = x0 + (bounds.x * i) / 5;
+      const z = z0 + (bounds.z * i) / 5;
+      addLine(new THREE.Vector3(x, y0, z0), new THREE.Vector3(x, y0, z1));
+      addLine(new THREE.Vector3(x0, y0, z), new THREE.Vector3(x1, y0, z));
+      addLine(new THREE.Vector3(x0, y0 + (bounds.y * i) / 5, z0), new THREE.Vector3(x0, y0 + (bounds.y * i) / 5, z1));
+      addLine(new THREE.Vector3(x0, y0 + (bounds.y * i) / 5, z0), new THREE.Vector3(x1, y0 + (bounds.y * i) / 5, z0));
+    }
+    addLine(new THREE.Vector3(x0, y0, z0), new THREE.Vector3(x1 + 0.5, y0, z0), axisMaterial);
+    addLine(new THREE.Vector3(x0, y0, z0), new THREE.Vector3(x0, y1 + 0.42, z0), axisMaterial);
+    addLine(new THREE.Vector3(x0, y0, z0), new THREE.Vector3(x0, y0, z1 + 0.5), axisMaterial);
+    frame.add(axisLabel("faster", new THREE.Vector3(x1 + 0.9, y0, z0)));
+    frame.add(axisLabel("smarter", new THREE.Vector3(x0, y1 + 0.72, z0)));
+    frame.add(axisLabel("cheaper", new THREE.Vector3(x0, y0, z1 + 0.9)));
+
+    const frontierPoints = chartModels.filter((m) => frontierSlugs.has(m.slug)).map(positionFor);
+    const frontierMaterial = new THREE.MeshBasicMaterial({
+      color: FRONTIER_3D_COLOR,
+      transparent: true,
+      opacity: 0.032,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    });
+    const envelope = new THREE.Mesh(
+      frontierEnvelopeGeometry(frontierPoints, x0, x1, z0, z1),
+      frontierMaterial,
+    );
+    scene.add(envelope);
+
+    const sphereGeometry = new THREE.SphereGeometry(0.085, 32, 16);
+    const ringGeometry = new THREE.TorusGeometry(0.14, 0.012, 10, 36);
+    const pickables: THREE.Mesh[] = [];
+    const objectBySlug = new Map<string, THREE.Mesh>();
+    const baseMaterialBySlug = new Map<string, THREE.MeshStandardMaterial>();
+    const ringBySlug = new Map<string, THREE.Mesh>();
+
+    chartModels.forEach((m) => {
+      const isFrontier = frontierSlugs.has(m.slug);
+      const material = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(isFrontier ? FRONTIER_3D_COLOR : DOMINATED_3D_COLOR),
+        roughness: 0.62,
+        metalness: 0.02,
+        transparent: true,
+        opacity: isFrontier ? 0.98 : 0.18,
+      });
+      const sphere = new THREE.Mesh(sphereGeometry, material);
+      sphere.position.copy(positionFor(m));
+      sphere.scale.setScalar(isFrontier ? 1.42 : 0.62);
+      sphere.userData.slug = m.slug;
+      scene.add(sphere);
+      pickables.push(sphere);
+      objectBySlug.set(m.slug, sphere);
+      baseMaterialBySlug.set(m.slug, material);
+
+      if (isFrontier) {
+        const ring = new THREE.Mesh(
+          ringGeometry,
+          new THREE.MeshBasicMaterial({ color: "#0a0a0a", transparent: true, opacity: 0.46 }),
+        );
+        ring.position.copy(sphere.position);
+        ring.rotation.x = Math.PI / 2;
+        scene.add(ring);
+        ringBySlug.set(m.slug, ring);
+
+        const label = makeTextSprite(m.displayName, "#0a0a0a");
+        label.position.copy(sphere.position).add(new THREE.Vector3(0.08, 0.18, 0.05));
+        label.userData.isLabel = true;
+        scene.add(label);
+      }
+    });
+
+    const pointer = new THREE.Vector2(20, 20);
+    const raycaster = new THREE.Raycaster();
+    let localHover: string | null = null;
+    let raf = 0;
+
+    const resize = () => {
+      const width = Math.max(1, host.clientWidth);
+      const height = Math.max(1, host.clientHeight);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height, true);
+    };
+
+    const setVisualHover = (slug: string | null) => {
+      objectBySlug.forEach((sphere, key) => {
+        const material = baseMaterialBySlug.get(key);
+        if (!material) return;
+        const isFrontier = frontierSlugs.has(key);
+        const isHovered = slug === key;
+        const hasHover = slug !== null;
+        sphere.scale.setScalar(isHovered ? 1.9 : isFrontier ? 1.42 : 0.62);
+        material.opacity = isHovered ? 1 : hasHover && !isFrontier ? 0.1 : isFrontier ? 0.98 : 0.18;
+      });
+      ringBySlug.forEach((ring, key) => {
+        ring.scale.setScalar(slug === key ? 1.25 : 1);
+      });
+    };
+
+    const animate = () => {
+      raf = window.requestAnimationFrame(animate);
+      controls.update();
+      raycaster.setFromCamera(pointer, camera);
+      const hit = raycaster.intersectObjects(pickables, false)[0];
+      const nextHover = hit ? String(hit.object.userData.slug) : null;
+      if (nextHover !== localHover) {
+        localHover = nextHover;
+        hoveredRef.current = nextHover;
+        onHoverRef.current(nextHover);
+      }
+      setVisualHover(hoveredRef.current);
+      renderer.render(scene, camera);
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    };
+    const onPointerLeave = () => {
+      pointer.set(20, 20);
+      localHover = null;
+      hoveredRef.current = null;
+      onHoverRef.current(null);
+    };
+
+    resize();
+    animate();
+    window.addEventListener("resize", resize);
+    renderer.domElement.addEventListener("pointermove", onPointerMove);
+    renderer.domElement.addEventListener("pointerleave", onPointerLeave);
+
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+      renderer.domElement.removeEventListener("pointermove", onPointerMove);
+      renderer.domElement.removeEventListener("pointerleave", onPointerLeave);
+      controls.dispose();
+      renderer.dispose();
+      scene.traverse((object) => {
+        if (object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Sprite) {
+          object.geometry?.dispose();
+          if (Array.isArray(object.material)) {
+            object.material.forEach((material) => material.dispose());
+          } else {
+            object.material?.dispose();
+          }
+        }
+      });
+      host.removeChild(renderer.domElement);
+    };
+  }, [models]);
+
+  return (
+    <div className="h-full w-full relative overflow-hidden bg-[#fbfbfa]">
+      <div ref={hostRef} className="absolute inset-0" aria-label="3D model frontier chart" />
+      <div className="absolute left-3 top-3 z-10 bg-white/90 border border-ink-100 rounded-lg px-3 py-2 text-[11px] text-ink-700 leading-snug">
+        <div className="font-medium text-ink-900">True 3D frontier</div>
+        <div>{frontierCount} non-dominated models across intelligence, latency, and cost.</div>
+      </div>
+      <div className="absolute left-3 bottom-3 z-10 flex items-center gap-4 text-[10px] uppercase tracking-[0.12em] text-ink-500">
+        <span>Drag to rotate</span>
+        <span>Scroll to zoom</span>
+        <span>Hover a point</span>
+      </div>
     </div>
   );
 }
@@ -681,7 +1049,7 @@ function HoverCard({ m }: { m: Model }) {
 
 // Page shell ---------------------------------------------------------------
 
-type Tab = "chart" | "detail";
+type Tab = "chart" | "frontier3d" | "detail";
 
 export default function App() {
   const [tab, setTab] = useState<Tab>("chart");
@@ -740,11 +1108,18 @@ export default function App() {
         <div className="shrink-0 flex items-center justify-between gap-6 border-b border-ink-100 py-3">
           <div className="flex items-center gap-6">
             <TabBtn id="chart" label="Map" />
+            <TabBtn id="frontier3d" label="3D Frontier" />
             <TabBtn id="detail" label="Detail" />
           </div>
           <div className="flex items-center gap-6">
-            <FrontierLegend />
-            <CostLegend />
+            {tab === "frontier3d" ? (
+              <div className="text-[11px] text-ink-700">
+                Green points are true frontier models. Pale points are dominated.
+              </div>
+            ) : (
+              <FrontierLegend />
+            )}
+            {tab !== "frontier3d" && <CostLegend />}
           </div>
         </div>
 
@@ -752,6 +1127,16 @@ export default function App() {
           {tab === "chart" && (
             <div className="h-full w-full relative">
               <MapChart
+                models={models}
+                onHover={setHoveredSlug}
+                hoveredSlug={hoveredSlug}
+              />
+              {hovered && <HoverCard m={hovered} />}
+            </div>
+          )}
+          {tab === "frontier3d" && (
+            <div className="h-full w-full relative">
+              <ThreeFrontierChart
                 models={models}
                 onHover={setHoveredSlug}
                 hoveredSlug={hoveredSlug}
