@@ -21,4 +21,4 @@ npm run fetch          # pull latest model numbers and refresh docs/screenshot.p
 npm run dev            # opens the chart in your browser
 ```
 
-The pinned model list lives at the top of `scripts/fetch-models.ts`. `npm run fetch` also scans the Artificial Analysis homepage Highlights cards, auto-adds any highlighted models that have complete chart metrics, and regenerates the README screenshot. Rows with missing cost or latency are skipped so they cannot break the log-scaled chart.
+The pinned model list lives at the top of `scripts/fetch-models.ts`. `npm run fetch` also scans the Artificial Analysis homepage Intelligence Index chart, auto-adds any curated models that have complete chart metrics, and regenerates the README screenshot. Rows with missing cost or latency are skipped so they cannot break the log-scaled chart.

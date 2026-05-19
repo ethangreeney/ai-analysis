@@ -19,7 +19,7 @@ config();
 
 const API_URL = "https://artificialanalysis.ai/api/v2/data/llms/models";
 const SCRAPE_URL = "https://artificialanalysis.ai/models/gpt-5-5-medium"; // any model page works
-const HIGHLIGHTS_URL = "https://artificialanalysis.ai/";
+const CURATED_MODELS_URL = "https://artificialanalysis.ai/";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_PATH = resolve(__dirname, "..");
 const OUT_PATH = resolve(__dirname, "..", "src", "data", "models.json");
@@ -30,12 +30,13 @@ const SCREENSHOT_DEVICE_SCALE = 2;
 interface ModelSeed {
   slug: string;
   displayName?: string;
-  source: "pinned" | "highlight";
+  source: "pinned" | "curated";
 }
 
 // Pinned set keyed by AA slug. The slug uniquely identifies the variant
 // (reasoning level + effort), unlike model names which can be ambiguous. The
-// fetcher also auto-adds any homepage Highlights models not listed here.
+// fetcher also auto-adds any models from AA's homepage Intelligence Index chart
+// not listed here.
 const PINNED_SLUGS: ModelSeed[] = [
   // OpenAI
   { slug: "gpt-5-5", displayName: "GPT-5.5 · xhigh", source: "pinned" },
@@ -52,6 +53,7 @@ const PINNED_SLUGS: ModelSeed[] = [
   { slug: "claude-4-5-haiku-reasoning", displayName: "Claude 4.5 Haiku", source: "pinned" },
   // Google
   { slug: "gemini-3-1-pro-preview", displayName: "Gemini 3.1 Pro", source: "pinned" },
+  { slug: "gemini-3-5-flash", displayName: "Gemini 3.5 Flash", source: "pinned" },
   { slug: "gemini-3-flash-reasoning", displayName: "Gemini 3 Flash", source: "pinned" },
   { slug: "gemini-3-1-flash-lite-preview", displayName: "Gemini 3.1 Flash-Lite", source: "pinned" },
   // xAI
@@ -200,57 +202,65 @@ function decodeHtml(text: string): string {
     .replace(/&gt;/g, ">");
 }
 
-function scrapeHighlightSeeds(html: string): ModelSeed[] {
-  const seeds = new Map<string, ModelSeed>();
-  const listRe =
-    /<ol class="sr-only" aria-label="(?:Intelligence|Speed|Price) models">([\s\S]*?)<\/ol>/g;
-  const linkRe = /<a tabindex="-1" href="\/models\/([^"]+)">([^<]+)<\/a>/g;
-  let list: RegExpExecArray | null;
+function decodeJsonString(text: string): string {
+  try {
+    return JSON.parse(`"${text}"`);
+  } catch {
+    return text;
+  }
+}
 
-  while ((list = listRe.exec(html)) !== null) {
-    linkRe.lastIndex = 0;
-    let link: RegExpExecArray | null;
-    while ((link = linkRe.exec(list[1])) !== null) {
-      const slug = link[1];
-      if (!seeds.has(slug)) {
-        seeds.set(slug, {
-          slug,
-          displayName: decodeHtml(link[2]).replace(/\s+/g, " ").trim(),
-          source: "highlight",
-        });
-      }
+function scrapeCuratedModelSeeds(html: string): ModelSeed[] {
+  const seeds = new Map<string, ModelSeed>();
+
+  // The SSR payload for AA's homepage Intelligence Index chart includes one
+  // `model_url` per selected bar. This is more complete than the shorter
+  // Highlights lists and matches the visible "N of total models" selector.
+  const modelRe =
+    /\\"short_name\\":\\"([^\\"]+)\\"[\s\S]*?\\"model_url\\":\\"\/models\/([a-z0-9\-]+)\\"/g;
+  let model: RegExpExecArray | null;
+
+  while ((model = modelRe.exec(html)) !== null) {
+    const displayName = decodeHtml(decodeJsonString(model[1])).replace(/\s+/g, " ").trim();
+    const slug = model[2];
+    if (!seeds.has(slug)) {
+      seeds.set(slug, {
+        slug,
+        displayName,
+        source: "curated",
+      });
     }
   }
 
   return [...seeds.values()];
 }
 
-async function fetchHighlightSeeds(): Promise<ModelSeed[]> {
+async function fetchCuratedModelSeeds(): Promise<ModelSeed[]> {
   try {
-    console.log(`scraping ${HIGHLIGHTS_URL} for homepage Highlights ...`);
-    const res = await fetch(HIGHLIGHTS_URL);
-    if (!res.ok) throw new Error(`highlights ${res.status}`);
-    const seeds = scrapeHighlightSeeds(await res.text());
-    console.log(`found ${seeds.length} highlighted model slugs`);
+    console.log(`scraping ${CURATED_MODELS_URL} for homepage curated Intelligence models ...`);
+    const res = await fetch(CURATED_MODELS_URL);
+    if (!res.ok) throw new Error(`curated models ${res.status}`);
+    const seeds = scrapeCuratedModelSeeds(await res.text());
+    console.log(`found ${seeds.length} curated model slugs`);
     return seeds;
   } catch (e) {
-    console.warn("[warn] could not scrape homepage Highlights:", e);
+    console.warn("[warn] could not scrape homepage curated Intelligence models:", e);
     return [];
   }
 }
 
-function buildModelSeeds(highlightSeeds: ModelSeed[]): ModelSeed[] {
+function buildModelSeeds(curatedSeeds: ModelSeed[]): ModelSeed[] {
   const seeds = new Map<string, ModelSeed>();
   for (const seed of PINNED_SLUGS) seeds.set(seed.slug, seed);
 
   const added: string[] = [];
-  for (const seed of highlightSeeds) {
+  for (const seed of curatedSeeds) {
     if (seeds.has(seed.slug)) continue;
     seeds.set(seed.slug, seed);
     added.push(seed.slug);
   }
 
-  if (added.length) console.log(`auto-added highlighted models: ${added.join(", ")}`);
+  if (added.length) console.log(`auto-added curated models: ${added.join(", ")}`);
   return [...seeds.values()];
 }
 
@@ -378,7 +388,7 @@ async function main() {
   const html = await scrapeRes.text();
   const scraped = scrapeModels(html);
   console.log(`scraped ${scraped.size} model entries`);
-  const modelSeeds = buildModelSeeds(await fetchHighlightSeeds());
+  const modelSeeds = buildModelSeeds(await fetchCuratedModelSeeds());
 
   // Build slug → API entry index. Note: API "slug" is the parent model slug,
   // shared across reasoning variants. We need name-based matching for variants.
