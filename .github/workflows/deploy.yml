@@ -1,0 +1,53 @@
+# Fetch fresh Artificial Analysis data, rebuild, and deploy to GitHub Pages.
+# Runs on every push to main and on a schedule, so the published site keeps
+# itself up to date. If the fetch fails (AA markup change, API outage), the
+# job fails before deploy and the site keeps serving the last good build.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 */6 * * *" # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Fetch latest model data
+        run: npm run fetch
+        env:
+          AA_API_KEY: ${{ secrets.AA_API_KEY }}
+          SKIP_SCREENSHOT: "1"
+
+      - name: Build
+        run: npm run build -- --base=/ai-analysis/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

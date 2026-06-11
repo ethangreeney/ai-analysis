@@ -70,7 +70,8 @@ const PINNED_SLUGS: ModelSeed[] = [
 
 interface ScrapedRow {
   slug: string;
-  costToRun: number; // USD to run the AA Intelligence Index eval suite
+  costToRun?: number; // USD to run the AA Intelligence Index eval suite
+  pricePerMillion?: number;
   e2eLatencyTotal: number; // input + reasoning + answer (seconds)
   e2eInputTime: number;
   e2eReasoningTime: number;
@@ -83,7 +84,10 @@ interface ApiModel {
   name: string;
   slug: string;
   model_creator?: { name?: string };
-  evaluations?: { artificial_analysis_intelligence_index?: number };
+  evaluations?: {
+    artificial_analysis_intelligence_index?: number;
+    artificial_analysis_coding_index?: number;
+  };
   pricing?: { price_1m_blended_3_to_1?: number; price_1m_input_tokens?: number; price_1m_output_tokens?: number };
   median_output_tokens_per_second?: number;
   median_time_to_first_token_seconds?: number;
@@ -95,9 +99,12 @@ export interface Model {
   displayName: string;
   creator: string;
   intelligence: number;
+  // AA Coding Index (LiveCodeBench, SciCode, Terminal-Bench Hard, τ²-bench).
+  // From the JSON API only — null when no API entry pairs with the AA slug.
+  codingIndex: number | null;
   // Cost to run the AA Intelligence Index eval suite, USD. Captures real token
   // usage (including reasoning tokens), unlike per-million blended price.
-  costToRun: number;
+  costToRun: number | null;
   // End-to-end latency for one query, summed across input/reasoning/answer phases (s).
   e2eLatency: number;
   reasoningTime: number;
@@ -119,74 +126,90 @@ function findAllRegex(text: string, re: RegExp): { index: number; match: RegExpE
 }
 
 function scrapeModels(html: string): Map<string, ScrapedRow> {
-  // The page embeds a streaming RSC payload with escaped JSON. Each model entry
-  // has, in order: ...,"slug":"<slug>",...,"intelligence_index":<n>,...,
-  // "end_to_end_response_time_metrics":{"input_time":...,"reasoning_time":...,
-  // "answer_time":...,"total_time":...},"intelligence_index_cost":{"total_cost":<n>,...}
-  //
-  // Strategy: find every cost block. For each, walk back to the nearest preceding
-  // slug (the model's own slug appears just before the cost block in the entry).
-  // Validate by also picking up the e2e block in between.
-  const slugRe = /\\"slug\\":\\"([a-z0-9\-]+)\\"/g;
-  const costRe = /\\"intelligence_index_cost\\":\{\\"total_cost\\":([0-9.eE+\-]+)/g;
-  const e2eRe = /\\"end_to_end_response_time_metrics\\":\{\\"input_time\\":([0-9.eE+\-]+),\\"reasoning_time\\":([0-9.eE+\-]+),\\"answer_time\\":([0-9.eE+\-]+),\\"total_time\\":([0-9.eE+\-]+)/g;
-  const iiRe = /\\"intelligence_index\\":([0-9.eE+\-]+)/g;
+  // The page embeds a streaming RSC payload with escaped JSON. Some newly-added
+  // models can have intelligence + latency before AA publishes eval-suite cost,
+  // so parse per-model entries instead of anchoring every row on the cost block.
+  const entryRe = /\{\\"additional_text\\":/g;
+  const slugRe = /\\"slug\\":\\"([a-z0-9\-]+)\\"/;
+  const costRe = /\\"intelligence_index_cost\\":\{\\"total_cost\\":([0-9.eE+\-]+)/;
+  const e2eRe = /\\"end_to_end_response_time_metrics\\":\{\\"input_time\\":([0-9.eE+\-]+),\\"reasoning_time\\":([0-9.eE+\-]+),\\"answer_time\\":([0-9.eE+\-]+),\\"total_time\\":([0-9.eE+\-]+)/;
+  const iiRe = /\\"intelligence_index\\":([0-9.eE+\-]+)/;
 
-  const slugs = findAllRegex(html, slugRe);
-  const costs = findAllRegex(html, costRe);
-  const e2es = findAllRegex(html, e2eRe);
-  const iis = findAllRegex(html, iiRe);
+  const entryStarts = findAllRegex(html, entryRe).map((entry) => entry.index);
 
   const result = new Map<string, ScrapedRow>();
 
-  // For each cost, the entry's structure is: ..., "slug":"<model>", ...,
-  // "model_creators":{..., "slug":"<creator>"}, ..., "intelligence_index_cost":...
-  // So the model's own slug is the SECOND-TO-LAST slug before each cost; the
-  // immediately-preceding slug is the creator's.
-  for (const c of costs) {
-    const before: string[] = [];
-    for (const s of slugs) {
-      if (s.index < c.index) before.push(s.match[1]);
-      else break;
-    }
-    if (before.length < 2) continue;
-    const lastSlug = before[before.length - 2];
+  for (let i = 0; i < entryStarts.length; i += 1) {
+    const start = entryStarts[i];
+    const end = entryStarts[i + 1] ?? html.length;
+    const entry = html.slice(start, end);
+    const slug = entry.match(slugRe)?.[1];
+    const e2e = entry.match(e2eRe);
+    if (!slug || !e2e || result.has(slug)) continue;
 
-    // The slug we just picked is the entry's slug only if there is no
-    // *intervening* model entry boundary. In practice it works because every
-    // entry contains its slug exactly once, just before the cost block.
+    const cost = entry.match(costRe)?.[1];
+    const intelligence = entry.match(iiRe)?.[1];
+    result.set(slug, {
+      slug,
+      costToRun: cost == null ? undefined : parseFloat(cost),
+      e2eLatencyTotal: parseFloat(e2e[4]),
+      e2eInputTime: parseFloat(e2e[1]),
+      e2eReasoningTime: parseFloat(e2e[2]),
+      e2eAnswerTime: parseFloat(e2e[3]),
+      intelligence: intelligence == null ? undefined : parseFloat(intelligence),
+    });
+  }
 
-    // Find the most recent e2e block before this cost (within the same entry).
-    let lastE2e: { input: number; reasoning: number; answer: number; total: number } | null = null;
-    for (const e of e2es) {
-      if (e.index >= c.index) break;
-      lastE2e = {
-        input: parseFloat(e.match[1]),
-        reasoning: parseFloat(e.match[2]),
-        answer: parseFloat(e.match[3]),
-        total: parseFloat(e.match[4]),
-      };
-    }
+  const ldScripts = findAllRegex(
+    html,
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
+  );
 
-    // Most recent intelligence_index before this cost.
-    let lastII: number | undefined;
-    for (const i of iis) {
-      if (i.index >= c.index) break;
-      lastII = parseFloat(i.match[1]);
+  for (const { match } of ldScripts) {
+    let dataset: { name?: string; data?: unknown[] };
+    try {
+      dataset = JSON.parse(match[1]);
+    } catch {
+      continue;
     }
 
-    // First write wins (each entry's data appears once; later occurrences are
-    // for other models and the slug walk-back will pair them correctly).
-    if (!result.has(lastSlug)) {
-      result.set(lastSlug, {
-        slug: lastSlug,
-        costToRun: parseFloat(c.match[1]),
-        e2eLatencyTotal: lastE2e?.total ?? 0,
-        e2eInputTime: lastE2e?.input ?? 0,
-        e2eReasoningTime: lastE2e?.reasoning ?? 0,
-        e2eAnswerTime: lastE2e?.answer ?? 0,
-        intelligence: lastII,
-      });
+    if (!Array.isArray(dataset.data)) continue;
+
+    for (const item of dataset.data) {
+      if (item == null || typeof item !== "object") continue;
+      const row = item as Record<string, unknown>;
+      const detailsUrl = typeof row.detailsUrl === "string" ? row.detailsUrl : "";
+      const slug = detailsUrl.match(/^\/models\/([a-z0-9-]+)$/)?.[1];
+      if (!slug) continue;
+
+      const current = result.get(slug);
+      if (!current) continue;
+
+      if (dataset.name === "Cost to Run Artificial Analysis Intelligence Index") {
+        const input = typeof row.inputCost === "number" ? row.inputCost : 0;
+        const reasoning = typeof row.reasoningCost === "number" ? row.reasoningCost : 0;
+        const answer = typeof row.answerCost === "number" ? row.answerCost : 0;
+        const total = input + reasoning + answer;
+        if (positiveFinite(total)) current.costToRun = total;
+      }
+
+      if (dataset.name === "Price" && typeof row.pricePerMillionTokens === "number") {
+        current.pricePerMillion = row.pricePerMillionTokens;
+      }
+
+      if (
+        (dataset.name === "Intelligence" || dataset.name === "Artificial Analysis Intelligence Index") &&
+        typeof row.artificialAnalysisIntelligenceIndex === "number"
+      ) {
+        current.intelligence = row.artificialAnalysisIntelligenceIndex;
+      }
+
+      if (
+        dataset.name === "Artificial Analysis Intelligence Index" &&
+        typeof row.intelligenceIndex === "number"
+      ) {
+        current.intelligence = row.intelligenceIndex;
+      }
     }
   }
 
@@ -397,6 +420,7 @@ async function main() {
   const out: Model[] = [];
   const missing: string[] = [];
   const invalid: string[] = [];
+  const pendingCost: string[] = [];
   for (const { slug, displayName } of modelSeeds) {
     const sc = scraped.get(slug);
     if (!sc) {
@@ -405,7 +429,6 @@ async function main() {
     }
     const badFields = [
       positiveFinite(sc.intelligence) ? null : "intelligence",
-      positiveFinite(sc.costToRun) ? null : "costToRun",
       positiveFinite(sc.e2eLatencyTotal) ? null : "e2eLatency",
     ].filter((field): field is string => field !== null);
 
@@ -436,17 +459,22 @@ async function main() {
       displayName: displayName ?? api?.name ?? slug,
       creator: api?.model_creator?.name ?? "Unknown",
       intelligence: sc.intelligence ?? api?.evaluations?.artificial_analysis_intelligence_index ?? 0,
-      costToRun: sc.costToRun,
+      codingIndex: api?.evaluations?.artificial_analysis_coding_index ?? null,
+      costToRun: positiveFinite(sc.costToRun) ? sc.costToRun : null,
       e2eLatency: sc.e2eLatencyTotal,
       reasoningTime: sc.e2eReasoningTime,
-      pricePerMillion: api?.pricing?.price_1m_blended_3_to_1 ?? 0,
+      pricePerMillion: sc.pricePerMillion ?? api?.pricing?.price_1m_blended_3_to_1 ?? 0,
       outputTokensPerSecond: api?.median_output_tokens_per_second ?? 0,
       ttft: api?.median_time_to_first_token_seconds ?? 0,
     });
+    if (!positiveFinite(sc.costToRun)) pendingCost.push(slug);
   }
 
+  const pendingCoding = out.filter((m) => !positiveFinite(m.codingIndex ?? undefined)).map((m) => m.slug);
+  if (pendingCoding.length) console.warn("[warn] rows without coding index:", pendingCoding.join(", "));
   if (missing.length) console.warn("[warn] missing slugs:", missing.join(", "));
   if (invalid.length) console.warn("[warn] skipped rows with invalid chart metrics:", invalid.join(", "));
+  if (pendingCost.length) console.warn("[warn] rows with pending cost-to-run:", pendingCost.join(", "));
   console.log(`built ${out.length} model rows`);
 
   mkdirSync(dirname(OUT_PATH), { recursive: true });
@@ -456,6 +484,10 @@ async function main() {
   );
   console.log(`wrote ${OUT_PATH}`);
 
+  if (process.env.SKIP_SCREENSHOT) {
+    console.log("SKIP_SCREENSHOT set — skipping screenshot refresh");
+    return;
+  }
   await refreshScreenshot();
 }
 

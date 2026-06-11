@@ -1,7 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { scaleLinear, scaleLog } from "d3-scale";
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import data from "./data/models.json";
 import { colorFor } from "./providerStyle";
 
@@ -11,7 +9,8 @@ interface Model {
   displayName: string;
   creator: string;
   intelligence: number;
-  costToRun: number;
+  codingIndex: number | null;
+  costToRun: number | null;
   e2eLatency: number;
   reasoningTime: number;
   pricePerMillion: number;
@@ -26,31 +25,20 @@ interface Snapshot {
 
 const snapshot = data as Snapshot;
 
-const fmtCost = (c: number) =>
-  c >= 1000 ? `$${(c / 1000).toFixed(1)}k` : c >= 100 ? `$${Math.round(c)}` : `$${c.toFixed(0)}`;
+type ChartableModel = Model & { costToRun: number };
 
-const isPositiveFinite = (value: number) => Number.isFinite(value) && value > 0;
-const isChartableModel = (m: Model) =>
+const fmtCost = (c: number | null) =>
+  c == null
+    ? "Pending"
+    : c >= 1000 ? `$${(c / 1000).toFixed(1)}k` : c >= 100 ? `$${Math.round(c)}` : `$${c.toFixed(0)}`;
+
+const fmtHoverCost = (c: number | null) =>
+  c == null ? "Pending" : c >= 1000 ? `$${(c / 1000).toFixed(1)}k` : `$${c.toFixed(0)}`;
+
+const isPositiveFinite = (value: number | null | undefined): value is number =>
+  typeof value === "number" && Number.isFinite(value) && value > 0;
+const isChartableModel = (m: Model): m is ChartableModel =>
   isPositiveFinite(m.intelligence) && isPositiveFinite(m.costToRun) && isPositiveFinite(m.e2eLatency);
-
-function trueParetoFrontier(models: Model[]): Model[] {
-  return models
-    .filter((m) => {
-      return !models.some((other) => {
-        if (other.slug === m.slug) return false;
-        const atLeastAsSmart = other.intelligence >= m.intelligence;
-        const atLeastAsFast = other.e2eLatency <= m.e2eLatency;
-        const atLeastAsCheap = other.costToRun <= m.costToRun;
-        const strictlyBetter =
-          other.intelligence > m.intelligence ||
-          other.e2eLatency < m.e2eLatency ||
-          other.costToRun < m.costToRun;
-
-        return atLeastAsSmart && atLeastAsFast && atLeastAsCheap && strictlyBetter;
-      });
-    })
-    .sort((a, b) => b.intelligence - a.intelligence);
-}
 
 interface Tier {
   label: string;
@@ -60,15 +48,49 @@ interface Tier {
   emphasis: number;
 }
 
-const TIERS: Tier[] = [
-  { label: "Frontier", min: 55, max: 65, shade: "#fafaf7", emphasis: 1 },
-  { label: "Strong", min: 45, max: 55, shade: "#fafafa", emphasis: 0.85 },
-  { label: "Capable", min: 35, max: 45, shade: "#fcfcfc", emphasis: 0.55 },
-  { label: "Basic", min: 0, max: 35, shade: "#ffffff", emphasis: 0.3 },
+interface TierBand {
+  label: string;
+  lower: number;
+  upper: number;
+  shade: string;
+  emphasis: number;
+}
+
+const RELATIVE_TIERS: TierBand[] = [
+  { label: "Leaders", lower: 0.82, upper: 1, shade: "#f7f7f2", emphasis: 1 },
+  { label: "Frontier Pack", lower: 0.64, upper: 0.82, shade: "#fafaf7", emphasis: 1 },
+  { label: "Competitive", lower: 0.46, upper: 0.64, shade: "#fafafa", emphasis: 0.85 },
+  { label: "Established", lower: 0.28, upper: 0.46, shade: "#fcfcfc", emphasis: 0.55 },
+  { label: "Trailing", lower: 0, upper: 0.28, shade: "#ffffff", emphasis: 0.3 },
 ];
 
-function tierFor(intel: number): Tier {
-  return TIERS.find((t) => intel >= t.min && intel < t.max) ?? TIERS[TIERS.length - 1];
+const INTELLIGENCE_STEP = 5;
+const DEFAULT_INTELLIGENCE_MIN = 14;
+const DEFAULT_INTELLIGENCE_MAX = 65;
+
+function intelligenceBounds(models: Model[]) {
+  const values = models.map((m) => m.intelligence).filter(isPositiveFinite);
+  const min = values.length ? Math.min(...values) : DEFAULT_INTELLIGENCE_MIN;
+  const max = values.length ? Math.max(...values) : DEFAULT_INTELLIGENCE_MAX;
+  return {
+    min: Math.min(DEFAULT_INTELLIGENCE_MIN, Math.floor((min - 2) / INTELLIGENCE_STEP) * INTELLIGENCE_STEP),
+    max: Math.max(DEFAULT_INTELLIGENCE_MAX, Math.ceil((max + 2) / INTELLIGENCE_STEP) * INTELLIGENCE_STEP),
+  };
+}
+
+function relativeTiers(min: number, max: number): Tier[] {
+  const span = Math.max(1, max - min);
+  return RELATIVE_TIERS.map((tier) => ({
+    label: tier.label,
+    min: min + span * tier.lower,
+    max: min + span * tier.upper,
+    shade: tier.shade,
+    emphasis: tier.emphasis,
+  }));
+}
+
+function tierFor(intel: number, tiers: Tier[]): Tier {
+  return tiers.find((t) => intel >= t.min && intel <= t.max) ?? tiers[tiers.length - 1];
 }
 
 // Cool→hot cost gradient with more separation in the middle so neighbouring
@@ -76,8 +98,7 @@ function tierFor(intel: number): Tier {
 const COST_COLD = [29, 96, 165]; // saturated deep blue (cheap)
 const COST_MID = [222, 195, 138]; // warm sand (mid)
 const COST_HOT = [185, 50, 38]; // saturated deep red (expensive)
-const FRONTIER_3D_COLOR = "#087a5a";
-const DOMINATED_3D_COLOR = "#d9d6cf";
+const PENDING_COST_COLOR = "#6d7781";
 function costColor(t: number): string {
   const u = Math.max(0, Math.min(1, t));
   const lerp = (a: number[], b: number[], k: number) =>
@@ -176,22 +197,22 @@ function MapChart({
   onHover: (slug: string | null) => void;
   hoveredSlug: string | null;
 }) {
-  const chartModels = useMemo(() => models.filter(isChartableModel), [models]);
+  const pricedModels = useMemo(() => models.filter(isChartableModel), [models]);
   const W = 1280;
   const H = 720;
-  const M = { top: 28, right: 60, bottom: 56, left: 110 };
+  const M = { top: 28, right: 60, bottom: 56, left: 142 };
   const innerW = W - M.left - M.right;
   const innerH = H - M.top - M.bottom;
 
-  const intelMin = 14;
-  const intelMax = 64;
+  const { min: intelMin, max: intelMax } = intelligenceBounds(models);
+  const tiers = relativeTiers(intelMin, intelMax);
   const yScale = scaleLinear().domain([intelMin, intelMax]).range([innerH, 0]);
 
   // X = end-to-end latency, log scale, inverted so faster sits on the right.
   // Log fits the user-felt cost of waiting (perception is roughly logarithmic;
   // the UX thresholds 1s / 10s / 1min are each an order of magnitude apart),
   // matches industry convention, and keeps the right-side cluster legible.
-  const latencies = chartModels.map((m) => m.e2eLatency);
+  const latencies = models.map((m) => m.e2eLatency);
   const latMin = latencies.length ? Math.min(...latencies) : 1;
   const latMax = latencies.length ? Math.max(...latencies) : 10;
   const latLow = latMin === latMax ? latMin * 0.8 : latMin * 0.9;
@@ -200,7 +221,7 @@ function MapChart({
 
   // Cost → color via log scale. Multiplicative cost differences map to even
   // perceptual color steps, matching how budgets are felt.
-  const costs = chartModels.map((m) => m.costToRun);
+  const costs = pricedModels.map((m) => m.costToRun);
   const costMin = costs.length ? Math.min(...costs) : 1;
   const costMax = costs.length ? Math.max(...costs) : 10;
   const costLow = costMin === costMax ? costMin * 0.8 : costMin * 0.9;
@@ -220,16 +241,19 @@ function MapChart({
     r: sizeScale(m.intelligence),
   });
 
+  const markerColor = (m: Model) =>
+    isPositiveFinite(m.costToRun) ? costColor(costNorm(m.costToRun)) : PENDING_COST_COLOR;
+
   const labels = useMemo(
-    () => placeLabels(chartModels, xy, innerW, innerH, chartModels),
-    [chartModels],
+    () => placeLabels(models, xy, innerW, innerH, models),
+    [models],
   );
 
   // Pareto frontier on (intelligence ↑, latency ↓): models that no other
   // model beats on both axes. Sweep from fastest to slowest, keeping any
   // point that raises the running-best intelligence.
   const frontier = useMemo(() => {
-    const sweep = [...chartModels].sort(
+    const sweep = [...models].sort(
       (a, b) => a.e2eLatency - b.e2eLatency || b.intelligence - a.intelligence,
     );
     const keep: Model[] = [];
@@ -241,7 +265,7 @@ function MapChart({
       }
     }
     return keep.sort((a, b) => a.intelligence - b.intelligence);
-  }, [chartModels]);
+  }, [models]);
 
   const frontierPath = frontier
     .map((m, i) => {
@@ -250,7 +274,7 @@ function MapChart({
     })
     .join(" ");
 
-  const ordered = [...chartModels].sort((a, b) => {
+  const ordered = [...models].sort((a, b) => {
     if (a.slug === hoveredSlug) return 1;
     if (b.slug === hoveredSlug) return -1;
     return a.intelligence - b.intelligence;
@@ -269,10 +293,11 @@ function MapChart({
     >
       <g transform={`translate(${M.left}, ${M.top})`}>
         {/* Tier bands */}
-        {TIERS.map((t) => {
+        {tiers.map((t) => {
           const yTop = yScale(Math.min(t.max, intelMax));
           const yBottom = yScale(Math.max(t.min, intelMin));
           const h = yBottom - yTop;
+          if (h <= 0) return null;
           return (
             <g key={t.label}>
               <rect x={0} y={yTop} width={innerW} height={h} fill={t.shade} />
@@ -296,13 +321,16 @@ function MapChart({
                 fill="#bcbcbc"
                 style={{ fontVariantNumeric: "tabular-nums" }}
               >
-                {t.min}–{t.max}
+                {Math.round(t.min)}–{Math.round(t.max)}
               </text>
             </g>
           );
         })}
 
-        {[20, 30, 40, 50, 60].map((v) => (
+        {Array.from(
+          { length: Math.floor(intelMax / 10) - Math.ceil(intelMin / 10) + 1 },
+          (_, i) => (Math.ceil(intelMin / 10) + i) * 10,
+        ).map((v) => (
           <line
             key={`yt-${v}`}
             x1={0}
@@ -314,7 +342,7 @@ function MapChart({
           />
         ))}
 
-        {TIERS.slice(0, -1).map((t) => (
+        {tiers.slice(0, -1).map((t) => (
           <line
             key={`sep-${t.label}`}
             x1={0}
@@ -379,7 +407,7 @@ function MapChart({
         </text>
 
         <text
-          transform={`translate(-78, ${innerH / 2}) rotate(-90)`}
+          transform={`translate(-112, ${innerH / 2}) rotate(-90)`}
           textAnchor="middle"
           fontSize={11}
           fill="#0a0a0a"
@@ -407,8 +435,8 @@ function MapChart({
         {/* Dots */}
         {ordered.map((m) => {
           const { x, y, r } = xy(m);
-          const costT = costNorm(m.costToRun);
-          const c = costColor(costT);
+          const hasCost = isPositiveFinite(m.costToRun);
+          const c = markerColor(m);
           const isHovered = hoveredSlug === m.slug;
           const isOther = hoveredSlug !== null && !isHovered;
           const baseOp = opacityFor(m.intelligence);
@@ -428,9 +456,10 @@ function MapChart({
                 cy={y}
                 r={r}
                 fill={c}
-                fillOpacity={isOther ? op : 0.88}
+                fillOpacity={hasCost ? (isOther ? op : 0.88) : isOther ? 0.1 : 0.12}
                 stroke={stroke}
-                strokeWidth={isHovered ? strokeW : 1.6}
+                strokeWidth={hasCost ? (isHovered ? strokeW : 1.6) : isHovered ? 2 : 1.7}
+                strokeDasharray={hasCost ? undefined : "3 2"}
                 style={{ transition: "all 200ms ease-out" }}
               />
             </g>
@@ -439,10 +468,9 @@ function MapChart({
 
         {/* Label stems */}
         {labels.map((l) => {
-          const m = chartModels.find((x) => x.slug === l.slug)!;
+          const m = models.find((x) => x.slug === l.slug)!;
           const { x, y, r } = xy(m);
-          const costT = costNorm(m.costToRun);
-          const c = costColor(costT);
+          const c = markerColor(m);
           const isHovered = hoveredSlug === l.slug;
           const isOther = hoveredSlug !== null && !isHovered;
           const dir = l.anchor === "start" ? 1 : -1;
@@ -465,12 +493,11 @@ function MapChart({
 
         {/* Labels */}
         {labels.map((l) => {
-              const m = chartModels.find((x) => x.slug === l.slug)!;
-          const costT = costNorm(m.costToRun);
-          const c = costColor(costT);
+          const m = models.find((x) => x.slug === l.slug)!;
+          const c = markerColor(m);
           const isHovered = hoveredSlug === l.slug;
           const isOther = hoveredSlug !== null && !isHovered;
-          const tier = tierFor(m.intelligence);
+          const tier = tierFor(m.intelligence, tiers);
           const baseOp = isHovered ? 1 : tier.emphasis;
           const op = isOther ? 0.12 : Math.max(0.72, baseOp);
           return (
@@ -536,8 +563,7 @@ function FrontierLegend() {
         className="invisible opacity-0 group-hover:visible group-hover:opacity-100 absolute top-full right-0 mt-2 w-64 bg-white border border-ink-100 rounded-lg px-3 py-2 text-[11px] text-ink-700 leading-snug z-30 transition-opacity duration-150"
         style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)" }}
       >
-        This line only uses intelligence and speed. The 3D tab marks the true frontier
-        after cost is included as a third optimization axis.
+        This line shows models no other model beats on both intelligence and speed.
       </div>
     </div>
   );
@@ -561,356 +587,98 @@ function CostLegend() {
   );
 }
 
-// True 3D Pareto view -------------------------------------------------------
+// Ranking ---------------------------------------------------------------
+//
+// Score = expected dollars to get a unit of coding work done, retries included.
+//
+//   work cost = attempts × (compute cost + wall-clock time × hourly rate)
+//   attempts  = 1 ÷ success rate
+//   success rate = (coding index ÷ frontier coding index) ^ FAILURE_EXPONENT
+//
+// Capability input is the AA Coding Index (LiveCodeBench, SciCode,
+// Terminal-Bench Hard, τ²-bench) — general intelligence overrates models that
+// benchmark well but code poorly. Compute cost is the AA eval-suite cost.
+// Wall-clock = e2e latency × calls per work unit. The exponent encodes that
+// capability is convex: a model at 60% of frontier doesn't take 1.6× longer —
+// it mostly fails and retries.
 
-function makeTextSprite(text: string, color = "#0a0a0a") {
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d")!;
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  canvas.width = 420 * dpr;
-  canvas.height = 72 * dpr;
-  ctx.scale(dpr, dpr);
-  ctx.font = "500 24px Inter, ui-sans-serif, system-ui, sans-serif";
-  ctx.textBaseline = "middle";
-  ctx.lineJoin = "round";
-  ctx.strokeStyle = "rgba(255,255,255,0.92)";
-  ctx.lineWidth = 7;
-  ctx.strokeText(text, 10, 36);
-  ctx.fillStyle = color;
-  ctx.fillText(text, 10, 36);
+const FAILURE_EXPONENT = 4;
+const HOURLY_RATE = 100; // USD per hour of human/agent supervision
+const CALLS_PER_WORK_UNIT = 1000; // sequential model calls in one unit of work
 
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  const material = new THREE.SpriteMaterial({
-    map: texture,
-    transparent: true,
-    depthTest: false,
-    depthWrite: false,
+type RankableModel = ChartableModel & { codingIndex: number };
+
+const isRankableModel = (m: Model): m is RankableModel =>
+  isChartableModel(m) && isPositiveFinite(m.codingIndex);
+
+interface RankedModel extends RankableModel {
+  rank: number;
+  attempts: number;
+  workCost: number;
+  scorePos: number; // 0..1, cheaper work = closer to 1
+  codingScore: number;
+  speedScore: number;
+  costScore: number;
+}
+
+function expandedExtent(values: number[]) {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  if (min === max) return { min: min * 0.9, max: max * 1.1 };
+  return { min, max };
+}
+
+function scoreRankings(models: RankableModel[]): RankedModel[] {
+  if (!models.length) return [];
+
+  const codingExtent = expandedExtent(models.map((m) => m.codingIndex));
+  const latencyExtent = expandedExtent(models.map((m) => m.e2eLatency));
+  const costExtent = expandedExtent(models.map((m) => m.costToRun));
+
+  const codingScale = scaleLinear()
+    .domain([codingExtent.min, codingExtent.max])
+    .range([0, 100])
+    .clamp(true);
+  const speedScale = scaleLog()
+    .domain([latencyExtent.max, latencyExtent.min])
+    .range([0, 100])
+    .clamp(true);
+  const costScale = scaleLog()
+    .domain([costExtent.max, costExtent.min])
+    .range([0, 100])
+    .clamp(true);
+
+  const frontier = Math.max(...models.map((m) => m.codingIndex));
+
+  const scored = models.map((m) => {
+    const successRate = Math.min(1, (m.codingIndex / frontier) ** FAILURE_EXPONENT);
+    const attempts = 1 / successRate;
+    const timeCost = (m.e2eLatency * CALLS_PER_WORK_UNIT / 3600) * HOURLY_RATE;
+    const workCost = attempts * (m.costToRun + timeCost);
+    return {
+      ...m,
+      rank: 0,
+      attempts,
+      workCost,
+      scorePos: 0,
+      codingScore: codingScale(m.codingIndex),
+      speedScore: speedScale(m.e2eLatency),
+      costScore: costScale(m.costToRun),
+    };
   });
-  const sprite = new THREE.Sprite(material);
-  sprite.scale.set(1.08, 0.19, 1);
-  return sprite;
+
+  const workExtent = expandedExtent(scored.map((m) => m.workCost));
+  const workScale = scaleLog()
+    .domain([workExtent.max, workExtent.min])
+    .range([0, 1])
+    .clamp(true);
+
+  return scored
+    .sort((a, b) => a.workCost - b.workCost || b.codingIndex - a.codingIndex)
+    .map((m, i) => ({ ...m, rank: i + 1, scorePos: workScale(m.workCost) }));
 }
 
-function axisLabel(text: string, position: THREE.Vector3) {
-  const label = makeTextSprite(text, "#3a3a3a");
-  label.position.copy(position);
-  label.scale.set(0.92, 0.16, 1);
-  return label;
-}
-
-function frontierEnvelopeGeometry(points: THREE.Vector3[], x0: number, x1: number, z0: number, z1: number) {
-  const steps = 18;
-  const positions: number[] = [];
-  const indices: number[] = [];
-  const vertexIndex = new Map<string, number>();
-  const yAt = (x: number, z: number) => {
-    const candidates = points.filter((p) => p.x >= x && p.z >= z);
-    if (!candidates.length) return null;
-    return Math.max(...candidates.map((p) => p.y));
-  };
-  const getVertex = (ix: number, iz: number) => {
-    const key = `${ix}:${iz}`;
-    const existing = vertexIndex.get(key);
-    if (existing !== undefined) return existing;
-
-    const x = x0 + ((x1 - x0) * ix) / steps;
-    const z = z0 + ((z1 - z0) * iz) / steps;
-    const y = yAt(x, z);
-    if (y === null) return null;
-
-    const idx = positions.length / 3;
-    positions.push(x, y, z);
-    vertexIndex.set(key, idx);
-    return idx;
-  };
-
-  for (let ix = 0; ix < steps; ix += 1) {
-    for (let iz = 0; iz < steps; iz += 1) {
-      const a = getVertex(ix, iz);
-      const b = getVertex(ix + 1, iz);
-      const c = getVertex(ix + 1, iz + 1);
-      const d = getVertex(ix, iz + 1);
-      if (a === null || b === null || c === null || d === null) continue;
-      indices.push(a, b, c, a, c, d);
-    }
-  }
-
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positions), 3));
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  return geometry;
-}
-
-function ThreeFrontierChart({
-  models,
-  onHover,
-  hoveredSlug,
-}: {
-  models: Model[];
-  onHover: (slug: string | null) => void;
-  hoveredSlug: string | null;
-}) {
-  const hostRef = useRef<HTMLDivElement | null>(null);
-  const hoveredRef = useRef<string | null>(hoveredSlug);
-  const onHoverRef = useRef(onHover);
-  const [frontierCount, setFrontierCount] = useState(0);
-
-  useEffect(() => {
-    hoveredRef.current = hoveredSlug;
-  }, [hoveredSlug]);
-
-  useEffect(() => {
-    onHoverRef.current = onHover;
-  }, [onHover]);
-
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return undefined;
-
-    const chartModels = models.filter(isChartableModel);
-    const frontierSlugs = new Set(trueParetoFrontier(chartModels).map((m) => m.slug));
-    setFrontierCount(frontierSlugs.size);
-
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#fbfbfa");
-
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.set(0.35, 3.15, 7.45);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.domElement.style.display = "block";
-    host.appendChild(renderer.domElement);
-
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.target.set(0, 0, 0);
-    controls.minDistance = 4;
-    controls.maxDistance = 12;
-
-    scene.add(new THREE.AmbientLight("#ffffff", 1.95));
-    const keyLight = new THREE.DirectionalLight("#ffffff", 1.7);
-    keyLight.position.set(4, 7, 5);
-    scene.add(keyLight);
-
-    const bounds = {
-      x: 5.6,
-      y: 3.8,
-      z: 4.4,
-    };
-    const intelExtent = [
-      Math.min(...chartModels.map((m) => m.intelligence)),
-      Math.max(...chartModels.map((m) => m.intelligence)),
-    ] as const;
-    const latencyExtent = [
-      Math.min(...chartModels.map((m) => m.e2eLatency)),
-      Math.max(...chartModels.map((m) => m.e2eLatency)),
-    ] as const;
-    const costExtent = [
-      Math.min(...chartModels.map((m) => m.costToRun)),
-      Math.max(...chartModels.map((m) => m.costToRun)),
-    ] as const;
-    const intelScale = scaleLinear().domain([intelExtent[0] - 2, intelExtent[1] + 2]).range([-bounds.y / 2, bounds.y / 2]);
-    const latencyScale = scaleLog().domain([latencyExtent[1] * 1.12, latencyExtent[0] * 0.88]).range([-bounds.x / 2, bounds.x / 2]);
-    const costScale = scaleLog().domain([costExtent[1] * 1.12, costExtent[0] * 0.88]).range([-bounds.z / 2, bounds.z / 2]);
-    const positionFor = (m: Model) =>
-      new THREE.Vector3(latencyScale(m.e2eLatency), intelScale(m.intelligence), costScale(m.costToRun));
-
-    const frame = new THREE.Group();
-    scene.add(frame);
-    const gridMaterial = new THREE.LineBasicMaterial({ color: "#e5e5e1", transparent: true, opacity: 0.55 });
-    const axisMaterial = new THREE.LineBasicMaterial({ color: "#8f8f8a", transparent: true, opacity: 0.84 });
-    const addLine = (a: THREE.Vector3, b: THREE.Vector3, material = gridMaterial) => {
-      const geometry = new THREE.BufferGeometry().setFromPoints([a, b]);
-      const line = new THREE.Line(geometry, material);
-      frame.add(line);
-      return line;
-    };
-
-    const x0 = -bounds.x / 2;
-    const x1 = bounds.x / 2;
-    const y0 = -bounds.y / 2;
-    const y1 = bounds.y / 2;
-    const z0 = -bounds.z / 2;
-    const z1 = bounds.z / 2;
-    for (let i = 0; i <= 5; i += 1) {
-      const x = x0 + (bounds.x * i) / 5;
-      const z = z0 + (bounds.z * i) / 5;
-      addLine(new THREE.Vector3(x, y0, z0), new THREE.Vector3(x, y0, z1));
-      addLine(new THREE.Vector3(x0, y0, z), new THREE.Vector3(x1, y0, z));
-      addLine(new THREE.Vector3(x0, y0 + (bounds.y * i) / 5, z0), new THREE.Vector3(x0, y0 + (bounds.y * i) / 5, z1));
-      addLine(new THREE.Vector3(x0, y0 + (bounds.y * i) / 5, z0), new THREE.Vector3(x1, y0 + (bounds.y * i) / 5, z0));
-    }
-    addLine(new THREE.Vector3(x0, y0, z0), new THREE.Vector3(x1 + 0.5, y0, z0), axisMaterial);
-    addLine(new THREE.Vector3(x0, y0, z0), new THREE.Vector3(x0, y1 + 0.42, z0), axisMaterial);
-    addLine(new THREE.Vector3(x0, y0, z0), new THREE.Vector3(x0, y0, z1 + 0.5), axisMaterial);
-    frame.add(axisLabel("faster", new THREE.Vector3(x1 + 0.9, y0, z0)));
-    frame.add(axisLabel("smarter", new THREE.Vector3(x0, y1 + 0.72, z0)));
-    frame.add(axisLabel("cheaper", new THREE.Vector3(x0, y0, z1 + 0.9)));
-
-    const frontierPoints = chartModels.filter((m) => frontierSlugs.has(m.slug)).map(positionFor);
-    const frontierMaterial = new THREE.MeshBasicMaterial({
-      color: FRONTIER_3D_COLOR,
-      transparent: true,
-      opacity: 0.032,
-      depthWrite: false,
-      side: THREE.DoubleSide,
-    });
-    const envelope = new THREE.Mesh(
-      frontierEnvelopeGeometry(frontierPoints, x0, x1, z0, z1),
-      frontierMaterial,
-    );
-    scene.add(envelope);
-
-    const sphereGeometry = new THREE.SphereGeometry(0.085, 32, 16);
-    const ringGeometry = new THREE.TorusGeometry(0.14, 0.012, 10, 36);
-    const pickables: THREE.Mesh[] = [];
-    const objectBySlug = new Map<string, THREE.Mesh>();
-    const baseMaterialBySlug = new Map<string, THREE.MeshStandardMaterial>();
-    const ringBySlug = new Map<string, THREE.Mesh>();
-
-    chartModels.forEach((m) => {
-      const isFrontier = frontierSlugs.has(m.slug);
-      const material = new THREE.MeshStandardMaterial({
-        color: new THREE.Color(isFrontier ? FRONTIER_3D_COLOR : DOMINATED_3D_COLOR),
-        roughness: 0.62,
-        metalness: 0.02,
-        transparent: true,
-        opacity: isFrontier ? 0.98 : 0.18,
-      });
-      const sphere = new THREE.Mesh(sphereGeometry, material);
-      sphere.position.copy(positionFor(m));
-      sphere.scale.setScalar(isFrontier ? 1.42 : 0.62);
-      sphere.userData.slug = m.slug;
-      scene.add(sphere);
-      pickables.push(sphere);
-      objectBySlug.set(m.slug, sphere);
-      baseMaterialBySlug.set(m.slug, material);
-
-      if (isFrontier) {
-        const ring = new THREE.Mesh(
-          ringGeometry,
-          new THREE.MeshBasicMaterial({ color: "#0a0a0a", transparent: true, opacity: 0.46 }),
-        );
-        ring.position.copy(sphere.position);
-        ring.rotation.x = Math.PI / 2;
-        scene.add(ring);
-        ringBySlug.set(m.slug, ring);
-
-        const label = makeTextSprite(m.displayName, "#0a0a0a");
-        label.position.copy(sphere.position).add(new THREE.Vector3(0.08, 0.18, 0.05));
-        label.userData.isLabel = true;
-        scene.add(label);
-      }
-    });
-
-    const pointer = new THREE.Vector2(20, 20);
-    const raycaster = new THREE.Raycaster();
-    let localHover: string | null = null;
-    let raf = 0;
-
-    const resize = () => {
-      const width = Math.max(1, host.clientWidth);
-      const height = Math.max(1, host.clientHeight);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-      renderer.setSize(width, height, true);
-    };
-
-    const setVisualHover = (slug: string | null) => {
-      objectBySlug.forEach((sphere, key) => {
-        const material = baseMaterialBySlug.get(key);
-        if (!material) return;
-        const isFrontier = frontierSlugs.has(key);
-        const isHovered = slug === key;
-        const hasHover = slug !== null;
-        sphere.scale.setScalar(isHovered ? 1.9 : isFrontier ? 1.42 : 0.62);
-        material.opacity = isHovered ? 1 : hasHover && !isFrontier ? 0.1 : isFrontier ? 0.98 : 0.18;
-      });
-      ringBySlug.forEach((ring, key) => {
-        ring.scale.setScalar(slug === key ? 1.25 : 1);
-      });
-    };
-
-    const animate = () => {
-      raf = window.requestAnimationFrame(animate);
-      controls.update();
-      raycaster.setFromCamera(pointer, camera);
-      const hit = raycaster.intersectObjects(pickables, false)[0];
-      const nextHover = hit ? String(hit.object.userData.slug) : null;
-      if (nextHover !== localHover) {
-        localHover = nextHover;
-        hoveredRef.current = nextHover;
-        onHoverRef.current(nextHover);
-      }
-      setVisualHover(hoveredRef.current);
-      renderer.render(scene, camera);
-    };
-
-    const onPointerMove = (event: PointerEvent) => {
-      const rect = renderer.domElement.getBoundingClientRect();
-      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-    };
-    const onPointerLeave = () => {
-      pointer.set(20, 20);
-      localHover = null;
-      hoveredRef.current = null;
-      onHoverRef.current(null);
-    };
-
-    resize();
-    animate();
-    window.addEventListener("resize", resize);
-    renderer.domElement.addEventListener("pointermove", onPointerMove);
-    renderer.domElement.addEventListener("pointerleave", onPointerLeave);
-
-    return () => {
-      window.cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
-      renderer.domElement.removeEventListener("pointermove", onPointerMove);
-      renderer.domElement.removeEventListener("pointerleave", onPointerLeave);
-      controls.dispose();
-      renderer.dispose();
-      scene.traverse((object) => {
-        if (object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Sprite) {
-          object.geometry?.dispose();
-          if (Array.isArray(object.material)) {
-            object.material.forEach((material) => material.dispose());
-          } else {
-            object.material?.dispose();
-          }
-        }
-      });
-      host.removeChild(renderer.domElement);
-    };
-  }, [models]);
-
-  return (
-    <div className="h-full w-full relative overflow-hidden bg-[#fbfbfa]">
-      <div ref={hostRef} className="absolute inset-0" aria-label="3D model frontier chart" />
-      <div className="absolute left-3 top-3 z-10 bg-white/90 border border-ink-100 rounded-lg px-3 py-2 text-[11px] text-ink-700 leading-snug">
-        <div className="font-medium text-ink-900">True 3D frontier</div>
-        <div>{frontierCount} non-dominated models across intelligence, latency, and cost.</div>
-      </div>
-      <div className="absolute left-3 bottom-3 z-10 flex items-center gap-4 text-[10px] uppercase tracking-[0.12em] text-ink-500">
-        <span>Drag to rotate</span>
-        <span>Scroll to zoom</span>
-        <span>Hover a point</span>
-      </div>
-    </div>
-  );
-}
-
-// Detail leaderboard --------------------------------------------------------
-
-type SortKey = "intelligence" | "e2eLatency" | "costToRun";
-
-function MetricStrip({
+function RankingView({
   models,
   hoveredSlug,
   onHover,
@@ -919,70 +687,52 @@ function MetricStrip({
   hoveredSlug: string | null;
   onHover: (s: string | null) => void;
 }) {
-  const [sortKey, setSortKey] = useState<SortKey>("intelligence");
-
-  const sorted = useMemo(() => {
-    const cp = [...models];
-    if (sortKey === "intelligence") cp.sort((a, b) => b.intelligence - a.intelligence);
-    if (sortKey === "e2eLatency") cp.sort((a, b) => a.e2eLatency - b.e2eLatency);
-    if (sortKey === "costToRun") cp.sort((a, b) => a.costToRun - b.costToRun);
-    return cp;
-  }, [sortKey, models]);
-
-  const intelMin = Math.min(...models.map((m) => m.intelligence));
-  const intelMax = Math.max(...models.map((m) => m.intelligence));
-  const latMin = Math.min(...models.map((m) => m.e2eLatency));
-  const latMax = Math.max(...models.map((m) => m.e2eLatency));
-  const costMin = Math.min(...models.map((m) => m.costToRun));
-  const costMax = Math.max(...models.map((m) => m.costToRun));
-  const intelScale = scaleLinear().domain([intelMin - 4, intelMax + 2]).range([0, 1]).clamp(true);
-  const latScale = scaleLog().domain([latMin * 0.85, latMax * 1.15]).range([1, 0]).clamp(true);
-  const costScale = scaleLog().domain([costMin * 0.85, costMax * 1.15]).range([1, 0]).clamp(true);
-
-  const Pill = ({ k, label }: { k: SortKey; label: string }) => (
-    <button
-      onClick={() => setSortKey(k)}
-      className={`text-[11px] px-3 py-1 rounded-full border transition-colors ${
-        sortKey === k
-          ? "border-ink-900 bg-ink-900 text-white"
-          : "border-ink-100 text-ink-500 hover:text-ink-900 hover:border-ink-300"
-      }`}
-    >
-      {label}
-    </button>
-  );
+  const ranked = useMemo(() => scoreRankings(models.filter(isRankableModel)), [models]);
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex flex-wrap items-center gap-2 mb-3 shrink-0">
-        <span className="text-[11px] uppercase tracking-[0.12em] text-ink-300 mr-1">Sort</span>
-        <Pill k="intelligence" label="Intelligence" />
-        <Pill k="e2eLatency" label="Fastest" />
-        <Pill k="costToRun" label="Cheapest" />
+      <div className="shrink-0 flex items-end justify-between gap-6 mb-3">
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.14em] text-ink-300 mb-1">Cost to get coding work done</div>
+          <div className="text-[13px] text-ink-600">
+            Expected dollars to finish a unit of coding work, retries included. Models far
+            from the coding frontier fail more, so they retry their way to expensive.
+          </div>
+          <div className="mt-1 text-[11px] text-ink-400 tabular-nums">
+            work cost = attempts × (compute&nbsp;$ + time × ${HOURLY_RATE}/hr) ·
+            attempts = 1 ÷ (coding index ÷ frontier)<sup>{FAILURE_EXPONENT}</sup> ·
+            one work unit ≈ {CALLS_PER_WORK_UNIT.toLocaleString()} model calls
+          </div>
+        </div>
+        <div className="text-[11px] text-ink-400 tabular-nums">
+          {ranked.length} complete models
+        </div>
       </div>
 
-      <div className="grid grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-x-6 px-1 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-300 shrink-0">
+      <div className="grid grid-cols-[3rem_minmax(0,1.45fr)_minmax(7rem,0.75fr)_4.5rem_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-x-6 px-1 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-300 shrink-0">
+        <div>Rank</div>
         <div>Model</div>
-        <div>Intelligence</div>
-        <div>Speed (E2E)</div>
-        <div>Cost to run</div>
+        <div>Work cost</div>
+        <div className="text-right">Attempts</div>
+        <div>Coding</div>
+        <div>Speed</div>
+        <div>Cost</div>
       </div>
 
       <div className="flex-1 min-h-0 overflow-auto divide-y divide-ink-100">
-        {sorted.map((m) => {
+        {ranked.map((m) => {
           const c = colorFor(m.creator);
           const isHovered = hoveredSlug === m.slug;
-          const tier = tierFor(m.intelligence);
-          const dim = tier.emphasis < 0.5 ? "opacity-60" : "";
+          const rowClass = "grid grid-cols-[3rem_minmax(0,1.45fr)_minmax(7rem,0.75fr)_4.5rem_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-x-6 items-center py-2 px-1 rounded transition-colors " +
+            (isHovered ? "bg-ink-50" : "");
           return (
             <div
               key={m.slug}
               onMouseEnter={() => onHover(m.slug)}
               onMouseLeave={() => onHover(null)}
-              className={`grid grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-x-6 items-center py-2 px-1 rounded transition-colors ${
-                isHovered ? "bg-ink-50" : ""
-              } ${dim}`}
+              className={rowClass}
             >
+              <div className="text-[13px] font-semibold tabular-nums text-ink-700">{m.rank}</div>
               <div className="flex items-center gap-3 min-w-0">
                 <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: c }} />
                 <span className="text-[13px] font-medium text-ink-900 truncate">
@@ -990,9 +740,13 @@ function MetricStrip({
                 </span>
                 <span className="text-[10px] text-ink-300 shrink-0">{m.creator}</span>
               </div>
-              <Track value={m.intelligence.toFixed(1)} pos={intelScale(m.intelligence)} color={c} />
-              <Track value={`${m.e2eLatency.toFixed(0)}s`} pos={latScale(m.e2eLatency)} color={c} />
-              <Track value={fmtCost(m.costToRun)} pos={costScale(m.costToRun)} color={c} />
+              <ScoreCell workCost={m.workCost} pos={m.scorePos} color={c} />
+              <div className="text-right tabular-nums text-[12px] font-medium text-ink-700">
+                {m.attempts >= 10 ? m.attempts.toFixed(0) : m.attempts.toFixed(1)}×
+              </div>
+              <Track value={m.codingIndex.toFixed(1)} pos={m.codingScore / 100} color={c} />
+              <Track value={m.e2eLatency.toFixed(0) + "s"} pos={m.speedScore / 100} color={c} />
+              <Track value={fmtCost(m.costToRun)} pos={m.costScore / 100} color={c} />
             </div>
           );
         })}
@@ -1001,21 +755,40 @@ function MetricStrip({
   );
 }
 
-function Track({ value, pos, color }: { value: string; pos: number; color: string }) {
+function ScoreCell({ workCost, pos, color }: { workCost: number; pos: number; color: string }) {
+  const pct = Math.max(0, Math.min(1, pos)) * 100;
+  return (
+    <div className="flex items-center gap-3">
+      <div className="relative h-1.5 w-full bg-ink-100 rounded-full overflow-hidden">
+        <div
+          className="absolute inset-y-0 left-0 rounded-full"
+          style={{ width: pct + "%", backgroundColor: color }}
+        />
+      </div>
+      <div className="shrink-0 w-12 text-right tabular-nums text-[13px] font-semibold text-ink-900">
+        {fmtCost(workCost)}
+      </div>
+    </div>
+  );
+}
+
+function Track({ value, pos, color, muted = false }: { value: string; pos: number; color: string; muted?: boolean }) {
   const pct = Math.max(0, Math.min(1, pos)) * 100;
   return (
     <div className="flex items-center gap-3">
       <div className="relative h-px w-full bg-ink-100">
-        <div
-          className="absolute -top-[3px] h-[7px] w-[7px] rounded-full transition-all duration-300"
-          style={{
-            left: `calc(${pct}% - 3.5px)`,
-            backgroundColor: color,
-            boxShadow: `0 0 0 3px ${color}14`,
-          }}
-        />
+        {!muted && (
+          <div
+            className="absolute -top-[3px] h-[7px] w-[7px] rounded-full transition-all duration-300"
+            style={{
+              left: "calc(" + pct + "% - 3.5px)",
+              backgroundColor: color,
+              boxShadow: "0 0 0 3px " + color + "14",
+            }}
+          />
+        )}
       </div>
-      <div className="shrink-0 w-14 text-right tabular-nums text-[12px] text-ink-700 font-medium">
+      <div className={"shrink-0 w-16 text-right tabular-nums text-[12px] font-medium " + (muted ? "text-ink-300" : "text-ink-700")}>
         {value}
       </div>
     </div>
@@ -1039,7 +812,7 @@ function HoverCard({ m }: { m: Model }) {
         <span className="text-ink-500">Intelligence</span>
         <span className="text-ink-900 text-right">{m.intelligence.toFixed(1)}</span>
         <span className="text-ink-500">Cost to run eval</span>
-        <span className="text-ink-900 text-right">${m.costToRun.toFixed(0)}</span>
+        <span className="text-ink-900 text-right">{fmtHoverCost(m.costToRun)}</span>
         <span className="text-ink-500">E2E latency</span>
         <span className="text-ink-900 text-right">{m.e2eLatency.toFixed(1)} s</span>
       </div>
@@ -1049,12 +822,16 @@ function HoverCard({ m }: { m: Model }) {
 
 // Page shell ---------------------------------------------------------------
 
-type Tab = "chart" | "frontier3d" | "detail";
+type Tab = "chart" | "ranking";
 
 export default function App() {
   const [tab, setTab] = useState<Tab>("chart");
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
-  const models = useMemo(() => snapshot.models.filter(isChartableModel), []);
+  const models = useMemo(
+    () => snapshot.models.filter((m) => isPositiveFinite(m.intelligence) && isPositiveFinite(m.e2eLatency)),
+    [],
+  );
+  const chartModels = useMemo(() => models.filter(isChartableModel), [models]);
   const fetchedDate = new Date(snapshot.fetchedAt).toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
@@ -1095,7 +872,7 @@ export default function App() {
               Updated {fetchedDate}
             </div>
             <div className="text-[10px] tracking-wide text-ink-300 uppercase">
-              Source: Artificial Analysis · {models.length} models
+              Source: Artificial Analysis · {chartModels.length} priced · {models.length} tracked
             </div>
           </div>
         </header>
@@ -1108,18 +885,16 @@ export default function App() {
         <div className="shrink-0 flex items-center justify-between gap-6 border-b border-ink-100 py-3">
           <div className="flex items-center gap-6">
             <TabBtn id="chart" label="Map" />
-            <TabBtn id="frontier3d" label="3D Frontier" />
-            <TabBtn id="detail" label="Detail" />
+            <TabBtn id="ranking" label="Coding ranking" />
           </div>
           <div className="flex items-center gap-6">
-            {tab === "frontier3d" ? (
+            {tab === "chart" && <FrontierLegend />}
+            {tab === "chart" && <CostLegend />}
+            {tab === "ranking" && (
               <div className="text-[11px] text-ink-700">
-                Green points are true frontier models. Pale points are dominated.
+                Lower is better: expected $ to get coding work done, retries included.
               </div>
-            ) : (
-              <FrontierLegend />
             )}
-            {tab !== "frontier3d" && <CostLegend />}
           </div>
         </div>
 
@@ -1134,18 +909,8 @@ export default function App() {
               {hovered && <HoverCard m={hovered} />}
             </div>
           )}
-          {tab === "frontier3d" && (
-            <div className="h-full w-full relative">
-              <ThreeFrontierChart
-                models={models}
-                onHover={setHoveredSlug}
-                hoveredSlug={hoveredSlug}
-              />
-              {hovered && <HoverCard m={hovered} />}
-            </div>
-          )}
-          {tab === "detail" && (
-            <MetricStrip
+          {tab === "ranking" && (
+            <RankingView
               models={models}
               hoveredSlug={hoveredSlug}
               onHover={setHoveredSlug}
@@ -1156,7 +921,8 @@ export default function App() {
         <footer className="shrink-0 pt-3 mt-2 border-t border-ink-100 text-[10px] text-ink-300 tracking-wide leading-snug">
           Cost to run = USD spent on the AA Intelligence Index eval suite (input +
           reasoning + answer tokens × per-token price). E2E latency = median wall-clock
-          per query (input + reasoning + answer phases).
+          per query (input + reasoning + answer phases). Coding index = AA Coding Index
+          (LiveCodeBench, SciCode, Terminal-Bench Hard, τ²-bench).
         </footer>
       </div>
     </div>
