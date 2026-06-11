@@ -603,7 +603,7 @@ function CostLegend() {
 // factor, so the last few points of frontier capability matter enormously and
 // far-from-frontier models effectively never finish.
 
-const ATTEMPTS_DOUBLE_EVERY = 3; // coding-index points below frontier per doubling
+const ATTEMPTS_DOUBLE_EVERY = 2.5; // coding-index points below frontier per doubling
 const HOURLY_RATE = 100; // USD per hour of human/agent supervision
 const CALLS_PER_WORK_UNIT = 1000; // sequential model calls in one unit of work
 
