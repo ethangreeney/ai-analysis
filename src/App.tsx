@@ -30,6 +30,7 @@ type ChartableModel = Model & { costToRun: number };
 const fmtCost = (c: number | null) =>
   c == null
     ? "Pending"
+    : c >= 1e6 ? `$${(c / 1e6).toFixed(1)}M`
     : c >= 1000 ? `$${(c / 1000).toFixed(1)}k` : c >= 100 ? `$${Math.round(c)}` : `$${c.toFixed(0)}`;
 
 const fmtHoverCost = (c: number | null) =>
@@ -592,17 +593,17 @@ function CostLegend() {
 // Score = expected dollars to get a unit of coding work done, retries included.
 //
 //   work cost = attempts × (compute cost + wall-clock time × hourly rate)
-//   attempts  = 1 ÷ success rate
-//   success rate = (coding index ÷ frontier coding index) ^ FAILURE_EXPONENT
+//   attempts  = 2 ^ ((frontier coding index − coding index) ÷ ATTEMPTS_DOUBLE_EVERY)
 //
 // Capability input is the AA Coding Index (LiveCodeBench, SciCode,
 // Terminal-Bench Hard, τ²-bench) — general intelligence overrates models that
 // benchmark well but code poorly. Compute cost is the AA eval-suite cost.
-// Wall-clock = e2e latency × calls per work unit. The exponent encodes that
-// capability is convex: a model at 60% of frontier doesn't take 1.6× longer —
-// it mostly fails and retries.
+// Wall-clock = e2e latency × calls per work unit. Attempts are exponential in
+// the gap to the frontier: each point below costs the same multiplicative
+// factor, so the last few points of frontier capability matter enormously and
+// far-from-frontier models effectively never finish.
 
-const FAILURE_EXPONENT = 4;
+const ATTEMPTS_DOUBLE_EVERY = 3; // coding-index points below frontier per doubling
 const HOURLY_RATE = 100; // USD per hour of human/agent supervision
 const CALLS_PER_WORK_UNIT = 1000; // sequential model calls in one unit of work
 
@@ -626,8 +627,21 @@ interface RankedModel extends RankableModel {
   costScore: number;
 }
 
+// Past 10 years of expected wall-clock the honest answer is "never" — the
+// model is too far from the frontier to finish, not merely slow.
 const fmtHours = (h: number) =>
-  h >= 1000 ? `${(h / 1000).toFixed(1)}k h` : h >= 10 ? `${Math.round(h)}h` : `${h.toFixed(1)}h`;
+  h >= 87600 ? "never"
+  : h >= 17520 ? `${Math.round(h / 8760)}y`
+  : h >= 100 ? `${Math.round(h / 24)}d`
+  : h >= 10 ? `${Math.round(h)}h` : `${h.toFixed(1)}h`;
+
+const fmtAttempts = (a: number) =>
+  a >= 1000 ? `${Math.round(a / 1000)}k×` : a >= 10 ? `${a.toFixed(0)}×` : `${a.toFixed(1)}×`;
+
+// Mobile shows rank/model/score/attempts; the per-axis tracks join at md+.
+const rankGridClass =
+  "grid grid-cols-[1.5rem_minmax(0,1.5fr)_minmax(5.5rem,0.9fr)_3rem] gap-x-3 " +
+  "md:grid-cols-[3rem_minmax(0,1.45fr)_minmax(7rem,0.75fr)_4.5rem_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] md:gap-x-6";
 
 function expandedExtent(values: number[]) {
   const min = Math.min(...values);
@@ -659,8 +673,7 @@ function scoreRankings(models: RankableModel[], mode: RankMode): RankedModel[] {
   const frontier = Math.max(...models.map((m) => m.codingIndex));
 
   const scored = models.map((m) => {
-    const successRate = Math.min(1, (m.codingIndex / frontier) ** FAILURE_EXPONENT);
-    const attempts = 1 / successRate;
+    const attempts = 2 ** ((frontier - m.codingIndex) / ATTEMPTS_DOUBLE_EVERY);
     const wallClockHours = (m.e2eLatency * CALLS_PER_WORK_UNIT) / 3600;
     const workCost = attempts * (m.costToRun + wallClockHours * HOURLY_RATE);
     const workTime = attempts * wallClockHours;
@@ -716,7 +729,7 @@ function RankingView({
 
   return (
     <div className="h-full flex flex-col">
-      <div className="shrink-0 flex items-end justify-between gap-6 mb-3">
+      <div className="shrink-0 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-6 mb-3">
         <div>
           <div className="text-[11px] uppercase tracking-[0.14em] text-ink-300 mb-1">
             {mode === "cost" ? "Cost to get coding work done" : "Time to get coding work done"}
@@ -732,36 +745,36 @@ function RankingView({
             ) : (
               <>work time = attempts × latency</>
             )}{" "}
-            · attempts = 1 ÷ (coding index ÷ frontier)<sup>{FAILURE_EXPONENT}</sup> ·
+            · attempts double every {ATTEMPTS_DOUBLE_EVERY} coding-index points below the frontier ·
             one work unit ≈ {CALLS_PER_WORK_UNIT.toLocaleString()} model calls
           </div>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-row items-center gap-3 sm:flex-col sm:items-end sm:gap-2 shrink-0">
           <div className="flex items-center gap-1 border border-ink-100 rounded-full p-0.5">
             <ModeBtn id="cost" label="Cost" />
             <ModeBtn id="time" label="Time" />
           </div>
-          <div className="text-[11px] text-ink-400 tabular-nums">
+          <div className="hidden sm:block text-[11px] text-ink-400 tabular-nums">
             {ranked.length} complete models
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-[3rem_minmax(0,1.45fr)_minmax(7rem,0.75fr)_4.5rem_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-x-6 px-1 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-300 shrink-0">
+      <div className={rankGridClass + " px-1 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-300 shrink-0"}>
         <div>Rank</div>
         <div>Model</div>
         <div>{mode === "cost" ? "Work cost" : "Work time"}</div>
         <div className="text-right">Attempts</div>
-        <div>Coding</div>
-        <div>Speed</div>
-        <div>Cost</div>
+        <div className="hidden md:block">Coding</div>
+        <div className="hidden md:block">Speed</div>
+        <div className="hidden md:block">Cost</div>
       </div>
 
       <div className="flex-1 min-h-0 overflow-auto divide-y divide-ink-100">
         {ranked.map((m) => {
           const c = colorFor(m.creator);
           const isHovered = hoveredSlug === m.slug;
-          const rowClass = "grid grid-cols-[3rem_minmax(0,1.45fr)_minmax(7rem,0.75fr)_4.5rem_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-x-6 items-center py-2 px-1 rounded transition-colors " +
+          const rowClass = rankGridClass + " items-center py-2 px-1 rounded transition-colors " +
             (isHovered ? "bg-ink-50" : "");
           return (
             <div
@@ -776,7 +789,7 @@ function RankingView({
                 <span className="text-[13px] font-medium text-ink-900 truncate">
                   {m.displayName}
                 </span>
-                <span className="text-[10px] text-ink-300 shrink-0">{m.creator}</span>
+                <span className="hidden sm:inline text-[10px] text-ink-300 shrink-0">{m.creator}</span>
               </div>
               <ScoreCell
                 value={mode === "cost" ? fmtCost(m.workCost) : fmtHours(m.workTime)}
@@ -784,11 +797,17 @@ function RankingView({
                 color={c}
               />
               <div className="text-right tabular-nums text-[12px] font-medium text-ink-700">
-                {m.attempts >= 10 ? m.attempts.toFixed(0) : m.attempts.toFixed(1)}×
+                {fmtAttempts(m.attempts)}
               </div>
-              <Track value={m.codingIndex.toFixed(1)} pos={m.codingScore / 100} color={c} />
-              <Track value={m.e2eLatency.toFixed(0) + "s"} pos={m.speedScore / 100} color={c} />
-              <Track value={fmtCost(m.costToRun)} pos={m.costScore / 100} color={c} />
+              <div className="hidden md:block">
+                <Track value={m.codingIndex.toFixed(1)} pos={m.codingScore / 100} color={c} />
+              </div>
+              <div className="hidden md:block">
+                <Track value={m.e2eLatency.toFixed(0) + "s"} pos={m.speedScore / 100} color={c} />
+              </div>
+              <div className="hidden md:block">
+                <Track value={fmtCost(m.costToRun)} pos={m.costScore / 100} color={c} />
+              </div>
             </div>
           );
         })}
@@ -895,7 +914,7 @@ export default function App() {
 
   return (
     <div className="h-screen w-full flex flex-col overflow-hidden">
-      <div className="mx-auto max-w-[1400px] w-full px-8 md:px-12 pt-6 pb-3 flex-1 flex flex-col min-h-0">
+      <div className="mx-auto max-w-[1400px] w-full px-4 sm:px-8 md:px-12 pt-6 pb-3 flex-1 flex flex-col min-h-0">
         <header className="shrink-0 flex items-end justify-between gap-8 pb-4 border-b border-ink-100">
           <div>
             <div className="text-[10px] uppercase tracking-[0.18em] text-ink-500 mb-1.5">
@@ -909,7 +928,7 @@ export default function App() {
               Pick the highest, rightmost dot your budget allows.
             </p>
           </div>
-          <div className="text-right shrink-0">
+          <div className="hidden sm:block text-right shrink-0">
             <div className="text-[10px] tracking-wide text-ink-300 uppercase">
               Updated {fetchedDate}
             </div>
@@ -929,7 +948,7 @@ export default function App() {
             <TabBtn id="chart" label="Map" />
             <TabBtn id="ranking" label="Coding ranking" />
           </div>
-          <div className="flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-6">
             {tab === "chart" && <FrontierLegend />}
             {tab === "chart" && <CostLegend />}
             {tab === "ranking" && (
@@ -942,12 +961,14 @@ export default function App() {
 
         <main className="flex-1 min-h-0 mt-3 relative">
           {tab === "chart" && (
-            <div className="h-full w-full relative">
-              <MapChart
-                models={models}
-                onHover={setHoveredSlug}
-                hoveredSlug={hoveredSlug}
-              />
+            <div className="h-full w-full relative overflow-x-auto">
+              <div className="h-full min-w-[860px]">
+                <MapChart
+                  models={models}
+                  onHover={setHoveredSlug}
+                  hoveredSlug={hoveredSlug}
+                />
+              </div>
               {hovered && <HoverCard m={hovered} />}
             </div>
           )}
