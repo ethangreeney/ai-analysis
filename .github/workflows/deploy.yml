@@ -1,14 +1,18 @@
 # Fetch fresh Artificial Analysis data, rebuild, and deploy to GitHub Pages.
-# Runs on every push to main and on a schedule, so the published site keeps
-# itself up to date. If the fetch fails (AA markup change, API outage), the
-# job fails before deploy and the site keeps serving the last good build.
+#
+# AA has no webhook, so the schedule polls hourly — but it only builds and
+# deploys when the fetched data actually differs from what the live site
+# serves (the build publishes its own models.json snapshot to diff against).
+# Pushes and manual runs always deploy. If the fetch fails (AA markup change,
+# API outage), the job fails before deploy and the site keeps serving the
+# last good build.
 name: Deploy
 
 on:
   push:
     branches: [main]
   schedule:
-    - cron: "0 */6 * * *" # every 6 hours
+    - cron: "7 * * * *" # hourly, off the top-of-hour congestion
   workflow_dispatch:
 
 permissions:
@@ -42,12 +46,31 @@ jobs:
           AA_API_KEY: ${{ secrets.AA_API_KEY }}
           SKIP_SCREENSHOT: "1"
 
+      # Compare fresh data (minus its fetch timestamp) against the snapshot
+      # the live site serves. First deploy: the curl 404s and we deploy.
+      - name: Check whether the data changed
+        id: check
+        run: |
+          live=$(curl -sf https://ethangreeney.github.io/ai-analysis/models.json | jq -S 'del(.fetchedAt)' || echo "")
+          fresh=$(jq -S 'del(.fetchedAt)' src/data/models.json)
+          if [ "$live" = "$fresh" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No new data — skipping deploy."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build
-        run: npm run build -- --base=/ai-analysis/
+        if: github.event_name != 'schedule' || steps.check.outputs.changed == 'true'
+        run: |
+          npm run build -- --base=/ai-analysis/
+          cp src/data/models.json dist/models.json
 
       - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'schedule' || steps.check.outputs.changed == 'true'
         with:
           path: dist
 
       - id: deployment
+        if: github.event_name != 'schedule' || steps.check.outputs.changed == 'true'
         uses: actions/deploy-pages@v4

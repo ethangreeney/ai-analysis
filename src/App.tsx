@@ -611,15 +611,23 @@ type RankableModel = ChartableModel & { codingIndex: number };
 const isRankableModel = (m: Model): m is RankableModel =>
   isChartableModel(m) && isPositiveFinite(m.codingIndex);
 
+// "cost" ranks by expected dollars (best value); "time" ranks by expected
+// wall-clock (best model, money no object — the hourly rate drops out).
+type RankMode = "cost" | "time";
+
 interface RankedModel extends RankableModel {
   rank: number;
   attempts: number;
   workCost: number;
-  scorePos: number; // 0..1, cheaper work = closer to 1
+  workTime: number; // expected hours to finish a work unit, retries included
+  scorePos: number; // 0..1, less cost/time = closer to 1
   codingScore: number;
   speedScore: number;
   costScore: number;
 }
+
+const fmtHours = (h: number) =>
+  h >= 1000 ? `${(h / 1000).toFixed(1)}k h` : h >= 10 ? `${Math.round(h)}h` : `${h.toFixed(1)}h`;
 
 function expandedExtent(values: number[]) {
   const min = Math.min(...values);
@@ -628,7 +636,7 @@ function expandedExtent(values: number[]) {
   return { min, max };
 }
 
-function scoreRankings(models: RankableModel[]): RankedModel[] {
+function scoreRankings(models: RankableModel[], mode: RankMode): RankedModel[] {
   if (!models.length) return [];
 
   const codingExtent = expandedExtent(models.map((m) => m.codingIndex));
@@ -653,13 +661,15 @@ function scoreRankings(models: RankableModel[]): RankedModel[] {
   const scored = models.map((m) => {
     const successRate = Math.min(1, (m.codingIndex / frontier) ** FAILURE_EXPONENT);
     const attempts = 1 / successRate;
-    const timeCost = (m.e2eLatency * CALLS_PER_WORK_UNIT / 3600) * HOURLY_RATE;
-    const workCost = attempts * (m.costToRun + timeCost);
+    const wallClockHours = (m.e2eLatency * CALLS_PER_WORK_UNIT) / 3600;
+    const workCost = attempts * (m.costToRun + wallClockHours * HOURLY_RATE);
+    const workTime = attempts * wallClockHours;
     return {
       ...m,
       rank: 0,
       attempts,
       workCost,
+      workTime,
       scorePos: 0,
       codingScore: codingScale(m.codingIndex),
       speedScore: speedScale(m.e2eLatency),
@@ -667,15 +677,18 @@ function scoreRankings(models: RankableModel[]): RankedModel[] {
     };
   });
 
-  const workExtent = expandedExtent(scored.map((m) => m.workCost));
+  const metric = (m: { workCost: number; workTime: number }) =>
+    mode === "cost" ? m.workCost : m.workTime;
+
+  const workExtent = expandedExtent(scored.map(metric));
   const workScale = scaleLog()
     .domain([workExtent.max, workExtent.min])
     .range([0, 1])
     .clamp(true);
 
   return scored
-    .sort((a, b) => a.workCost - b.workCost || b.codingIndex - a.codingIndex)
-    .map((m, i) => ({ ...m, rank: i + 1, scorePos: workScale(m.workCost) }));
+    .sort((a, b) => metric(a) - metric(b) || b.codingIndex - a.codingIndex)
+    .map((m, i) => ({ ...m, rank: i + 1, scorePos: workScale(metric(m)) }));
 }
 
 function RankingView({
@@ -687,32 +700,57 @@ function RankingView({
   hoveredSlug: string | null;
   onHover: (s: string | null) => void;
 }) {
-  const ranked = useMemo(() => scoreRankings(models.filter(isRankableModel)), [models]);
+  const [mode, setMode] = useState<RankMode>("cost");
+  const ranked = useMemo(() => scoreRankings(models.filter(isRankableModel), mode), [models, mode]);
+
+  const ModeBtn = ({ id, label }: { id: RankMode; label: string }) => (
+    <button
+      onClick={() => setMode(id)}
+      className={`px-2.5 py-1 text-[11px] rounded-full transition-colors ${
+        mode === id ? "bg-ink-900 text-white font-medium" : "text-ink-500 hover:text-ink-900"
+      }`}
+    >
+      {label}
+    </button>
+  );
 
   return (
     <div className="h-full flex flex-col">
       <div className="shrink-0 flex items-end justify-between gap-6 mb-3">
         <div>
-          <div className="text-[11px] uppercase tracking-[0.14em] text-ink-300 mb-1">Cost to get coding work done</div>
+          <div className="text-[11px] uppercase tracking-[0.14em] text-ink-300 mb-1">
+            {mode === "cost" ? "Cost to get coding work done" : "Time to get coding work done"}
+          </div>
           <div className="text-[13px] text-ink-600">
-            Expected dollars to finish a unit of coding work, retries included. Models far
-            from the coding frontier fail more, so they retry their way to expensive.
+            {mode === "cost"
+              ? "Expected dollars to finish a unit of coding work, retries included. The best value for money."
+              : "Expected hours to finish a unit of coding work, retries included. The best model, money no object."}
           </div>
           <div className="mt-1 text-[11px] text-ink-400 tabular-nums">
-            work cost = attempts × (compute&nbsp;$ + time × ${HOURLY_RATE}/hr) ·
-            attempts = 1 ÷ (coding index ÷ frontier)<sup>{FAILURE_EXPONENT}</sup> ·
+            {mode === "cost" ? (
+              <>work cost = attempts × (compute&nbsp;$ + time × ${HOURLY_RATE}/hr)</>
+            ) : (
+              <>work time = attempts × latency</>
+            )}{" "}
+            · attempts = 1 ÷ (coding index ÷ frontier)<sup>{FAILURE_EXPONENT}</sup> ·
             one work unit ≈ {CALLS_PER_WORK_UNIT.toLocaleString()} model calls
           </div>
         </div>
-        <div className="text-[11px] text-ink-400 tabular-nums">
-          {ranked.length} complete models
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-1 border border-ink-100 rounded-full p-0.5">
+            <ModeBtn id="cost" label="Cost" />
+            <ModeBtn id="time" label="Time" />
+          </div>
+          <div className="text-[11px] text-ink-400 tabular-nums">
+            {ranked.length} complete models
+          </div>
         </div>
       </div>
 
       <div className="grid grid-cols-[3rem_minmax(0,1.45fr)_minmax(7rem,0.75fr)_4.5rem_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-x-6 px-1 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-300 shrink-0">
         <div>Rank</div>
         <div>Model</div>
-        <div>Work cost</div>
+        <div>{mode === "cost" ? "Work cost" : "Work time"}</div>
         <div className="text-right">Attempts</div>
         <div>Coding</div>
         <div>Speed</div>
@@ -740,7 +778,11 @@ function RankingView({
                 </span>
                 <span className="text-[10px] text-ink-300 shrink-0">{m.creator}</span>
               </div>
-              <ScoreCell workCost={m.workCost} pos={m.scorePos} color={c} />
+              <ScoreCell
+                value={mode === "cost" ? fmtCost(m.workCost) : fmtHours(m.workTime)}
+                pos={m.scorePos}
+                color={c}
+              />
               <div className="text-right tabular-nums text-[12px] font-medium text-ink-700">
                 {m.attempts >= 10 ? m.attempts.toFixed(0) : m.attempts.toFixed(1)}×
               </div>
@@ -755,7 +797,7 @@ function RankingView({
   );
 }
 
-function ScoreCell({ workCost, pos, color }: { workCost: number; pos: number; color: string }) {
+function ScoreCell({ value, pos, color }: { value: string; pos: number; color: string }) {
   const pct = Math.max(0, Math.min(1, pos)) * 100;
   return (
     <div className="flex items-center gap-3">
@@ -766,7 +808,7 @@ function ScoreCell({ workCost, pos, color }: { workCost: number; pos: number; co
         />
       </div>
       <div className="shrink-0 w-12 text-right tabular-nums text-[13px] font-semibold text-ink-900">
-        {fmtCost(workCost)}
+        {value}
       </div>
     </div>
   );
@@ -892,7 +934,7 @@ export default function App() {
             {tab === "chart" && <CostLegend />}
             {tab === "ranking" && (
               <div className="text-[11px] text-ink-700">
-                Lower is better: expected $ to get coding work done, retries included.
+                Lower is better: expected cost or time to get coding work done, retries included.
               </div>
             )}
           </div>
