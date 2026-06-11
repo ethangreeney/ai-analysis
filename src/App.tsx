@@ -613,8 +613,9 @@ const isRankableModel = (m: Model): m is RankableModel =>
   isChartableModel(m) && isPositiveFinite(m.codingIndex);
 
 // "cost" ranks by expected dollars (best value); "time" ranks by expected
-// wall-clock (best model, money no object — the hourly rate drops out).
-type RankMode = "cost" | "time";
+// wall-clock (best model, money no object — the hourly rate drops out);
+// "intel" ranks by the raw AA Intelligence Index, no formula at all.
+type RankMode = "cost" | "time" | "intel";
 
 interface RankedModel extends RankableModel {
   rank: number;
@@ -690,6 +691,17 @@ function scoreRankings(models: RankableModel[], mode: RankMode): RankedModel[] {
     };
   });
 
+  if (mode === "intel") {
+    const intelExtent = expandedExtent(scored.map((m) => m.intelligence));
+    const intelScale = scaleLinear()
+      .domain([intelExtent.min, intelExtent.max])
+      .range([0, 1])
+      .clamp(true);
+    return scored
+      .sort((a, b) => b.intelligence - a.intelligence || b.codingIndex - a.codingIndex)
+      .map((m, i) => ({ ...m, rank: i + 1, scorePos: intelScale(m.intelligence) }));
+  }
+
   const metric = (m: { workCost: number; workTime: number }) =>
     mode === "cost" ? m.workCost : m.workTime;
 
@@ -732,27 +744,40 @@ function RankingView({
       <div className="shrink-0 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-6 mb-3">
         <div>
           <div className="text-[11px] uppercase tracking-[0.14em] text-ink-300 mb-1">
-            {mode === "cost" ? "Cost to get coding work done" : "Time to get coding work done"}
+            {mode === "cost"
+              ? "Cost to get coding work done"
+              : mode === "time"
+                ? "Time to get coding work done"
+                : "Raw intelligence"}
           </div>
           <div className="text-[13px] text-ink-600">
             {mode === "cost"
               ? "Expected dollars to finish a unit of coding work, retries included. The best value for money."
-              : "Expected hours to finish a unit of coding work, retries included. The best model, money no object."}
+              : mode === "time"
+                ? "Expected hours to finish a unit of coding work, retries included. The best model, money no object."
+                : "The AA Intelligence Index, straight from the benchmarks. No formula — higher is better."}
           </div>
           <div className="mt-1 text-[11px] text-ink-400 tabular-nums">
-            {mode === "cost" ? (
-              <>work cost = attempts × (compute&nbsp;$ + time × ${HOURLY_RATE}/hr)</>
+            {mode === "intel" ? (
+              <>score = Artificial Analysis Intelligence Index, unweighted</>
             ) : (
-              <>work time = attempts × latency</>
-            )}{" "}
-            · attempts double every {ATTEMPTS_DOUBLE_EVERY} coding-index points below the frontier ·
-            one work unit ≈ {CALLS_PER_WORK_UNIT.toLocaleString()} model calls
+              <>
+                {mode === "cost" ? (
+                  <>work cost = attempts × (compute&nbsp;$ + time × ${HOURLY_RATE}/hr)</>
+                ) : (
+                  <>work time = attempts × latency</>
+                )}{" "}
+                · attempts double every {ATTEMPTS_DOUBLE_EVERY} coding-index points below the frontier ·
+                one work unit ≈ {CALLS_PER_WORK_UNIT.toLocaleString()} model calls
+              </>
+            )}
           </div>
         </div>
         <div className="flex flex-row items-center gap-3 sm:flex-col sm:items-end sm:gap-2 shrink-0">
           <div className="flex items-center gap-1 border border-ink-100 rounded-full p-0.5">
             <ModeBtn id="cost" label="Cost" />
             <ModeBtn id="time" label="Time" />
+            <ModeBtn id="intel" label="Intelligence" />
           </div>
           <div className="hidden sm:block text-[11px] text-ink-400 tabular-nums">
             {ranked.length} complete models
@@ -763,7 +788,7 @@ function RankingView({
       <div className={rankGridClass + " px-1 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-300 shrink-0"}>
         <div>Rank</div>
         <div>Model</div>
-        <div>{mode === "cost" ? "Work cost" : "Work time"}</div>
+        <div>{mode === "cost" ? "Work cost" : mode === "time" ? "Work time" : "Intelligence"}</div>
         <div className="text-right">Attempts</div>
         <div className="hidden md:block">Coding</div>
         <div className="hidden md:block">Speed</div>
@@ -792,7 +817,13 @@ function RankingView({
                 <span className="hidden sm:inline text-[10px] text-ink-300 shrink-0">{m.creator}</span>
               </div>
               <ScoreCell
-                value={mode === "cost" ? fmtCost(m.workCost) : fmtHours(m.workTime)}
+                value={
+                  mode === "cost"
+                    ? fmtCost(m.workCost)
+                    : mode === "time"
+                      ? fmtHours(m.workTime)
+                      : m.intelligence.toFixed(1)
+                }
                 pos={m.scorePos}
                 color={c}
               />
@@ -953,7 +984,7 @@ export default function App() {
             {tab === "chart" && <CostLegend />}
             {tab === "ranking" && (
               <div className="text-[11px] text-ink-700">
-                Lower is better: expected cost or time to get coding work done, retries included.
+                Rank by expected cost or time to get coding work done, or by raw intelligence.
               </div>
             )}
           </div>
