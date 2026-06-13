@@ -585,7 +585,7 @@ const isRankableModel = (m: Model): m is RankableModel =>
 
 // "cost" ranks by expected dollars (best value); "time" ranks by expected
 // wall-clock (best model, money no object — the hourly rate drops out);
-// "intel" ranks by the raw AA Intelligence Index, no formula at all.
+// "intel" ranks by the raw AA Coding Index, no formula at all.
 type RankMode = "cost" | "time" | "intel";
 
 interface RankedModel extends RankableModel {
@@ -633,14 +633,14 @@ function scoreRankings(models: RankableModel[], mode: RankMode): RankedModel[] {
   });
 
   if (mode === "intel") {
-    const intelExtent = expandedExtent(scored.map((m) => m.intelligence));
-    const intelScale = scaleLinear()
-      .domain([intelExtent.min, intelExtent.max])
+    const codingExtent = expandedExtent(scored.map((m) => m.codingIndex));
+    const codingScale = scaleLinear()
+      .domain([codingExtent.min, codingExtent.max])
       .range([0, 1])
       .clamp(true);
     return scored
-      .sort((a, b) => b.intelligence - a.intelligence || b.codingIndex - a.codingIndex)
-      .map((m, i) => ({ ...m, rank: i + 1, scorePos: intelScale(m.intelligence) }));
+      .sort((a, b) => b.codingIndex - a.codingIndex || b.intelligence - a.intelligence)
+      .map((m, i) => ({ ...m, rank: i + 1, scorePos: codingScale(m.codingIndex) }));
   }
 
   const metric = (m: { workCost: number; workTime: number }) =>
@@ -689,18 +689,18 @@ function RankingView({
               ? "Cost to get coding work done"
               : mode === "time"
                 ? "Time to get coding work done"
-                : "Raw intelligence"}
+                : "Raw coding ability"}
           </div>
           <div className="text-[13px] text-ink-600">
             {mode === "cost"
               ? "Expected dollars to finish a unit of coding work, retries included. The best value for money."
               : mode === "time"
                 ? "Expected hours to finish a unit of coding work, retries included. The best model, money no object."
-                : "The AA Intelligence Index, straight from the benchmarks. No formula — higher is better."}
+                : "The AA Coding Index, straight from the benchmarks. No formula — higher is better."}
           </div>
           <div className="mt-1 text-[11px] text-ink-400 tabular-nums">
             {mode === "intel" ? (
-              <>score = Artificial Analysis Intelligence Index, unweighted</>
+              <>score = Artificial Analysis Coding Index, unweighted</>
             ) : (
               <>
                 {mode === "cost" ? (
@@ -718,7 +718,7 @@ function RankingView({
           <div className="flex items-center gap-1 border border-ink-100 rounded-full p-0.5 w-fit">
             <ModeBtn id="cost" label="Cost" />
             <ModeBtn id="time" label="Time" />
-            <ModeBtn id="intel" label="Intelligence" />
+            <ModeBtn id="intel" label="Coding" />
           </div>
         </div>
       </div>
@@ -726,9 +726,9 @@ function RankingView({
       <div className={rankGridClass + " px-1 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-300 shrink-0"}>
         <div>Rank</div>
         <div>Model</div>
-        <div>{mode === "cost" ? "Work cost" : mode === "time" ? "Work time" : "Intelligence"}</div>
+        <div>{mode === "cost" ? "Work cost" : mode === "time" ? "Work time" : "Coding index"}</div>
         <div className="text-right">Attempts</div>
-        <div className="hidden md:block text-right">Coding</div>
+        <div className="hidden md:block text-right">{mode === "intel" ? "Intel" : "Coding"}</div>
         <div className="hidden md:block text-right">Speed</div>
         <div className="hidden md:block text-right">Cost</div>
       </div>
@@ -760,7 +760,7 @@ function RankingView({
                     ? fmtCost(m.workCost)
                     : mode === "time"
                       ? fmtHours(m.workTime)
-                      : m.intelligence.toFixed(1)
+                      : m.codingIndex.toFixed(1)
                 }
                 pos={m.scorePos}
                 color={c}
@@ -769,7 +769,7 @@ function RankingView({
                 {fmtAttempts(m.attempts)}
               </div>
               <div className="hidden md:block text-right tabular-nums text-[12px] text-ink-700">
-                {m.codingIndex.toFixed(1)}
+                {mode === "intel" ? m.intelligence.toFixed(1) : m.codingIndex.toFixed(1)}
               </div>
               <div className="hidden md:block text-right tabular-nums text-[12px] text-ink-700">
                 {m.e2eLatency.toFixed(0)}s
