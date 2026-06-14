@@ -16,6 +16,7 @@ interface Model {
   pricePerMillion: number;
   outputTokensPerSecond: number;
   ttft: number;
+  addedAt?: string;
 }
 
 interface Snapshot {
@@ -191,11 +192,17 @@ function MapChart({
   models,
   onHover,
   hoveredSlug,
+  matchedSlugs,
+  newestSlugs,
 }: {
   models: Model[];
   onHover: (slug: string | null) => void;
   hoveredSlug: string | null;
+  matchedSlugs: Set<string> | null;
+  newestSlugs: Set<string>;
 }) {
+  const searchActive = matchedSlugs !== null;
+  const isMatch = (slug: string) => !searchActive || matchedSlugs!.has(slug);
   const pricedModels = useMemo(() => models.filter(isChartableModel), [models]);
   const W = 1280;
   const H = 720;
@@ -273,11 +280,13 @@ function MapChart({
     })
     .join(" ");
 
-  const ordered = [...models].sort((a, b) => {
-    if (a.slug === hoveredSlug) return 1;
-    if (b.slug === hoveredSlug) return -1;
-    return a.intelligence - b.intelligence;
-  });
+  // Draw order = stacking: hovered on top, then newest (so its ring reads),
+  // then search matches, then by intelligence.
+  const priority = (m: Model) =>
+    m.slug === hoveredSlug ? 3 : newestSlugs.has(m.slug) ? 2 : searchActive && isMatch(m.slug) ? 1 : 0;
+  const ordered = [...models].sort(
+    (a, b) => priority(a) - priority(b) || a.intelligence - b.intelligence,
+  );
 
   const xTicks = [5, 10, 30, 100, 200].filter(
     (t) => t >= xScale.domain()[1] && t <= xScale.domain()[0],
@@ -427,10 +436,16 @@ function MapChart({
           const hasCost = isPositiveFinite(m.costToRun);
           const c = markerColor(m);
           const isHovered = hoveredSlug === m.slug;
-          const isOther = hoveredSlug !== null && !isHovered;
+          const isOther = isHovered
+            ? false
+            : searchActive
+              ? !isMatch(m.slug)
+              : hoveredSlug !== null;
+          const isLit = !isHovered && searchActive && isMatch(m.slug);
+          const isNew = newestSlugs.has(m.slug);
           const baseOp = opacityFor(m.intelligence);
           const op = isHovered ? 1 : isOther ? Math.min(0.18, baseOp) : baseOp;
-          const stroke = isHovered ? "#0a0a0a" : "white";
+          const stroke = isHovered || isLit ? "#0a0a0a" : "white";
           const strokeW = isHovered ? 1.5 : 1.2;
           return (
             <g
@@ -439,7 +454,31 @@ function MapChart({
               onMouseLeave={() => onHover(null)}
               style={{ cursor: "pointer" }}
             >
-              {isHovered && <circle cx={x} cy={y} r={r + 7} fill={c} fillOpacity={0.18} />}
+              {(isHovered || isLit) && <circle cx={x} cy={y} r={r + 7} fill={c} fillOpacity={0.18} />}
+              {isNew && (
+                <g opacity={isOther ? 0.15 : 1} style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}>
+                  {!isOther && (
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={r + 4}
+                      fill="none"
+                      stroke={colorFor(m.creator)}
+                      strokeWidth={1.5}
+                      className="newest-ping"
+                    />
+                  )}
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={r + 4}
+                    fill="none"
+                    stroke={colorFor(m.creator)}
+                    strokeWidth={1.5}
+                    opacity={0.9}
+                  />
+                </g>
+              )}
               <circle
                 cx={x}
                 cy={y}
@@ -461,7 +500,11 @@ function MapChart({
           const { x, y, r } = xy(m);
           const c = markerColor(m);
           const isHovered = hoveredSlug === l.slug;
-          const isOther = hoveredSlug !== null && !isHovered;
+          const isOther = isHovered
+            ? false
+            : searchActive
+              ? !isMatch(l.slug)
+              : hoveredSlug !== null;
           const dir = l.anchor === "start" ? 1 : -1;
           const fromX = x + dir * (r + 3);
           const toX = l.anchor === "start" ? l.x - 5 : l.x + 5;
@@ -484,7 +527,11 @@ function MapChart({
         {labels.map((l) => {
           const m = models.find((x) => x.slug === l.slug)!;
           const isHovered = hoveredSlug === l.slug;
-          const isOther = hoveredSlug !== null && !isHovered;
+          const isOther = isHovered
+            ? false
+            : searchActive
+              ? !isMatch(l.slug)
+              : hoveredSlug !== null;
           const tier = tierFor(m.intelligence, tiers);
           const baseOp = isHovered ? 1 : tier.emphasis;
           const op = isOther ? 0.12 : Math.max(0.72, baseOp);
@@ -508,6 +555,33 @@ function MapChart({
             </text>
           );
         })}
+
+        {/* "NEW" tag on the most recently added model(s) */}
+        {models
+          .filter((m) => newestSlugs.has(m.slug))
+          .map((m) => {
+            const { x, y, r } = xy(m);
+            const dim = searchActive && !isMatch(m.slug);
+            return (
+              <text
+                key={`new-${m.slug}`}
+                x={x}
+                y={y - r - 8}
+                textAnchor="middle"
+                fontSize={9}
+                fontWeight={700}
+                fill={colorFor(m.creator)}
+                letterSpacing={0.8}
+                opacity={dim ? 0.15 : 1}
+                stroke="#ffffff"
+                strokeWidth={2.5}
+                paintOrder="stroke"
+                style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
+              >
+                NEW
+              </text>
+            );
+          })}
       </g>
     </svg>
   );
@@ -661,11 +735,16 @@ function RankingView({
   models,
   hoveredSlug,
   onHover,
+  matchedSlugs,
+  newestSlugs,
 }: {
   models: Model[];
   hoveredSlug: string | null;
   onHover: (s: string | null) => void;
+  matchedSlugs: Set<string> | null;
+  newestSlugs: Set<string>;
 }) {
+  const searchActive = matchedSlugs !== null;
   const [mode, setMode] = useState<RankMode>("cost");
   const ranked = useMemo(() => scoreRankings(models.filter(isRankableModel), mode), [models, mode]);
 
@@ -737,8 +816,10 @@ function RankingView({
         {ranked.map((m) => {
           const c = colorFor(m.creator);
           const isHovered = hoveredSlug === m.slug;
-          const rowClass = rankGridClass + " items-center py-2 px-1 rounded transition-colors " +
-            (isHovered ? "bg-ink-50" : "");
+          const dimmed = searchActive && !matchedSlugs!.has(m.slug);
+          const isNew = newestSlugs.has(m.slug);
+          const rowClass = rankGridClass + " items-center py-2 px-1 rounded transition-all " +
+            (isHovered ? "bg-ink-50 " : "") + (dimmed ? "opacity-30" : "");
           return (
             <div
               key={m.slug}
@@ -752,6 +833,14 @@ function RankingView({
                 <span className="text-[13px] font-medium text-ink-900 truncate">
                   {m.displayName}
                 </span>
+                {isNew && (
+                  <span
+                    className="shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full"
+                    style={{ color: c, backgroundColor: c + "1a" }}
+                  >
+                    New
+                  </span>
+                )}
                 <span className="hidden sm:inline text-[10px] text-ink-300 shrink-0">{m.creator}</span>
               </div>
               <ScoreCell
@@ -829,6 +918,60 @@ function HoverCard({ m }: { m: Model }) {
   );
 }
 
+// Search — spotlight matching models, dim the rest. Shared across both tabs.
+function SearchBox({
+  value,
+  onChange,
+  matchCount,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  matchCount: number | null;
+}) {
+  const active = value.trim().length > 0;
+  return (
+    <div className="flex items-center gap-2">
+      <div className="relative">
+        <svg
+          className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#9b9b9b"
+          strokeWidth="2.4"
+          aria-hidden
+        >
+          <circle cx="11" cy="11" r="7" />
+          <line x1="21" y1="21" x2="16.5" y2="16.5" strokeLinecap="round" />
+        </svg>
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Search models…"
+          aria-label="Search models"
+          className="w-36 sm:w-48 text-[12px] pl-7 pr-7 py-1.5 rounded-full border border-ink-100 text-ink-900 placeholder:text-ink-300 focus:outline-none focus:border-ink-300 transition-colors"
+        />
+        {active && (
+          <button
+            onClick={() => onChange("")}
+            aria-label="Clear search"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-700 text-[14px] leading-none"
+          >
+            ×
+          </button>
+        )}
+      </div>
+      {active && (
+        <span className="hidden sm:inline text-[10px] tabular-nums text-ink-400 whitespace-nowrap">
+          {matchCount} {matchCount === 1 ? "match" : "matches"}
+        </span>
+      )}
+    </div>
+  );
+}
+
 // Page shell ---------------------------------------------------------------
 
 type Tab = "chart" | "ranking";
@@ -836,6 +979,7 @@ type Tab = "chart" | "ranking";
 export default function App() {
   const [tab, setTab] = useState<Tab>("chart");
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
   const models = useMemo(
     () => snapshot.models.filter((m) => isPositiveFinite(m.intelligence) && isPositiveFinite(m.e2eLatency)),
     [],
@@ -846,6 +990,42 @@ export default function App() {
     month: "short",
     day: "numeric",
   });
+
+  // Newest = model(s) sharing the latest addedAt — but only when that date is
+  // strictly newer than the oldest tracked model, so a uniformly-dated baseline
+  // flags nothing. Driven by first-seen stamping in the fetch pipeline.
+  const newestSlugs = useMemo(() => {
+    const dated = models.filter((m) => m.addedAt);
+    const times = dated.map((m) => Date.parse(m.addedAt!)).filter(Number.isFinite);
+    if (times.length < 2) return new Set<string>();
+    const max = Math.max(...times);
+    if (max === Math.min(...times)) return new Set<string>();
+    return new Set(dated.filter((m) => Date.parse(m.addedAt!) === max).map((m) => m.slug));
+  }, [models]);
+  const newestModel = useMemo(
+    () =>
+      models
+        .filter((m) => newestSlugs.has(m.slug))
+        .sort((a, b) => b.intelligence - a.intelligence)[0] ?? null,
+    [models, newestSlugs],
+  );
+
+  const matchedSlugs = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return null;
+    return new Set(
+      models
+        .filter(
+          (m) =>
+            m.displayName.toLowerCase().includes(q) ||
+            m.name.toLowerCase().includes(q) ||
+            m.creator.toLowerCase().includes(q),
+        )
+        .map((m) => m.slug),
+    );
+  }, [query, models]);
+  const matchCount = matchedSlugs?.size ?? null;
+
   const hovered = hoveredSlug ? models.find((m) => m.slug === hoveredSlug) : null;
 
   const TabBtn = ({ id, label }: { id: Tab; label: string }) => (
@@ -881,7 +1061,15 @@ export default function App() {
             <div className="text-[10px] tracking-wide text-ink-300 uppercase">
               Updated {fetchedDate}
             </div>
-            <div className="text-[10px] tracking-wide text-ink-300 uppercase">
+            {newestModel && (
+              <div className="mt-0.5 text-[10px] tracking-wide">
+                <span className="uppercase text-ink-300">Newest </span>
+                <span className="font-medium" style={{ color: colorFor(newestModel.creator) }}>
+                  {newestModel.displayName}
+                </span>
+              </div>
+            )}
+            <div className="mt-0.5 text-[10px] tracking-wide text-ink-300 uppercase">
               Source: Artificial Analysis · {chartModels.length} priced · {models.length} tracked
             </div>
           </div>
@@ -897,9 +1085,10 @@ export default function App() {
             <TabBtn id="chart" label="Map" />
             <TabBtn id="ranking" label="Coding ranking" />
           </div>
-          <div className="hidden md:flex items-center gap-6">
-            {tab === "chart" && <FrontierLegend />}
-            {tab === "chart" && <CostLegend />}
+          <div className="flex items-center gap-4 md:gap-6">
+            {tab === "chart" && <div className="hidden md:block"><FrontierLegend /></div>}
+            {tab === "chart" && <div className="hidden md:block"><CostLegend /></div>}
+            <SearchBox value={query} onChange={setQuery} matchCount={matchCount} />
           </div>
         </div>
 
@@ -911,6 +1100,8 @@ export default function App() {
                   models={models}
                   onHover={setHoveredSlug}
                   hoveredSlug={hoveredSlug}
+                  matchedSlugs={matchedSlugs}
+                  newestSlugs={newestSlugs}
                 />
               </div>
               {hovered && <HoverCard m={hovered} />}
@@ -921,6 +1112,8 @@ export default function App() {
               models={models}
               hoveredSlug={hoveredSlug}
               onHover={setHoveredSlug}
+              matchedSlugs={matchedSlugs}
+              newestSlugs={newestSlugs}
             />
           )}
         </main>

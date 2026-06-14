@@ -477,11 +477,41 @@ async function main() {
   if (pendingCost.length) console.warn("[warn] rows with pending cost-to-run:", pendingCost.join(", "));
   console.log(`built ${out.length} model rows`);
 
+  const fetchedAt = new Date().toISOString();
+
+  // First-seen tracking: keep each model's original addedAt, stamp newly seen
+  // slugs with this run's timestamp. Drives the "newest model" highlight in the
+  // UI — a model is flagged new from the refresh that first introduces it.
+  //
+  // Prior dates come from two sources: a small committed bootstrap map
+  // (first-seen.json) so the highlight works on the very first deploy, and the
+  // existing models.json (gitignored, hydrated from the live site in CI) which
+  // carries the accumulated history and takes precedence over the bootstrap.
+  let prior: Record<string, string> = {};
+  const SEED_PATH = resolve(__dirname, "first-seen.json");
+  if (existsSync(SEED_PATH)) {
+    try {
+      Object.assign(prior, JSON.parse(readFileSync(SEED_PATH, "utf8")) as Record<string, string>);
+    } catch {
+      console.warn("[warn] could not read first-seen.json bootstrap map");
+    }
+  }
+  if (existsSync(OUT_PATH)) {
+    try {
+      const old = JSON.parse(readFileSync(OUT_PATH, "utf8")) as {
+        models?: { slug: string; addedAt?: string }[];
+      };
+      for (const m of old.models ?? []) if (m.addedAt) prior[m.slug] = m.addedAt;
+    } catch {
+      console.warn("[warn] could not read prior models.json for addedAt tracking");
+    }
+  }
+  const stamped = out.map((m) => ({ ...m, addedAt: prior[m.slug] ?? fetchedAt }));
+  const fresh = stamped.filter((m) => m.addedAt === fetchedAt).map((m) => m.slug);
+  if (fresh.length) console.log(`newly added this run: ${fresh.join(", ")}`);
+
   mkdirSync(dirname(OUT_PATH), { recursive: true });
-  writeFileSync(
-    OUT_PATH,
-    JSON.stringify({ fetchedAt: new Date().toISOString(), models: out }, null, 2),
-  );
+  writeFileSync(OUT_PATH, JSON.stringify({ fetchedAt, models: stamped }, null, 2));
   console.log(`wrote ${OUT_PATH}`);
 
   if (process.env.SKIP_SCREENSHOT) {

@@ -40,6 +40,22 @@ jobs:
 
       - run: npm ci
 
+      # Hydrate from the live snapshot so first-seen ("newest model") history
+      # accumulates on the deployed data (models.json is gitignored, so checkout
+      # has none). The fetch carries each model's addedAt forward from this file
+      # and stamps only genuinely-new slugs. Only use the live copy once it
+      # actually carries first-seen data; otherwise the fetch falls back to the
+      # committed bootstrap map (scripts/first-seen.json) to seed the highlight.
+      - name: Hydrate first-seen history from live site
+        run: |
+          if curl -sf https://ethangreeney.github.io/ai-analysis/models.json -o /tmp/live.json \
+             && jq -e '[.models[].addedAt | values] | length > 0' /tmp/live.json >/dev/null 2>&1; then
+            mv /tmp/live.json src/data/models.json
+            echo "Hydrated first-seen history from live snapshot."
+          else
+            echo "No live first-seen data yet — fetch will bootstrap from scripts/first-seen.json."
+          fi
+
       - name: Fetch latest model data
         run: npm run fetch
         env:

@@ -10,3 +10,29 @@
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   }
 }
+
+/* Radar-ping on the most-recently-added model: a ring that expands and fades,
+   like a sonar ping, drawing a calm eye to what's new. */
+@keyframes newestPing {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(2.3);
+    opacity: 0;
+  }
+}
+.newest-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: newestPing 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .newest-ping {
+    animation: none;
+    opacity: 0;
+  }
+}
