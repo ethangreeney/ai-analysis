@@ -50,6 +50,7 @@ jobs:
         run: |
           if curl -sf https://ethangreeney.github.io/ai-analysis/models.json -o /tmp/live.json \
              && jq -e '[.models[].addedAt | values] | length > 0' /tmp/live.json >/dev/null 2>&1; then
+            mkdir -p src/data    # gitignored dir: absent on a fresh checkout
             mv /tmp/live.json src/data/models.json
             echo "Hydrated first-seen history from live snapshot."
           else
