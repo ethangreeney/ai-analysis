@@ -10,12 +10,13 @@ interface Model {
   creator: string;
   intelligence: number;
   codingIndex: number | null;
-  costToRun: number | null;
-  e2eLatency: number;
-  reasoningTime: number;
+  costPerTask: number | null;
+  e2eLatency: number | null;
+  reasoningTime: number | null;
   pricePerMillion: number;
   outputTokensPerSecond: number;
   ttft: number;
+  releaseDate?: string;
   addedAt?: string;
 }
 
@@ -26,21 +27,49 @@ interface Snapshot {
 
 const snapshot = data as Snapshot;
 
-type ChartableModel = Model & { costToRun: number };
-
-const fmtCost = (c: number | null) =>
-  c == null
-    ? "Pending"
-    : c >= 1e6 ? `$${(c / 1e6).toFixed(1)}M`
-    : c >= 1000 ? `$${(c / 1000).toFixed(1)}k` : c >= 100 ? `$${Math.round(c)}` : `$${c.toFixed(0)}`;
+type ChartableModel = Model & { costPerTask: number };
+type TimedModel = Model & { e2eLatency: number };
 
 const fmtHoverCost = (c: number | null) =>
-  c == null ? "Pending" : c >= 1000 ? `$${(c / 1000).toFixed(1)}k` : `$${c.toFixed(0)}`;
+  c == null ? "—" : c >= 1000 ? `$${(c / 1000).toFixed(1)}k` : `$${c.toFixed(c >= 10 ? 1 : 2)}`;
+const fmtHoverLatency = (seconds: number | null) => (seconds == null ? "—" : `${seconds.toFixed(1)} s`);
 
 const isPositiveFinite = (value: number | null | undefined): value is number =>
   typeof value === "number" && Number.isFinite(value) && value > 0;
-const isChartableModel = (m: Model): m is ChartableModel =>
-  isPositiveFinite(m.intelligence) && isPositiveFinite(m.costToRun) && isPositiveFinite(m.e2eLatency);
+const hasCost = (m: Model): m is ChartableModel => isPositiveFinite(m.costPerTask);
+const hasLatency = (m: Model): m is TimedModel => isPositiveFinite(m.e2eLatency);
+
+type YMetric = "intelligence" | "coding";
+
+interface MetricConfig {
+  label: string;
+  title: string;
+  axisLabel: string;
+  defaultMin: number;
+  defaultMax: number;
+  value: (m: Model) => number | null;
+}
+
+const Y_METRICS: Record<YMetric, MetricConfig> = {
+  intelligence: {
+    label: "AA Intelligence",
+    title: "Artificial Analysis Intelligence Index",
+    axisLabel: "AA INTELLIGENCE INDEX",
+    defaultMin: 0,
+    defaultMax: 65,
+    value: (m) => m.intelligence,
+  },
+  coding: {
+    label: "Coding",
+    title: "Coding Index",
+    axisLabel: "CODING INDEX",
+    defaultMin: 0,
+    defaultMax: 80,
+    value: (m) => m.codingIndex,
+  },
+};
+
+const RECENT_WINDOW_MONTHS = 3;
 
 interface Tier {
   label: string;
@@ -66,17 +95,14 @@ const RELATIVE_TIERS: TierBand[] = [
   { label: "Trailing", lower: 0, upper: 0.28, shade: "#ffffff", emphasis: 0.3 },
 ];
 
-const INTELLIGENCE_STEP = 5;
-const DEFAULT_INTELLIGENCE_MIN = 14;
-const DEFAULT_INTELLIGENCE_MAX = 65;
+const METRIC_STEP = 5;
 
-function intelligenceBounds(models: Model[]) {
-  const values = models.map((m) => m.intelligence).filter(isPositiveFinite);
-  const min = values.length ? Math.min(...values) : DEFAULT_INTELLIGENCE_MIN;
-  const max = values.length ? Math.max(...values) : DEFAULT_INTELLIGENCE_MAX;
+function metricBounds(values: number[], defaultMin: number, defaultMax: number) {
+  const min = values.length ? Math.min(...values) : defaultMin;
+  const max = values.length ? Math.max(...values) : defaultMax;
   return {
-    min: Math.min(DEFAULT_INTELLIGENCE_MIN, Math.floor((min - 2) / INTELLIGENCE_STEP) * INTELLIGENCE_STEP),
-    max: Math.max(DEFAULT_INTELLIGENCE_MAX, Math.ceil((max + 2) / INTELLIGENCE_STEP) * INTELLIGENCE_STEP),
+    min: Math.min(defaultMin, Math.floor((min - 2) / METRIC_STEP) * METRIC_STEP),
+    max: Math.max(defaultMax, Math.ceil((max + 2) / METRIC_STEP) * METRIC_STEP),
   };
 }
 
@@ -100,7 +126,7 @@ function tierFor(intel: number, tiers: Tier[]): Tier {
 const COST_COLD = [29, 96, 165]; // saturated deep blue (cheap)
 const COST_MID = [222, 195, 138]; // warm sand (mid)
 const COST_HOT = [185, 50, 38]; // saturated deep red (expensive)
-const PENDING_COST_COLOR = "#6d7781";
+const NEUTRAL_COST_COLOR = "#6d7781";
 function costColor(t: number): string {
   const u = Math.max(0, Math.min(1, t));
   const lerp = (a: number[], b: number[], k: number) =>
@@ -164,7 +190,7 @@ function placeLabels(
 
   for (const c of cands) {
     const offsets = [0, 18, -18, 36, -36, 54, -54, 72, -72, 90, -90];
-    let y = Math.max(12, Math.min(innerH - 12, c.baseY));
+    let y: number | null = null;
 
     for (const offset of offsets) {
       const candidateY = Math.max(12, Math.min(innerH - 12, c.baseY + offset));
@@ -177,6 +203,7 @@ function placeLabels(
         break;
       }
     }
+    if (y == null) continue;
     placed.push({
       slug: c.slug,
       x: c.x,
@@ -190,35 +217,45 @@ function placeLabels(
 
 function MapChart({
   models,
+  yMetric,
   onHover,
   hoveredSlug,
   matchedSlugs,
   newestSlugs,
 }: {
   models: Model[];
+  yMetric: YMetric;
   onHover: (slug: string | null) => void;
   hoveredSlug: string | null;
   matchedSlugs: Set<string> | null;
   newestSlugs: Set<string>;
 }) {
+  const metric = Y_METRICS[yMetric];
   const searchActive = matchedSlugs !== null;
   const isMatch = (slug: string) => !searchActive || matchedSlugs!.has(slug);
-  const pricedModels = useMemo(() => models.filter(isChartableModel), [models]);
+  const metricModels = useMemo(
+    () => models.filter((m) => isPositiveFinite(metric.value(m))),
+    [metric, models],
+  );
+  const timedModels = useMemo(() => metricModels.filter(hasLatency), [metricModels]);
+  const pricedModels = useMemo(() => metricModels.filter(hasCost), [metricModels]);
   const W = 1280;
   const H = 720;
   const M = { top: 28, right: 60, bottom: 56, left: 142 };
   const innerW = W - M.left - M.right;
   const innerH = H - M.top - M.bottom;
+  const untimedX = 18;
 
-  const { min: intelMin, max: intelMax } = intelligenceBounds(models);
-  const tiers = relativeTiers(intelMin, intelMax);
-  const yScale = scaleLinear().domain([intelMin, intelMax]).range([innerH, 0]);
+  const metricValues = metricModels.map((m) => metric.value(m)).filter(isPositiveFinite);
+  const { min: metricMin, max: metricMax } = metricBounds(metricValues, metric.defaultMin, metric.defaultMax);
+  const tiers = relativeTiers(metricMin, metricMax);
+  const yScale = scaleLinear().domain([metricMin, metricMax]).range([innerH, 0]);
 
-  // X = end-to-end latency, log scale, inverted so faster sits on the right.
+  // X = end-to-end response time, log scale, inverted so faster sits on the right.
   // Log fits the user-felt cost of waiting (perception is roughly logarithmic;
   // the UX thresholds 1s / 10s / 1min are each an order of magnitude apart),
   // matches industry convention, and keeps the right-side cluster legible.
-  const latencies = models.map((m) => m.e2eLatency);
+  const latencies = timedModels.map((m) => m.e2eLatency);
   const latMin = latencies.length ? Math.min(...latencies) : 1;
   const latMax = latencies.length ? Math.max(...latencies) : 10;
   const latLow = latMin === latMax ? latMin * 0.8 : latMin * 0.9;
@@ -227,70 +264,151 @@ function MapChart({
 
   // Cost → color via log scale. Multiplicative cost differences map to even
   // perceptual color steps, matching how budgets are felt.
-  const costs = pricedModels.map((m) => m.costToRun);
+  const costs = pricedModels.map((m) => m.costPerTask);
   const costMin = costs.length ? Math.min(...costs) : 1;
   const costMax = costs.length ? Math.max(...costs) : 10;
   const costLow = costMin === costMax ? costMin * 0.8 : costMin * 0.9;
   const costHigh = costMin === costMax ? costMax * 1.2 : costMax * 1.1;
   const costNorm = scaleLog().domain([costLow, costHigh]).range([0, 1]).clamp(true);
 
-  const sizeScale = scaleLinear().domain([intelMin, intelMax]).range([7, 12]).clamp(true);
+  const sizeScale = scaleLinear().domain([metricMin, metricMax]).range([7, 12]).clamp(true);
 
-  const opacityFor = (intel: number) => {
-    const t = (intel - intelMin) / (intelMax - intelMin);
+  const opacityFor = (value: number) => {
+    const t = (value - metricMin) / (metricMax - metricMin);
     return 0.4 + 0.55 * Math.max(0, Math.min(1, t));
   };
 
   const xy = (m: Model) => ({
-    x: xScale(m.e2eLatency),
-    y: yScale(m.intelligence),
-    r: sizeScale(m.intelligence),
+    x: hasLatency(m) ? xScale(m.e2eLatency) : untimedX,
+    y: yScale(metric.value(m)!),
+    r: sizeScale(metric.value(m)!),
   });
 
   const markerColor = (m: Model) =>
-    isPositiveFinite(m.costToRun) ? costColor(costNorm(m.costToRun)) : PENDING_COST_COLOR;
+    isPositiveFinite(m.costPerTask) ? costColor(costNorm(m.costPerTask)) : NEUTRAL_COST_COLOR;
 
-  const labels = useMemo(
-    () => placeLabels(models, xy, innerW, innerH, models),
-    [models],
-  );
-
-  // Pareto frontier on (intelligence ↑, latency ↓): models that no other
+  // Pareto frontier on (selected metric ↑, latency ↓): models that no other
   // model beats on both axes. Sweep from fastest to slowest, keeping any
-  // point that raises the running-best intelligence.
+  // point that raises the running-best metric value.
   const frontier = useMemo(() => {
-    const sweep = [...models].sort(
-      (a, b) => a.e2eLatency - b.e2eLatency || b.intelligence - a.intelligence,
+    const sweep = [...timedModels].sort(
+      (a, b) => a.e2eLatency - b.e2eLatency || metric.value(b)! - metric.value(a)!,
     );
     const keep: Model[] = [];
-    let bestIntel = -Infinity;
+    let bestValue = -Infinity;
     for (const m of sweep) {
-      if (m.intelligence > bestIntel) {
+      const value = metric.value(m)!;
+      if (value > bestValue) {
         keep.push(m);
-        bestIntel = m.intelligence;
+        bestValue = value;
       }
     }
-    return keep.sort((a, b) => a.intelligence - b.intelligence);
-  }, [models]);
+    return keep.sort((a, b) => metric.value(a)! - metric.value(b)!);
+  }, [metric, timedModels]);
+  const frontierSlugs = useMemo(() => new Set(frontier.map((m) => m.slug)), [frontier]);
+  const isFrontier = (slug: string) => frontierSlugs.has(slug);
 
-  const frontierPath = frontier
-    .map((m, i) => {
-      const { x, y } = xy(m);
-      return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(" ");
+  const recentCutoffMs = useMemo(() => {
+    const cutoff = new Date(snapshot.fetchedAt);
+    cutoff.setUTCMonth(cutoff.getUTCMonth() - RECENT_WINDOW_MONTHS);
+    return cutoff.getTime();
+  }, []);
 
-  // Draw order = stacking: hovered on top, then newest (so its ring reads),
-  // then search matches, then by intelligence.
+  const recentModels = useMemo(
+    () =>
+      metricModels
+        .filter((m) => m.releaseDate && Date.parse(m.releaseDate) >= recentCutoffMs)
+        .sort((a, b) => Date.parse(b.releaseDate!) - Date.parse(a.releaseDate!)),
+    [metricModels, recentCutoffMs],
+  );
+  const defaultRecentModels = useMemo(
+    () => recentModels.filter((m) => hasLatency(m) || hasCost(m) || newestSlugs.has(m.slug)),
+    [newestSlugs, recentModels],
+  );
+
+  const visibleModels = useMemo(() => {
+    const bySlug = new Map<string, Model>();
+    const add = (m: Model | undefined) => {
+      if (m) bySlug.set(m.slug, m);
+    };
+
+    frontier.forEach(add);
+    metricModels.filter((m) => newestSlugs.has(m.slug)).forEach(add);
+
+    if (searchActive) {
+      metricModels.filter((m) => isMatch(m.slug)).forEach(add);
+    } else {
+      defaultRecentModels.forEach(add);
+    }
+
+    if (hoveredSlug) add(metricModels.find((m) => m.slug === hoveredSlug));
+    return [...bySlug.values()];
+  }, [defaultRecentModels, frontier, hoveredSlug, matchedSlugs, metricModels, newestSlugs, searchActive]);
+
+  const labeledModels = useMemo(() => {
+    const bySlug = new Map<string, Model>();
+    const add = (m: Model | undefined) => {
+      if (m) bySlug.set(m.slug, m);
+    };
+
+    frontier.forEach(add);
+    metricModels
+      .filter((m) => newestSlugs.has(m.slug))
+      .forEach(add);
+    if (hoveredSlug) add(metricModels.find((m) => m.slug === hoveredSlug));
+
+    const visibleMatches = searchActive
+      ? metricModels
+          .filter((m) => isMatch(m.slug))
+          .sort((a, b) => metric.value(b)! - metric.value(a)!)
+          .slice(0, 80)
+      : [];
+    visibleMatches.forEach(add);
+
+    if (!searchActive) {
+      defaultRecentModels
+        .slice()
+        .sort((a, b) => metric.value(b)! - metric.value(a)!)
+        .slice(0, 6)
+        .forEach(add);
+    }
+
+    return [...bySlug.values()];
+  }, [defaultRecentModels, frontier, hoveredSlug, matchedSlugs, metric, metricModels, newestSlugs, searchActive]);
+
+  const labels = useMemo(
+    () => placeLabels(labeledModels, xy, innerW, innerH, visibleModels),
+    [labeledModels, visibleModels],
+  );
+
+  const frontierPoints = [...frontier].reverse().map((m) => xy(m));
+  const frontierPath = frontierPoints.length
+    ? [
+        `M0,${frontierPoints[0].y.toFixed(1)}`,
+        ...frontierPoints.map((p) => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`),
+      ].join(" ")
+    : "";
+
+  // Draw order = stacking: hovered on top, then newest, search matches,
+  // frontier, and finally the rest by selected metric value.
   const priority = (m: Model) =>
-    m.slug === hoveredSlug ? 3 : newestSlugs.has(m.slug) ? 2 : searchActive && isMatch(m.slug) ? 1 : 0;
-  const ordered = [...models].sort(
-    (a, b) => priority(a) - priority(b) || a.intelligence - b.intelligence,
+    m.slug === hoveredSlug
+      ? 4
+      : newestSlugs.has(m.slug)
+        ? 3
+        : searchActive && isMatch(m.slug)
+          ? 2
+          : isFrontier(m.slug)
+            ? 1
+            : 0;
+  const ordered = [...visibleModels].sort(
+    (a, b) => priority(a) - priority(b) || metric.value(a)! - metric.value(b)!,
   );
 
   const xTicks = [5, 10, 30, 100, 200].filter(
     (t) => t >= xScale.domain()[1] && t <= xScale.domain()[0],
   );
+  const hasVisibleUntimed = visibleModels.some((m) => !hasLatency(m));
 
   return (
     <svg
@@ -302,8 +420,8 @@ function MapChart({
       <g transform={`translate(${M.left}, ${M.top})`}>
         {/* Tier bands */}
         {tiers.map((t) => {
-          const yTop = yScale(Math.min(t.max, intelMax));
-          const yBottom = yScale(Math.max(t.min, intelMin));
+          const yTop = yScale(Math.min(t.max, metricMax));
+          const yBottom = yScale(Math.max(t.min, metricMin));
           const h = yBottom - yTop;
           if (h <= 0) return null;
           return (
@@ -325,9 +443,9 @@ function MapChart({
           );
         })}
 
-        {Array.from(
-          { length: Math.floor(intelMax / 10) - Math.ceil(intelMin / 10) + 1 },
-          (_, i) => (Math.ceil(intelMin / 10) + i) * 10,
+          {Array.from(
+          { length: Math.floor(metricMax / 10) - Math.ceil(metricMin / 10) + 1 },
+          (_, i) => (Math.ceil(metricMin / 10) + i) * 10,
         ).map((v) => (
           <line
             key={`yt-${v}`}
@@ -351,6 +469,31 @@ function MapChart({
             strokeWidth={1}
           />
         ))}
+
+        {hasVisibleUntimed && (
+          <g style={{ pointerEvents: "none" }}>
+            <line
+              x1={untimedX}
+              x2={untimedX}
+              y1={0}
+              y2={innerH}
+              stroke="#d8d8d8"
+              strokeWidth={1}
+              strokeDasharray="2 5"
+            />
+            <text
+              x={untimedX}
+              y={-8}
+              textAnchor="middle"
+              fontSize={9}
+              fontWeight={600}
+              fill="#9b9b9b"
+              letterSpacing={1.1}
+            >
+              TIMING N/A
+            </text>
+          </g>
+        )}
 
 
         {/* X axis */}
@@ -401,7 +544,7 @@ function MapChart({
           fill="#9b9b9b"
           letterSpacing={1.2}
         >
-          END-TO-END LATENCY
+          END-TO-END RESPONSE TIME
         </text>
 
         <text
@@ -412,7 +555,7 @@ function MapChart({
           fontWeight={500}
           letterSpacing={1.4}
         >
-          INTELLIGENCE INDEX
+          {metric.axisLabel}
         </text>
 
         {/* Pareto frontier — guide line through non-dominated points */}
@@ -425,7 +568,7 @@ function MapChart({
             strokeDasharray="5 5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            opacity={hoveredSlug ? 0.1 : 0.36}
+            opacity={hoveredSlug ? 0.22 : 0.52}
             style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
           />
         )}
@@ -433,8 +576,9 @@ function MapChart({
         {/* Dots */}
         {ordered.map((m) => {
           const { x, y, r } = xy(m);
-          const hasCost = isPositiveFinite(m.costToRun);
+          const hasCost = isPositiveFinite(m.costPerTask);
           const c = markerColor(m);
+          const onFrontier = isFrontier(m.slug);
           const isHovered = hoveredSlug === m.slug;
           const isOther = isHovered
             ? false
@@ -443,10 +587,17 @@ function MapChart({
               : hoveredSlug !== null;
           const isLit = !isHovered && searchActive && isMatch(m.slug);
           const isNew = newestSlugs.has(m.slug);
-          const baseOp = opacityFor(m.intelligence);
-          const op = isHovered ? 1 : isOther ? Math.min(0.18, baseOp) : baseOp;
+          const baseOp = opacityFor(metric.value(m)!);
+          const op = isHovered
+            ? 1
+            : isOther
+              ? onFrontier ? 0.38 : Math.min(0.12, baseOp)
+              : onFrontier || isLit || isNew
+                ? Math.max(0.86, baseOp)
+                : Math.min(0.5, baseOp);
           const stroke = isHovered || isLit ? "#0a0a0a" : "white";
-          const strokeW = isHovered ? 1.5 : 1.2;
+          const strokeW = isHovered ? 1.8 : onFrontier ? 1.6 : 1.2;
+          const dotR = onFrontier ? r + 1.4 : r;
           return (
             <g
               key={m.slug}
@@ -454,40 +605,15 @@ function MapChart({
               onMouseLeave={() => onHover(null)}
               style={{ cursor: "pointer" }}
             >
-              {(isHovered || isLit) && <circle cx={x} cy={y} r={r + 7} fill={c} fillOpacity={0.18} />}
-              {isNew && (
-                <g opacity={isOther ? 0.15 : 1} style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}>
-                  {!isOther && (
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={r + 4}
-                      fill="none"
-                      stroke={colorFor(m.creator)}
-                      strokeWidth={1.5}
-                      className="newest-ping"
-                    />
-                  )}
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={r + 4}
-                    fill="none"
-                    stroke={colorFor(m.creator)}
-                    strokeWidth={1.5}
-                    opacity={0.9}
-                  />
-                </g>
-              )}
+              {(isHovered || isLit) && <circle cx={x} cy={y} r={dotR + 7} fill={c} fillOpacity={0.18} />}
               <circle
                 cx={x}
                 cy={y}
-                r={r}
+                r={dotR}
                 fill={c}
-                fillOpacity={hasCost ? (isOther ? op : 0.88) : isOther ? 0.1 : 0.12}
+                fillOpacity={hasCost ? op : isOther ? 0.18 : onFrontier ? 0.72 : 0.54}
                 stroke={stroke}
-                strokeWidth={hasCost ? (isHovered ? strokeW : 1.6) : isHovered ? 2 : 1.7}
-                strokeDasharray={hasCost ? undefined : "3 2"}
+                strokeWidth={strokeW}
                 style={{ transition: "all 200ms ease-out" }}
               />
             </g>
@@ -505,6 +631,7 @@ function MapChart({
             : searchActive
               ? !isMatch(l.slug)
               : hoveredSlug !== null;
+          const onFrontier = isFrontier(l.slug);
           const dir = l.anchor === "start" ? 1 : -1;
           const fromX = x + dir * (r + 3);
           const toX = l.anchor === "start" ? l.x - 5 : l.x + 5;
@@ -515,9 +642,9 @@ function MapChart({
               d={`M${fromX.toFixed(1)},${y.toFixed(1)} L${toX.toFixed(1)},${l.y.toFixed(1)}`}
               fill="none"
               stroke={c}
-              strokeWidth={isHovered ? 1.3 : 1}
+              strokeWidth={isHovered || onFrontier ? 1.3 : 1}
               strokeLinecap="round"
-              opacity={isOther ? 0.08 : isHovered ? 0.58 : 0.34}
+              opacity={isOther ? (onFrontier ? 0.2 : 0.08) : isHovered ? 0.58 : onFrontier ? 0.44 : 0.24}
               style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
             />
           );
@@ -532,9 +659,10 @@ function MapChart({
             : searchActive
               ? !isMatch(l.slug)
               : hoveredSlug !== null;
-          const tier = tierFor(m.intelligence, tiers);
-          const baseOp = isHovered ? 1 : tier.emphasis;
-          const op = isOther ? 0.12 : Math.max(0.72, baseOp);
+          const onFrontier = isFrontier(l.slug);
+          const tier = tierFor(metric.value(m)!, tiers);
+          const baseOp = isHovered || onFrontier ? 1 : tier.emphasis;
+          const op = isOther ? (onFrontier ? 0.34 : 0.12) : Math.max(onFrontier ? 0.9 : 0.68, baseOp);
           return (
             <text
               key={`lbl-${l.slug}`}
@@ -542,8 +670,8 @@ function MapChart({
               y={l.y}
               textAnchor={l.anchor}
               dominantBaseline="middle"
-              fontSize={isHovered ? 12 : 11}
-              fontWeight={isHovered ? 600 : 500}
+              fontSize={isHovered || onFrontier ? 12 : 11}
+              fontWeight={isHovered || onFrontier ? 600 : 500}
               fill={isHovered ? "#0a0a0a" : "#2f2f2f"}
               fillOpacity={op}
               stroke="#ffffff"
@@ -558,7 +686,7 @@ function MapChart({
 
         {/* "NEW" tag on the most recently added model(s) */}
         {models
-          .filter((m) => newestSlugs.has(m.slug))
+          .filter((m) => newestSlugs.has(m.slug) && isPositiveFinite(metric.value(m)))
           .map((m) => {
             const { x, y, r } = xy(m);
             const dim = searchActive && !isMatch(m.slug);
@@ -621,304 +749,73 @@ function CostLegend() {
   const stops = [0, 0.25, 0.5, 0.75, 1].map((t) => costColor(t));
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[11px] text-ink-700">cheap</span>
+      <span className="text-[11px] text-ink-700">low cost/task</span>
       <div
         className="h-2 w-40 rounded-full"
         style={{
           background: `linear-gradient(to right, ${stops.join(", ")})`,
         }}
       />
-      <span className="text-[11px] text-ink-700">expensive</span>
-    </div>
-  );
-}
-
-// Ranking ---------------------------------------------------------------
-//
-// Score = expected dollars to get a unit of coding work done, retries included.
-//
-//   work cost = attempts × (compute cost + wall-clock time × hourly rate)
-//   attempts  = 2 ^ ((frontier coding index − coding index) ÷ ATTEMPTS_DOUBLE_EVERY)
-//
-// Capability input is the AA Coding Index (LiveCodeBench, SciCode,
-// Terminal-Bench Hard, τ²-bench) — general intelligence overrates models that
-// benchmark well but code poorly. Compute cost is the AA eval-suite cost.
-// Wall-clock = e2e latency × calls per work unit. Attempts are exponential in
-// the gap to the frontier: each point below costs the same multiplicative
-// factor, so the last few points of frontier capability matter enormously and
-// far-from-frontier models effectively never finish.
-
-const ATTEMPTS_DOUBLE_EVERY = 2.5; // coding-index points below frontier per doubling
-const HOURLY_RATE = 100; // USD per hour of human/agent supervision
-const CALLS_PER_WORK_UNIT = 1000; // sequential model calls in one unit of work
-
-type RankableModel = ChartableModel & { codingIndex: number };
-
-const isRankableModel = (m: Model): m is RankableModel =>
-  isChartableModel(m) && isPositiveFinite(m.codingIndex);
-
-// "cost" ranks by expected dollars (best value); "time" ranks by expected
-// wall-clock (best model, money no object — the hourly rate drops out);
-// "intel" ranks by the raw AA Coding Index, no formula at all.
-type RankMode = "cost" | "time" | "intel";
-
-interface RankedModel extends RankableModel {
-  rank: number;
-  attempts: number;
-  workCost: number;
-  workTime: number; // expected hours to finish a work unit, retries included
-  scorePos: number; // 0..1, better score = closer to 1
-}
-
-// Past 10 years of expected wall-clock the honest answer is "never" — the
-// model is too far from the frontier to finish, not merely slow.
-const fmtHours = (h: number) =>
-  h >= 87600 ? "never"
-  : h >= 17520 ? `${Math.round(h / 8760)}y`
-  : h >= 100 ? `${Math.round(h / 24)}d`
-  : h >= 10 ? `${Math.round(h)}h` : `${h.toFixed(1)}h`;
-
-const fmtAttempts = (a: number) =>
-  a >= 1000 ? `${Math.round(a / 1000)}k×` : a >= 10 ? `${a.toFixed(0)}×` : `${a.toFixed(1)}×`;
-
-// Mobile shows rank/model/score/attempts; the per-axis numbers join at md+.
-const rankGridClass =
-  "grid grid-cols-[1.5rem_minmax(0,1.5fr)_minmax(5.5rem,0.9fr)_3rem] gap-x-3 " +
-  "md:grid-cols-[3rem_minmax(0,1fr)_minmax(10rem,0.8fr)_5rem_5rem_5rem_5rem] md:gap-x-8";
-
-function expandedExtent(values: number[]) {
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  if (min === max) return { min: min * 0.9, max: max * 1.1 };
-  return { min, max };
-}
-
-function scoreRankings(models: RankableModel[], mode: RankMode): RankedModel[] {
-  if (!models.length) return [];
-
-  const frontier = Math.max(...models.map((m) => m.codingIndex));
-
-  const scored = models.map((m) => {
-    const attempts = 2 ** ((frontier - m.codingIndex) / ATTEMPTS_DOUBLE_EVERY);
-    const wallClockHours = (m.e2eLatency * CALLS_PER_WORK_UNIT) / 3600;
-    const workCost = attempts * (m.costToRun + wallClockHours * HOURLY_RATE);
-    const workTime = attempts * wallClockHours;
-    return { ...m, rank: 0, attempts, workCost, workTime, scorePos: 0 };
-  });
-
-  if (mode === "intel") {
-    const codingExtent = expandedExtent(scored.map((m) => m.codingIndex));
-    const codingScale = scaleLinear()
-      .domain([codingExtent.min, codingExtent.max])
-      .range([0, 1])
-      .clamp(true);
-    return scored
-      .sort((a, b) => b.codingIndex - a.codingIndex || b.intelligence - a.intelligence)
-      .map((m, i) => ({ ...m, rank: i + 1, scorePos: codingScale(m.codingIndex) }));
-  }
-
-  const metric = (m: { workCost: number; workTime: number }) =>
-    mode === "cost" ? m.workCost : m.workTime;
-
-  const workExtent = expandedExtent(scored.map(metric));
-  const workScale = scaleLog()
-    .domain([workExtent.max, workExtent.min])
-    .range([0, 1])
-    .clamp(true);
-
-  return scored
-    .sort((a, b) => metric(a) - metric(b) || b.codingIndex - a.codingIndex)
-    .map((m, i) => ({ ...m, rank: i + 1, scorePos: workScale(metric(m)) }));
-}
-
-function RankingView({
-  models,
-  hoveredSlug,
-  onHover,
-  matchedSlugs,
-  newestSlugs,
-}: {
-  models: Model[];
-  hoveredSlug: string | null;
-  onHover: (s: string | null) => void;
-  matchedSlugs: Set<string> | null;
-  newestSlugs: Set<string>;
-}) {
-  const searchActive = matchedSlugs !== null;
-  const [mode, setMode] = useState<RankMode>("cost");
-  const ranked = useMemo(() => scoreRankings(models.filter(isRankableModel), mode), [models, mode]);
-
-  const ModeBtn = ({ id, label }: { id: RankMode; label: string }) => (
-    <button
-      onClick={() => setMode(id)}
-      className={`px-2.5 py-1 text-[11px] rounded-full transition-colors ${
-        mode === id ? "bg-ink-900 text-white font-medium" : "text-ink-500 hover:text-ink-900"
-      }`}
-    >
-      {label}
-    </button>
-  );
-
-  return (
-    <div className="h-full flex flex-col">
-      <div className="shrink-0 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-6 mb-3">
-        <div>
-          <div className="text-[11px] uppercase tracking-[0.14em] text-ink-300 mb-1">
-            {mode === "cost"
-              ? "Cost to get coding work done"
-              : mode === "time"
-                ? "Time to get coding work done"
-                : "Raw coding ability"}
-          </div>
-          <div className="text-[13px] text-ink-600">
-            {mode === "cost"
-              ? "Expected dollars to finish a unit of coding work, retries included. The best value for money."
-              : mode === "time"
-                ? "Expected hours to finish a unit of coding work, retries included. The best model, money no object."
-                : "The AA Coding Index, straight from the benchmarks. No formula — higher is better."}
-          </div>
-          <div className="mt-1 text-[11px] text-ink-400 tabular-nums">
-            {mode === "intel" ? (
-              <>score = Artificial Analysis Coding Index, unweighted</>
-            ) : (
-              <>
-                {mode === "cost" ? (
-                  <>work cost = attempts × (compute&nbsp;$ + time × ${HOURLY_RATE}/hr)</>
-                ) : (
-                  <>work time = attempts × latency</>
-                )}{" "}
-                · attempts double every {ATTEMPTS_DOUBLE_EVERY} coding-index points below the frontier ·
-                one work unit ≈ {CALLS_PER_WORK_UNIT.toLocaleString()} model calls
-              </>
-            )}
-          </div>
-        </div>
-        <div className="shrink-0">
-          <div className="flex items-center gap-1 border border-ink-100 rounded-full p-0.5 w-fit">
-            <ModeBtn id="cost" label="Cost" />
-            <ModeBtn id="time" label="Time" />
-            <ModeBtn id="intel" label="Coding" />
-          </div>
-        </div>
-      </div>
-
-      <div className={rankGridClass + " px-1 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-300 shrink-0"}>
-        <div>Rank</div>
-        <div>Model</div>
-        <div>{mode === "cost" ? "Work cost" : mode === "time" ? "Work time" : "Coding index"}</div>
-        <div className="text-right">Attempts</div>
-        <div className="hidden md:block text-right">{mode === "intel" ? "Intel" : "Coding"}</div>
-        <div className="hidden md:block text-right">Speed</div>
-        <div className="hidden md:block text-right">Cost</div>
-      </div>
-
-      <div className="flex-1 min-h-0 overflow-auto divide-y divide-ink-100">
-        {ranked.map((m) => {
-          const c = colorFor(m.creator);
-          const isHovered = hoveredSlug === m.slug;
-          const dimmed = searchActive && !matchedSlugs!.has(m.slug);
-          const isNew = newestSlugs.has(m.slug);
-          const rowClass = rankGridClass + " items-center py-2 px-1 rounded transition-all " +
-            (isHovered ? "bg-ink-50 " : "") + (dimmed ? "opacity-30" : "");
-          return (
-            <div
-              key={m.slug}
-              onMouseEnter={() => onHover(m.slug)}
-              onMouseLeave={() => onHover(null)}
-              className={rowClass}
-            >
-              <div className="text-[13px] font-semibold tabular-nums text-ink-700">{m.rank}</div>
-              <div className="flex items-center gap-3 min-w-0">
-                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: c }} />
-                <span className="text-[13px] font-medium text-ink-900 truncate">
-                  {m.displayName}
-                </span>
-                {isNew && (
-                  <span
-                    className="shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full"
-                    style={{ color: c, backgroundColor: c + "1a" }}
-                  >
-                    New
-                  </span>
-                )}
-                <span className="hidden sm:inline text-[10px] text-ink-300 shrink-0">{m.creator}</span>
-              </div>
-              <ScoreCell
-                value={
-                  mode === "cost"
-                    ? fmtCost(m.workCost)
-                    : mode === "time"
-                      ? fmtHours(m.workTime)
-                      : m.codingIndex.toFixed(1)
-                }
-                pos={m.scorePos}
-                color={c}
-              />
-              <div className="text-right tabular-nums text-[12px] font-medium text-ink-700">
-                {fmtAttempts(m.attempts)}
-              </div>
-              <div className="hidden md:block text-right tabular-nums text-[12px] text-ink-700">
-                {mode === "intel" ? m.intelligence.toFixed(1) : m.codingIndex.toFixed(1)}
-              </div>
-              <div className="hidden md:block text-right tabular-nums text-[12px] text-ink-700">
-                {m.e2eLatency.toFixed(0)}s
-              </div>
-              <div className="hidden md:block text-right tabular-nums text-[12px] text-ink-700">
-                {fmtCost(m.costToRun)}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function ScoreCell({ value, pos, color }: { value: string; pos: number; color: string }) {
-  const pct = Math.max(0, Math.min(1, pos)) * 100;
-  return (
-    <div className="flex items-center gap-3">
-      <div className="relative h-1.5 w-full bg-ink-100 rounded-full overflow-hidden">
-        <div
-          className="absolute inset-y-0 left-0 rounded-full"
-          style={{ width: pct + "%", backgroundColor: color }}
-        />
-      </div>
-      <div className="shrink-0 w-12 text-right tabular-nums text-[13px] font-semibold text-ink-900">
-        {value}
-      </div>
+      <span className="text-[11px] text-ink-700">high</span>
     </div>
   );
 }
 
 function HoverCard({ m }: { m: Model }) {
+  const metrics = [
+    { label: "End-to-end response time", value: fmtHoverLatency(m.e2eLatency) },
+    { label: "Cost per task", value: fmtHoverCost(m.costPerTask) },
+    { label: "Intelligence", value: m.intelligence.toFixed(1) },
+  ];
+
   return (
     <div
-      className="pointer-events-none absolute top-3 right-3 bg-white border border-ink-100 rounded-lg px-4 py-3 max-w-[20rem] z-20"
-      style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)" }}
+      className="pointer-events-none absolute top-3 right-3 w-[18.5rem] rounded-xl border border-ink-100/80 bg-white/95 px-4 py-3.5 text-ink-900 z-20 backdrop-blur"
+      style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 18px 48px rgba(0,0,0,0.10)" }}
     >
-      <div className="flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: colorFor(m.creator) }} />
-        <span className="text-[11px] uppercase tracking-[0.12em] text-ink-500">{m.creator}</span>
+      <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-ink-500">
+        {m.creator}
       </div>
-      <div className="mt-1 text-[14px] font-medium text-ink-900 leading-tight">
+      <div className="mt-1.5 text-[15px] font-semibold leading-tight text-ink-900">
         {m.displayName}
       </div>
-      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[12px] tabular-nums">
-        <span className="text-ink-500">Intelligence</span>
-        <span className="text-ink-900 text-right">{m.intelligence.toFixed(1)}</span>
-        <span className="text-ink-500">Coding index</span>
-        <span className="text-ink-900 text-right">{m.codingIndex == null ? "—" : m.codingIndex.toFixed(1)}</span>
-        <span className="text-ink-500">Cost to run eval</span>
-        <span className="text-ink-900 text-right">{fmtHoverCost(m.costToRun)}</span>
-        <span className="text-ink-500">E2E latency</span>
-        <span className="text-ink-900 text-right">{m.e2eLatency.toFixed(1)} s</span>
+      <div className="mt-3 divide-y divide-ink-100 text-[12px]">
+        {metrics.map((metric) => (
+          <div key={metric.label} className="flex items-baseline justify-between gap-5 py-2 first:pt-0 last:pb-0">
+            <span className="text-ink-500">{metric.label}</span>
+            <span className="font-semibold tabular-nums text-ink-900">{metric.value}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-// Search — spotlight matching models, dim the rest. Shared across both tabs.
+function MetricSwitch({
+  value,
+  onChange,
+}: {
+  value: YMetric;
+  onChange: (value: YMetric) => void;
+}) {
+  return (
+    <div className="flex items-center gap-1 border border-ink-100 rounded-full p-0.5 w-fit">
+      {(Object.keys(Y_METRICS) as YMetric[]).map((metric) => (
+        <button
+          key={metric}
+          onClick={() => onChange(metric)}
+          className={`px-2.5 py-1 text-[11px] rounded-full transition-colors ${
+            value === metric ? "bg-ink-900 text-white font-medium" : "text-ink-500 hover:text-ink-900"
+          }`}
+        >
+          {Y_METRICS[metric].label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// Search — spotlight matching models, dim the rest.
 function SearchBox({
   value,
   onChange,
@@ -972,49 +869,55 @@ function SearchBox({
   );
 }
 
-// Page shell ---------------------------------------------------------------
-
-type Tab = "chart" | "ranking";
-
 export default function App() {
-  const [tab, setTab] = useState<Tab>("chart");
+  const [yMetric, setYMetric] = useState<YMetric>("intelligence");
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const models = useMemo(
-    () => snapshot.models.filter((m) => isPositiveFinite(m.intelligence) && isPositiveFinite(m.e2eLatency)),
+    () => snapshot.models.filter((m) => isPositiveFinite(m.intelligence)),
     [],
   );
-  const chartModels = useMemo(() => models.filter(isChartableModel), [models]);
+  const metric = Y_METRICS[yMetric];
+  const metricModels = useMemo(
+    () => models.filter((m) => isPositiveFinite(metric.value(m))),
+    [metric, models],
+  );
   const fetchedDate = new Date(snapshot.fetchedAt).toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 
-  // Newest = model(s) sharing the latest addedAt — but only when that date is
-  // strictly newer than the oldest tracked model, so a uniformly-dated baseline
-  // flags nothing. Driven by first-seen stamping in the fetch pipeline.
+  // Newest = model(s) sharing the latest release date. Fall back to first-seen
+  // timestamps only when AA has not published release dates for any model.
   const newestSlugs = useMemo(() => {
-    const dated = models.filter((m) => m.addedAt);
-    const times = dated.map((m) => Date.parse(m.addedAt!)).filter(Number.isFinite);
+    const hasReleaseDates = models.some((m) => m.releaseDate);
+    const dated = models
+      .map((m) => ({ model: m, date: hasReleaseDates ? m.releaseDate : m.addedAt }))
+      .filter((item): item is { model: Model; date: string } => Boolean(item.date));
+    const times = dated.map((item) => Date.parse(item.date)).filter(Number.isFinite);
     if (times.length < 2) return new Set<string>();
     const max = Math.max(...times);
     if (max === Math.min(...times)) return new Set<string>();
-    return new Set(dated.filter((m) => Date.parse(m.addedAt!) === max).map((m) => m.slug));
+    return new Set(
+      dated
+        .filter((item) => Date.parse(item.date) === max)
+        .map((item) => item.model.slug),
+    );
   }, [models]);
   const newestModel = useMemo(
     () =>
-      models
+      metricModels
         .filter((m) => newestSlugs.has(m.slug))
-        .sort((a, b) => b.intelligence - a.intelligence)[0] ?? null,
-    [models, newestSlugs],
+        .sort((a, b) => metric.value(b)! - metric.value(a)!)[0] ?? null,
+    [metric, metricModels, newestSlugs],
   );
 
   const matchedSlugs = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return null;
     return new Set(
-      models
+      metricModels
         .filter(
           (m) =>
             m.displayName.toLowerCase().includes(q) ||
@@ -1023,22 +926,10 @@ export default function App() {
         )
         .map((m) => m.slug),
     );
-  }, [query, models]);
+  }, [query, metricModels]);
   const matchCount = matchedSlugs?.size ?? null;
 
-  const hovered = hoveredSlug ? models.find((m) => m.slug === hoveredSlug) : null;
-
-  const TabBtn = ({ id, label }: { id: Tab; label: string }) => (
-    <button
-      onClick={() => setTab(id)}
-      className={`relative pb-2 text-[12px] tracking-wide transition-colors ${
-        tab === id ? "text-ink-900 font-medium" : "text-ink-500 hover:text-ink-900"
-      }`}
-    >
-      {label}
-      {tab === id && <span className="absolute left-0 right-0 -bottom-[1px] h-[2px] bg-ink-900" />}
-    </button>
-  );
+  const hovered = hoveredSlug ? metricModels.find((m) => m.slug === hoveredSlug) : null;
 
   return (
     <div className="h-screen w-full flex flex-col overflow-hidden">
@@ -1052,9 +943,7 @@ export default function App() {
               Smart, fast, and cheap.
             </h1>
             <p className="mt-1.5 text-[13px] text-ink-500 max-w-3xl leading-snug">
-              {tab === "chart"
-                ? "Up is smarter. Right is faster. Blue is cheap, red is expensive. Pick the highest, rightmost dot your budget allows."
-                : "What it actually takes to get coding work done with each model — in dollars, hours, or raw smarts."}
+              Up is stronger on {metric.title}. Right is faster on end-to-end response time. Color is cost per task.
             </p>
           </div>
           <div className="hidden sm:block text-right shrink-0">
@@ -1069,60 +958,38 @@ export default function App() {
                 </span>
               </div>
             )}
-            <div className="mt-0.5 text-[10px] tracking-wide text-ink-300 uppercase">
-              Source: Artificial Analysis · {chartModels.length} priced · {models.length} tracked
-            </div>
           </div>
         </header>
 
-        {/* The two visible horizontal lines are this row's top sibling
-            border (header's border-b) and this row's own border-b. So the
-            row sits flush against the header (no margin), and any padding
-            applied evenly here keeps the bar at the geometric midpoint of
-            the two borders. */}
         <div className="shrink-0 flex items-center justify-between gap-6 border-b border-ink-100 py-3">
-          <div className="flex items-center gap-6">
-            <TabBtn id="chart" label="Map" />
-            <TabBtn id="ranking" label="Coding ranking" />
+          <div className="flex items-center gap-4">
+            <MetricSwitch value={yMetric} onChange={setYMetric} />
           </div>
           <div className="flex items-center gap-4 md:gap-6">
-            {tab === "chart" && <div className="hidden md:block"><FrontierLegend /></div>}
-            {tab === "chart" && <div className="hidden md:block"><CostLegend /></div>}
+            <div className="hidden md:block"><FrontierLegend /></div>
+            <div className="hidden md:block"><CostLegend /></div>
             <SearchBox value={query} onChange={setQuery} matchCount={matchCount} />
           </div>
         </div>
 
         <main className="flex-1 min-h-0 mt-3 relative">
-          {tab === "chart" && (
-            <div className="h-full w-full relative overflow-x-auto">
-              <div className="h-full min-w-[860px]">
-                <MapChart
-                  models={models}
-                  onHover={setHoveredSlug}
-                  hoveredSlug={hoveredSlug}
-                  matchedSlugs={matchedSlugs}
-                  newestSlugs={newestSlugs}
-                />
-              </div>
-              {hovered && <HoverCard m={hovered} />}
+          <div className="h-full w-full relative overflow-x-auto">
+            <div className="h-full min-w-[860px]">
+              <MapChart
+                models={models}
+                yMetric={yMetric}
+                onHover={setHoveredSlug}
+                hoveredSlug={hoveredSlug}
+                matchedSlugs={matchedSlugs}
+                newestSlugs={newestSlugs}
+              />
             </div>
-          )}
-          {tab === "ranking" && (
-            <RankingView
-              models={models}
-              hoveredSlug={hoveredSlug}
-              onHover={setHoveredSlug}
-              matchedSlugs={matchedSlugs}
-              newestSlugs={newestSlugs}
-            />
-          )}
+            {hovered && <HoverCard m={hovered} />}
+          </div>
         </main>
 
         <footer className="shrink-0 pt-3 mt-2 border-t border-ink-100 text-[10px] text-ink-300 tracking-wide leading-snug">
-          Cost to run = USD spent on the AA Intelligence Index eval suite (input +
-          reasoning + answer tokens × per-token price). E2E latency = median wall-clock
-          per query (input + reasoning + answer phases). Coding index = AA Coding Index
-          (LiveCodeBench, SciCode, Terminal-Bench Hard, τ²-bench).
+          Data from Artificial Analysis. Default map shows the last {RECENT_WINDOW_MONTHS} months plus the frontier; priced untimed models sit on the timing n/a rail.
         </footer>
       </div>
     </div>
