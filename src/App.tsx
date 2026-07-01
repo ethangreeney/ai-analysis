@@ -936,14 +936,11 @@ export default function App() {
       <div className="mx-auto max-w-[1400px] w-full px-4 sm:px-8 md:px-12 pt-6 pb-3 flex-1 flex flex-col min-h-0">
         <header className="shrink-0 flex items-end justify-between gap-8 pb-4 border-b border-ink-100">
           <div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-ink-500 mb-1.5">
-              Frontier AI · Landscape
-            </div>
             <h1 className="text-2xl md:text-[28px] font-light tracking-tight text-ink-900 leading-tight">
               Smart, fast, and cheap.
             </h1>
             <p className="mt-1.5 text-[13px] text-ink-500 max-w-3xl leading-snug">
-              Up is stronger on {metric.title}. Right is faster on end-to-end response time. Color is cost per task.
+              Shows task cost, not token price; end-to-end wait, not tokens/sec. Up is intelligence, right is faster, color is cost.
             </p>
           </div>
           <div className="hidden sm:block text-right shrink-0">
