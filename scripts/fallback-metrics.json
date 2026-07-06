@@ -1,0 +1,5285 @@
+{
+  "sourceFetchedAt": "2026-07-01T00:23:12.563Z",
+  "models": [
+    {
+      "slug": "claude-fable-5",
+      "displayName": "Claude Fable 5 (with fallback)",
+      "costPerTask": 2.749823901909715,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 20,
+      "releaseDate": "2026-06-09",
+      "addedAt": "2026-06-11T22:09:33.687Z"
+    },
+    {
+      "slug": "claude-opus-4-8",
+      "displayName": "Claude Opus 4.8 (max)",
+      "costPerTask": 1.7972215258754352,
+      "e2eLatencyTotal": 36.23487389510917,
+      "reasoningTime": 0,
+      "pricePerMillion": 10,
+      "releaseDate": "2026-05-28",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gpt-5-5",
+      "displayName": "GPT-5.5 (xhigh)",
+      "costPerTask": 1.0283313144512114,
+      "e2eLatencyTotal": 73.7341824886907,
+      "reasoningTime": 0,
+      "pricePerMillion": 11.25,
+      "releaseDate": "2026-04-23",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "claude-opus-4-7",
+      "displayName": "Claude Opus 4.7 (max)",
+      "costPerTask": 1.9733096609430143,
+      "e2eLatencyTotal": 31.83557031954428,
+      "reasoningTime": 0,
+      "pricePerMillion": 10,
+      "releaseDate": "2026-04-16",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "claude-sonnet-5",
+      "displayName": "Claude Sonnet 5 (max)",
+      "costPerTask": 2.2881381720338676,
+      "e2eLatencyTotal": 156.49479422022492,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2026-06-30",
+      "addedAt": "2026-06-30"
+    },
+    {
+      "slug": "gpt-5-5-high",
+      "displayName": "GPT-5.5 (high)",
+      "costPerTask": 0.6919686005520624,
+      "e2eLatencyTotal": 37.057004935553806,
+      "reasoningTime": 0,
+      "pricePerMillion": 11.25,
+      "releaseDate": "2026-04-23",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gpt-5-4",
+      "displayName": "GPT-5.4 (xhigh)",
+      "costPerTask": 0.8868298551068886,
+      "e2eLatencyTotal": 115.85789400859728,
+      "reasoningTime": 0,
+      "pricePerMillion": 5.625,
+      "releaseDate": "2026-03-05",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "glm-5-2",
+      "displayName": "GLM-5.2 (max)",
+      "costPerTask": 0.475782357504648,
+      "e2eLatencyTotal": 16.132204212240893,
+      "reasoningTime": 11.803245708192673,
+      "pricePerMillion": 2.15,
+      "releaseDate": "2026-06-16",
+      "addedAt": "2026-06-16"
+    },
+    {
+      "slug": "gpt-5-5-medium",
+      "displayName": "GPT-5.5 (medium)",
+      "costPerTask": 0.4206822071969107,
+      "e2eLatencyTotal": 12.753478118688566,
+      "reasoningTime": 0,
+      "pricePerMillion": 11.25,
+      "releaseDate": "2026-04-23",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gemini-3-5-flash",
+      "displayName": "Gemini 3.5 Flash",
+      "costPerTask": 0.585545242207561,
+      "e2eLatencyTotal": 27.206880839778773,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.375,
+      "releaseDate": "2026-05-19",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "claude-sonnet-4-6-adaptive",
+      "displayName": "Claude Sonnet 4.6 (max)",
+      "costPerTask": 1.1355620170084484,
+      "e2eLatencyTotal": 112.1875316649858,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2026-02-17",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gemini-3-1-pro-preview",
+      "displayName": "Gemini 3.1 Pro Preview",
+      "costPerTask": 0.29113642988035915,
+      "e2eLatencyTotal": 27.957883141958625,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.5,
+      "releaseDate": "2026-02-19",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "qwen3-7-max",
+      "displayName": "Qwen3.7 Max",
+      "costPerTask": 1.061325321467105,
+      "e2eLatencyTotal": 17.099538630188277,
+      "reasoningTime": 12.104858678539767,
+      "pricePerMillion": 3.75,
+      "releaseDate": "2026-05-19",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gemini-3-5-flash-medium",
+      "displayName": "Gemini 3.5 Flash (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 20.434040099906397,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.375,
+      "releaseDate": "2026-05-19",
+      "addedAt": "2026-05-19"
+    },
+    {
+      "slug": "minimax-m3",
+      "displayName": "MiniMax-M3",
+      "costPerTask": 0.12455059919140353,
+      "e2eLatencyTotal": 26.74653627731826,
+      "reasoningTime": 19.542497868254422,
+      "pricePerMillion": 0.525,
+      "releaseDate": "2026-06-01",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "deepseek-v4-pro",
+      "displayName": "DeepSeek V4 Pro (Max)",
+      "costPerTask": 0.044843733471261124,
+      "e2eLatencyTotal": 57.05780165593975,
+      "reasoningTime": 49.690778551740834,
+      "pricePerMillion": 0.544,
+      "releaseDate": "2026-04-24",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gpt-5-3-codex",
+      "displayName": "GPT-5.3 Codex (xhigh)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 88.93642937468114,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.813,
+      "releaseDate": "2026-02-05",
+      "addedAt": "2026-02-05"
+    },
+    {
+      "slug": "claude-opus-4-6-adaptive",
+      "displayName": "Claude Opus 4.6 (max)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 35.59090461325217,
+      "reasoningTime": 0,
+      "pricePerMillion": 10,
+      "releaseDate": "2026-02-05",
+      "addedAt": "2026-02-05"
+    },
+    {
+      "slug": "gpt-5-5-low",
+      "displayName": "GPT-5.5 (low)",
+      "costPerTask": 0.2180413325292904,
+      "e2eLatencyTotal": 9.31990981615552,
+      "reasoningTime": 0,
+      "pricePerMillion": 11.25,
+      "releaseDate": "2026-04-23",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "muse-spark",
+      "displayName": "Muse Spark",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-08",
+      "addedAt": "2026-04-08"
+    },
+    {
+      "slug": "kimi-k2-6",
+      "displayName": "Kimi K2.6",
+      "costPerTask": 0.3075432697244069,
+      "e2eLatencyTotal": 86.98767838919701,
+      "reasoningTime": 75.88693993009116,
+      "pricePerMillion": 1.712,
+      "releaseDate": "2026-04-20",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "claude-opus-4-7-non-reasoning",
+      "displayName": "Claude Opus 4.7 (Non-reasoning, high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 12.301863172718253,
+      "reasoningTime": 0,
+      "pricePerMillion": 10,
+      "releaseDate": "2026-04-16",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "mimo-v2-5-pro",
+      "displayName": "MiMo-V2.5-Pro",
+      "costPerTask": 0.03139528698492376,
+      "e2eLatencyTotal": 49.32883722802525,
+      "reasoningTime": 37.543008654420206,
+      "pricePerMillion": 0.544,
+      "releaseDate": "2026-04-22",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gpt-5-2",
+      "displayName": "GPT-5.2 (xhigh)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 158.973966568162,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.813,
+      "releaseDate": "2025-12-11",
+      "addedAt": "2025-12-11"
+    },
+    {
+      "slug": "kimi-k2-7-code",
+      "displayName": "Kimi K2.7 Code",
+      "costPerTask": 0.17772103999963917,
+      "e2eLatencyTotal": 50.852215096685796,
+      "reasoningTime": 39.27532269726255,
+      "pricePerMillion": 1.712,
+      "releaseDate": "2026-06-12",
+      "addedAt": "2026-06-12"
+    },
+    {
+      "slug": "nex-n2-pro",
+      "displayName": "Nex-N2-Pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": 33.108846269424696,
+      "reasoningTime": 25.122995471139983,
+      "pricePerMillion": 1,
+      "releaseDate": "2026-06-02",
+      "addedAt": "2026-06-02"
+    },
+    {
+      "slug": "deepseek-v4-pro-high",
+      "displayName": "DeepSeek V4 Pro (High)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 32.823519211363504,
+      "reasoningTime": 24.794091354675768,
+      "pricePerMillion": 0.544,
+      "releaseDate": "2026-04-24",
+      "addedAt": "2026-04-24"
+    },
+    {
+      "slug": "claude-opus-4-5-thinking",
+      "displayName": "Claude Opus 4.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 27.164554483370477,
+      "reasoningTime": 0,
+      "pricePerMillion": 10,
+      "releaseDate": "2025-11-24",
+      "addedAt": "2025-11-24"
+    },
+    {
+      "slug": "mimo-v2-pro",
+      "displayName": "MiMo-V2-Pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": 66.29606752852378,
+      "reasoningTime": 54.53303961893891,
+      "pricePerMillion": 1.5,
+      "releaseDate": "2026-03-18",
+      "addedAt": "2026-03-18"
+    },
+    {
+      "slug": "deepseek-v4-flash",
+      "displayName": "DeepSeek V4 Flash (Max)",
+      "costPerTask": 0.01971570690606465,
+      "e2eLatencyTotal": 59.43492344957056,
+      "reasoningTime": 53.27083068084468,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2026-04-24",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "glm-5-1",
+      "displayName": "GLM-5.1",
+      "costPerTask": 0.22741069810359207,
+      "e2eLatencyTotal": 69.71552776048883,
+      "reasoningTime": 60.279871793691676,
+      "pricePerMillion": 2.15,
+      "releaseDate": "2026-04-07",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gpt-5-2-codex",
+      "displayName": "GPT-5.2 Codex (xhigh)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 35.0723528435518,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.813,
+      "releaseDate": "2025-12-11",
+      "addedAt": "2025-12-11"
+    },
+    {
+      "slug": "mimo-v2-5-0424",
+      "displayName": "MiMo-V2.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 32.979242790339626,
+      "reasoningTime": 23.985016366271324,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2026-04-22",
+      "addedAt": "2026-04-22"
+    },
+    {
+      "slug": "qwen3-6-max",
+      "displayName": "Qwen3.6 Max Preview",
+      "costPerTask": null,
+      "e2eLatencyTotal": 72.5976343677306,
+      "reasoningTime": 55.47229390378442,
+      "pricePerMillion": 2.925,
+      "releaseDate": "2026-04-20",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gpt-5-4-mini",
+      "displayName": "GPT-5.4 mini (xhigh)",
+      "costPerTask": 0.47929864085182117,
+      "e2eLatencyTotal": 7.729832480692083,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.688,
+      "releaseDate": "2026-03-17",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "grok-build-0-1-06-16",
+      "displayName": "Grok Build 0.1 0616",
+      "costPerTask": 0.21191134533727934,
+      "e2eLatencyTotal": 30.786178565810296,
+      "reasoningTime": 24.206578332248085,
+      "pricePerMillion": 1.25,
+      "releaseDate": null,
+      "addedAt": "2026-06-30T23:19:17.865Z"
+    },
+    {
+      "slug": "qwen3-6-plus",
+      "displayName": "Qwen3.6 Plus",
+      "costPerTask": 0.31383547131763045,
+      "e2eLatencyTotal": 119.99744260578197,
+      "reasoningTime": 107.48041300980856,
+      "pricePerMillion": 1.125,
+      "releaseDate": "2026-04-02",
+      "addedAt": "2026-04-02"
+    },
+    {
+      "slug": "gemini-3-pro",
+      "displayName": "Gemini 3 Pro Preview (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.5,
+      "releaseDate": "2025-11-18",
+      "addedAt": "2025-11-18"
+    },
+    {
+      "slug": "glm-5",
+      "displayName": "GLM-5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 57.89699583758312,
+      "reasoningTime": 48.65949958796107,
+      "pricePerMillion": 1.55,
+      "releaseDate": "2026-02-11",
+      "addedAt": "2026-02-11"
+    },
+    {
+      "slug": "gpt-5-4-low",
+      "displayName": "GPT-5.4 (low)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.0434995194729275,
+      "reasoningTime": 0,
+      "pricePerMillion": 5.906,
+      "releaseDate": "2026-03-05",
+      "addedAt": "2026-03-05"
+    },
+    {
+      "slug": "qwen3-7-plus",
+      "displayName": "Qwen3.7 Plus",
+      "costPerTask": 0.045502132309623196,
+      "e2eLatencyTotal": 53.98204037323894,
+      "reasoningTime": 40.960100026591,
+      "pricePerMillion": 0.59,
+      "releaseDate": "2026-06-01",
+      "addedAt": "2026-06-01"
+    },
+    {
+      "slug": "gpt-5-1",
+      "displayName": "GPT-5.1 (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 46.58586382867216,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-11-13",
+      "addedAt": "2025-11-13"
+    },
+    {
+      "slug": "gpt-5-4-nano",
+      "displayName": "GPT-5.4 nano (xhigh)",
+      "costPerTask": 0.14548292517280012,
+      "e2eLatencyTotal": 7.693765583589862,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.463,
+      "releaseDate": "2026-03-17",
+      "addedAt": "2026-03-17"
+    },
+    {
+      "slug": "minimax-m2-7",
+      "displayName": "MiniMax-M2.7",
+      "costPerTask": 0.07415351093539828,
+      "e2eLatencyTotal": 71.41632830793459,
+      "reasoningTime": 57.31971910352107,
+      "pricePerMillion": 0.525,
+      "releaseDate": "2026-03-18",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "kimi-k2-5",
+      "displayName": "Kimi K2.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 86.98551244413795,
+      "reasoningTime": 71.8210635447708,
+      "pricePerMillion": 1.185,
+      "releaseDate": "2026-01-27",
+      "addedAt": "2026-01-27"
+    },
+    {
+      "slug": "glm-5-turbo",
+      "displayName": "GLM-5-Turbo",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-03-15",
+      "addedAt": "2026-03-15"
+    },
+    {
+      "slug": "gpt-5-2-medium",
+      "displayName": "GPT-5.2 (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.813,
+      "releaseDate": "2025-12-11",
+      "addedAt": "2025-12-11"
+    },
+    {
+      "slug": "claude-opus-4-6",
+      "displayName": "Claude Opus 4.6 (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 15.234689094739656,
+      "reasoningTime": 0,
+      "pricePerMillion": 10,
+      "releaseDate": "2026-02-05",
+      "addedAt": "2026-02-05"
+    },
+    {
+      "slug": "nvidia-nemotron-3-ultra-550b-a55b",
+      "displayName": "Nemotron 3 Ultra",
+      "costPerTask": 0.24390316682824711,
+      "e2eLatencyTotal": 20.59890960832347,
+      "reasoningTime": 15.759961798517388,
+      "pricePerMillion": 1.175,
+      "releaseDate": "2026-06-04",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gemini-3-flash-reasoning",
+      "displayName": "Gemini 3 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.710978538980648,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.125,
+      "releaseDate": "2025-12-17",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "grok-4-3",
+      "displayName": "Grok 4.3 (high)",
+      "costPerTask": 0.15738725933763534,
+      "e2eLatencyTotal": 20.560239088271466,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.563,
+      "releaseDate": "2026-04-30",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "deepseek-v4-flash-high",
+      "displayName": "DeepSeek V4 Flash (High)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2026-04-24",
+      "addedAt": "2026-04-24"
+    },
+    {
+      "slug": "qwen3-6-27b",
+      "displayName": "Qwen3.6 27B",
+      "costPerTask": 0.26527574515202695,
+      "e2eLatencyTotal": 109.29931685959649,
+      "reasoningTime": 96.99044123117605,
+      "pricePerMillion": 1.35,
+      "releaseDate": "2026-04-22",
+      "addedAt": "2026-04-22"
+    },
+    {
+      "slug": "grok-4-20",
+      "displayName": "Grok 4.20 0309 v2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.456429310906852,
+      "reasoningTime": 0,
+      "pricePerMillion": 3,
+      "releaseDate": "2026-04-07",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "grok-4-20-0309",
+      "displayName": "Grok 4.20 0309",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.084391343217327,
+      "reasoningTime": 0,
+      "pricePerMillion": 3,
+      "releaseDate": "2026-03-10",
+      "addedAt": "2026-03-10"
+    },
+    {
+      "slug": "mimo-v2-omni-0327",
+      "displayName": "MiMo-V2-Omni-0327",
+      "costPerTask": null,
+      "e2eLatencyTotal": 30.081843063301623,
+      "reasoningTime": 22.063282320241665,
+      "pricePerMillion": 0.8,
+      "releaseDate": "2026-03-27",
+      "addedAt": "2026-03-27"
+    },
+    {
+      "slug": "gpt-5-codex",
+      "displayName": "GPT-5 Codex (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.042199281520512,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-09-23",
+      "addedAt": "2025-09-23"
+    },
+    {
+      "slug": "gpt-5",
+      "displayName": "GPT-5 (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 87.21237808789922,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "grok-4-3-medium",
+      "displayName": "Grok 4.3 (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 17.05783233061158,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.563,
+      "releaseDate": "2026-04-30",
+      "addedAt": "2026-04-30"
+    },
+    {
+      "slug": "claude-sonnet-4-6",
+      "displayName": "Claude Sonnet 4.6 (Non-reasoning)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 12.642727997407311,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2026-02-17",
+      "addedAt": "2026-02-17"
+    },
+    {
+      "slug": "grok-4-3-low",
+      "displayName": "Grok 4.3 (low)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 9.660034953576368,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.563,
+      "releaseDate": "2026-04-30",
+      "addedAt": "2026-04-30"
+    },
+    {
+      "slug": "kat-coder-pro-v2",
+      "displayName": "KAT-Coder-Pro V2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.130609082002034,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.525,
+      "releaseDate": "2026-03-27",
+      "addedAt": "2026-03-27"
+    },
+    {
+      "slug": "gpt-5-5-non-reasoning",
+      "displayName": "GPT-5.5 (Non-reasoning)",
+      "costPerTask": 0.17704240542967806,
+      "e2eLatencyTotal": 8.373354064729373,
+      "reasoningTime": 0,
+      "pricePerMillion": 11.25,
+      "releaseDate": "2026-04-23",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "glm-5-1-non-reasoning",
+      "displayName": "GLM-5.1",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.932435788557457,
+      "reasoningTime": 0,
+      "pricePerMillion": 2.15,
+      "releaseDate": "2026-04-07",
+      "addedAt": "2026-04-07"
+    },
+    {
+      "slug": "mimo-v2-omni",
+      "displayName": "MiMo-V2-Omni",
+      "costPerTask": null,
+      "e2eLatencyTotal": 30.67120334708701,
+      "reasoningTime": 22.399632237669785,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-03-19",
+      "addedAt": "2026-03-19"
+    },
+    {
+      "slug": "gemini-3-5-flash-minimal",
+      "displayName": "Gemini 3.5 Flash (minimal)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.200800438895522,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.375,
+      "releaseDate": "2026-05-19",
+      "addedAt": "2026-05-19"
+    },
+    {
+      "slug": "gpt-5-1-codex",
+      "displayName": "GPT-5.1 Codex (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.208259309591912,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-11-13",
+      "addedAt": "2025-11-13"
+    },
+    {
+      "slug": "claude-opus-4-5",
+      "displayName": "Claude Opus 4.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 12.154313261622054,
+      "reasoningTime": 0,
+      "pricePerMillion": 10,
+      "releaseDate": "2025-11-24",
+      "addedAt": "2025-11-24"
+    },
+    {
+      "slug": "claude-4-5-sonnet-thinking",
+      "displayName": "Claude 4.5 Sonnet",
+      "costPerTask": null,
+      "e2eLatencyTotal": 22.193931877822923,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2025-09-29",
+      "addedAt": "2025-09-29"
+    },
+    {
+      "slug": "kat-coder-pro-v1",
+      "displayName": "KAT-Coder-Pro V1",
+      "costPerTask": 0.041373799048384945,
+      "e2eLatencyTotal": 6.095855037458721,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.525,
+      "releaseDate": "2025-11-11",
+      "addedAt": "2025-11-11"
+    },
+    {
+      "slug": "kimi-k2-6-non-reasoning",
+      "displayName": "Kimi K2.6",
+      "costPerTask": null,
+      "e2eLatencyTotal": 14.286903734941301,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.712,
+      "releaseDate": "2026-04-20",
+      "addedAt": "2026-04-20"
+    },
+    {
+      "slug": "glm-5v-turbo",
+      "displayName": "GLM 5V Turbo",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-01",
+      "addedAt": "2026-04-01"
+    },
+    {
+      "slug": "claude-sonnet-4-6-non-reasoning-low-effort",
+      "displayName": "Claude Sonnet 4.6 (Non-reasoning, Low Effort)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 13.149560415286743,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2026-02-17",
+      "addedAt": "2026-02-17"
+    },
+    {
+      "slug": "glm-4-7",
+      "displayName": "GLM-4.7",
+      "costPerTask": null,
+      "e2eLatencyTotal": 21.238398349671602,
+      "reasoningTime": 16.20334826053734,
+      "pricePerMillion": 1,
+      "releaseDate": "2025-12-22",
+      "addedAt": "2025-12-22"
+    },
+    {
+      "slug": "qwen3-5-27b",
+      "displayName": "Qwen3.5 27B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 36.234484227745284,
+      "reasoningTime": 24.47319949739614,
+      "pricePerMillion": 0.825,
+      "releaseDate": "2026-02-24",
+      "addedAt": "2026-02-24"
+    },
+    {
+      "slug": "gpt-5-medium",
+      "displayName": "GPT-5 (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 39.83534660690939,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "claude-4-1-opus-thinking",
+      "displayName": "Claude 4.1 Opus",
+      "costPerTask": null,
+      "e2eLatencyTotal": 31.88427248278007,
+      "reasoningTime": 0,
+      "pricePerMillion": 30,
+      "releaseDate": "2025-08-05",
+      "addedAt": "2025-08-05"
+    },
+    {
+      "slug": "qwen3-5-397b-a17b",
+      "displayName": "Qwen3.5 397B A17B",
+      "costPerTask": 0.3331057741426611,
+      "e2eLatencyTotal": 75.65163193862163,
+      "reasoningTime": 63.05640543184362,
+      "pricePerMillion": 1.35,
+      "releaseDate": "2026-02-16",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "minimax-m2-5",
+      "displayName": "MiniMax-M2.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 18.634075843480773,
+      "reasoningTime": 8.55906125718465,
+      "pricePerMillion": 0.525,
+      "releaseDate": "2026-02-12",
+      "addedAt": "2026-02-12"
+    },
+    {
+      "slug": "hy3",
+      "displayName": "Hy3-preview",
+      "costPerTask": null,
+      "e2eLatencyTotal": 19.352798965885942,
+      "reasoningTime": 12.942855919908425,
+      "pricePerMillion": 0.2,
+      "releaseDate": "2026-04-23",
+      "addedAt": "2026-04-23"
+    },
+    {
+      "slug": "gpt-5-5-instant-05-26",
+      "displayName": "GPT-5.5 Instant (May 2026)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 11.25,
+      "releaseDate": "2026-05-05",
+      "addedAt": "2026-05-05"
+    },
+    {
+      "slug": "deepseek-v3-2-reasoning",
+      "displayName": "DeepSeek V3.2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.337,
+      "releaseDate": "2025-12-01",
+      "addedAt": "2025-12-01"
+    },
+    {
+      "slug": "grok-4",
+      "displayName": "Grok 4",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 11,
+      "releaseDate": "2025-07-10",
+      "addedAt": "2025-07-10"
+    },
+    {
+      "slug": "mimo-v2-0206",
+      "displayName": "MiMo-V2-Flash (Feb 2026)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 27.794019996662005,
+      "reasoningTime": 20.27625504532955,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2025-12-16",
+      "addedAt": "2025-12-16"
+    },
+    {
+      "slug": "gemini-3-pro-low",
+      "displayName": "Gemini 3 Pro Preview (low)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.5,
+      "releaseDate": "2025-11-18",
+      "addedAt": "2025-11-18"
+    },
+    {
+      "slug": "gpt-5-mini",
+      "displayName": "GPT-5 mini (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 76.32466324912323,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.688,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "kimi-k2-thinking",
+      "displayName": "Kimi K2 Thinking",
+      "costPerTask": null,
+      "e2eLatencyTotal": 21.643352802190062,
+      "reasoningTime": 16.200116524152048,
+      "pricePerMillion": 1.075,
+      "releaseDate": "2025-11-06",
+      "addedAt": "2025-11-06"
+    },
+    {
+      "slug": "o3-pro",
+      "displayName": "o3-pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": 71.32799568859946,
+      "reasoningTime": 0,
+      "pricePerMillion": 35,
+      "releaseDate": "2025-06-10",
+      "addedAt": "2025-06-10"
+    },
+    {
+      "slug": "glm-5-non-reasoning",
+      "displayName": "GLM-5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.836895167208986,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.55,
+      "releaseDate": "2026-02-11",
+      "addedAt": "2026-02-11"
+    },
+    {
+      "slug": "qwen3-5-122b-a10b",
+      "displayName": "Qwen3.5 122B A10B",
+      "costPerTask": 0.24119620563683528,
+      "e2eLatencyTotal": 19.68485406821131,
+      "reasoningTime": 13.827544542569038,
+      "pricePerMillion": 1.1,
+      "releaseDate": "2026-02-24",
+      "addedAt": "2026-02-24"
+    },
+    {
+      "slug": "qwen3-5-397b-a17b-non-reasoning",
+      "displayName": "Qwen3.5 397B A17B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 12.438192548417621,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.35,
+      "releaseDate": "2026-02-16",
+      "addedAt": "2026-02-16"
+    },
+    {
+      "slug": "qwen3-max-thinking",
+      "displayName": "Qwen3 Max Thinking",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 2.4,
+      "releaseDate": "2026-01-26",
+      "addedAt": "2026-01-26"
+    },
+    {
+      "slug": "qwen3-6-35b-a3b",
+      "displayName": "Qwen3.6 35B A3B",
+      "costPerTask": 0.17881593213598196,
+      "e2eLatencyTotal": 38.3501687977988,
+      "reasoningTime": 32.972134266795514,
+      "pricePerMillion": 0.557,
+      "releaseDate": "2026-04-16",
+      "addedAt": "2026-04-16"
+    },
+    {
+      "slug": "minimax-m2-1",
+      "displayName": "MiniMax-M2.1",
+      "costPerTask": null,
+      "e2eLatencyTotal": 17.60265460771145,
+      "reasoningTime": 9.712156082969175,
+      "pricePerMillion": 0.525,
+      "releaseDate": "2025-12-23",
+      "addedAt": "2025-12-23"
+    },
+    {
+      "slug": "deepseek-v4-pro-non-reasoning",
+      "displayName": "DeepSeek V4 Pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.737305377372708,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.544,
+      "releaseDate": "2026-04-24",
+      "addedAt": "2026-04-24"
+    },
+    {
+      "slug": "mimo-v2-flash-reasoning",
+      "displayName": "MiMo-V2-Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 28.515137387929613,
+      "reasoningTime": 20.94707074874369,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2025-12-16",
+      "addedAt": "2025-12-16"
+    },
+    {
+      "slug": "gpt-5-low",
+      "displayName": "GPT-5 (low)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 17.720315673094362,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "claude-4-opus-thinking",
+      "displayName": "Claude 4 Opus",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 30,
+      "releaseDate": "2025-05-22",
+      "addedAt": "2025-05-22"
+    },
+    {
+      "slug": "gpt-5-mini-medium",
+      "displayName": "GPT-5 mini (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 17.569927530682698,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.688,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "qwen3-5-omni-plus",
+      "displayName": "Qwen3.5 Omni Plus",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.688909345187778,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.5,
+      "releaseDate": "2026-03-30",
+      "addedAt": "2026-03-30"
+    },
+    {
+      "slug": "gpt-5-1-codex-mini",
+      "displayName": "GPT-5.1 Codex mini (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.627251442153524,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.688,
+      "releaseDate": "2025-11-13",
+      "addedAt": "2025-11-13"
+    },
+    {
+      "slug": "grok-4-1-fast-reasoning",
+      "displayName": "Grok 4.1 Fast",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-11-19",
+      "addedAt": "2025-11-19"
+    },
+    {
+      "slug": "ring-2-6-1t",
+      "displayName": "Ring-2.6-1T",
+      "costPerTask": 0.3451837452945369,
+      "e2eLatencyTotal": 23.818724998749786,
+      "reasoningTime": 16.381373484600022,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2026-05-08",
+      "addedAt": "2026-05-08"
+    },
+    {
+      "slug": "o3",
+      "displayName": "o3",
+      "costPerTask": null,
+      "e2eLatencyTotal": 8.925785833334892,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.5,
+      "releaseDate": "2025-04-16",
+      "addedAt": "2025-04-16"
+    },
+    {
+      "slug": "gpt-5-4-nano-medium",
+      "displayName": "GPT-5.4 nano",
+      "costPerTask": null,
+      "e2eLatencyTotal": 8.18715340233702,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.463,
+      "releaseDate": "2026-03-17",
+      "addedAt": "2026-03-17"
+    },
+    {
+      "slug": "mistral-medium-3-5",
+      "displayName": "Mistral Medium 3.5",
+      "costPerTask": 1.1962136097409157,
+      "e2eLatencyTotal": 26.692963134179507,
+      "reasoningTime": 19.654995268144173,
+      "pricePerMillion": 3,
+      "releaseDate": "2026-04-29",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gpt-5-4-mini-medium",
+      "displayName": "GPT-5.4 mini (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.473695983039613,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.688,
+      "releaseDate": "2026-03-17",
+      "addedAt": "2026-03-17"
+    },
+    {
+      "slug": "step-3-7-flash",
+      "displayName": "Step 3.7 Flash",
+      "costPerTask": 0.08809745297033102,
+      "e2eLatencyTotal": 7.364891561718702,
+      "reasoningTime": 5.085525321774769,
+      "pricePerMillion": 0.438,
+      "releaseDate": "2026-05-29",
+      "addedAt": "2026-05-29"
+    },
+    {
+      "slug": "claude-4-5-haiku-reasoning",
+      "displayName": "Claude 4.5 Haiku",
+      "costPerTask": 0.23747351037813688,
+      "e2eLatencyTotal": 26.49004713080418,
+      "reasoningTime": 0,
+      "pricePerMillion": 2,
+      "releaseDate": "2025-10-15",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "kimi-k2-5-non-reasoning",
+      "displayName": "Kimi K2.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 15.231272812995076,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.2,
+      "releaseDate": "2026-01-27",
+      "addedAt": "2026-01-27"
+    },
+    {
+      "slug": "gemma-4-31b",
+      "displayName": "Gemma 4 31B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 64.63149099345965,
+      "reasoningTime": 49.35970011159654,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-02",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "qwen3-5-27b-non-reasoning",
+      "displayName": "Qwen3.5 27B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.412492006515706,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.875,
+      "releaseDate": "2026-02-24",
+      "addedAt": "2026-02-24"
+    },
+    {
+      "slug": "command-a-plus",
+      "displayName": "Command A+",
+      "costPerTask": null,
+      "e2eLatencyTotal": 16.629505879923293,
+      "reasoningTime": 12.963524163138588,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-05-20",
+      "addedAt": "2026-05-20"
+    },
+    {
+      "slug": "qwen3-6-27b-non-reasoning",
+      "displayName": "Qwen3.6 27B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 12.388002156607973,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.35,
+      "releaseDate": "2026-04-22",
+      "addedAt": "2026-04-22"
+    },
+    {
+      "slug": "claude-4-5-sonnet",
+      "displayName": "Claude 4.5 Sonnet",
+      "costPerTask": null,
+      "e2eLatencyTotal": 13.855896691626452,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2025-09-29",
+      "addedAt": "2025-09-29"
+    },
+    {
+      "slug": "qwen3-5-35b-a3b",
+      "displayName": "Qwen3.5 35B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 17.43054306683864,
+      "reasoningTime": 12.247836768670952,
+      "pricePerMillion": 0.688,
+      "releaseDate": "2026-02-24",
+      "addedAt": "2026-02-24"
+    },
+    {
+      "slug": "claude-4-sonnet-thinking",
+      "displayName": "Claude 4 Sonnet",
+      "costPerTask": 0.44666997215264714,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2025-05-22",
+      "addedAt": "2025-05-22"
+    },
+    {
+      "slug": "gpt-5-5-instant-06-26",
+      "displayName": "GPT-5.5 Instant (June 2026)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 11.25,
+      "releaseDate": "2026-06-25",
+      "addedAt": "2026-06-25"
+    },
+    {
+      "slug": "deepseek-v4-flash-non-reasoning",
+      "displayName": "DeepSeek V4 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.84672862068075,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2026-04-24",
+      "addedAt": "2026-04-24"
+    },
+    {
+      "slug": "jt-35b-flash",
+      "displayName": "JT-35B-Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-05-14",
+      "addedAt": "2026-05-14"
+    },
+    {
+      "slug": "minimax-m2",
+      "displayName": "MiniMax-M2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 25.19266284526908,
+      "reasoningTime": 18.548179745015215,
+      "pricePerMillion": 0.525,
+      "releaseDate": "2025-10-26",
+      "addedAt": "2025-10-26"
+    },
+    {
+      "slug": "claude-4-1-opus",
+      "displayName": "Claude 4.1 Opus",
+      "costPerTask": null,
+      "e2eLatencyTotal": 18.44465270693489,
+      "reasoningTime": 0,
+      "pricePerMillion": 30,
+      "releaseDate": "2025-08-05",
+      "addedAt": "2025-08-05"
+    },
+    {
+      "slug": "qwen3-5-122b-a10b-non-reasoning",
+      "displayName": "Qwen3.5 122B A10B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.515711983161361,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.1,
+      "releaseDate": "2026-02-24",
+      "addedAt": "2026-02-24"
+    },
+    {
+      "slug": "mimo-v2-5-pro-non-reasoning",
+      "displayName": "MiMo-V2.5-Pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.471956044510558,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.35,
+      "releaseDate": "2026-04-22",
+      "addedAt": "2026-04-22"
+    },
+    {
+      "slug": "gpt-5-4-non-reasoning",
+      "displayName": "GPT-5.4 (Non-reasoning)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.349863575471822,
+      "reasoningTime": 0,
+      "pricePerMillion": 5.906,
+      "releaseDate": "2026-03-05",
+      "addedAt": "2026-03-05"
+    },
+    {
+      "slug": "grok-4-fast-reasoning",
+      "displayName": "Grok 4 Fast",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.275,
+      "releaseDate": "2025-09-19",
+      "addedAt": "2025-09-19"
+    },
+    {
+      "slug": "gemini-3-flash",
+      "displayName": "Gemini 3 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.9648329263679356,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.125,
+      "releaseDate": "2025-12-17",
+      "addedAt": "2025-12-17"
+    },
+    {
+      "slug": "claude-3-7-sonnet-thinking",
+      "displayName": "Claude 3.7 Sonnet",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-24",
+      "addedAt": "2025-02-24"
+    },
+    {
+      "slug": "glm-4-7-non-reasoning",
+      "displayName": "GLM-4.7",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.167223798202061,
+      "reasoningTime": 0,
+      "pricePerMillion": 1,
+      "releaseDate": "2025-12-22",
+      "addedAt": "2025-12-22"
+    },
+    {
+      "slug": "deepseek-v3-1-terminus-reasoning",
+      "displayName": "DeepSeek V3.1 Terminus",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.914,
+      "releaseDate": "2025-09-22",
+      "addedAt": "2025-09-22"
+    },
+    {
+      "slug": "hy3-non-reasoning",
+      "displayName": "Hy3-preview",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.2863377653026875,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.2,
+      "releaseDate": "2026-04-23",
+      "addedAt": "2026-04-23"
+    },
+    {
+      "slug": "ling-2-6-1t",
+      "displayName": "Ling-2.6-1T",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2026-04-23",
+      "addedAt": "2026-04-23"
+    },
+    {
+      "slug": "gpt-5-2-non-reasoning",
+      "displayName": "GPT-5.2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 8.92295332296873,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.813,
+      "releaseDate": "2025-12-11",
+      "addedAt": "2025-12-11"
+    },
+    {
+      "slug": "step-3-5-flash",
+      "displayName": "Step 3.5 Flash 2603",
+      "costPerTask": null,
+      "e2eLatencyTotal": 13.418417451241584,
+      "reasoningTime": 9.798103740993259,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2026-04-02",
+      "addedAt": "2026-04-02"
+    },
+    {
+      "slug": "doubao-seed-code",
+      "displayName": "Doubao Seed Code",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-11-11",
+      "addedAt": "2025-11-11"
+    },
+    {
+      "slug": "gemini-2-5-pro",
+      "displayName": "Gemini 2.5 Pro",
+      "costPerTask": 0.19782530888396901,
+      "e2eLatencyTotal": 24.865097742192397,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-06-05",
+      "addedAt": "2025-06-05"
+    },
+    {
+      "slug": "gemma-4-26b-a4b",
+      "displayName": "Gemma 4 26B A4B",
+      "costPerTask": 0.031937907574716345,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.198,
+      "releaseDate": "2026-04-02",
+      "addedAt": "2026-04-02"
+    },
+    {
+      "slug": "o4-mini",
+      "displayName": "o4-mini (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 25.75552891221348,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.925,
+      "releaseDate": "2025-04-16",
+      "addedAt": "2025-04-16"
+    },
+    {
+      "slug": "step-3-5-flash-0202",
+      "displayName": "Step 3.5 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 13.673847543929268,
+      "reasoningTime": 10.023556667942854,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2026-02-02",
+      "addedAt": "2026-02-02"
+    },
+    {
+      "slug": "claude-4-opus",
+      "displayName": "Claude 4 Opus",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 30,
+      "releaseDate": "2025-05-22",
+      "addedAt": "2025-05-22"
+    },
+    {
+      "slug": "claude-4-sonnet",
+      "displayName": "Claude 4 Sonnet",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2025-05-22",
+      "addedAt": "2025-05-22"
+    },
+    {
+      "slug": "deepseek-v3-2-reasoning-0925",
+      "displayName": "DeepSeek V3.2 Exp",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.31,
+      "releaseDate": "2025-09-29",
+      "addedAt": "2025-09-29"
+    },
+    {
+      "slug": "nvidia-nemotron-3-super-120b-a12b",
+      "displayName": "NVIDIA Nemotron 3 Super",
+      "costPerTask": 0.2520905115547944,
+      "e2eLatencyTotal": 9.949419280486934,
+      "reasoningTime": 6.751401068389611,
+      "pricePerMillion": 0.412,
+      "releaseDate": "2026-03-11",
+      "addedAt": "2026-03-11"
+    },
+    {
+      "slug": "mercury-2",
+      "displayName": "Mercury 2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.9980715083334046,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.375,
+      "releaseDate": "2026-02-20",
+      "addedAt": "2026-02-20"
+    },
+    {
+      "slug": "glm-4-6-reasoning",
+      "displayName": "GLM-4.6",
+      "costPerTask": null,
+      "e2eLatencyTotal": 50.45521551157934,
+      "reasoningTime": 39.032851424863466,
+      "pricePerMillion": 0.963,
+      "releaseDate": "2025-09-30",
+      "addedAt": "2025-09-30"
+    },
+    {
+      "slug": "gemini-3-1-flash-lite-preview",
+      "displayName": "Gemini 3.1 Flash-Lite",
+      "costPerTask": 0.041571620355421224,
+      "e2eLatencyTotal": 6.146125846745475,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.563,
+      "releaseDate": "2026-03-03",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "qwen3-max-thinking-preview",
+      "displayName": "Qwen3 Max Thinking (Preview)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 52.765696674355326,
+      "reasoningTime": 38.84885764988419,
+      "pricePerMillion": 2.4,
+      "releaseDate": "2025-11-03",
+      "addedAt": "2025-11-03"
+    },
+    {
+      "slug": "gemma-4-31b-non-reasoning",
+      "displayName": "Gemma 4 31B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.395705780252571,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.205,
+      "releaseDate": "2026-04-02",
+      "addedAt": "2026-04-02"
+    },
+    {
+      "slug": "grok-4-3-non-reasoning",
+      "displayName": "Grok 4.3 (Non-reasoning)",
+      "costPerTask": 0.3888732326397479,
+      "e2eLatencyTotal": 5.354397388336963,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.563,
+      "releaseDate": "2026-04-30",
+      "addedAt": "2026-04-30"
+    },
+    {
+      "slug": "k-exaone",
+      "displayName": "K-EXAONE",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-31",
+      "addedAt": "2025-12-31"
+    },
+    {
+      "slug": "mimo-v2-flash",
+      "displayName": "MiMo-V2-Flash",
+      "costPerTask": 0.3511773843295714,
+      "e2eLatencyTotal": 7.988509704902562,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2025-12-16",
+      "addedAt": "2025-12-16"
+    },
+    {
+      "slug": "deepseek-v3-2",
+      "displayName": "DeepSeek V3.2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.775,
+      "releaseDate": "2025-12-01",
+      "addedAt": "2025-12-01"
+    },
+    {
+      "slug": "trinity-large-thinking",
+      "displayName": "Trinity Large Thinking",
+      "costPerTask": null,
+      "e2eLatencyTotal": 13.327233754434888,
+      "reasoningTime": 9.870502505147547,
+      "pricePerMillion": 0.395,
+      "releaseDate": "2026-04-01",
+      "addedAt": "2026-04-01"
+    },
+    {
+      "slug": "qwen3-6-35b-a3b-non-reasoning",
+      "displayName": "Qwen3.6 35B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.025125550070229,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.844,
+      "releaseDate": "2026-04-16",
+      "addedAt": "2026-04-16"
+    },
+    {
+      "slug": "qwen3-max",
+      "displayName": "Qwen3 Max",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.387574197931976,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.047,
+      "releaseDate": "2025-09-23",
+      "addedAt": "2025-09-23"
+    },
+    {
+      "slug": "gpt-oss-120b",
+      "displayName": "gpt-oss-120b (high)",
+      "costPerTask": 0.06067164425252873,
+      "e2eLatencyTotal": 9.181255151143569,
+      "reasoningTime": 6.592839918914815,
+      "pricePerMillion": 0.262,
+      "releaseDate": "2025-08-05",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gemini-2-5-flash-preview-09-2025-reasoning",
+      "displayName": "Gemini 2.5 Flash (Sep)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-09-25",
+      "addedAt": "2025-09-25"
+    },
+    {
+      "slug": "claude-4-5-haiku",
+      "displayName": "Claude 4.5 Haiku",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.4532604367269135,
+      "reasoningTime": 0,
+      "pricePerMillion": 2,
+      "releaseDate": "2025-10-15",
+      "addedAt": "2025-10-15"
+    },
+    {
+      "slug": "kimi-k2-0905",
+      "displayName": "Kimi K2 0905",
+      "costPerTask": null,
+      "e2eLatencyTotal": 17.136437723049397,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.075,
+      "releaseDate": "2025-09-05",
+      "addedAt": "2025-09-05"
+    },
+    {
+      "slug": "claude-3-7-sonnet",
+      "displayName": "Claude 3.7 Sonnet",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2025-02-24",
+      "addedAt": "2025-02-24"
+    },
+    {
+      "slug": "o1",
+      "displayName": "o1",
+      "costPerTask": null,
+      "e2eLatencyTotal": 28.001658814099212,
+      "reasoningTime": 0,
+      "pricePerMillion": 26.25,
+      "releaseDate": "2024-12-05",
+      "addedAt": "2024-12-05"
+    },
+    {
+      "slug": "qwen3-5-35b-a3b-non-reasoning",
+      "displayName": "Qwen3.5 35B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.750361170378647,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.688,
+      "releaseDate": "2026-02-24",
+      "addedAt": "2026-02-24"
+    },
+    {
+      "slug": "gemini-2-5-pro-03-25",
+      "displayName": "Gemini 2.5 Pro (Mar)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-03-25",
+      "addedAt": "2025-03-25"
+    },
+    {
+      "slug": "glm-4-6",
+      "displayName": "GLM-4.6",
+      "costPerTask": null,
+      "e2eLatencyTotal": 14.393909530396343,
+      "reasoningTime": 0,
+      "pricePerMillion": 1,
+      "releaseDate": "2025-09-30",
+      "addedAt": "2025-09-30"
+    },
+    {
+      "slug": "exaone-4-5-33b",
+      "displayName": "EXAONE 4.5 33B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-09",
+      "addedAt": "2026-04-09"
+    },
+    {
+      "slug": "glm-4-7-flash",
+      "displayName": "GLM-4.7-Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 27.513543854397717,
+      "reasoningTime": 20.819889270718207,
+      "pricePerMillion": 0.153,
+      "releaseDate": "2026-01-19",
+      "addedAt": "2026-01-19"
+    },
+    {
+      "slug": "grok-3-mini-reasoning",
+      "displayName": "Grok 3 mini Reasoning (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 41.461819802839635,
+      "reasoningTime": 32.59525027947176,
+      "pricePerMillion": 0.35,
+      "releaseDate": "2025-02-19",
+      "addedAt": "2025-02-19"
+    },
+    {
+      "slug": "grok-4-20-0309-non-reasoning",
+      "displayName": "Grok 4.20 0309",
+      "costPerTask": null,
+      "e2eLatencyTotal": 2.78647431631602,
+      "reasoningTime": 0,
+      "pricePerMillion": 3,
+      "releaseDate": "2026-03-10",
+      "addedAt": "2026-03-10"
+    },
+    {
+      "slug": "gemini-2-5-pro-05-06",
+      "displayName": "Gemini 2.5 Pro (May)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-05-06",
+      "addedAt": "2025-05-06"
+    },
+    {
+      "slug": "qwen3-235b-a22b-instruct-2507-reasoning",
+      "displayName": "Qwen3 235B A22B 2507",
+      "costPerTask": null,
+      "e2eLatencyTotal": 42.91984998207181,
+      "reasoningTime": 32.11341046005727,
+      "pricePerMillion": 0.838,
+      "releaseDate": "2025-07-25",
+      "addedAt": "2025-07-25"
+    },
+    {
+      "slug": "deepseek-v3-2-speciale",
+      "displayName": "DeepSeek V3.2 Speciale",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-01",
+      "addedAt": "2025-12-01"
+    },
+    {
+      "slug": "hypernova-60b",
+      "displayName": "HyperNova 60B 2605",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.442656012902149,
+      "reasoningTime": 5.3726060539216185,
+      "pricePerMillion": 0.065,
+      "releaseDate": "2026-05-26",
+      "addedAt": "2026-05-26"
+    },
+    {
+      "slug": "gemma-4-12b",
+      "displayName": "Gemma 4 12B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 22.620446301648755,
+      "reasoningTime": 16.161194161719084,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2026-06-03",
+      "addedAt": "2026-06-03"
+    },
+    {
+      "slug": "ernie-5-0-thinking-preview",
+      "displayName": "ERNIE 5.0 Thinking Preview",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-11-13",
+      "addedAt": "2025-11-13"
+    },
+    {
+      "slug": "grok-4-20-non-reasoning",
+      "displayName": "Grok 4.20 0309 v2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 2.8444095509194813,
+      "reasoningTime": 0,
+      "pricePerMillion": 3,
+      "releaseDate": "2026-04-07",
+      "addedAt": "2026-04-07"
+    },
+    {
+      "slug": "nova-2-0-pro-reasoning-medium",
+      "displayName": "Nova 2.0 Pro Preview (medium)",
+      "costPerTask": 0.1728370588534525,
+      "e2eLatencyTotal": 33.41395472539207,
+      "reasoningTime": 15.521550841513731,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-11-27",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "grok-code-fast-1",
+      "displayName": "Grok Code Fast 1",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-08-28",
+      "addedAt": "2025-08-28"
+    },
+    {
+      "slug": "qwen3-5-9b",
+      "displayName": "Qwen3.5 9B",
+      "costPerTask": 0.15844958949572202,
+      "e2eLatencyTotal": 52.35075103379601,
+      "reasoningTime": 40.815199140636764,
+      "pricePerMillion": 0.113,
+      "releaseDate": "2026-03-02",
+      "addedAt": "2026-03-02"
+    },
+    {
+      "slug": "deepseek-v3-1-terminus",
+      "displayName": "DeepSeek V3.1 Terminus",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.453,
+      "releaseDate": "2025-09-22",
+      "addedAt": "2025-09-22"
+    },
+    {
+      "slug": "deepseek-v3-2-0925",
+      "displayName": "DeepSeek V3.2 Exp",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.31,
+      "releaseDate": "2025-09-29",
+      "addedAt": "2025-09-29"
+    },
+    {
+      "slug": "nemotron-cascade-2-30b-a3b",
+      "displayName": "Nemotron Cascade 2 30B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-03-19",
+      "addedAt": "2026-03-19"
+    },
+    {
+      "slug": "apriel-v1-5-15b-thinker",
+      "displayName": "Apriel-v1.5-15B-Thinker",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-09-30",
+      "addedAt": "2025-09-30"
+    },
+    {
+      "slug": "qwen3-coder-next",
+      "displayName": "Qwen3 Coder Next",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.4073847368661045,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.563,
+      "releaseDate": "2026-02-03",
+      "addedAt": "2026-02-03"
+    },
+    {
+      "slug": "deepseek-v3-1",
+      "displayName": "DeepSeek V3.1",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.834,
+      "releaseDate": "2025-08-21",
+      "addedAt": "2025-08-21"
+    },
+    {
+      "slug": "nova-2-0-omni-reasoning-medium",
+      "displayName": "Nova 2.0 Omni (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2025-11-26",
+      "addedAt": "2025-11-26"
+    },
+    {
+      "slug": "mistral-small-4",
+      "displayName": "Mistral Small 4",
+      "costPerTask": null,
+      "e2eLatencyTotal": 15.282565490888746,
+      "reasoningTime": 11.56615323191102,
+      "pricePerMillion": 0.262,
+      "releaseDate": "2026-03-16",
+      "addedAt": "2026-03-16"
+    },
+    {
+      "slug": "deepseek-v3-1-reasoning",
+      "displayName": "DeepSeek V3.1",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.865,
+      "releaseDate": "2025-08-21",
+      "addedAt": "2025-08-21"
+    },
+    {
+      "slug": "qwen3-vl-235b-a22b-reasoning",
+      "displayName": "Qwen3 VL 235B A22B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 47.48002457530392,
+      "reasoningTime": 35.58568593144293,
+      "pricePerMillion": 2.174,
+      "releaseDate": "2025-09-23",
+      "addedAt": "2025-09-23"
+    },
+    {
+      "slug": "north-mini-code",
+      "displayName": "North Mini Code",
+      "costPerTask": null,
+      "e2eLatencyTotal": 41.382652966955575,
+      "reasoningTime": 32.81464565756443,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-06-09",
+      "addedAt": "2026-06-09"
+    },
+    {
+      "slug": "apriel-v1-6-15b-thinker",
+      "displayName": "Apriel-v1.6-15B-Thinker",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-11-25",
+      "addedAt": "2025-11-25"
+    },
+    {
+      "slug": "gpt-5-1-non-reasoning",
+      "displayName": "GPT-5.1",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.53585957809431,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-11-13",
+      "addedAt": "2025-11-13"
+    },
+    {
+      "slug": "qwen3-5-9b-non-reasoning",
+      "displayName": "Qwen3.5 9B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-03-02",
+      "addedAt": "2026-03-02"
+    },
+    {
+      "slug": "gemma-4-26b-a4b-non-reasoning",
+      "displayName": "Gemma 4 26B A4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 13.003277351828045,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.198,
+      "releaseDate": "2026-04-02",
+      "addedAt": "2026-04-02"
+    },
+    {
+      "slug": "qwen3-5-4b",
+      "displayName": "Qwen3.5 4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 97.14744661928816,
+      "reasoningTime": 77.06553474983055,
+      "pricePerMillion": 0.06,
+      "releaseDate": "2026-03-02",
+      "addedAt": "2026-03-02"
+    },
+    {
+      "slug": "deepseek-r1",
+      "displayName": "DeepSeek R1 0528",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 2.063,
+      "releaseDate": "2025-05-28",
+      "addedAt": "2025-05-28"
+    },
+    {
+      "slug": "gemini-2-5-flash-reasoning",
+      "displayName": "Gemini 2.5 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 16.280315750532754,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2025-05-20",
+      "addedAt": "2025-05-20"
+    },
+    {
+      "slug": "gpt-5-nano",
+      "displayName": "GPT-5 nano (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 98.0946793259823,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.138,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "qwen3-next-80b-a3b-reasoning",
+      "displayName": "Qwen3 Next 80B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 16.441168477840137,
+      "reasoningTime": 11.45613930347206,
+      "pricePerMillion": 1.875,
+      "releaseDate": "2025-09-11",
+      "addedAt": "2025-09-11"
+    },
+    {
+      "slug": "nova-2-0-pro-reasoning-low",
+      "displayName": "Nova 2.0 Pro Preview (low)",
+      "costPerTask": 0.21277260985423777,
+      "e2eLatencyTotal": 31.14161771825762,
+      "reasoningTime": 16.604299104206337,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-11-27",
+      "addedAt": "2025-11-27"
+    },
+    {
+      "slug": "kimi-k2",
+      "displayName": "Kimi K2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 18.00533591270822,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.039,
+      "releaseDate": "2025-07-11",
+      "addedAt": "2025-07-11"
+    },
+    {
+      "slug": "gpt-4-1",
+      "displayName": "GPT-4.1",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.5450395458416715,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.5,
+      "releaseDate": "2025-04-14",
+      "addedAt": "2025-04-14"
+    },
+    {
+      "slug": "ling-2-6-flash",
+      "displayName": "Ling 2.6 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.427852203650638,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2026-04-21",
+      "addedAt": "2026-04-21"
+    },
+    {
+      "slug": "qwen3-max-preview",
+      "displayName": "Qwen3 Max (Preview)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.804631750474798,
+      "reasoningTime": 0,
+      "pricePerMillion": 2.4,
+      "releaseDate": "2025-09-05",
+      "addedAt": "2025-09-05"
+    },
+    {
+      "slug": "devstral-2",
+      "displayName": "Devstral 2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.699469266829391,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-09",
+      "addedAt": "2025-12-09"
+    },
+    {
+      "slug": "nova-2-0-lite-reasoning-medium",
+      "displayName": "Nova 2.0 Lite (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 30.247180613969014,
+      "reasoningTime": 12.612259909575211,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2025-10-29",
+      "addedAt": "2025-10-29"
+    },
+    {
+      "slug": "gpt-5-nano-medium",
+      "displayName": "GPT-5 nano (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 47.84289624064816,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.138,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "qwen3-5-omni-flash",
+      "displayName": "Qwen3.5 Omni Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.9394888359513063,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.275,
+      "releaseDate": "2026-03-30",
+      "addedAt": "2026-03-30"
+    },
+    {
+      "slug": "o3-mini",
+      "displayName": "o3-mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.707398176166621,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.925,
+      "releaseDate": "2025-01-31",
+      "addedAt": "2025-01-31"
+    },
+    {
+      "slug": "o1-pro",
+      "displayName": "o1-pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 262.5,
+      "releaseDate": "2025-03-19",
+      "addedAt": "2025-03-19"
+    },
+    {
+      "slug": "gemini-2-5-flash-preview-09-2025",
+      "displayName": "Gemini 2.5 Flash (Sep)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-09-25",
+      "addedAt": "2025-09-25"
+    },
+    {
+      "slug": "jt-mini",
+      "displayName": "JT-MINI",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-15",
+      "addedAt": "2026-04-15"
+    },
+    {
+      "slug": "deepseek-r1-0120",
+      "displayName": "DeepSeek R1 (Jan)",
+      "costPerTask": 0.24713753983015388,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 2.431,
+      "releaseDate": "2025-01-20",
+      "addedAt": "2025-01-20"
+    },
+    {
+      "slug": "o3-mini-high",
+      "displayName": "o3-mini (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 20.435694248563443,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.925,
+      "releaseDate": "2025-01-31",
+      "addedAt": "2025-01-31"
+    },
+    {
+      "slug": "grok-3",
+      "displayName": "Grok 3",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 8,
+      "releaseDate": "2025-02-19",
+      "addedAt": "2025-02-19"
+    },
+    {
+      "slug": "seed-oss-36b-instruct",
+      "displayName": "Seed-OSS-36B-Instruct",
+      "costPerTask": null,
+      "e2eLatencyTotal": 75.2083420222468,
+      "reasoningTime": 57.79928979459744,
+      "pricePerMillion": 0.3,
+      "releaseDate": "2025-08-20",
+      "addedAt": "2025-08-20"
+    },
+    {
+      "slug": "nova-2-0-lite-reasoning",
+      "displayName": "Nova 2.0 Lite (high)",
+      "costPerTask": 0.24542698374402477,
+      "e2eLatencyTotal": 31.63500560963872,
+      "reasoningTime": 13.195865435310896,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2025-10-29",
+      "addedAt": "2025-10-29"
+    },
+    {
+      "slug": "qwen3-235b-a22b-instruct-2507",
+      "displayName": "Qwen3 235B 2507",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.682331771670778,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.356,
+      "releaseDate": "2025-07-21",
+      "addedAt": "2025-07-21"
+    },
+    {
+      "slug": "qwen3-coder-480b-a35b-instruct",
+      "displayName": "Qwen3 Coder 480B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.793222657794765,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.675,
+      "releaseDate": "2025-07-22",
+      "addedAt": "2025-07-22"
+    },
+    {
+      "slug": "qwen3-vl-32b-reasoning",
+      "displayName": "Qwen3 VL 32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 30.169966604913814,
+      "reasoningTime": 22.01322543793101,
+      "pricePerMillion": 2.625,
+      "releaseDate": "2025-10-21",
+      "addedAt": "2025-10-21"
+    },
+    {
+      "slug": "magistral-medium-2509",
+      "displayName": "Magistral Medium 1.2",
+      "costPerTask": 0.7471451276458294,
+      "e2eLatencyTotal": 64.32785775660741,
+      "reasoningTime": 50.02875279648609,
+      "pricePerMillion": 2.75,
+      "releaseDate": "2025-09-18",
+      "addedAt": "2025-09-18"
+    },
+    {
+      "slug": "sonar-reasoning-pro",
+      "displayName": "Sonar Reasoning Pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-28",
+      "addedAt": "2025-01-28"
+    },
+    {
+      "slug": "nova-2-0-lite-reasoning-low",
+      "displayName": "Nova 2.0 Lite (low)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 27.436809380268826,
+      "reasoningTime": 13.71292821541514,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2025-10-29",
+      "addedAt": "2025-10-29"
+    },
+    {
+      "slug": "gpt-oss-120b-low",
+      "displayName": "gpt-oss-120b (low)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 8.414601348190514,
+      "reasoningTime": 5.956269124952142,
+      "pricePerMillion": 0.262,
+      "releaseDate": "2025-08-05",
+      "addedAt": "2025-08-05"
+    },
+    {
+      "slug": "minimax-m1-80k",
+      "displayName": "MiniMax M1 80k",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.963,
+      "releaseDate": "2025-06-17",
+      "addedAt": "2025-06-17"
+    },
+    {
+      "slug": "gpt-5-4-nano-non-reasoning",
+      "displayName": "GPT-5.4 nano",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.084490925701524,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.463,
+      "releaseDate": "2026-03-17",
+      "addedAt": "2026-03-17"
+    },
+    {
+      "slug": "gemini-2-5-flash-reasoning-04-2025",
+      "displayName": "Gemini 2.5 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-04-17",
+      "addedAt": "2025-04-17"
+    },
+    {
+      "slug": "devstral-small-2",
+      "displayName": "Devstral Small 2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 12.317318192596009,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-09",
+      "addedAt": "2025-12-09"
+    },
+    {
+      "slug": "k2-think-v2",
+      "displayName": "K2 Think V2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-15",
+      "addedAt": "2025-12-15"
+    },
+    {
+      "slug": "longcat-flash-lite",
+      "displayName": "LongCat Flash Lite",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-01-28",
+      "addedAt": "2026-01-28"
+    },
+    {
+      "slug": "gpt-5-minimal",
+      "displayName": "GPT-5 (minimal)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 9.016429856117869,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "o1-preview",
+      "displayName": "o1-preview",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 28.875,
+      "releaseDate": "2024-09-12",
+      "addedAt": "2024-09-12"
+    },
+    {
+      "slug": "hyperclova-x-seed-think-32b",
+      "displayName": "HyperCLOVA X SEED Think (32B)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-26",
+      "addedAt": "2025-12-26"
+    },
+    {
+      "slug": "grok-4-1-fast",
+      "displayName": "Grok 4.1 Fast",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-11-19",
+      "addedAt": "2025-11-19"
+    },
+    {
+      "slug": "glm-4-6v-reasoning",
+      "displayName": "GLM-4.6V",
+      "costPerTask": null,
+      "e2eLatencyTotal": 37.72649531714283,
+      "reasoningTime": 27.45740261291383,
+      "pricePerMillion": 0.45,
+      "releaseDate": "2025-12-08",
+      "addedAt": "2025-12-08"
+    },
+    {
+      "slug": "k-exaone-non-reasoning",
+      "displayName": "K-EXAONE",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-31",
+      "addedAt": "2025-12-31"
+    },
+    {
+      "slug": "gpt-5-4-mini-non-reasoning",
+      "displayName": "GPT-5.4 mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.799982094231503,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.688,
+      "releaseDate": "2026-03-17",
+      "addedAt": "2026-03-17"
+    },
+    {
+      "slug": "nova-2-0-omni-reasoning-low",
+      "displayName": "Nova 2.0 Omni (low)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2025-11-26",
+      "addedAt": "2025-11-26"
+    },
+    {
+      "slug": "glm-4-5-air",
+      "displayName": "GLM-4.5-Air",
+      "costPerTask": null,
+      "e2eLatencyTotal": 39.112533158091594,
+      "reasoningTime": 29.085822479273386,
+      "pricePerMillion": 0.372,
+      "releaseDate": "2025-07-28",
+      "addedAt": "2025-07-28"
+    },
+    {
+      "slug": "grok-4-fast",
+      "displayName": "Grok 4 Fast",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.275,
+      "releaseDate": "2025-09-19",
+      "addedAt": "2025-09-19"
+    },
+    {
+      "slug": "mi-dm-k-2-5-pro-dec28",
+      "displayName": "Mi:dm K 2.5 Pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-11",
+      "addedAt": "2025-12-11"
+    },
+    {
+      "slug": "gpt-4-1-mini",
+      "displayName": "GPT-4.1 mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.055406691239117,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.7,
+      "releaseDate": "2025-04-14",
+      "addedAt": "2025-04-14"
+    },
+    {
+      "slug": "ring-1t",
+      "displayName": "Ring-1T",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-13",
+      "addedAt": "2025-10-13"
+    },
+    {
+      "slug": "qwen3-5-4b-non-reasoning",
+      "displayName": "Qwen3.5 4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 21.282563730298083,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.06,
+      "releaseDate": "2026-03-02",
+      "addedAt": "2026-03-02"
+    },
+    {
+      "slug": "mistral-large-3",
+      "displayName": "Mistral Large 3",
+      "costPerTask": 0.05988932957210771,
+      "e2eLatencyTotal": 11.032723803631784,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.75,
+      "releaseDate": "2025-12-02",
+      "addedAt": "2025-12-02"
+    },
+    {
+      "slug": "qwen3-30b-a3b-2507-reasoning",
+      "displayName": "Qwen3 30B A3B 2507",
+      "costPerTask": null,
+      "e2eLatencyTotal": 20.44808838998984,
+      "reasoningTime": 14.416134461591817,
+      "pricePerMillion": 0.673,
+      "releaseDate": "2025-07-30",
+      "addedAt": "2025-07-30"
+    },
+    {
+      "slug": "intellect-3",
+      "displayName": "INTELLECT-3",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-11-27",
+      "addedAt": "2025-11-27"
+    },
+    {
+      "slug": "glm-4-7-flash-non-reasoning",
+      "displayName": "GLM-4.7-Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.340016969752669,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.153,
+      "releaseDate": "2026-01-19",
+      "addedAt": "2026-01-19"
+    },
+    {
+      "slug": "deepseek-v3-0324",
+      "displayName": "DeepSeek V3 0324",
+      "costPerTask": 0.18953428564807268,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.209,
+      "releaseDate": "2025-03-25",
+      "addedAt": "2025-03-25"
+    },
+    {
+      "slug": "gpt-5-chatgpt",
+      "displayName": "GPT-5 (ChatGPT)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.6836822205027775,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "solar-open-100b-reasoning",
+      "displayName": "Solar Open 100B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-17",
+      "addedAt": "2025-12-17"
+    },
+    {
+      "slug": "grok-3-reasoning",
+      "displayName": "Grok 3 Reasoning Beta",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-19",
+      "addedAt": "2025-02-19"
+    },
+    {
+      "slug": "gemini-2-5-flash-lite-preview-09-2025-reasoning",
+      "displayName": "Gemini 2.5 Flash-Lite (Sep)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2025-09-08",
+      "addedAt": "2025-09-08"
+    },
+    {
+      "slug": "nemotron-3-nano-omni-30b-a3b",
+      "displayName": "Nemotron 3 Nano Omni 30B A3B Reasoning",
+      "costPerTask": null,
+      "e2eLatencyTotal": 9.595085925145822,
+      "reasoningTime": 6.862576506916714,
+      "pricePerMillion": 0.131,
+      "releaseDate": "2026-04-29",
+      "addedAt": "2026-04-29"
+    },
+    {
+      "slug": "gpt-oss-20b",
+      "displayName": "gpt-oss-20B (high)",
+      "costPerTask": 0.017842778338181632,
+      "e2eLatencyTotal": 11.861378812508754,
+      "reasoningTime": 8.811279566407034,
+      "pricePerMillion": 0.088,
+      "releaseDate": "2025-08-05",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "mistral-small-3-1",
+      "displayName": "Mistral Small 3.1",
+      "costPerTask": 0.04267239759653488,
+      "e2eLatencyTotal": 3.8678067184843674,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.138,
+      "releaseDate": "2025-03-17",
+      "addedAt": "2025-03-17"
+    },
+    {
+      "slug": "mistral-medium-3-1",
+      "displayName": "Mistral Medium 3.1",
+      "costPerTask": 0.1448042873568494,
+      "e2eLatencyTotal": 7.198946815837676,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.8,
+      "releaseDate": "2025-08-12",
+      "addedAt": "2025-08-12"
+    },
+    {
+      "slug": "minimax-m1-40k",
+      "displayName": "MiniMax M1 40k",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-06-17",
+      "addedAt": "2025-06-17"
+    },
+    {
+      "slug": "nova-2-0-pro",
+      "displayName": "Nova 2.0 Pro Preview",
+      "costPerTask": 0.24556414020453576,
+      "e2eLatencyTotal": 4.928247593407761,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.438,
+      "releaseDate": "2025-11-27",
+      "addedAt": "2025-11-27"
+    },
+    {
+      "slug": "gpt-oss-20b-low",
+      "displayName": "gpt-oss-20B (low)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.902130156527248,
+      "reasoningTime": 8.78919118762194,
+      "pricePerMillion": 0.095,
+      "releaseDate": "2025-08-05",
+      "addedAt": "2025-08-05"
+    },
+    {
+      "slug": "qwen3-vl-235b-a22b-instruct",
+      "displayName": "Qwen3 VL 235B A22B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 12.345935815496997,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.7,
+      "releaseDate": "2025-09-23",
+      "addedAt": "2025-09-23"
+    },
+    {
+      "slug": "llama-4-maverick",
+      "displayName": "Llama 4 Maverick",
+      "costPerTask": 0.03169297992682114,
+      "e2eLatencyTotal": 5.400639589471906,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.475,
+      "releaseDate": "2025-04-05",
+      "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "gpt-5-mini-minimal",
+      "displayName": "GPT-5 mini (minimal)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.811420696254054,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.688,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "k2-v2",
+      "displayName": "K2-V2 (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-05",
+      "addedAt": "2025-12-05"
+    },
+    {
+      "slug": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+      "displayName": "NVIDIA Nemotron 3 Nano",
+      "costPerTask": 0.020143555962855803,
+      "e2eLatencyTotal": 33.831797189172526,
+      "reasoningTime": 24.787449988137876,
+      "pricePerMillion": 0.096,
+      "releaseDate": "2025-12-15",
+      "addedAt": "2025-12-15"
+    },
+    {
+      "slug": "deepseek-v3",
+      "displayName": "DeepSeek V3 (Dec)",
+      "costPerTask": 0.025364701163106757,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.523,
+      "releaseDate": "2024-12-26",
+      "addedAt": "2024-12-26"
+    },
+    {
+      "slug": "gemini-2-5-flash",
+      "displayName": "Gemini 2.5 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 2.885851155304929,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2025-05-20",
+      "addedAt": "2025-05-20"
+    },
+    {
+      "slug": "solar-pro-3",
+      "displayName": "Solar Pro 3",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-06",
+      "addedAt": "2026-04-06"
+    },
+    {
+      "slug": "o1-mini",
+      "displayName": "o1-mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-09-12",
+      "addedAt": "2024-09-12"
+    },
+    {
+      "slug": "qwen3-next-80b-a3b-instruct",
+      "displayName": "Qwen3 Next 80B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.9662192059761585,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.875,
+      "releaseDate": "2025-09-11",
+      "addedAt": "2025-09-11"
+    },
+    {
+      "slug": "tri-21b-think-preview",
+      "displayName": "Tri-21B-think Preview",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-02-10",
+      "addedAt": "2026-02-10"
+    },
+    {
+      "slug": "qwen3-coder-30b-a3b-instruct",
+      "displayName": "Qwen3 Coder 30B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.553875299836651,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.352,
+      "releaseDate": "2025-07-31",
+      "addedAt": "2025-07-31"
+    },
+    {
+      "slug": "gpt-4-5",
+      "displayName": "GPT-4.5 (Preview)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-27",
+      "addedAt": "2025-02-27"
+    },
+    {
+      "slug": "diffusiongemma-26b-a4b",
+      "displayName": "DiffusionGemma 26B A4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-06-10",
+      "addedAt": "2026-06-10"
+    },
+    {
+      "slug": "qwen3-235b-a22b-instruct-reasoning",
+      "displayName": "Qwen3 235B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 44.27421707436358,
+      "reasoningTime": 33.20977309709085,
+      "pricePerMillion": 2.625,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "qwq-32b",
+      "displayName": "QwQ-32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 101.84454568419247,
+      "reasoningTime": 83.05121969748448,
+      "pricePerMillion": 0.745,
+      "releaseDate": "2025-03-05",
+      "addedAt": "2025-03-05"
+    },
+    {
+      "slug": "qwen3-vl-30b-a3b-reasoning",
+      "displayName": "Qwen3 VL 30B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 24.714840665855636,
+      "reasoningTime": 17.916754527084255,
+      "pricePerMillion": 0.338,
+      "releaseDate": "2025-10-03",
+      "addedAt": "2025-10-03"
+    },
+    {
+      "slug": "gemini-2-0-flash-thinking-exp-0121",
+      "displayName": "Gemini 2.0 Flash Thinking exp. (Jan)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-21",
+      "addedAt": "2025-01-21"
+    },
+    {
+      "slug": "gemma-4-12b-non-reasoning",
+      "displayName": "Gemma 4 12B (Non-reasoning)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.60876453853612,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2026-06-03",
+      "addedAt": "2026-06-03"
+    },
+    {
+      "slug": "gemini-2-5-flash-lite-preview-09-2025",
+      "displayName": "Gemini 2.5 Flash-Lite (Sep)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2025-09-25",
+      "addedAt": "2025-09-25"
+    },
+    {
+      "slug": "motif-2-12-7b",
+      "displayName": "Motif-2-12.7B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-04",
+      "addedAt": "2025-12-04"
+    },
+    {
+      "slug": "ling-1t",
+      "displayName": "Ling-1T",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-08",
+      "addedAt": "2025-10-08"
+    },
+    {
+      "slug": "nova-premier",
+      "displayName": "Nova Premier",
+      "costPerTask": null,
+      "e2eLatencyTotal": 17.810685225049102,
+      "reasoningTime": 0,
+      "pricePerMillion": 5,
+      "releaseDate": "2025-04-30",
+      "addedAt": "2025-04-30"
+    },
+    {
+      "slug": "solar-pro-2-preview-reasoning",
+      "displayName": "Solar Pro 2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-05-20",
+      "addedAt": "2025-05-20"
+    },
+    {
+      "slug": "magistral-medium",
+      "displayName": "Magistral Medium 1",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-06-10",
+      "addedAt": "2025-06-10"
+    },
+    {
+      "slug": "gemma-4-e4b",
+      "displayName": "Gemma 4 E4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-03",
+      "addedAt": "2026-04-03"
+    },
+    {
+      "slug": "mistral-medium-3",
+      "displayName": "Mistral Medium 3",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.636842077960074,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.8,
+      "releaseDate": "2025-05-07",
+      "addedAt": "2025-05-07"
+    },
+    {
+      "slug": "k2-v2-medium",
+      "displayName": "K2-V2 (medium)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-05",
+      "addedAt": "2025-12-05"
+    },
+    {
+      "slug": "llama-nemotron-super-49b-v1-5-reasoning",
+      "displayName": "Llama Nemotron Super 49B v1.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 51.228393044530534,
+      "reasoningTime": 39.9783030308243,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2025-07-25",
+      "addedAt": "2025-07-25"
+    },
+    {
+      "slug": "devstral-medium",
+      "displayName": "Devstral Medium",
+      "costPerTask": null,
+      "e2eLatencyTotal": 9.452073092727723,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.8,
+      "releaseDate": "2025-07-10",
+      "addedAt": "2025-07-10"
+    },
+    {
+      "slug": "mistral-small-4-non-reasoning",
+      "displayName": "Mistral Small 4",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.9073524650909297,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.262,
+      "releaseDate": "2026-03-16",
+      "addedAt": "2026-03-16"
+    },
+    {
+      "slug": "tri-21b-think-v0-5",
+      "displayName": "Tri-21B-Think",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-02-10",
+      "addedAt": "2026-02-10"
+    },
+    {
+      "slug": "gpt-4o-chatgpt-03-25",
+      "displayName": "GPT-4o (Mar)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-03-27",
+      "addedAt": "2025-03-27"
+    },
+    {
+      "slug": "gemini-2-0-flash",
+      "displayName": "Gemini 2.0 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.262,
+      "releaseDate": "2025-02-05",
+      "addedAt": "2025-02-05"
+    },
+    {
+      "slug": "claude-3-5-haiku",
+      "displayName": "Claude 3.5 Haiku",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.6,
+      "releaseDate": "2024-10-22",
+      "addedAt": "2024-10-22"
+    },
+    {
+      "slug": "llama-3-3-nemotron-super-49b-reasoning",
+      "displayName": "Llama 3.3 Nemotron Super 49B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-03-18",
+      "addedAt": "2025-03-18"
+    },
+    {
+      "slug": "qwen3-4b-2507-instruct-reasoning",
+      "displayName": "Qwen3 4B 2507",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-08-06",
+      "addedAt": "2025-08-06"
+    },
+    {
+      "slug": "minicpm5-1b",
+      "displayName": "MiniCPM5-1B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-05-25",
+      "addedAt": "2026-05-25"
+    },
+    {
+      "slug": "sarvam-105b",
+      "displayName": "Sarvam 105B (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 24.67312506239644,
+      "reasoningTime": 18.127171492317178,
+      "pricePerMillion": 0.074,
+      "releaseDate": "2026-03-06",
+      "addedAt": "2026-03-06"
+    },
+    {
+      "slug": "gemini-2-0-pro-experimental-02-05",
+      "displayName": "Gemini 2.0 Pro Experimental",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-05",
+      "addedAt": "2025-02-05"
+    },
+    {
+      "slug": "nova-2-0-lite",
+      "displayName": "Nova 2.0 Lite",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.9600898086020937,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2025-10-29",
+      "addedAt": "2025-10-29"
+    },
+    {
+      "slug": "devstral-small-2505",
+      "displayName": "Devstral Small (May)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-05-21",
+      "addedAt": "2025-05-21"
+    },
+    {
+      "slug": "claude-3-opus",
+      "displayName": "Claude 3 Opus",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 30,
+      "releaseDate": "2024-03-04",
+      "addedAt": "2024-03-04"
+    },
+    {
+      "slug": "minicpm5-1b-non-reasoning",
+      "displayName": "MiniCPM5-1B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-05-25",
+      "addedAt": "2026-05-25"
+    },
+    {
+      "slug": "sonar-reasoning",
+      "displayName": "Sonar Reasoning",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-28",
+      "addedAt": "2025-01-28"
+    },
+    {
+      "slug": "gemini-2-5-flash-04-2025",
+      "displayName": "Gemini 2.5 Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-04-17",
+      "addedAt": "2025-04-17"
+    },
+    {
+      "slug": "qwen3-32b-instruct-reasoning",
+      "displayName": "Qwen3 32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 27.68211019838434,
+      "reasoningTime": 20.11048606510752,
+      "pricePerMillion": 0.276,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "gemini-2-5-flash-lite-reasoning",
+      "displayName": "Gemini 2.5 Flash-Lite",
+      "costPerTask": null,
+      "e2eLatencyTotal": 27.755414792743952,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2025-06-17",
+      "addedAt": "2025-06-17"
+    },
+    {
+      "slug": "magistral-small-2509",
+      "displayName": "Magistral Small 1.2",
+      "costPerTask": 0.2382247627174546,
+      "e2eLatencyTotal": 31.380388081945718,
+      "reasoningTime": 24.321656538356667,
+      "pricePerMillion": 0.75,
+      "releaseDate": "2025-09-17",
+      "addedAt": "2025-09-17"
+    },
+    {
+      "slug": "gpt-4o",
+      "displayName": "GPT-4o (Nov)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.4315439905663223,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.375,
+      "releaseDate": "2024-11-20",
+      "addedAt": "2024-11-20"
+    },
+    {
+      "slug": "qwen3-vl-32b-instruct",
+      "displayName": "Qwen3 VL 32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.025670673044916,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.225,
+      "releaseDate": "2025-10-21",
+      "addedAt": "2025-10-21"
+    },
+    {
+      "slug": "ministral-3-14b",
+      "displayName": "Ministral 3 14B",
+      "costPerTask": 0.14918625422811388,
+      "e2eLatencyTotal": 7.795617988545684,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.2,
+      "releaseDate": "2025-12-02",
+      "addedAt": "2025-12-02"
+    },
+    {
+      "slug": "deepseek-r1-distill-qwen-32b",
+      "displayName": "DeepSeek R1 Distill Qwen 32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-20",
+      "addedAt": "2025-01-20"
+    },
+    {
+      "slug": "glm-4-6v",
+      "displayName": "GLM-4.6V",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.713268423926891,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.45,
+      "releaseDate": "2025-12-08",
+      "addedAt": "2025-12-08"
+    },
+    {
+      "slug": "qwen3-235b-a22b-instruct",
+      "displayName": "Qwen3 235B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.675109128077132,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.787,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "magistral-small",
+      "displayName": "Magistral Small 1",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-06-10",
+      "addedAt": "2025-06-10"
+    },
+    {
+      "slug": "gemini-2-0-flash-experimental",
+      "displayName": "Gemini 2.0 Flash (exp)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-12-11",
+      "addedAt": "2024-12-11"
+    },
+    {
+      "slug": "exaone-4-0-32b-reasoning",
+      "displayName": "EXAONE 4.0 32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-07-15",
+      "addedAt": "2025-07-15"
+    },
+    {
+      "slug": "qwen3-vl-8b-reasoning",
+      "displayName": "Qwen3 VL 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 24.17766294532507,
+      "reasoningTime": 17.42816783346004,
+      "pricePerMillion": 0.66,
+      "releaseDate": "2025-10-14",
+      "addedAt": "2025-10-14"
+    },
+    {
+      "slug": "mistral-small-3-2",
+      "displayName": "Mistral Small 3.2",
+      "costPerTask": 0.10821228710431724,
+      "e2eLatencyTotal": 4.2121067506726115,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.128,
+      "releaseDate": "2025-06-20",
+      "addedAt": "2025-06-20"
+    },
+    {
+      "slug": "nova-2-0-omni",
+      "displayName": "Nova 2.0 Omni",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.85,
+      "releaseDate": "2025-11-26",
+      "addedAt": "2025-11-26"
+    },
+    {
+      "slug": "qwen3-14b-instruct-reasoning",
+      "displayName": "Qwen3 14B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 44.74092070596243,
+      "reasoningTime": 33.541485583170065,
+      "pricePerMillion": 0.731,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "deepseek-r1-qwen3-8b",
+      "displayName": "DeepSeek R1 0528 Qwen3 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-05-29",
+      "addedAt": "2025-05-29"
+    },
+    {
+      "slug": "qwen3-5-2b",
+      "displayName": "Qwen3.5 2B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 109.59059913950215,
+      "reasoningTime": 86.95586759960177,
+      "pricePerMillion": 0.04,
+      "releaseDate": "2026-03-02",
+      "addedAt": "2026-03-02"
+    },
+    {
+      "slug": "qwen-2-5-max",
+      "displayName": "Qwen2.5 Max",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 2.8,
+      "releaseDate": "2025-01-28",
+      "addedAt": "2025-01-28"
+    },
+    {
+      "slug": "nanbeige4-1-3b",
+      "displayName": "Nanbeige4.1-3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-02-11",
+      "addedAt": "2026-02-11"
+    },
+    {
+      "slug": "llama-4-scout",
+      "displayName": "Llama 4 Scout",
+      "costPerTask": 0.008506397458326823,
+      "e2eLatencyTotal": 5.796258850231963,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.292,
+      "releaseDate": "2025-04-05",
+      "addedAt": "2025-04-05"
+    },
+    {
+      "slug": "qwen3-vl-30b-a3b-instruct",
+      "displayName": "Qwen3 VL 30B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.676341255959857,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.3,
+      "releaseDate": "2025-10-03",
+      "addedAt": "2025-10-03"
+    },
+    {
+      "slug": "hermes-4-llama-3-1-70b-reasoning",
+      "displayName": "Hermes 4 70B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 32.016715823267255,
+      "reasoningTime": 24.447316952213765,
+      "pricePerMillion": 0.198,
+      "releaseDate": "2025-08-27",
+      "addedAt": "2025-08-27"
+    },
+    {
+      "slug": "gemini-1-5-pro",
+      "displayName": "Gemini 1.5 Pro (Sep)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-09-24",
+      "addedAt": "2024-09-24"
+    },
+    {
+      "slug": "solar-pro-2-preview",
+      "displayName": "Solar Pro 2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-05-20",
+      "addedAt": "2025-05-20"
+    },
+    {
+      "slug": "deepseek-r1-distill-llama-70b",
+      "displayName": "DeepSeek R1 Distill Llama 70B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 52.26853761490518,
+      "reasoningTime": 41.3117338783244,
+      "pricePerMillion": 0.787,
+      "releaseDate": "2025-01-20",
+      "addedAt": "2025-01-20"
+    },
+    {
+      "slug": "claude-35-sonnet",
+      "displayName": "Claude 3.5 Sonnet (Oct)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2024-10-22",
+      "addedAt": "2024-10-22"
+    },
+    {
+      "slug": "deepseek-r1-distill-qwen-14b",
+      "displayName": "DeepSeek R1 Distill Qwen 14B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-20",
+      "addedAt": "2025-01-20"
+    },
+    {
+      "slug": "falcon-h1r-7b",
+      "displayName": "Falcon-H1R-7B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-01-04",
+      "addedAt": "2026-01-04"
+    },
+    {
+      "slug": "ling-flash-2-0",
+      "displayName": "Ling-flash-2.0",
+      "costPerTask": null,
+      "e2eLatencyTotal": 8.5105223292911,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.247,
+      "releaseDate": "2025-09-17",
+      "addedAt": "2025-09-17"
+    },
+    {
+      "slug": "qwen3-omni-30b-a3b-reasoning",
+      "displayName": "Qwen3 Omni 30B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 27.76522552865828,
+      "reasoningTime": 20.608648283726737,
+      "pricePerMillion": 0.43,
+      "releaseDate": "2025-09-22",
+      "addedAt": "2025-09-22"
+    },
+    {
+      "slug": "gpt-4o-2024-08-06",
+      "displayName": "GPT-4o (Aug)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.896250233033794,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.375,
+      "releaseDate": "2024-08-06",
+      "addedAt": "2024-08-06"
+    },
+    {
+      "slug": "gpt-4-1-nano",
+      "displayName": "GPT-4.1 nano",
+      "costPerTask": 0.03308199563121945,
+      "e2eLatencyTotal": 3.873100266705755,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2025-04-14",
+      "addedAt": "2025-04-14"
+    },
+    {
+      "slug": "qwen2-5-72b-instruct",
+      "displayName": "Qwen2.5 72B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.37,
+      "releaseDate": "2024-09-19",
+      "addedAt": "2024-09-19"
+    },
+    {
+      "slug": "sonar",
+      "displayName": "Sonar",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-21",
+      "addedAt": "2025-01-21"
+    },
+    {
+      "slug": "step-3-vl-10b",
+      "displayName": "Step3 VL 10B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-01-20",
+      "addedAt": "2026-01-20"
+    },
+    {
+      "slug": "qwen3-30b-a3b-instruct-reasoning",
+      "displayName": "Qwen3 30B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 26.318930851109304,
+      "reasoningTime": 19.245154446487273,
+      "pricePerMillion": 0.18,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "sonar-pro",
+      "displayName": "Sonar Pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-21",
+      "addedAt": "2025-01-21"
+    },
+    {
+      "slug": "devstral-small",
+      "displayName": "Devstral Small",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.63714229615454,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2025-07-10",
+      "addedAt": "2025-07-10"
+    },
+    {
+      "slug": "gemma-4-e2b",
+      "displayName": "Gemma 4 E2B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-02",
+      "addedAt": "2026-04-02"
+    },
+    {
+      "slug": "glm-4-5v-reasoning",
+      "displayName": "GLM-4.5V",
+      "costPerTask": null,
+      "e2eLatencyTotal": 32.77831180256692,
+      "reasoningTime": 23.136054760853682,
+      "pricePerMillion": 0.9,
+      "releaseDate": "2025-08-11",
+      "addedAt": "2025-08-11"
+    },
+    {
+      "slug": "mistral-large-2",
+      "displayName": "Mistral Large 2 (Nov)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.441254618055668,
+      "reasoningTime": 0,
+      "pricePerMillion": 3,
+      "releaseDate": "2024-11-18",
+      "addedAt": "2024-11-18"
+    },
+    {
+      "slug": "llama-3-1-nemotron-ultra-253b-v1-reasoning",
+      "displayName": "Llama Nemotron Ultra",
+      "costPerTask": null,
+      "e2eLatencyTotal": 51.1470767113767,
+      "reasoningTime": 39.00254960150141,
+      "pricePerMillion": 0.9,
+      "releaseDate": "2025-04-07",
+      "addedAt": "2025-04-07"
+    },
+    {
+      "slug": "qwen3-30b-a3b-2507",
+      "displayName": "Qwen3 30B A3B 2507",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.193392433049154,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.213,
+      "releaseDate": "2025-07-29",
+      "addedAt": "2025-07-29"
+    },
+    {
+      "slug": "ernie-4-5-300b-a47b",
+      "displayName": "ERNIE 4.5 300B A47B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.485,
+      "releaseDate": "2025-06-30",
+      "addedAt": "2025-06-30"
+    },
+    {
+      "slug": "hermes-4-llama-3-1-405b-reasoning",
+      "displayName": "Hermes 4 405B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 68.59797545858532,
+      "reasoningTime": 52.96021452126824,
+      "pricePerMillion": 1.5,
+      "releaseDate": "2025-08-27",
+      "addedAt": "2025-08-27"
+    },
+    {
+      "slug": "solar-pro-2-reasoning",
+      "displayName": "Solar Pro 2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-07-09",
+      "addedAt": "2025-07-09"
+    },
+    {
+      "slug": "nvidia-nemotron-nano-12b-v2-vl-reasoning",
+      "displayName": "NVIDIA Nemotron Nano 12B v2 VL",
+      "costPerTask": null,
+      "e2eLatencyTotal": 9.337450242118582,
+      "reasoningTime": 7.111489488094925,
+      "pricePerMillion": 0.3,
+      "releaseDate": "2025-10-28",
+      "addedAt": "2025-10-28"
+    },
+    {
+      "slug": "ministral-3-8b",
+      "displayName": "Ministral 3 8B",
+      "costPerTask": 0.18482442028714433,
+      "e2eLatencyTotal": 7.2818969802749045,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2025-12-02",
+      "addedAt": "2025-12-02"
+    },
+    {
+      "slug": "gemma-4-e4b-non-reasoning",
+      "displayName": "Gemma 4 E4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-03",
+      "addedAt": "2026-04-03"
+    },
+    {
+      "slug": "granite-4-1-30b",
+      "displayName": "Granite 4.1 30B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-29",
+      "addedAt": "2026-04-29"
+    },
+    {
+      "slug": "nvidia-nemotron-nano-9b-v2-reasoning",
+      "displayName": "NVIDIA Nemotron Nano 9B V2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 48.157632250037466,
+      "reasoningTime": 30.072978804829972,
+      "pricePerMillion": 0.07,
+      "releaseDate": "2025-08-18",
+      "addedAt": "2025-08-18"
+    },
+    {
+      "slug": "hermes-4-llama-3-1-405b",
+      "displayName": "Hermes 4 405B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 15.5220849845501,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.5,
+      "releaseDate": "2025-08-27",
+      "addedAt": "2025-08-27"
+    },
+    {
+      "slug": "gemini-2-0-flash-lite-001",
+      "displayName": "Gemini 2.0 Flash-Lite (Feb)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-25",
+      "addedAt": "2025-02-25"
+    },
+    {
+      "slug": "nvidia-nemotron-3-nano-4b",
+      "displayName": "NVIDIA Nemotron 3 Nano 4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-03-16",
+      "addedAt": "2026-03-16"
+    },
+    {
+      "slug": "qwen3-5-2b-non-reasoning",
+      "displayName": "Qwen3.5 2B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 19.863137289958633,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.04,
+      "releaseDate": "2026-03-02",
+      "addedAt": "2026-03-02"
+    },
+    {
+      "slug": "llama-nemotron-super-49b-v1-5",
+      "displayName": "Llama Nemotron Super 49B v1.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.182887402144392,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2025-07-25",
+      "addedAt": "2025-07-25"
+    },
+    {
+      "slug": "qwen3-32b-instruct",
+      "displayName": "Qwen3 32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.690004656649821,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.26,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "gpt-4o-2024-05-13",
+      "displayName": "GPT-4o (May)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.697393302574358,
+      "reasoningTime": 0,
+      "pricePerMillion": 7.5,
+      "releaseDate": "2024-05-13",
+      "addedAt": "2024-05-13"
+    },
+    {
+      "slug": "llama-3-3-instruct-70b",
+      "displayName": "Llama 3.3 70B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.129294667624016,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.612,
+      "releaseDate": "2024-12-06",
+      "addedAt": "2024-12-06"
+    },
+    {
+      "slug": "gemini-2-0-flash-lite-preview",
+      "displayName": "Gemini 2.0 Flash-Lite (Preview)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-05",
+      "addedAt": "2025-02-05"
+    },
+    {
+      "slug": "k2-v2-low",
+      "displayName": "K2-V2 (low)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-05",
+      "addedAt": "2025-12-05"
+    },
+    {
+      "slug": "llama-3-1-nemotron-nano-4b-reasoning",
+      "displayName": "Llama 3.1 Nemotron Nano 4B v1.1",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-05-20",
+      "addedAt": "2025-05-20"
+    },
+    {
+      "slug": "kimi-linear-48b-a3b-instruct",
+      "displayName": "Kimi Linear 48B A3B Instruct",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-30",
+      "addedAt": "2025-10-30"
+    },
+    {
+      "slug": "llama-3-1-instruct-405b",
+      "displayName": "Llama 3.1 405B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 8.772409075000033,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.688,
+      "releaseDate": "2024-07-23",
+      "addedAt": "2024-07-23"
+    },
+    {
+      "slug": "llama-3-3-nemotron-super-49b",
+      "displayName": "Llama 3.3 Nemotron Super 49B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-03-18",
+      "addedAt": "2025-03-18"
+    },
+    {
+      "slug": "qwen3-vl-8b-instruct",
+      "displayName": "Qwen3 VL 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.503934148822946,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.31,
+      "releaseDate": "2025-10-14",
+      "addedAt": "2025-10-14"
+    },
+    {
+      "slug": "qwen3-4b-instruct-reasoning",
+      "displayName": "Qwen3 4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.398,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "lfm2-5-8b-a1b",
+      "displayName": "LFM2.5-8B-A1B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 9.454471597769915,
+      "reasoningTime": 6.0470097762161155,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-05-28",
+      "addedAt": "2026-05-28"
+    },
+    {
+      "slug": "claude-35-sonnet-june-24",
+      "displayName": "Claude 3.5 Sonnet (June)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2024-06-21",
+      "addedAt": "2024-06-21"
+    },
+    {
+      "slug": "qwen3-8b-instruct-reasoning",
+      "displayName": "Qwen3 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 69.40614995839353,
+      "reasoningTime": 52.43480646871489,
+      "pricePerMillion": 0.37,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "tulu3-405b",
+      "displayName": "Tulu3 405B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-30",
+      "addedAt": "2025-01-30"
+    },
+    {
+      "slug": "gpt-4o-chatgpt",
+      "displayName": "GPT-4o (ChatGPT)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-15",
+      "addedAt": "2025-02-15"
+    },
+    {
+      "slug": "ring-flash-2-0",
+      "displayName": "Ring-flash-2.0",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.247,
+      "releaseDate": "2025-09-19",
+      "addedAt": "2025-09-19"
+    },
+    {
+      "slug": "pixtral-large-2411",
+      "displayName": "Pixtral Large",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.289177965992117,
+      "reasoningTime": 0,
+      "pricePerMillion": 3,
+      "releaseDate": "2024-11-18",
+      "addedAt": "2024-11-18"
+    },
+    {
+      "slug": "olmo-3-1-32b-think",
+      "displayName": "Olmo 3.1 32B Think",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-12",
+      "addedAt": "2025-12-12"
+    },
+    {
+      "slug": "grok-2-1212",
+      "displayName": "Grok 2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-12-12",
+      "addedAt": "2024-12-12"
+    },
+    {
+      "slug": "gpt-5-nano-minimal",
+      "displayName": "GPT-5 nano (minimal)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.348801298066535,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.138,
+      "releaseDate": "2025-08-07",
+      "addedAt": "2025-08-07"
+    },
+    {
+      "slug": "gemini-1-5-flash",
+      "displayName": "Gemini 1.5 Flash (Sep)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-09-24",
+      "addedAt": "2024-09-24"
+    },
+    {
+      "slug": "qwen3-vl-4b-reasoning",
+      "displayName": "Qwen3 VL 4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-14",
+      "addedAt": "2025-10-14"
+    },
+    {
+      "slug": "gpt-4-turbo",
+      "displayName": "GPT-4 Turbo",
+      "costPerTask": null,
+      "e2eLatencyTotal": 18.40032068209509,
+      "reasoningTime": 0,
+      "pricePerMillion": 15,
+      "releaseDate": "2023-11-06",
+      "addedAt": "2023-11-06"
+    },
+    {
+      "slug": "solar-pro-2",
+      "displayName": "Solar Pro 2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-07-09",
+      "addedAt": "2025-07-09"
+    },
+    {
+      "slug": "nova-pro",
+      "displayName": "Nova Pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.4,
+      "releaseDate": "2024-12-03",
+      "addedAt": "2024-12-03"
+    },
+    {
+      "slug": "command-a",
+      "displayName": "Command A",
+      "costPerTask": null,
+      "e2eLatencyTotal": 9.209003514442772,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.375,
+      "releaseDate": "2025-03-13",
+      "addedAt": "2025-03-13"
+    },
+    {
+      "slug": "llama-3-1-nemotron-instruct-70b",
+      "displayName": "Llama 3.1 Nemotron 70B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.43180242617274,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.2,
+      "releaseDate": "2024-10-15",
+      "addedAt": "2024-10-15"
+    },
+    {
+      "slug": "llama-3-1-instruct-8b",
+      "displayName": "Llama 3.1 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.350335158208869,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.1,
+      "releaseDate": "2024-07-23",
+      "addedAt": "2024-07-23"
+    },
+    {
+      "slug": "grok-beta",
+      "displayName": "Grok Beta",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-08-13",
+      "addedAt": "2024-08-13"
+    },
+    {
+      "slug": "gemma-3-27b",
+      "displayName": "Gemma 3 27B",
+      "costPerTask": 0.07821609821553162,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.145,
+      "releaseDate": "2025-03-12",
+      "addedAt": "2025-03-12"
+    },
+    {
+      "slug": "nvidia-nemotron-3-nano-30b-a3b",
+      "displayName": "NVIDIA Nemotron 3 Nano",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.622595981024506,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.088,
+      "releaseDate": "2025-12-15",
+      "addedAt": "2025-12-15"
+    },
+    {
+      "slug": "nvidia-nemotron-nano-9b-v2",
+      "displayName": "NVIDIA Nemotron Nano 9B V2",
+      "costPerTask": null,
+      "e2eLatencyTotal": 5.716065595544776,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.086,
+      "releaseDate": "2025-08-18",
+      "addedAt": "2025-08-18"
+    },
+    {
+      "slug": "mistral-large-2407",
+      "displayName": "Mistral Large 2 (Jul)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 3,
+      "releaseDate": "2024-07-24",
+      "addedAt": "2024-07-24"
+    },
+    {
+      "slug": "qwen3-4b-2507-instruct",
+      "displayName": "Qwen3 4B 2507",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-08-06",
+      "addedAt": "2025-08-06"
+    },
+    {
+      "slug": "qwen2-5-coder-32b-instruct",
+      "displayName": "Qwen2.5 Coder 32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-11-11",
+      "addedAt": "2024-11-11"
+    },
+    {
+      "slug": "qwen3-14b-instruct",
+      "displayName": "Qwen3 14B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.235681229472783,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.381,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "gpt-4",
+      "displayName": "GPT-4",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 37.5,
+      "releaseDate": "2023-03-14",
+      "addedAt": "2023-03-14"
+    },
+    {
+      "slug": "glm-4-5v",
+      "displayName": "GLM-4.5V",
+      "costPerTask": null,
+      "e2eLatencyTotal": 22.548798414722416,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.9,
+      "releaseDate": "2025-08-11",
+      "addedAt": "2025-08-11"
+    },
+    {
+      "slug": "mistral-small-3",
+      "displayName": "Mistral Small 3",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.947612429801282,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.104,
+      "releaseDate": "2025-01-30",
+      "addedAt": "2025-01-30"
+    },
+    {
+      "slug": "gemini-2-5-flash-lite",
+      "displayName": "Gemini 2.5 Flash-Lite",
+      "costPerTask": null,
+      "e2eLatencyTotal": 2.6077237409517093,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.175,
+      "releaseDate": "2025-06-17",
+      "addedAt": "2025-06-17"
+    },
+    {
+      "slug": "nova-lite",
+      "displayName": "Nova Lite",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.969920432822054,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.105,
+      "releaseDate": "2024-12-03",
+      "addedAt": "2024-12-03"
+    },
+    {
+      "slug": "gpt-4o-mini",
+      "displayName": "GPT-4o mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.843618028806289,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.262,
+      "releaseDate": "2024-07-18",
+      "addedAt": "2024-07-18"
+    },
+    {
+      "slug": "hermes-4-llama-3-1-70b",
+      "displayName": "Hermes 4 70B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.6209379260166035,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.198,
+      "releaseDate": "2025-08-27",
+      "addedAt": "2025-08-27"
+    },
+    {
+      "slug": "qwen3-30b-a3b-instruct",
+      "displayName": "Qwen3 30B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.084511336836903,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.133,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "ministral-3-3b",
+      "displayName": "Ministral 3 3B",
+      "costPerTask": 0.12619350182313843,
+      "e2eLatencyTotal": 3.923858406659799,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.1,
+      "releaseDate": "2025-12-02",
+      "addedAt": "2025-12-02"
+    },
+    {
+      "slug": "deepseek-v2-5",
+      "displayName": "DeepSeek-V2.5 (Dec)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-12-10",
+      "addedAt": "2024-12-10"
+    },
+    {
+      "slug": "qwen3-4b-instruct",
+      "displayName": "Qwen3 4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.188,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "llama-3-1-instruct-70b",
+      "displayName": "Llama 3.1 70B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 19.81731367535195,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.56,
+      "releaseDate": "2024-07-23",
+      "addedAt": "2024-07-23"
+    },
+    {
+      "slug": "granite-4-1-8b",
+      "displayName": "Granite 4.1 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.960240056171936,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.063,
+      "releaseDate": "2026-04-29",
+      "addedAt": "2026-04-29"
+    },
+    {
+      "slug": "sarvam-30b",
+      "displayName": "Sarvam 30B (high)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 16.90845976891385,
+      "reasoningTime": 12.036379867131178,
+      "pricePerMillion": 0.047,
+      "releaseDate": "2026-03-06",
+      "addedAt": "2026-03-06"
+    },
+    {
+      "slug": "gemini-2-0-flash-thinking-exp-1219",
+      "displayName": "Gemini 2.0 Flash Thinking exp. (Dec)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-12-19",
+      "addedAt": "2024-12-19"
+    },
+    {
+      "slug": "deepseek-v2-5-sep-2024",
+      "displayName": "DeepSeek-V2.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-09-06",
+      "addedAt": "2024-09-06"
+    },
+    {
+      "slug": "olmo-3-1-32b-instruct",
+      "displayName": "Olmo 3.1 32B Instruct",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-01-13",
+      "addedAt": "2026-01-13"
+    },
+    {
+      "slug": "mistral-saba",
+      "displayName": "Mistral Saba",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-17",
+      "addedAt": "2025-02-17"
+    },
+    {
+      "slug": "deepseek-r1-distill-llama-8b",
+      "displayName": "DeepSeek R1 Distill Llama 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-20",
+      "addedAt": "2025-01-20"
+    },
+    {
+      "slug": "gemma-4-e2b-non-reasoning",
+      "displayName": "Gemma 4 E2B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-02",
+      "addedAt": "2026-04-02"
+    },
+    {
+      "slug": "olmo-3-32b-think",
+      "displayName": "Olmo 3 32B Think",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-11-20",
+      "addedAt": "2025-11-20"
+    },
+    {
+      "slug": "gemini-1-5-pro-may-2024",
+      "displayName": "Gemini 1.5 Pro (May)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-05-15",
+      "addedAt": "2024-05-15"
+    },
+    {
+      "slug": "r1-1776",
+      "displayName": "R1 1776",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-18",
+      "addedAt": "2025-02-18"
+    },
+    {
+      "slug": "qwen-turbo",
+      "displayName": "Qwen2.5 Turbo",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.053757978001977,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.088,
+      "releaseDate": "2024-11-18",
+      "addedAt": "2024-11-18"
+    },
+    {
+      "slug": "reka-flash",
+      "displayName": "Reka Flash",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.120924128135364,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.35,
+      "releaseDate": "2024-10-04",
+      "addedAt": "2024-10-04"
+    },
+    {
+      "slug": "llama-3-2-instruct-90b-vision",
+      "displayName": "Llama 3.2 90B (Vision)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 9.67851996417642,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.38,
+      "releaseDate": "2024-09-25",
+      "addedAt": "2024-09-25"
+    },
+    {
+      "slug": "solar-mini",
+      "displayName": "Solar Mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2024-01-25",
+      "addedAt": "2024-01-25"
+    },
+    {
+      "slug": "grok-1",
+      "displayName": "Grok-1",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-03-17",
+      "addedAt": "2024-03-17"
+    },
+    {
+      "slug": "qwen2-72b-instruct",
+      "displayName": "Qwen2 72B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-06-07",
+      "addedAt": "2024-06-07"
+    },
+    {
+      "slug": "exaone-4-0-32b",
+      "displayName": "EXAONE 4.0 32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-07-15",
+      "addedAt": "2025-07-15"
+    },
+    {
+      "slug": "gemini-1-5-flash-8b",
+      "displayName": "Gemini 1.5 Flash-8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-10-03",
+      "addedAt": "2024-10-03"
+    },
+    {
+      "slug": "deephermes-3-mistral-24b-preview",
+      "displayName": "DeepHermes 3 - Mistral 24B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-03-13",
+      "addedAt": "2025-03-13"
+    },
+    {
+      "slug": "jamba-1-7-large",
+      "displayName": "Jamba 1.7 Large",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.029742752495693,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.5,
+      "releaseDate": "2025-07-07",
+      "addedAt": "2025-07-07"
+    },
+    {
+      "slug": "granite-4-0-h-small",
+      "displayName": "Granite 4.0 H Small",
+      "costPerTask": null,
+      "e2eLatencyTotal": 11.624245125372244,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.107,
+      "releaseDate": "2025-09-22",
+      "addedAt": "2025-09-22"
+    },
+    {
+      "slug": "jamba-1-5-large",
+      "displayName": "Jamba 1.5 Large",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.5,
+      "releaseDate": "2024-08-22",
+      "addedAt": "2024-08-22"
+    },
+    {
+      "slug": "qwen3-omni-30b-a3b-instruct",
+      "displayName": "Qwen3 Omni 30B A3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.228387692241939,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.43,
+      "releaseDate": "2025-09-22",
+      "addedAt": "2025-09-22"
+    },
+    {
+      "slug": "hermes-3-llama-3-1-70b",
+      "displayName": "Hermes 3 - Llama-3.1 70B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 19.935186891071346,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.3,
+      "releaseDate": "2024-08-15",
+      "addedAt": "2024-08-15"
+    },
+    {
+      "slug": "qwen3-8b-instruct",
+      "displayName": "Qwen3 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 17.116272366099377,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.185,
+      "releaseDate": "2025-04-28",
+      "addedAt": "2025-04-28"
+    },
+    {
+      "slug": "deepseek-coder-v2",
+      "displayName": "DeepSeek-Coder-V2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-06-17",
+      "addedAt": "2024-06-17"
+    },
+    {
+      "slug": "olmo-2-32b",
+      "displayName": "OLMo 2 32B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-03-13",
+      "addedAt": "2025-03-13"
+    },
+    {
+      "slug": "jamba-1-6-large",
+      "displayName": "Jamba 1.6 Large",
+      "costPerTask": null,
+      "e2eLatencyTotal": 9.54613696770181,
+      "reasoningTime": 0,
+      "pricePerMillion": 3.5,
+      "releaseDate": "2025-03-06",
+      "addedAt": "2025-03-06"
+    },
+    {
+      "slug": "qwen3-5-0-8b",
+      "displayName": "Qwen3.5 0.8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 104.43138500886404,
+      "reasoningTime": 82.82303829429121,
+      "pricePerMillion": 0.02,
+      "releaseDate": "2026-03-02",
+      "addedAt": "2026-03-02"
+    },
+    {
+      "slug": "lfm2-24b-a2b",
+      "displayName": "LFM2 24B A2B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 4.739010136509339,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.052,
+      "releaseDate": "2026-02-25",
+      "addedAt": "2026-02-25"
+    },
+    {
+      "slug": "gemini-1-5-flash-may-2024",
+      "displayName": "Gemini 1.5 Flash (May)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-05-14",
+      "addedAt": "2024-05-14"
+    },
+    {
+      "slug": "phi-4",
+      "displayName": "Phi-4",
+      "costPerTask": null,
+      "e2eLatencyTotal": 16.459124236107535,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.219,
+      "releaseDate": "2024-12-12",
+      "addedAt": "2024-12-12"
+    },
+    {
+      "slug": "claude-3-sonnet",
+      "displayName": "Claude 3 Sonnet",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2024-03-04",
+      "addedAt": "2024-03-04"
+    },
+    {
+      "slug": "nova-micro",
+      "displayName": "Nova Micro",
+      "costPerTask": null,
+      "e2eLatencyTotal": 2.5190810202483807,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.061,
+      "releaseDate": "2024-12-03",
+      "addedAt": "2024-12-03"
+    },
+    {
+      "slug": "mistral-small",
+      "displayName": "Mistral Small (Sep)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.9806834614005044,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.3,
+      "releaseDate": "2024-09-17",
+      "addedAt": "2024-09-17"
+    },
+    {
+      "slug": "gemini-1-0-ultra",
+      "displayName": "Gemini 1.0 Ultra",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-12-06",
+      "addedAt": "2023-12-06"
+    },
+    {
+      "slug": "phi-3-mini",
+      "displayName": "Phi-3 Mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-04-23",
+      "addedAt": "2024-04-23"
+    },
+    {
+      "slug": "nvidia-nemotron-nano-12b-v2-vl",
+      "displayName": "NVIDIA Nemotron Nano 12B v2 VL",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.32002692769597,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.3,
+      "releaseDate": "2025-10-28",
+      "addedAt": "2025-10-28"
+    },
+    {
+      "slug": "gemma-3n-e4b-preview-0520",
+      "displayName": "Gemma 3n E4B (May)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-05-20",
+      "addedAt": "2025-05-20"
+    },
+    {
+      "slug": "phi-4-multimodal",
+      "displayName": "Phi-4 Multimodal",
+      "costPerTask": null,
+      "e2eLatencyTotal": 31.568567693488916,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-26",
+      "addedAt": "2025-02-26"
+    },
+    {
+      "slug": "qwen2-5-coder-7b-instruct",
+      "displayName": "Qwen2.5 Coder 7B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-09-19",
+      "addedAt": "2024-09-19"
+    },
+    {
+      "slug": "qwen3-5-0-8b-non-reasoning",
+      "displayName": "Qwen3.5 0.8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 22.2243762408984,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.02,
+      "releaseDate": "2026-03-02",
+      "addedAt": "2026-03-02"
+    },
+    {
+      "slug": "mistral-large",
+      "displayName": "Mistral Large (Feb)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2024-02-26",
+      "addedAt": "2024-02-26"
+    },
+    {
+      "slug": "mistral-8x22b-instruct",
+      "displayName": "Mixtral 8x22B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-04-17",
+      "addedAt": "2024-04-17"
+    },
+    {
+      "slug": "llama-2-chat-7b",
+      "displayName": "Llama 2 Chat 7B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.1,
+      "releaseDate": "2023-07-18",
+      "addedAt": "2023-07-18"
+    },
+    {
+      "slug": "llama-3-2-instruct-3b",
+      "displayName": "Llama 3.2 3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.784633570583425,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.15,
+      "releaseDate": "2024-09-25",
+      "addedAt": "2024-09-25"
+    },
+    {
+      "slug": "minicpm-v4-6-1-3b",
+      "displayName": "MiniCPM-V 4.6 1.3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-05-11",
+      "addedAt": "2026-05-11"
+    },
+    {
+      "slug": "jamba-reasoning-3b",
+      "displayName": "Jamba Reasoning 3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-08",
+      "addedAt": "2025-10-08"
+    },
+    {
+      "slug": "qwen3-vl-4b-instruct",
+      "displayName": "Qwen3 VL 4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-14",
+      "addedAt": "2025-10-14"
+    },
+    {
+      "slug": "reka-flash-3",
+      "displayName": "Reka Flash 3",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.35,
+      "releaseDate": "2025-03-10",
+      "addedAt": "2025-03-10"
+    },
+    {
+      "slug": "olmo-3-7b-think",
+      "displayName": "Olmo 3 7B Think",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-11-20",
+      "addedAt": "2025-11-20"
+    },
+    {
+      "slug": "claude-21",
+      "displayName": "Claude 2.1",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-11-21",
+      "addedAt": "2023-11-21"
+    },
+    {
+      "slug": "claude-3-haiku",
+      "displayName": "Claude 3 Haiku",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.5,
+      "releaseDate": "2024-03-04",
+      "addedAt": "2024-03-04"
+    },
+    {
+      "slug": "olmo-2-7b",
+      "displayName": "OLMo 2 7B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-11-26",
+      "addedAt": "2024-11-26"
+    },
+    {
+      "slug": "molmo-7b-d",
+      "displayName": "Molmo 7B-D",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-09-25",
+      "addedAt": "2024-09-25"
+    },
+    {
+      "slug": "ling-mini-2-0",
+      "displayName": "Ling-mini-2.0",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-09-09",
+      "addedAt": "2025-09-09"
+    },
+    {
+      "slug": "deepseek-r1-distill-qwen-1-5b",
+      "displayName": "DeepSeek R1 Distill Qwen 1.5B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-01-20",
+      "addedAt": "2025-01-20"
+    },
+    {
+      "slug": "claude-2",
+      "displayName": "Claude 2.0",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-07-11",
+      "addedAt": "2023-07-11"
+    },
+    {
+      "slug": "deepseek-v2",
+      "displayName": "DeepSeek-V2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-05-06",
+      "addedAt": "2024-05-06"
+    },
+    {
+      "slug": "mistral-small-2402",
+      "displayName": "Mistral Small (Feb)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.942979672227622,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.5,
+      "releaseDate": "2024-02-26",
+      "addedAt": "2024-02-26"
+    },
+    {
+      "slug": "mistral-medium",
+      "displayName": "Mistral Medium",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.611981280226546,
+      "reasoningTime": 0,
+      "pricePerMillion": 4.088,
+      "releaseDate": "2023-12-11",
+      "addedAt": "2023-12-11"
+    },
+    {
+      "slug": "gpt-35-turbo",
+      "displayName": "GPT-3.5 Turbo",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.75,
+      "releaseDate": "2022-11-30",
+      "addedAt": "2022-11-30"
+    },
+    {
+      "slug": "llama-3-instruct-70b",
+      "displayName": "Llama 3 70B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.175,
+      "releaseDate": "2024-04-18",
+      "addedAt": "2024-04-18"
+    },
+    {
+      "slug": "arctic-instruct",
+      "displayName": "Arctic",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-04-24",
+      "addedAt": "2024-04-24"
+    },
+    {
+      "slug": "qwen-chat-72b",
+      "displayName": "Qwen Chat 72B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-11-30",
+      "addedAt": "2023-11-30"
+    },
+    {
+      "slug": "gemma-3-12b",
+      "displayName": "Gemma 3 12B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.14,
+      "releaseDate": "2025-03-12",
+      "addedAt": "2025-03-12"
+    },
+    {
+      "slug": "lfm-40b",
+      "displayName": "LFM 40B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-09-30",
+      "addedAt": "2024-09-30"
+    },
+    {
+      "slug": "llama-3-2-instruct-11b-vision",
+      "displayName": "Llama 3.2 11B (Vision)",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.23784612969468,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.245,
+      "releaseDate": "2024-09-25",
+      "addedAt": "2024-09-25"
+    },
+    {
+      "slug": "palm-2",
+      "displayName": "PALM-2",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-05-10",
+      "addedAt": "2023-05-10"
+    },
+    {
+      "slug": "granite-4-1-3b",
+      "displayName": "Granite 4.1 3B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-04-29",
+      "addedAt": "2026-04-29"
+    },
+    {
+      "slug": "gemini-1-0-pro",
+      "displayName": "Gemini 1.0 Pro",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-12-06",
+      "addedAt": "2023-12-06"
+    },
+    {
+      "slug": "deepseek-coder-v2-lite",
+      "displayName": "DeepSeek Coder V2 Lite",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-06-17",
+      "addedAt": "2024-06-17"
+    },
+    {
+      "slug": "sarvam-m-reasoning",
+      "displayName": "Sarvam M",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-05-23",
+      "addedAt": "2025-05-23"
+    },
+    {
+      "slug": "phi-4-mini",
+      "displayName": "Phi-4 Mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": 12.879283950474136,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-02-26",
+      "addedAt": "2024-02-26"
+    },
+    {
+      "slug": "deepseek-llm-67b-chat",
+      "displayName": "DeepSeek LLM 67B (V1)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-11-29",
+      "addedAt": "2023-11-29"
+    },
+    {
+      "slug": "llama-2-chat-70b",
+      "displayName": "Llama 2 Chat 70B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-07-18",
+      "addedAt": "2023-07-18"
+    },
+    {
+      "slug": "llama-2-chat-13b",
+      "displayName": "Llama 2 Chat 13B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-07-18",
+      "addedAt": "2023-07-18"
+    },
+    {
+      "slug": "command-r-plus-04-2024",
+      "displayName": "Command-R+ (Apr)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 6,
+      "releaseDate": "2024-04-04",
+      "addedAt": "2024-04-04"
+    },
+    {
+      "slug": "openchat-35",
+      "displayName": "OpenChat 3.5",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-12-18",
+      "addedAt": "2023-12-18"
+    },
+    {
+      "slug": "dbrx",
+      "displayName": "DBRX",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2024-03-27",
+      "addedAt": "2024-03-27"
+    },
+    {
+      "slug": "exaone-4-0-1-2b-reasoning",
+      "displayName": "Exaone 4.0 1.2B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-07-15",
+      "addedAt": "2025-07-15"
+    },
+    {
+      "slug": "olmo-3-7b-instruct",
+      "displayName": "Olmo 3 7B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.125,
+      "releaseDate": "2025-11-20",
+      "addedAt": "2025-11-20"
+    },
+    {
+      "slug": "exaone-4-0-1-2b",
+      "displayName": "Exaone 4.0 1.2B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-07-15",
+      "addedAt": "2025-07-15"
+    },
+    {
+      "slug": "lfm2-5-1-2b-thinking",
+      "displayName": "LFM2.5-1.2B-Thinking",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-01-20",
+      "addedAt": "2026-01-20"
+    },
+    {
+      "slug": "jamba-1-7-mini",
+      "displayName": "Jamba 1.7 Mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-07-07",
+      "addedAt": "2025-07-07"
+    },
+    {
+      "slug": "lfm2-2-6b",
+      "displayName": "LFM2 2.6B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 7.720868798677522,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-09-23",
+      "addedAt": "2025-09-23"
+    },
+    {
+      "slug": "lfm2-5-1-2b-instruct",
+      "displayName": "LFM2.5-1.2B-Instruct",
+      "costPerTask": null,
+      "e2eLatencyTotal": 2.488452279487086,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-01-05",
+      "addedAt": "2026-01-05"
+    },
+    {
+      "slug": "jamba-1-5-mini",
+      "displayName": "Jamba 1.5 Mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.25,
+      "releaseDate": "2024-08-22",
+      "addedAt": "2024-08-22"
+    },
+    {
+      "slug": "granite-4-0-h-nano-1b",
+      "displayName": "Granite 4.0 H 1B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-28",
+      "addedAt": "2025-10-28"
+    },
+    {
+      "slug": "jamba-1-6-mini",
+      "displayName": "Jamba 1.6 Mini",
+      "costPerTask": null,
+      "e2eLatencyTotal": 3.737238503810481,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.25,
+      "releaseDate": "2025-03-06",
+      "addedAt": "2025-03-06"
+    },
+    {
+      "slug": "mixtral-8x7b-instruct",
+      "displayName": "Mixtral 8x7B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.512,
+      "releaseDate": "2023-12-11",
+      "addedAt": "2023-12-11"
+    },
+    {
+      "slug": "gemma-3-270m",
+      "displayName": "Gemma 3 270M",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-08-14",
+      "addedAt": "2025-08-14"
+    },
+    {
+      "slug": "apertus-70b-instruct",
+      "displayName": "Apertus 70B Instruct",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.345,
+      "releaseDate": "2025-09-02",
+      "addedAt": "2025-09-02"
+    },
+    {
+      "slug": "granite-4-0-micro",
+      "displayName": "Granite 4.0 Micro",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-09-22",
+      "addedAt": "2025-09-22"
+    },
+    {
+      "slug": "deephermes-3-llama-3-1-8b-preview",
+      "displayName": "DeepHermes 3 - Llama-3.1 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-02-13",
+      "addedAt": "2025-02-13"
+    },
+    {
+      "slug": "claude-instant",
+      "displayName": "Claude Instant",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-03-14",
+      "addedAt": "2023-03-14"
+    },
+    {
+      "slug": "command-r-03-2024",
+      "displayName": "Command-R (Mar)",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.75,
+      "releaseDate": "2024-03-12",
+      "addedAt": "2024-03-12"
+    },
+    {
+      "slug": "llama-65b",
+      "displayName": "Llama 65B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-02-24",
+      "addedAt": "2023-02-24"
+    },
+    {
+      "slug": "mistral-7b-instruct",
+      "displayName": "Mistral 7B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.898600727354824,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.206,
+      "releaseDate": "2023-09-27",
+      "addedAt": "2023-09-27"
+    },
+    {
+      "slug": "qwen-chat-14b",
+      "displayName": "Qwen Chat 14B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2023-09-25",
+      "addedAt": "2023-09-25"
+    },
+    {
+      "slug": "granite-4-0-nano-1b",
+      "displayName": "Granite 4.0 1B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-28",
+      "addedAt": "2025-10-28"
+    },
+    {
+      "slug": "molmo2-8b",
+      "displayName": "Molmo2-8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-12-11",
+      "addedAt": "2025-12-11"
+    },
+    {
+      "slug": "lfm2-8b-a1b",
+      "displayName": "LFM2 8B A1B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-07",
+      "addedAt": "2025-10-07"
+    },
+    {
+      "slug": "granite-3-3-8b-instruct",
+      "displayName": "Granite 3.3 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 28.84575305990594,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.085,
+      "releaseDate": "2025-04-16",
+      "addedAt": "2025-04-16"
+    },
+    {
+      "slug": "llama-3-instruct-8b",
+      "displayName": "Llama 3 8B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.07,
+      "releaseDate": "2024-04-18",
+      "addedAt": "2024-04-18"
+    },
+    {
+      "slug": "gemma-3n-e4b",
+      "displayName": "Gemma 3n E4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 10.437072100224203,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.025,
+      "releaseDate": "2025-06-26",
+      "addedAt": "2025-06-26"
+    },
+    {
+      "slug": "lfm2-1-2b",
+      "displayName": "LFM2 1.2B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 2.2196907517164326,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-07-10",
+      "addedAt": "2025-07-10"
+    },
+    {
+      "slug": "gemma-3-4b",
+      "displayName": "Gemma 3 4B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.05,
+      "releaseDate": "2025-03-12",
+      "addedAt": "2025-03-12"
+    },
+    {
+      "slug": "llama-3-2-instruct-1b",
+      "displayName": "Llama 3.2 1B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.7903303586866866,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.05,
+      "releaseDate": "2024-09-25",
+      "addedAt": "2024-09-25"
+    },
+    {
+      "slug": "lfm2-5-vl-1-6b",
+      "displayName": "LFM2.5-VL-1.6B",
+      "costPerTask": null,
+      "e2eLatencyTotal": 6.492376359442799,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-01-05",
+      "addedAt": "2026-01-05"
+    },
+    {
+      "slug": "apertus-8b-instruct",
+      "displayName": "Apertus 8B Instruct",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.125,
+      "releaseDate": "2025-09-02",
+      "addedAt": "2025-09-02"
+    },
+    {
+      "slug": "gemma-3-1b",
+      "displayName": "Gemma 3 1B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-03-13",
+      "addedAt": "2025-03-13"
+    },
+    {
+      "slug": "gemma-3n-e2b",
+      "displayName": "Gemma 3n E2B",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-06-26",
+      "addedAt": "2025-06-26"
+    },
+    {
+      "slug": "granite-4-0-350m",
+      "displayName": "Granite 4.0 350M",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-28",
+      "addedAt": "2025-10-28"
+    },
+    {
+      "slug": "granite-4-0-h-350m",
+      "displayName": "Granite 4.0 H 350M",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2025-10-28",
+      "addedAt": "2025-10-28"
+    },
+    {
+      "slug": "tiny-aya-global",
+      "displayName": "Tiny Aya Global",
+      "costPerTask": null,
+      "e2eLatencyTotal": null,
+      "reasoningTime": 0,
+      "pricePerMillion": 0,
+      "releaseDate": "2026-02-17",
+      "addedAt": "2026-02-17"
+    }
+  ]
+}

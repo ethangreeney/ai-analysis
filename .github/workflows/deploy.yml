@@ -63,6 +63,15 @@ jobs:
           AA_API_KEY: ${{ secrets.AA_API_KEY }}
           SKIP_SCREENSHOT: "1"
 
+      - name: Validate fetched snapshot size
+        run: |
+          rows=$(jq '.models | length' src/data/models.json)
+          timed=$(jq '[.models[] | select(.e2eLatency != null and .e2eLatency > 0)] | length' src/data/models.json)
+          if [ "$rows" -lt 300 ] || [ "$timed" -lt 250 ]; then
+            echo "Refusing to deploy partial data: rows=$rows timed=$timed"
+            exit 1
+          fi
+
       # Compare fresh data (minus its fetch timestamp) against the snapshot
       # the live site serves. First deploy: the curl 404s and we deploy.
       - name: Check whether the data changed

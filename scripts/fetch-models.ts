@@ -14,6 +14,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
+import fallbackMetrics from "./fallback-metrics.json";
 
 config();
 
@@ -25,6 +26,8 @@ const OUT_PATH = resolve(__dirname, "..", "src", "data", "models.json");
 const SCREENSHOT_PATH = resolve(ROOT_PATH, "docs", "screenshot.png");
 const SCREENSHOT_VIEWPORT = { width: 1600, height: 1000 };
 const SCREENSHOT_DEVICE_SCALE = 2;
+const MIN_MODEL_ROWS = 300;
+const MIN_TIMED_ROWS = 250;
 
 interface ModelSeed {
   slug: string;
@@ -41,6 +44,20 @@ interface ScrapedRow {
   e2eReasoningTime?: number;
   e2eAnswerTime?: number;
   intelligence?: number;
+}
+
+interface FallbackMetricsSnapshot {
+  sourceFetchedAt: string;
+  models: {
+    slug: string;
+    displayName?: string;
+    costPerTask?: number | null;
+    e2eLatencyTotal?: number | null;
+    reasoningTime?: number | null;
+    pricePerMillion?: number | null;
+    releaseDate?: string | null;
+    addedAt?: string | null;
+  }[];
 }
 
 interface ApiModel {
@@ -128,6 +145,44 @@ function scrapeModels(html: string): Map<string, ScrapedRow> {
     });
   }
 
+  // AA's Next.js stream now exposes model data with camelCase fields. The
+  // model detail page may only include a selected subset, so this is enrichment
+  // rather than the source of truth for row discovery.
+  const nextEntryStarts = findAllRegex(html, /\{\\"id\\":\\"/g).map((entry) => entry.index);
+  for (let i = 0; i < nextEntryStarts.length; i += 1) {
+    const start = nextEntryStarts[i];
+    const end = nextEntryStarts[i + 1] ?? html.length;
+    const entry = html.slice(start, end);
+    const slug = entry.match(slugRe)?.[1];
+    if (!slug) continue;
+
+    const current = result.get(slug) ?? { slug };
+    result.set(slug, current);
+
+    const shortName = entry.match(/\\"shortName\\":\\"([^\\"]+)\\"/)?.[1];
+    if (shortName) {
+      current.displayName = decodeHtml(decodeJsonString(shortName)).replace(/\s+/g, " ").trim();
+    }
+
+    const costPerTask = entry.match(
+      /\\"intelligenceIndexCostPerTask\\":\{\\"cost\\":\{\\"total\\":([0-9.eE+\-]+)/,
+    )?.[1];
+    if (costPerTask) current.costPerTask = parseFloat(costPerTask);
+
+    const e2e = entry.match(
+      /\\"endToEndResponseTime\\":\{\\"input\\":([0-9.eE+\-]+),\\"reasoning\\":([0-9.eE+\-]+),\\"answer\\":([0-9.eE+\-]+),\\"total\\":([0-9.eE+\-]+)/,
+    );
+    if (e2e) {
+      current.e2eInputTime = parseFloat(e2e[1]);
+      current.e2eReasoningTime = parseFloat(e2e[2]);
+      current.e2eAnswerTime = parseFloat(e2e[3]);
+      current.e2eLatencyTotal = parseFloat(e2e[4]);
+    }
+
+    const intelligence = entry.match(/\\"intelligenceIndex\\":([0-9.eE+\-]+)/)?.[1];
+    if (intelligence) current.intelligence = parseFloat(intelligence);
+  }
+
   const ldScripts = findAllRegex(
     html,
     /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
@@ -206,6 +261,55 @@ function scrapeModels(html: string): Map<string, ScrapedRow> {
   return result;
 }
 
+function loadFallbackMetrics(): Map<string, ScrapedRow & { releaseDate?: string; addedAt?: string }> {
+  const snapshot = fallbackMetrics as FallbackMetricsSnapshot;
+  const rows = new Map<string, ScrapedRow & { releaseDate?: string; addedAt?: string }>();
+
+  for (const row of snapshot.models) {
+    rows.set(row.slug, {
+      slug: row.slug,
+      displayName: row.displayName,
+      costPerTask: row.costPerTask ?? undefined,
+      e2eLatencyTotal: row.e2eLatencyTotal ?? undefined,
+      e2eReasoningTime: row.reasoningTime ?? undefined,
+      pricePerMillion: row.pricePerMillion ?? undefined,
+      releaseDate: row.releaseDate ?? undefined,
+      addedAt: row.addedAt ?? undefined,
+    });
+  }
+
+  return rows;
+}
+
+function mergeMetrics(
+  scraped: Map<string, ScrapedRow>,
+  fallback: Map<string, ScrapedRow & { releaseDate?: string; addedAt?: string }>,
+): Map<string, ScrapedRow & { releaseDate?: string; addedAt?: string }> {
+  const merged = new Map<string, ScrapedRow & { releaseDate?: string; addedAt?: string }>();
+
+  for (const [slug, row] of fallback) {
+    merged.set(slug, { ...row });
+  }
+
+  for (const [slug, row] of scraped) {
+    const current = merged.get(slug) ?? { slug };
+    merged.set(slug, {
+      ...current,
+      ...row,
+      displayName: row.displayName ?? current.displayName,
+      costPerTask: positiveFinite(row.costPerTask) ? row.costPerTask : current.costPerTask,
+      e2eLatencyTotal: positiveFinite(row.e2eLatencyTotal) ? row.e2eLatencyTotal : current.e2eLatencyTotal,
+      e2eInputTime: row.e2eInputTime ?? current.e2eInputTime,
+      e2eReasoningTime: row.e2eReasoningTime ?? current.e2eReasoningTime,
+      e2eAnswerTime: row.e2eAnswerTime ?? current.e2eAnswerTime,
+      intelligence: positiveFinite(row.intelligence) ? row.intelligence : current.intelligence,
+      pricePerMillion: positiveFinite(row.pricePerMillion) ? row.pricePerMillion : current.pricePerMillion,
+    });
+  }
+
+  return merged;
+}
+
 function decodeHtml(text: string): string {
   return text
     .replace(/&amp;/g, "&")
@@ -223,27 +327,26 @@ function decodeJsonString(text: string): string {
   }
 }
 
-function buildModelSeeds(scraped: Map<string, ScrapedRow>, apiModels: ApiModel[]): ModelSeed[] {
+function buildModelSeeds(
+  metrics: Map<string, ScrapedRow>,
+  apiModels: ApiModel[],
+): ModelSeed[] {
   const apiBySlug = new Map(apiModels.map((model) => [model.slug, model]));
-  const seeds = [...scraped.values()]
-    .filter((row) => {
-      const api = apiBySlug.get(row.slug);
-      return Boolean(
-        api &&
-          positiveFinite(row.intelligence),
-      );
-    })
-    .map((row) => ({
-      slug: row.slug,
-      displayName: row.displayName ?? apiBySlug.get(row.slug)?.name ?? row.slug,
+  const seeds = apiModels
+    .filter((api) => positiveFinite(api.evaluations?.artificial_analysis_intelligence_index))
+    .map((api) => ({
+      slug: api.slug,
+      displayName: metrics.get(api.slug)?.displayName ?? api.name,
     }))
     .sort((a, b) => {
-      const ai = scraped.get(a.slug)?.intelligence ?? 0;
-      const bi = scraped.get(b.slug)?.intelligence ?? 0;
+      const ai =
+        apiBySlug.get(a.slug)?.evaluations?.artificial_analysis_intelligence_index ?? 0;
+      const bi =
+        apiBySlug.get(b.slug)?.evaluations?.artificial_analysis_intelligence_index ?? 0;
       return bi - ai || a.slug.localeCompare(b.slug);
     });
 
-  console.log(`discovered ${seeds.length} live model slugs with API + intelligence metrics`);
+  console.log(`discovered ${seeds.length} API model slugs with intelligence metrics`);
   return seeds;
 }
 
@@ -378,28 +481,21 @@ async function main() {
   const html = await scrapeRes.text();
   const scraped = scrapeModels(html);
   console.log(`scraped ${scraped.size} model entries`);
-  const modelSeeds = buildModelSeeds(scraped, apiModels);
+  const fallback = loadFallbackMetrics();
+  console.log(`loaded ${fallback.size} fallback metric rows from ${fallbackMetrics.sourceFetchedAt}`);
+  const metrics = mergeMetrics(scraped, fallback);
+  const modelSeeds = buildModelSeeds(metrics, apiModels);
 
   const apiBySlug = new Map(apiModels.map((model) => [model.slug, model]));
 
   const out: Model[] = [];
-  const missing: string[] = [];
-  const invalid: string[] = [];
+  const missingMetrics: string[] = [];
   const missingApi: string[] = [];
   const missingCost: string[] = [];
   for (const { slug, displayName } of modelSeeds) {
-    const sc = scraped.get(slug);
+    const sc = metrics.get(slug);
     if (!sc) {
-      missing.push(slug);
-      continue;
-    }
-    const badFields = [
-      positiveFinite(sc.intelligence) ? null : "intelligence",
-    ].filter((field): field is string => field !== null);
-
-    if (badFields.length) {
-      invalid.push(`${slug} (${badFields.join(", ")})`);
-      continue;
+      missingMetrics.push(slug);
     }
 
     const api = apiBySlug.get(slug);
@@ -413,26 +509,31 @@ async function main() {
       name: api.name,
       displayName: displayName ?? api.name,
       creator: api.model_creator?.name ?? "Unknown",
-      intelligence: sc.intelligence ?? api.evaluations?.artificial_analysis_intelligence_index ?? 0,
+      intelligence: api.evaluations?.artificial_analysis_intelligence_index ?? sc?.intelligence ?? 0,
       codingIndex: api.evaluations?.artificial_analysis_coding_index ?? null,
-      costPerTask: positiveFinite(sc.costPerTask) ? sc.costPerTask : null,
-      e2eLatency: positiveFinite(sc.e2eLatencyTotal) ? sc.e2eLatencyTotal : null,
-      reasoningTime: sc.e2eReasoningTime ?? null,
-      pricePerMillion: sc.pricePerMillion ?? api.pricing?.price_1m_blended_3_to_1 ?? 0,
+      costPerTask: positiveFinite(sc?.costPerTask) ? sc.costPerTask : null,
+      e2eLatency: positiveFinite(sc?.e2eLatencyTotal) ? sc.e2eLatencyTotal : null,
+      reasoningTime: sc?.e2eReasoningTime ?? null,
+      pricePerMillion: sc?.pricePerMillion ?? api.pricing?.price_1m_blended_3_to_1 ?? 0,
       outputTokensPerSecond: api.median_output_tokens_per_second ?? 0,
       ttft: api.median_time_to_first_token_seconds ?? 0,
-      releaseDate: api.release_date,
+      releaseDate: api.release_date ?? sc?.releaseDate,
     });
-    if (!positiveFinite(sc.costPerTask)) missingCost.push(slug);
+    if (!positiveFinite(sc?.costPerTask)) missingCost.push(slug);
   }
 
   const missingCoding = out.filter((m) => !positiveFinite(m.codingIndex ?? undefined)).map((m) => m.slug);
   const missingLatency = out.filter((m) => !positiveFinite(m.e2eLatency ?? undefined)).map((m) => m.slug);
+  if (out.length < MIN_MODEL_ROWS) {
+    throw new Error(`refusing to write partial snapshot: only ${out.length} model rows`);
+  }
+  if (out.length - missingLatency.length < MIN_TIMED_ROWS) {
+    throw new Error(`refusing to write partial snapshot: only ${out.length - missingLatency.length} timed rows`);
+  }
   warnList("rows without coding index", missingCoding);
   warnList("rows without end-to-end response time", missingLatency);
   warnList("rows without exact API match", missingApi);
-  warnList("missing slugs", missing);
-  warnList("skipped rows with invalid chart metrics", invalid);
+  warnList("rows without scraped/fallback metrics", missingMetrics);
   warnList("rows without cost per task", missingCost);
   console.log(`built ${out.length} model rows`);
 
