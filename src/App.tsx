@@ -1,743 +1,92 @@
-import { useMemo, useState } from "react";
-import { scaleLinear, scaleLog } from "d3-scale";
-import data from "./data/models.json";
-
-interface Model {
-  slug: string;
-  name: string;
-  displayName: string;
-  creator: string;
-  intelligence: number;
-  codingIndex: number | null;
-  costPerTask: number | null;
-  e2eLatency: number | null;
-  reasoningTime: number | null;
-  pricePerMillion: number;
-  outputTokensPerSecond: number;
-  ttft: number;
-  releaseDate?: string;
-  addedAt?: string;
-}
-
-interface Snapshot {
-  fetchedAt: string;
-  models: Model[];
-}
-
-const snapshot = data as Snapshot;
-
-type ChartableModel = Model & { costPerTask: number };
-type TimedModel = Model & { e2eLatency: number };
-
-const fmtHoverCost = (c: number | null) =>
-  c == null ? "—" : c >= 1000 ? `$${(c / 1000).toFixed(1)}k` : `$${c.toFixed(c >= 10 ? 1 : 2)}`;
-const fmtHoverLatency = (seconds: number | null) => (seconds == null ? "—" : `${seconds.toFixed(1)} s`);
-
-const isPositiveFinite = (value: number | null | undefined): value is number =>
-  typeof value === "number" && Number.isFinite(value) && value > 0;
-const hasCost = (m: Model): m is ChartableModel => isPositiveFinite(m.costPerTask);
-const hasLatency = (m: Model): m is TimedModel => isPositiveFinite(m.e2eLatency);
-
-type YMetric = "intelligence" | "coding";
-
-interface MetricConfig {
-  label: string;
-  title: string;
-  axisLabel: string;
-  defaultMin: number;
-  defaultMax: number;
-  value: (m: Model) => number | null;
-}
-
-const Y_METRICS: Record<YMetric, MetricConfig> = {
-  intelligence: {
-    label: "AA Intelligence",
-    title: "Artificial Analysis Intelligence Index",
-    axisLabel: "AA INTELLIGENCE INDEX",
-    defaultMin: 0,
-    defaultMax: 65,
-    value: (m) => m.intelligence,
-  },
-  coding: {
-    label: "Coding",
-    title: "Coding Index",
-    axisLabel: "CODING INDEX",
-    defaultMin: 0,
-    defaultMax: 80,
-    value: (m) => m.codingIndex,
-  },
-};
+import { useEffect, useMemo, useState } from "react";
+import { MapChart } from "./MapChart";
+import {
+  Model,
+  YMetric,
+  XMode,
+  Y_METRICS,
+  X_MODES,
+  Limits,
+  NO_LIMITS,
+  allModels,
+  fetchedAtMs,
+  fmtCost,
+  fmtDate,
+  fmtSeconds,
+  fmtSecondsShort,
+  isPositiveFinite,
+  limitsActive,
+  qualifies,
+  rampColor,
+  NEW_MODEL_COLOR,
+  PICK_COLOR,
+} from "./model";
 
 const RECENT_WINDOW_MONTHS = 3;
+const DAY_MS = 86_400_000;
 
-interface Tier {
-  label: string;
-  min: number;
-  max: number;
-  shade: string;
-  emphasis: number;
-}
+const releaseTimes = allModels.map((m) => m.releaseMs).filter((t): t is number => t != null);
+const minReleaseMs = releaseTimes.length ? Math.min(...releaseTimes) : fetchedAtMs - 365 * DAY_MS;
 
-interface TierBand {
-  label: string;
-  lower: number;
-  upper: number;
-  shade: string;
-  emphasis: number;
-}
+const dataRange = (values: (number | null)[]): [number, number] => {
+  const v = values.filter(isPositiveFinite);
+  return v.length ? [Math.min(...v) * 0.9, Math.max(...v) * 1.1] : [1, 10];
+};
+const WAIT_RANGE = dataRange(allModels.map((m) => m.e2eLatency));
+const COST_RANGE = dataRange(allModels.map((m) => m.costPerTask));
 
-const RELATIVE_TIERS: TierBand[] = [
-  { label: "Leaders", lower: 0.82, upper: 1, shade: "#f7f7f2", emphasis: 1 },
-  { label: "Frontier Pack", lower: 0.64, upper: 0.82, shade: "#fafaf7", emphasis: 1 },
-  { label: "Competitive", lower: 0.46, upper: 0.64, shade: "#fafafa", emphasis: 0.85 },
-  { label: "Established", lower: 0.28, upper: 0.46, shade: "#fcfcfc", emphasis: 0.55 },
-  { label: "Trailing", lower: 0, upper: 0.28, shade: "#ffffff", emphasis: 0.3 },
-];
+const fmtIndex = (v: number | null) => (v == null ? "—" : v.toFixed(1));
 
-const METRIC_STEP = 5;
-
-function metricBounds(values: number[], defaultMin: number, defaultMax: number) {
-  const min = values.length ? Math.min(...values) : defaultMin;
-  const max = values.length ? Math.max(...values) : defaultMax;
-  return {
-    min: Math.min(defaultMin, Math.floor((min - 2) / METRIC_STEP) * METRIC_STEP),
-    max: Math.max(defaultMax, Math.ceil((max + 2) / METRIC_STEP) * METRIC_STEP),
-  };
-}
-
-function relativeTiers(min: number, max: number): Tier[] {
-  const span = Math.max(1, max - min);
-  return RELATIVE_TIERS.map((tier) => ({
-    label: tier.label,
-    min: min + span * tier.lower,
-    max: min + span * tier.upper,
-    shade: tier.shade,
-    emphasis: tier.emphasis,
-  }));
-}
-
-function tierFor(intel: number, tiers: Tier[]): Tier {
-  return tiers.find((t) => intel >= t.min && intel <= t.max) ?? tiers[tiers.length - 1];
-}
-
-// Cool→hot cost gradient with more separation in the middle so neighbouring
-// cost levels read as visibly different.
-const COST_COLD = [29, 96, 165]; // saturated deep blue (cheap)
-const COST_MID = [222, 195, 138]; // warm sand (mid)
-const COST_HOT = [185, 50, 38]; // saturated deep red (expensive)
-const NEUTRAL_COST_COLOR = "#6d7781";
-const NEW_MODEL_COLOR = "#C96442";
-function costColor(t: number): string {
-  const u = Math.max(0, Math.min(1, t));
-  const lerp = (a: number[], b: number[], k: number) =>
-    a.map((v, i) => Math.round(v + (b[i] - v) * k));
-  const rgb = u < 0.5 ? lerp(COST_COLD, COST_MID, u * 2) : lerp(COST_MID, COST_HOT, (u - 0.5) * 2);
-  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-}
-
-interface Placed {
-  slug: string;
-  x: number;
-  y: number;
-  anchor: "start" | "end";
-  text: string;
-}
-
-const labelWidth = (text: string) => text.length * 6.2;
-
-function placeLabels(
-  models: Model[],
-  xy: (m: Model) => { x: number; y: number; r: number },
-  innerW: number,
-  innerH: number,
-  obstacleModels = models,
-): Placed[] {
-  const cands = models
-    .map((m) => {
-      const { x, y, r } = xy(m);
-      const anchor: "start" | "end" = x + r + 130 < innerW ? "start" : "end";
-      const off = anchor === "start" ? r + 8 : -(r + 8);
-      return { slug: m.slug, x: x + off, y, anchor, text: m.displayName, baseY: y };
-    })
-    .sort((a, b) => a.baseY - b.baseY);
-  const placed: Placed[] = [];
-  const labelH = 15;
-  const labelPad = 4;
-  const dotPad = 3;
-  const rectFor = (item: Omit<Placed, "slug">) => {
-    const w = labelWidth(item.text);
-    return {
-      x1: item.anchor === "start" ? item.x : item.x - w,
-      x2: item.anchor === "start" ? item.x + w : item.x,
-      y1: item.y - labelH / 2,
-      y2: item.y + labelH / 2,
-    };
-  };
-  const dotRects = obstacleModels.map((m) => {
-    const { x, y, r } = xy(m);
-    return {
-      x1: x - r - dotPad,
-      x2: x + r + dotPad,
-      y1: y - r - dotPad,
-      y2: y + r + dotPad,
-    };
-  });
-  const overlaps = (a: ReturnType<typeof rectFor>, b: ReturnType<typeof rectFor>) =>
-    a.x1 - labelPad < b.x2 &&
-    a.x2 + labelPad > b.x1 &&
-    a.y1 - labelPad < b.y2 &&
-    a.y2 + labelPad > b.y1;
-
-  for (const c of cands) {
-    const offsets = [0, 18, -18, 36, -36, 54, -54, 72, -72, 90, -90];
-    let y: number | null = null;
-
-    for (const offset of offsets) {
-      const candidateY = Math.max(12, Math.min(innerH - 12, c.baseY + offset));
-      const rect = rectFor({ ...c, y: candidateY });
-      if (
-        !placed.some((p) => overlaps(rect, rectFor(p))) &&
-        !dotRects.some((dot) => overlaps(rect, dot))
-      ) {
-        y = candidateY;
-        break;
-      }
-    }
-    if (y == null) continue;
-    placed.push({
-      slug: c.slug,
-      x: c.x,
-      y: Math.max(12, Math.min(innerH - 12, y)),
-      anchor: c.anchor,
-      text: c.text,
-    });
+// Shareable state lives in the URL hash: #y=coding&x=cost&q=claude&asof=2025-06-01&wait=30&cost=1
+function readHash() {
+  const p = new URLSearchParams(window.location.hash.slice(1));
+  const y: YMetric = p.get("y") === "coding" ? "coding" : "intelligence";
+  const xRaw = p.get("x");
+  const x: XMode = xRaw === "cost" || xRaw === "timeline" ? xRaw : "speed";
+  const q = p.get("q") ?? "";
+  let asOf: number | null = null;
+  const asofRaw = p.get("asof");
+  if (asofRaw) {
+    const ms = Date.parse(asofRaw);
+    if (Number.isFinite(ms) && ms < fetchedAtMs) asOf = Math.max(ms, minReleaseMs);
   }
-  return placed;
+  const wait = Number.parseFloat(p.get("wait") ?? "");
+  const cost = Number.parseFloat(p.get("cost") ?? "");
+  const maxWait = Number.isFinite(wait) && wait > 0 ? wait : null;
+  const maxCost = Number.isFinite(cost) && cost > 0 ? cost : null;
+  return { y, x, q, asOf, maxWait, maxCost, limitsOn: maxWait != null || maxCost != null };
 }
+const initial = readHash();
 
-function MapChart({
-  models,
-  yMetric,
-  onHover,
-  hoveredSlug,
-  matchedSlugs,
-  newestSlugs,
+const trimNum = (v: number) => String(Number(v.toPrecision(3)));
+
+function SegmentSwitch<T extends string>({
+  options,
+  value,
+  onChange,
 }: {
-  models: Model[];
-  yMetric: YMetric;
-  onHover: (slug: string | null) => void;
-  hoveredSlug: string | null;
-  matchedSlugs: Set<string> | null;
-  newestSlugs: Set<string>;
+  options: { value: T; label: string }[];
+  value: T;
+  onChange: (value: T) => void;
 }) {
-  const metric = Y_METRICS[yMetric];
-  const searchActive = matchedSlugs !== null;
-  const isMatch = (slug: string) => !searchActive || matchedSlugs!.has(slug);
-  const metricModels = useMemo(
-    () => models.filter((m) => isPositiveFinite(metric.value(m))),
-    [metric, models],
-  );
-  const timedModels = useMemo(() => metricModels.filter(hasLatency), [metricModels]);
-  const pricedModels = useMemo(() => metricModels.filter(hasCost), [metricModels]);
-  const W = 1280;
-  const H = 720;
-  const M = { top: 28, right: 60, bottom: 56, left: 142 };
-  const innerW = W - M.left - M.right;
-  const innerH = H - M.top - M.bottom;
-  const untimedX = 18;
-
-  const metricValues = metricModels.map((m) => metric.value(m)).filter(isPositiveFinite);
-  const { min: metricMin, max: metricMax } = metricBounds(metricValues, metric.defaultMin, metric.defaultMax);
-  const tiers = relativeTiers(metricMin, metricMax);
-  const yScale = scaleLinear().domain([metricMin, metricMax]).range([innerH, 0]);
-
-  // X = end-to-end response time, log scale, inverted so faster sits on the right.
-  // Log fits the user-felt cost of waiting (perception is roughly logarithmic;
-  // the UX thresholds 1s / 10s / 1min are each an order of magnitude apart),
-  // matches industry convention, and keeps the right-side cluster legible.
-  const latencies = timedModels.map((m) => m.e2eLatency);
-  const latMin = latencies.length ? Math.min(...latencies) : 1;
-  const latMax = latencies.length ? Math.max(...latencies) : 10;
-  const latLow = latMin === latMax ? latMin * 0.8 : latMin * 0.9;
-  const latHigh = latMin === latMax ? latMax * 1.2 : latMax * 1.1;
-  const xScale = scaleLog().domain([latHigh, latLow]).range([0, innerW]);
-
-  // Cost → color via log scale. Multiplicative cost differences map to even
-  // perceptual color steps, matching how budgets are felt.
-  const costs = pricedModels.map((m) => m.costPerTask);
-  const costMin = costs.length ? Math.min(...costs) : 1;
-  const costMax = costs.length ? Math.max(...costs) : 10;
-  const costLow = costMin === costMax ? costMin * 0.8 : costMin * 0.9;
-  const costHigh = costMin === costMax ? costMax * 1.2 : costMax * 1.1;
-  const costNorm = scaleLog().domain([costLow, costHigh]).range([0, 1]).clamp(true);
-
-  const sizeScale = scaleLinear().domain([metricMin, metricMax]).range([7, 12]).clamp(true);
-
-  const opacityFor = (value: number) => {
-    const t = (value - metricMin) / (metricMax - metricMin);
-    return 0.4 + 0.55 * Math.max(0, Math.min(1, t));
-  };
-
-  const xy = (m: Model) => ({
-    x: hasLatency(m) ? xScale(m.e2eLatency) : untimedX,
-    y: yScale(metric.value(m)!),
-    r: sizeScale(metric.value(m)!),
-  });
-
-  const markerColor = (m: Model) =>
-    isPositiveFinite(m.costPerTask) ? costColor(costNorm(m.costPerTask)) : NEUTRAL_COST_COLOR;
-
-  // Pareto frontier on (selected metric ↑, latency ↓): models that no other
-  // model beats on both axes. Sweep from fastest to slowest, keeping any
-  // point that raises the running-best metric value.
-  const frontier = useMemo(() => {
-    const sweep = [...timedModels].sort(
-      (a, b) => a.e2eLatency - b.e2eLatency || metric.value(b)! - metric.value(a)!,
-    );
-    const keep: Model[] = [];
-    let bestValue = -Infinity;
-    for (const m of sweep) {
-      const value = metric.value(m)!;
-      if (value > bestValue) {
-        keep.push(m);
-        bestValue = value;
-      }
-    }
-    return keep.sort((a, b) => metric.value(a)! - metric.value(b)!);
-  }, [metric, timedModels]);
-  const frontierSlugs = useMemo(() => new Set(frontier.map((m) => m.slug)), [frontier]);
-  const isFrontier = (slug: string) => frontierSlugs.has(slug);
-
-  const recentCutoffMs = useMemo(() => {
-    const cutoff = new Date(snapshot.fetchedAt);
-    cutoff.setUTCMonth(cutoff.getUTCMonth() - RECENT_WINDOW_MONTHS);
-    return cutoff.getTime();
-  }, []);
-
-  const recentModels = useMemo(
-    () =>
-      metricModels
-        .filter((m) => m.releaseDate && Date.parse(m.releaseDate) >= recentCutoffMs)
-        .sort((a, b) => Date.parse(b.releaseDate!) - Date.parse(a.releaseDate!)),
-    [metricModels, recentCutoffMs],
-  );
-  const defaultRecentModels = useMemo(
-    () => recentModels.filter((m) => hasLatency(m) || hasCost(m) || newestSlugs.has(m.slug)),
-    [newestSlugs, recentModels],
-  );
-
-  const visibleModels = useMemo(() => {
-    const bySlug = new Map<string, Model>();
-    const add = (m: Model | undefined) => {
-      if (m) bySlug.set(m.slug, m);
-    };
-
-    frontier.forEach(add);
-    metricModels.filter((m) => newestSlugs.has(m.slug)).forEach(add);
-
-    if (searchActive) {
-      metricModels.filter((m) => isMatch(m.slug)).forEach(add);
-    } else {
-      defaultRecentModels.forEach(add);
-    }
-
-    if (hoveredSlug) add(metricModels.find((m) => m.slug === hoveredSlug));
-    return [...bySlug.values()];
-  }, [defaultRecentModels, frontier, hoveredSlug, matchedSlugs, metricModels, newestSlugs, searchActive]);
-
-  const labeledModels = useMemo(() => {
-    const bySlug = new Map<string, Model>();
-    const add = (m: Model | undefined) => {
-      if (m) bySlug.set(m.slug, m);
-    };
-
-    frontier.forEach(add);
-    metricModels
-      .filter((m) => newestSlugs.has(m.slug))
-      .forEach(add);
-    if (hoveredSlug) add(metricModels.find((m) => m.slug === hoveredSlug));
-
-    const visibleMatches = searchActive
-      ? metricModels
-          .filter((m) => isMatch(m.slug))
-          .sort((a, b) => metric.value(b)! - metric.value(a)!)
-          .slice(0, 80)
-      : [];
-    visibleMatches.forEach(add);
-
-    if (!searchActive) {
-      defaultRecentModels
-        .slice()
-        .sort((a, b) => metric.value(b)! - metric.value(a)!)
-        .slice(0, 6)
-        .forEach(add);
-    }
-
-    return [...bySlug.values()];
-  }, [defaultRecentModels, frontier, hoveredSlug, matchedSlugs, metric, metricModels, newestSlugs, searchActive]);
-
-  const labels = useMemo(
-    () => placeLabels(labeledModels, xy, innerW, innerH, visibleModels),
-    [labeledModels, visibleModels],
-  );
-
-  const frontierPoints = [...frontier].reverse().map((m) => xy(m));
-  const frontierPath = frontierPoints.length
-    ? [
-        `M0,${frontierPoints[0].y.toFixed(1)}`,
-        ...frontierPoints.map((p) => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`),
-      ].join(" ")
-    : "";
-
-  // Draw order = stacking: hovered on top, then newest, search matches,
-  // frontier, and finally the rest by selected metric value.
-  const priority = (m: Model) =>
-    m.slug === hoveredSlug
-      ? 4
-      : newestSlugs.has(m.slug)
-        ? 3
-        : searchActive && isMatch(m.slug)
-          ? 2
-          : isFrontier(m.slug)
-            ? 1
-            : 0;
-  const ordered = [...visibleModels].sort(
-    (a, b) => priority(a) - priority(b) || metric.value(a)! - metric.value(b)!,
-  );
-
-  const xTicks = [5, 10, 30, 100, 200].filter(
-    (t) => t >= xScale.domain()[1] && t <= xScale.domain()[0],
-  );
-  const hasVisibleUntimed = visibleModels.some((m) => !hasLatency(m));
-
   return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      className="w-full h-full select-none"
-      preserveAspectRatio="xMidYMid meet"
-      style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
-    >
-      <g transform={`translate(${M.left}, ${M.top})`}>
-        {/* Tier bands */}
-        {tiers.map((t) => {
-          const yTop = yScale(Math.min(t.max, metricMax));
-          const yBottom = yScale(Math.max(t.min, metricMin));
-          const h = yBottom - yTop;
-          if (h <= 0) return null;
-          return (
-            <g key={t.label}>
-              <rect x={0} y={yTop} width={innerW} height={h} fill={t.shade} />
-              <text
-                x={-14}
-                y={(yTop + yBottom) / 2}
-                textAnchor="end"
-                dominantBaseline="middle"
-                fontSize={11}
-                fontWeight={t.emphasis > 0.7 ? 600 : 400}
-                fill={t.emphasis > 0.7 ? "#0a0a0a" : "#9b9b9b"}
-                letterSpacing={0.4}
-              >
-                {t.label.toUpperCase()}
-              </text>
-            </g>
-          );
-        })}
-
-          {Array.from(
-          { length: Math.floor(metricMax / 10) - Math.ceil(metricMin / 10) + 1 },
-          (_, i) => (Math.ceil(metricMin / 10) + i) * 10,
-        ).map((v) => (
-          <line
-            key={`yt-${v}`}
-            x1={0}
-            x2={innerW}
-            y1={yScale(v)}
-            y2={yScale(v)}
-            stroke="#eaeaea"
-            strokeWidth={0.5}
-          />
-        ))}
-
-        {tiers.slice(0, -1).map((t) => (
-          <line
-            key={`sep-${t.label}`}
-            x1={0}
-            x2={innerW}
-            y1={yScale(t.min)}
-            y2={yScale(t.min)}
-            stroke="#e0e0e0"
-            strokeWidth={1}
-          />
-        ))}
-
-        {hasVisibleUntimed && (
-          <g style={{ pointerEvents: "none" }}>
-            <line
-              x1={untimedX}
-              x2={untimedX}
-              y1={0}
-              y2={innerH}
-              stroke="#d8d8d8"
-              strokeWidth={1}
-              strokeDasharray="2 5"
-            />
-            <text
-              x={untimedX}
-              y={-8}
-              textAnchor="middle"
-              fontSize={9}
-              fontWeight={600}
-              fill="#9b9b9b"
-              letterSpacing={1.1}
-            >
-              TIMING N/A
-            </text>
-          </g>
-        )}
-
-
-        {/* X axis */}
-        <line x1={0} x2={innerW} y1={innerH} y2={innerH} stroke="#9b9b9b" />
-        {xTicks.map((t) => (
-          <g key={`xt-${t}`} transform={`translate(${xScale(t)}, 0)`}>
-            <line x1={0} x2={0} y1={innerH} y2={innerH + 5} stroke="#9b9b9b" strokeWidth={1} />
-            <text
-              x={0}
-              y={innerH + 18}
-              textAnchor="middle"
-              fontSize={11}
-              fontWeight={500}
-              fill="#3a3a3a"
-              style={{ fontVariantNumeric: "tabular-nums" }}
-            >
-              {t}s
-            </text>
-          </g>
-        ))}
-        <text
-          x={innerW}
-          y={innerH + 40}
-          textAnchor="end"
-          fontSize={11}
-          fontWeight={600}
-          fill="#0a0a0a"
-          letterSpacing={1.4}
+    <div className="flex items-center gap-1 border border-ink-100 rounded-full p-0.5 w-fit">
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          onClick={() => onChange(opt.value)}
+          className={`px-2.5 py-1 text-[11px] rounded-full transition-colors ${
+            value === opt.value ? "bg-ink-900 text-white font-medium" : "text-ink-500 hover:text-ink-900"
+          }`}
         >
-          FASTER →
-        </text>
-        <text
-          x={0}
-          y={innerH + 40}
-          textAnchor="start"
-          fontSize={11}
-          fontWeight={500}
-          fill="#3a3a3a"
-          letterSpacing={1.4}
-        >
-          ← SLOWER
-        </text>
-        <text
-          x={innerW / 2}
-          y={innerH + 40}
-          textAnchor="middle"
-          fontSize={10}
-          fill="#9b9b9b"
-          letterSpacing={1.2}
-        >
-          END-TO-END RESPONSE TIME
-        </text>
-
-        <text
-          transform={`translate(-112, ${innerH / 2}) rotate(-90)`}
-          textAnchor="middle"
-          fontSize={11}
-          fill="#0a0a0a"
-          fontWeight={500}
-          letterSpacing={1.4}
-        >
-          {metric.axisLabel}
-        </text>
-
-        {/* Pareto frontier — guide line through non-dominated points */}
-        {frontier.length > 1 && (
-          <path
-            d={frontierPath}
-            fill="none"
-            stroke="#bdbdbd"
-            strokeWidth={1.1}
-            strokeDasharray="5 5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity={hoveredSlug ? 0.22 : 0.52}
-            style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
-          />
-        )}
-
-        {/* Dots */}
-        {ordered.map((m) => {
-          const { x, y, r } = xy(m);
-          const hasCost = isPositiveFinite(m.costPerTask);
-          const c = markerColor(m);
-          const onFrontier = isFrontier(m.slug);
-          const isHovered = hoveredSlug === m.slug;
-          const isOther = isHovered
-            ? false
-            : searchActive
-              ? !isMatch(m.slug)
-              : hoveredSlug !== null;
-          const isLit = !isHovered && searchActive && isMatch(m.slug);
-          const isNew = newestSlugs.has(m.slug);
-          const baseOp = opacityFor(metric.value(m)!);
-          const op = isHovered
-            ? 1
-            : isOther
-              ? onFrontier ? 0.38 : Math.min(0.12, baseOp)
-              : onFrontier || isLit || isNew
-                ? Math.max(0.86, baseOp)
-                : Math.min(0.5, baseOp);
-          const stroke = isHovered || isLit ? "#0a0a0a" : "white";
-          const strokeW = isHovered ? 1.8 : onFrontier ? 1.6 : 1.2;
-          const dotR = onFrontier ? r + 1.4 : r;
-          return (
-            <g
-              key={m.slug}
-              onMouseEnter={() => onHover(m.slug)}
-              onMouseLeave={() => onHover(null)}
-              style={{ cursor: "pointer" }}
-            >
-              {(isHovered || isLit) && <circle cx={x} cy={y} r={dotR + 7} fill={c} fillOpacity={0.18} />}
-              {isNew && (
-                <g opacity={isOther ? 0.18 : 1} style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}>
-                  {!isOther && (
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={dotR + 7}
-                      fill={NEW_MODEL_COLOR}
-                      className="newest-glow"
-                    />
-                  )}
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={dotR + 3}
-                    fill="none"
-                    stroke={NEW_MODEL_COLOR}
-                    strokeOpacity={isOther ? 0.25 : 0.7}
-                    strokeWidth={1.1}
-                  />
-                </g>
-              )}
-              <circle
-                cx={x}
-                cy={y}
-                r={dotR}
-                fill={c}
-                fillOpacity={hasCost ? op : isOther ? 0.18 : onFrontier ? 0.72 : 0.54}
-                stroke={stroke}
-                strokeWidth={strokeW}
-                style={{ transition: "all 200ms ease-out" }}
-              />
-            </g>
-          );
-        })}
-
-        {/* Label stems */}
-        {labels.map((l) => {
-          const m = models.find((x) => x.slug === l.slug)!;
-          const { x, y, r } = xy(m);
-          const c = markerColor(m);
-          const isHovered = hoveredSlug === l.slug;
-          const isOther = isHovered
-            ? false
-            : searchActive
-              ? !isMatch(l.slug)
-              : hoveredSlug !== null;
-          const onFrontier = isFrontier(l.slug);
-          const dir = l.anchor === "start" ? 1 : -1;
-          const fromX = x + dir * (r + 3);
-          const toX = l.anchor === "start" ? l.x - 5 : l.x + 5;
-
-          return (
-            <path
-              key={`stem-${l.slug}`}
-              d={`M${fromX.toFixed(1)},${y.toFixed(1)} L${toX.toFixed(1)},${l.y.toFixed(1)}`}
-              fill="none"
-              stroke={c}
-              strokeWidth={isHovered || onFrontier ? 1.3 : 1}
-              strokeLinecap="round"
-              opacity={isOther ? (onFrontier ? 0.2 : 0.08) : isHovered ? 0.58 : onFrontier ? 0.44 : 0.24}
-              style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
-            />
-          );
-        })}
-
-        {/* Labels */}
-        {labels.map((l) => {
-          const m = models.find((x) => x.slug === l.slug)!;
-          const isHovered = hoveredSlug === l.slug;
-          const isOther = isHovered
-            ? false
-            : searchActive
-              ? !isMatch(l.slug)
-              : hoveredSlug !== null;
-          const onFrontier = isFrontier(l.slug);
-          const tier = tierFor(metric.value(m)!, tiers);
-          const baseOp = isHovered || onFrontier ? 1 : tier.emphasis;
-          const op = isOther ? (onFrontier ? 0.34 : 0.12) : Math.max(onFrontier ? 0.9 : 0.68, baseOp);
-          return (
-            <text
-              key={`lbl-${l.slug}`}
-              x={l.x}
-              y={l.y}
-              textAnchor={l.anchor}
-              dominantBaseline="middle"
-              fontSize={isHovered || onFrontier ? 12 : 11}
-              fontWeight={isHovered || onFrontier ? 600 : 500}
-              fill={isHovered ? "#0a0a0a" : "#2f2f2f"}
-              fillOpacity={op}
-              stroke="#ffffff"
-              strokeWidth={3}
-              paintOrder="stroke"
-              style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
-            >
-              {l.text}
-            </text>
-          );
-        })}
-
-        {/* "NEW" tag on the most recently added model(s) */}
-        {models
-          .filter((m) => newestSlugs.has(m.slug) && isPositiveFinite(metric.value(m)))
-          .map((m) => {
-            const { x, y, r } = xy(m);
-            const dim = searchActive && !isMatch(m.slug);
-            return (
-              <text
-                key={`new-${m.slug}`}
-                x={x}
-                y={y - r - 9}
-                textAnchor="middle"
-                fontSize={8.5}
-                fontWeight={750}
-                fill={NEW_MODEL_COLOR}
-                letterSpacing={0.8}
-                opacity={dim ? 0.15 : 1}
-                stroke="#ffffff"
-                strokeWidth={2.4}
-                paintOrder="stroke"
-                style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
-              >
-                NEW
-              </text>
-            );
-          })}
-      </g>
-    </svg>
+          {opt.label}
+        </button>
+      ))}
+    </div>
   );
 }
 
-function FrontierLegend() {
+function FrontierLegend({ label, note }: { label: string; note: string }) {
   return (
     <div className="relative group flex items-center gap-2 cursor-help">
       <svg width="32" height="6" className="shrink-0" aria-hidden>
@@ -753,41 +102,54 @@ function FrontierLegend() {
         />
       </svg>
       <span className="text-[11px] text-ink-700 underline decoration-dotted decoration-ink-300 underline-offset-[3px]">
-        2D frontier
+        {label}
       </span>
       <div
         className="invisible opacity-0 group-hover:visible group-hover:opacity-100 absolute top-full right-0 mt-2 w-64 bg-white border border-ink-100 rounded-lg px-3 py-2 text-[11px] text-ink-700 leading-snug z-30 transition-opacity duration-150"
         style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)" }}
       >
-        This line shows models no other model beats on both intelligence and speed.
+        {note}
       </div>
     </div>
   );
 }
 
-// Cost color legend — "cheap" sits on the cheap side of the bar, "expensive"
-// on the expensive side, so proximity matches meaning.
-function CostLegend() {
-  const stops = [0, 0.25, 0.5, 0.75, 1].map((t) => costColor(t));
+// Color legend — low (blue) end labeled with the data minimum, high (red)
+// end with the maximum, so the ramp can be decoded to actual values.
+function ColorLegend({
+  title,
+  domain,
+  fmt,
+}: {
+  title: string;
+  domain: [number, number];
+  fmt: (v: number) => string;
+}) {
+  const stops = [0, 0.25, 0.5, 0.75, 1].map((t) => rampColor(t));
   return (
-    <div className="flex items-center gap-3">
-      <span className="text-[11px] text-ink-700">low cost/task</span>
+    <div className="flex items-center gap-2">
+      <span className="text-[11px] text-ink-700">{title}</span>
+      <span className="text-[10px] tabular-nums text-ink-500">{fmt(domain[0])}</span>
       <div
-        className="h-2 w-40 rounded-full"
-        style={{
-          background: `linear-gradient(to right, ${stops.join(", ")})`,
-        }}
+        className="h-2 w-32 rounded-full"
+        style={{ background: `linear-gradient(to right, ${stops.join(", ")})` }}
       />
-      <span className="text-[11px] text-ink-700">high</span>
+      <span className="text-[10px] tabular-nums text-ink-500">{fmt(domain[1])}</span>
     </div>
   );
 }
 
-function HoverCard({ m }: { m: Model }) {
-  const metrics = [
-    { label: "End-to-end response time", value: fmtHoverLatency(m.e2eLatency) },
-    { label: "Cost per task", value: fmtHoverCost(m.costPerTask) },
-    { label: "Intelligence", value: m.intelligence.toFixed(1) },
+function HoverCard({ m, yMetric, caption }: { m: Model; yMetric: YMetric; caption?: string }) {
+  const active = Y_METRICS[yMetric];
+  const other = Y_METRICS[yMetric === "intelligence" ? "coding" : "intelligence"];
+  const rows = [
+    { label: active.rowLabel, value: fmtIndex(active.value(m)) },
+    ...(isPositiveFinite(other.value(m))
+      ? [{ label: other.rowLabel, value: fmtIndex(other.value(m)) }]
+      : []),
+    { label: "Cost per task", value: fmtCost(m.costPerTask) },
+    { label: "End-to-end response time", value: fmtSeconds(m.e2eLatency) },
+    { label: "Released", value: fmtDate(m.releaseMs) },
   ];
 
   return (
@@ -795,44 +157,30 @@ function HoverCard({ m }: { m: Model }) {
       className="pointer-events-none absolute top-3 right-3 w-[18.5rem] rounded-xl border border-ink-100/80 bg-white/95 px-4 py-3.5 text-ink-900 z-20 backdrop-blur"
       style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 18px 48px rgba(0,0,0,0.10)" }}
     >
-      <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-ink-500">
-        {m.creator}
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-ink-500">
+          {m.creator}
+        </div>
+        {caption && (
+          <div
+            className="text-[9px] font-bold uppercase tracking-[0.14em]"
+            style={{ color: PICK_COLOR }}
+          >
+            {caption}
+          </div>
+        )}
       </div>
       <div className="mt-1.5 text-[15px] font-semibold leading-tight text-ink-900">
         {m.displayName}
       </div>
       <div className="mt-3 divide-y divide-ink-100 text-[12px]">
-        {metrics.map((metric) => (
-          <div key={metric.label} className="flex items-baseline justify-between gap-5 py-2 first:pt-0 last:pb-0">
-            <span className="text-ink-500">{metric.label}</span>
-            <span className="font-semibold tabular-nums text-ink-900">{metric.value}</span>
+        {rows.map((row) => (
+          <div key={row.label} className="flex items-baseline justify-between gap-5 py-2 first:pt-0 last:pb-0">
+            <span className="text-ink-500">{row.label}</span>
+            <span className="font-semibold tabular-nums text-ink-900">{row.value}</span>
           </div>
         ))}
       </div>
-    </div>
-  );
-}
-
-function MetricSwitch({
-  value,
-  onChange,
-}: {
-  value: YMetric;
-  onChange: (value: YMetric) => void;
-}) {
-  return (
-    <div className="flex items-center gap-1 border border-ink-100 rounded-full p-0.5 w-fit">
-      {(Object.keys(Y_METRICS) as YMetric[]).map((metric) => (
-        <button
-          key={metric}
-          onClick={() => onChange(metric)}
-          className={`px-2.5 py-1 text-[11px] rounded-full transition-colors ${
-            value === metric ? "bg-ink-900 text-white font-medium" : "text-ink-500 hover:text-ink-900"
-          }`}
-        >
-          {Y_METRICS[metric].label}
-        </button>
-      ))}
     </div>
   );
 }
@@ -842,10 +190,12 @@ function SearchBox({
   value,
   onChange,
   matchCount,
+  offViewCount,
 }: {
   value: string;
   onChange: (v: string) => void;
   matchCount: number | null;
+  offViewCount: number;
 }) {
   const active = value.trim().length > 0;
   return (
@@ -866,6 +216,7 @@ function SearchBox({
         </svg>
         <input
           type="text"
+          name="model-search"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Search models…"
@@ -883,63 +234,187 @@ function SearchBox({
         )}
       </div>
       {active && (
-        <span className="hidden sm:inline text-[10px] tabular-nums text-ink-400 whitespace-nowrap">
+        <span className="hidden sm:inline text-[10px] tabular-nums text-ink-500 whitespace-nowrap">
           {matchCount} {matchCount === 1 ? "match" : "matches"}
+          {offViewCount > 0 && <span className="text-ink-300"> · {offViewCount} off view</span>}
         </span>
       )}
     </div>
   );
 }
 
-export default function App() {
-  const [yMetric, setYMetric] = useState<YMetric>("intelligence");
-  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
-  const [query, setQuery] = useState("");
-  const models = useMemo(
-    () => snapshot.models.filter((m) => isPositiveFinite(m.intelligence)),
-    [],
+// One limit knob: log-mapped slider where the far right means "any".
+function LimitSlider({
+  label,
+  range,
+  value,
+  onChange,
+  fmt,
+}: {
+  label: string;
+  range: [number, number];
+  value: number | null;
+  onChange: (v: number | null) => void;
+  fmt: (v: number) => string;
+}) {
+  const [lo, hi] = range;
+  const t = value == null ? 1 : Math.max(0, Math.min(1, Math.log(value / lo) / Math.log(hi / lo)));
+  return (
+    <label className="flex items-center gap-2">
+      <span className="text-[11px] text-ink-500 whitespace-nowrap">{label}</span>
+      <input
+        type="range"
+        name={label}
+        min={0}
+        max={1}
+        step={0.005}
+        value={t}
+        onChange={(e) => {
+          const u = Number.parseFloat(e.target.value);
+          onChange(u >= 1 ? null : lo * Math.pow(hi / lo, u));
+        }}
+        className="limit w-28 sm:w-32"
+        aria-label={label}
+      />
+      <span className="text-[11px] font-medium tabular-nums text-ink-900 w-12">
+        {value == null ? "any" : fmt(value)}
+      </span>
+    </label>
   );
-  const metric = Y_METRICS[yMetric];
-  const metricModels = useMemo(
-    () => models.filter((m) => isPositiveFinite(metric.value(m))),
-    [metric, models],
-  );
-  const fetchedDate = new Date(snapshot.fetchedAt).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+}
 
-  // Newest = model(s) sharing the latest release date. Fall back to first-seen
-  // timestamps only when AA has not published release dates for any model.
+function TimeScrubber({
+  value,
+  playing,
+  onChange,
+  onTogglePlay,
+}: {
+  value: number | null;
+  playing: boolean;
+  onChange: (v: number | null) => void;
+  onTogglePlay: () => void;
+}) {
+  return (
+    <div className="shrink-0 flex items-center gap-3 pt-2">
+      <button
+        onClick={onTogglePlay}
+        aria-label={playing ? "Pause replay" : "Replay history"}
+        className="h-6 w-6 rounded-full border border-ink-100 flex items-center justify-center text-ink-700 hover:border-ink-300 transition-colors shrink-0"
+      >
+        {playing ? (
+          <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
+            <rect x="1.5" y="1" width="2.6" height="8" fill="currentColor" />
+            <rect x="5.9" y="1" width="2.6" height="8" fill="currentColor" />
+          </svg>
+        ) : (
+          <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
+            <path d="M2 0.8v8.4L9 5z" fill="currentColor" />
+          </svg>
+        )}
+      </button>
+      <span className="hidden sm:inline text-[9px] uppercase tracking-[0.16em] text-ink-300 shrink-0">
+        Replay
+      </span>
+      <input
+        type="range"
+        name="asof"
+        min={minReleaseMs}
+        max={fetchedAtMs}
+        step={DAY_MS}
+        value={value ?? fetchedAtMs}
+        onChange={(e) => {
+          const v = Number(e.target.value);
+          // The day-step never lands exactly on the max, so treat the last
+          // step as "today".
+          onChange(fetchedAtMs - v < DAY_MS ? null : v);
+        }}
+        className="scrub flex-1 min-w-0"
+        aria-label="View the map as of a past date"
+      />
+      <span className="text-[11px] tabular-nums text-ink-700 w-24 text-right shrink-0">
+        {value == null ? "Today" : fmtDate(value)}
+      </span>
+    </div>
+  );
+}
+
+export default function App() {
+  const [yMetric, setYMetric] = useState<YMetric>(initial.y);
+  const [xMode, setXMode] = useState<XMode>(initial.x);
+  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const [query, setQuery] = useState(initial.q);
+  const [asOf, setAsOf] = useState<number | null>(initial.asOf);
+  const [playing, setPlaying] = useState(false);
+  const [limitsOn, setLimitsOn] = useState(initial.limitsOn);
+  const [maxWait, setMaxWait] = useState<number | null>(initial.maxWait);
+  const [maxCost, setMaxCost] = useState<number | null>(initial.maxCost);
+
+  const metric = Y_METRICS[yMetric];
+  const xc = X_MODES[xMode];
+  const timeline = xMode === "timeline";
+  // The timeline already shows all of history, so the scrubber only applies
+  // to the scatter views.
+  const effectiveAsOf = timeline ? null : asOf;
+
+  const asOfModels = useMemo(
+    () =>
+      effectiveAsOf == null
+        ? allModels
+        : allModels.filter((m) => m.releaseMs != null && m.releaseMs <= effectiveAsOf),
+    [effectiveAsOf],
+  );
+  const metricModels = useMemo(
+    () => asOfModels.filter((m) => isPositiveFinite(metric.value(m))),
+    [asOfModels, metric],
+  );
+  const viewModels = useMemo(
+    () => metricModels.filter((m) => !timeline || m.releaseMs != null),
+    [metricModels, timeline],
+  );
+
+  const colorDomain = useMemo<[number, number]>(() => {
+    const v = viewModels.map((m) => xc.colorValue(m)).filter(isPositiveFinite);
+    return v.length ? [Math.min(...v), Math.max(...v)] : [1, 10];
+  }, [viewModels, xc]);
+
+  const recentCutoffMs = useMemo(() => {
+    const cutoff = new Date(effectiveAsOf ?? fetchedAtMs);
+    cutoff.setUTCMonth(cutoff.getUTCMonth() - RECENT_WINDOW_MONTHS);
+    return cutoff.getTime();
+  }, [effectiveAsOf]);
+
+  // Newest = model(s) sharing the latest release date as of the viewed date.
+  // Fall back to first-seen timestamps only when release dates are absent.
   const newestSlugs = useMemo(() => {
-    const hasReleaseDates = models.some((m) => m.releaseDate);
-    const dated = models
-      .map((m) => ({ model: m, date: hasReleaseDates ? m.releaseDate : m.addedAt }))
-      .filter((item): item is { model: Model; date: string } => Boolean(item.date));
-    const times = dated.map((item) => Date.parse(item.date)).filter(Number.isFinite);
-    if (times.length < 2) return new Set<string>();
+    const hasReleaseDates = asOfModels.some((m) => m.releaseMs != null);
+    const dated = asOfModels
+      .map((m) => ({
+        m,
+        t: hasReleaseDates ? m.releaseMs : m.addedAt ? Date.parse(m.addedAt) : NaN,
+      }))
+      .filter((item): item is { m: Model; t: number } => Number.isFinite(item.t));
+    if (dated.length < 2) return new Set<string>();
+    const times = dated.map((item) => item.t);
     const max = Math.max(...times);
     if (max === Math.min(...times)) return new Set<string>();
-    return new Set(
-      dated
-        .filter((item) => Date.parse(item.date) === max)
-        .map((item) => item.model.slug),
-    );
-  }, [models]);
+    return new Set(dated.filter((item) => item.t === max).map((item) => item.m.slug));
+  }, [asOfModels]);
   const newestModel = useMemo(
     () =>
-      metricModels
+      viewModels
         .filter((m) => newestSlugs.has(m.slug))
         .sort((a, b) => metric.value(b)! - metric.value(a)!)[0] ?? null,
-    [metric, metricModels, newestSlugs],
+    [metric, newestSlugs, viewModels],
   );
 
+  // Search matches all models as of the viewed date — matches that can't be
+  // plotted on the current view are reported as "off view" instead of
+  // silently vanishing.
   const matchedSlugs = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return null;
     return new Set(
-      metricModels
+      asOfModels
         .filter(
           (m) =>
             m.displayName.toLowerCase().includes(q) ||
@@ -948,10 +423,88 @@ export default function App() {
         )
         .map((m) => m.slug),
     );
-  }, [query, metricModels]);
+  }, [query, asOfModels]);
   const matchCount = matchedSlugs?.size ?? null;
+  const offViewCount = useMemo(() => {
+    if (!matchedSlugs) return 0;
+    const plottable = new Set(viewModels.map((m) => m.slug));
+    return [...matchedSlugs].filter((slug) => !plottable.has(slug)).length;
+  }, [matchedSlugs, viewModels]);
 
-  const hovered = hoveredSlug ? metricModels.find((m) => m.slug === hoveredSlug) : null;
+  const limits: Limits = limitsOn ? { maxWait, maxCost } : NO_LIMITS;
+  const limited = limitsActive(limits);
+  const bestPick = useMemo(() => {
+    if (!limited) return null;
+    return (
+      viewModels
+        .filter((m) => qualifies(m, limits) && (!matchedSlugs || matchedSlugs.has(m.slug)))
+        .sort((a, b) => metric.value(b)! - metric.value(a)!)[0] ?? null
+    );
+  }, [limited, matchedSlugs, maxCost, maxWait, metric, viewModels]);
+
+  // Replay: sweep the as-of date from the first release to today.
+  useEffect(() => {
+    if (!playing) return;
+    const step = Math.max(DAY_MS, Math.round((fetchedAtMs - minReleaseMs) / 150));
+    const id = setInterval(() => setAsOf((prev) => (prev ?? minReleaseMs) + step), 70);
+    return () => clearInterval(id);
+  }, [playing]);
+  useEffect(() => {
+    if (asOf != null && asOf >= fetchedAtMs) {
+      setAsOf(null);
+      setPlaying(false);
+    }
+  }, [asOf]);
+  useEffect(() => {
+    if (timeline) setPlaying(false);
+  }, [timeline]);
+  const togglePlay = () => {
+    if (!playing && asOf == null) setAsOf(minReleaseMs);
+    setPlaying((p) => !p);
+  };
+
+  // Apply externally-set hashes (pasted URL, back/forward) — replaceState
+  // below never fires hashchange, so this can't loop.
+  useEffect(() => {
+    const onHash = () => {
+      const h = readHash();
+      setYMetric(h.y);
+      setXMode(h.x);
+      setQuery(h.q);
+      setAsOf(h.asOf);
+      setLimitsOn(h.limitsOn);
+      setMaxWait(h.maxWait);
+      setMaxCost(h.maxCost);
+      setPlaying(false);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  // Mirror the view into the URL hash so any state is shareable.
+  useEffect(() => {
+    const p = new URLSearchParams();
+    if (yMetric !== "intelligence") p.set("y", yMetric);
+    if (xMode !== "speed") p.set("x", xMode);
+    if (query.trim()) p.set("q", query.trim());
+    if (asOf != null) p.set("asof", new Date(asOf).toISOString().slice(0, 10));
+    if (limitsOn && maxWait != null) p.set("wait", trimNum(maxWait));
+    if (limitsOn && maxCost != null) p.set("cost", trimNum(maxCost));
+    const hash = p.toString();
+    const next = hash ? `#${hash}` : "";
+    if (next === location.hash) return;
+    try {
+      history.replaceState(null, "", `${location.pathname}${location.search}${next}`);
+    } catch {
+      // Sandboxed/about:blank documents (README screenshot capture) refuse
+      // replaceState — the URL mirror is best-effort there.
+    }
+  }, [yMetric, xMode, query, asOf, limitsOn, maxWait, maxCost]);
+
+  const fetchedDate = fmtDate(fetchedAtMs);
+  const hovered = hoveredSlug ? viewModels.find((m) => m.slug === hoveredSlug) : null;
+  const cardModel = hovered ?? (limited ? bestPick : null);
+  const subtitle = xc.subtitle.replace("Up is intelligence", `Up is ${metric.noun}`);
 
   return (
     <div className="h-screen w-full flex flex-col overflow-hidden">
@@ -961,13 +514,11 @@ export default function App() {
             <h1 className="text-2xl md:text-[28px] font-light tracking-tight text-ink-900 leading-tight">
               Smart, fast, and cheap.
             </h1>
-            <p className="mt-1.5 text-[13px] text-ink-500 max-w-3xl leading-snug">
-              Shows task cost, not token price; end-to-end wait, not tokens/sec. Up is intelligence, right is faster, color is cost.
-            </p>
+            <p className="mt-1.5 text-[13px] text-ink-500 max-w-3xl leading-snug">{subtitle}</p>
           </div>
           <div className="hidden sm:block text-right shrink-0">
             <div className="text-[10px] tracking-wide text-ink-300 uppercase">
-              Updated {fetchedDate}
+              {effectiveAsOf == null ? `Updated ${fetchedDate}` : `As of ${fmtDate(effectiveAsOf)}`}
             </div>
             {newestModel && (
               <div className="mt-0.5 text-[10px] tracking-wide">
@@ -981,34 +532,129 @@ export default function App() {
         </header>
 
         <div className="shrink-0 flex items-center justify-between gap-6 border-b border-ink-100 py-3">
-          <div className="flex items-center gap-4">
-            <MetricSwitch value={yMetric} onChange={setYMetric} />
+          <div className="flex items-center gap-2 md:gap-3">
+            <SegmentSwitch
+              options={(Object.keys(Y_METRICS) as YMetric[]).map((k) => ({
+                value: k,
+                label: Y_METRICS[k].label,
+              }))}
+              value={yMetric}
+              onChange={setYMetric}
+            />
+            <SegmentSwitch
+              options={(Object.keys(X_MODES) as XMode[]).map((k) => ({
+                value: k,
+                label: X_MODES[k].label,
+              }))}
+              value={xMode}
+              onChange={setXMode}
+            />
           </div>
           <div className="flex items-center gap-4 md:gap-6">
-            <div className="hidden md:block"><FrontierLegend /></div>
-            <div className="hidden md:block"><CostLegend /></div>
-            <SearchBox value={query} onChange={setQuery} matchCount={matchCount} />
+            <div className="hidden md:block">
+              <FrontierLegend label={xc.frontierLabel} note={xc.frontierNote(metric.noun)} />
+            </div>
+            <div className="hidden md:block">
+              <ColorLegend title={xc.colorTitle} domain={colorDomain} fmt={xc.fmtColor} />
+            </div>
+            <button
+              onClick={() => setLimitsOn((v) => !v)}
+              className={`px-2.5 py-1 text-[11px] rounded-full border transition-colors ${
+                limitsOn
+                  ? "bg-ink-900 text-white border-ink-900 font-medium"
+                  : "border-ink-100 text-ink-500 hover:text-ink-900"
+              }`}
+            >
+              Limits
+            </button>
+            <SearchBox
+              value={query}
+              onChange={setQuery}
+              matchCount={matchCount}
+              offViewCount={offViewCount}
+            />
           </div>
         </div>
+
+        {limitsOn && (
+          <div className="shrink-0 flex flex-wrap items-center gap-x-8 gap-y-2 border-b border-ink-100 py-2.5">
+            <LimitSlider
+              label="Max wait"
+              range={WAIT_RANGE}
+              value={maxWait}
+              onChange={setMaxWait}
+              fmt={fmtSecondsShort}
+            />
+            <LimitSlider
+              label="Max cost/task"
+              range={COST_RANGE}
+              value={maxCost}
+              onChange={setMaxCost}
+              fmt={fmtCost}
+            />
+            <div className="text-[11px] text-ink-500">
+              {limited ? (
+                bestPick ? (
+                  <>
+                    Top pick under these limits:{" "}
+                    <span className="font-semibold text-ink-900">{bestPick.displayName}</span>
+                  </>
+                ) : (
+                  "No model fits these limits."
+                )
+              ) : (
+                "Drag a slider to set a limit — the smartest model that fits gets flagged."
+              )}
+            </div>
+            {limited && (
+              <button
+                onClick={() => {
+                  setMaxWait(null);
+                  setMaxCost(null);
+                }}
+                className="text-[11px] text-ink-500 underline decoration-ink-300 underline-offset-2 hover:text-ink-900"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        )}
 
         <main className="flex-1 min-h-0 mt-3 relative">
           <div className="h-full w-full relative overflow-x-auto">
             <div className="h-full min-w-[860px]">
               <MapChart
-                models={models}
+                models={asOfModels}
                 yMetric={yMetric}
+                xMode={xMode}
                 onHover={setHoveredSlug}
                 hoveredSlug={hoveredSlug}
                 matchedSlugs={matchedSlugs}
                 newestSlugs={newestSlugs}
+                recentCutoffMs={recentCutoffMs}
+                limits={limits}
+                bestPickSlug={bestPick?.slug ?? null}
+                colorDomain={colorDomain}
               />
             </div>
-            {hovered && <HoverCard m={hovered} />}
+            {cardModel && (
+              <HoverCard
+                m={cardModel}
+                yMetric={yMetric}
+                caption={!hovered && cardModel === bestPick ? "Top pick" : undefined}
+              />
+            )}
           </div>
         </main>
 
+        {!timeline && (
+          <TimeScrubber value={asOf} playing={playing} onChange={setAsOf} onTogglePlay={togglePlay} />
+        )}
+
         <footer className="shrink-0 pt-3 mt-2 border-t border-ink-100 text-[10px] text-ink-300 tracking-wide leading-snug">
-          Data from Artificial Analysis. Default map shows the last {RECENT_WINDOW_MONTHS} months plus the frontier; priced untimed models sit on the timing n/a rail.
+          Data from Artificial Analysis. {xc.footnote}
+          {yMetric === "coding" &&
+            " Cost figures are per Intelligence Index task — AA doesn't publish per-coding-task cost."}
         </footer>
       </div>
     </div>

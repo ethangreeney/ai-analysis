@@ -35,3 +35,51 @@
     opacity: 0.08;
   }
 }
+
+/* Hairline sliders (time scrubber + limit knobs) in the ink palette. */
+input[type="range"].scrub,
+input[type="range"].limit {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 14px;
+  background: transparent;
+  cursor: pointer;
+}
+input[type="range"].scrub::-webkit-slider-runnable-track,
+input[type="range"].limit::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 1px;
+  background: #e4e4e4;
+}
+input[type="range"].scrub::-moz-range-track,
+input[type="range"].limit::-moz-range-track {
+  height: 2px;
+  border-radius: 1px;
+  background: #e4e4e4;
+}
+input[type="range"].scrub::-webkit-slider-thumb,
+input[type="range"].limit::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -5px;
+  height: 12px;
+  width: 12px;
+  border-radius: 9999px;
+  background: #0a0a0a;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px #d4d4d4;
+  transition: transform 0.1s ease;
+}
+input[type="range"].scrub::-moz-range-thumb,
+input[type="range"].limit::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  border-radius: 9999px;
+  background: #0a0a0a;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px #d4d4d4;
+}
+input[type="range"].scrub:hover::-webkit-slider-thumb,
+input[type="range"].limit:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
