@@ -11,28 +11,27 @@
   }
 }
 
-/* Radar-ping on the most-recently-added model: a ring that expands and fades,
-   like a sonar ping, drawing a calm eye to what's new. */
+/* Subtle glow on the most-recently-added model. */
 @keyframes newestPing {
-  0% {
-    transform: scale(1);
-    opacity: 0.55;
-  }
-  70%,
+  0%,
   100% {
-    transform: scale(2.3);
-    opacity: 0;
+    transform: scale(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.22;
   }
 }
-.newest-ping {
+.newest-glow {
   transform-box: fill-box;
   transform-origin: center;
-  animation: newestPing 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  animation: newestPing 2.2s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .newest-ping {
+  .newest-glow {
     animation: none;
-    opacity: 0;
+    opacity: 0.08;
   }
 }

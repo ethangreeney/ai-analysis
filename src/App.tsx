@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { scaleLinear, scaleLog } from "d3-scale";
 import data from "./data/models.json";
-import { colorFor } from "./providerStyle";
 
 interface Model {
   slug: string;
@@ -127,6 +126,7 @@ const COST_COLD = [29, 96, 165]; // saturated deep blue (cheap)
 const COST_MID = [222, 195, 138]; // warm sand (mid)
 const COST_HOT = [185, 50, 38]; // saturated deep red (expensive)
 const NEUTRAL_COST_COLOR = "#6d7781";
+const NEW_MODEL_COLOR = "#C96442";
 function costColor(t: number): string {
   const u = Math.max(0, Math.min(1, t));
   const lerp = (a: number[], b: number[], k: number) =>
@@ -606,6 +606,28 @@ function MapChart({
               style={{ cursor: "pointer" }}
             >
               {(isHovered || isLit) && <circle cx={x} cy={y} r={dotR + 7} fill={c} fillOpacity={0.18} />}
+              {isNew && (
+                <g opacity={isOther ? 0.18 : 1} style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}>
+                  {!isOther && (
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={dotR + 7}
+                      fill={NEW_MODEL_COLOR}
+                      className="newest-glow"
+                    />
+                  )}
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={dotR + 3}
+                    fill="none"
+                    stroke={NEW_MODEL_COLOR}
+                    strokeOpacity={isOther ? 0.25 : 0.7}
+                    strokeWidth={1.1}
+                  />
+                </g>
+              )}
               <circle
                 cx={x}
                 cy={y}
@@ -694,15 +716,15 @@ function MapChart({
               <text
                 key={`new-${m.slug}`}
                 x={x}
-                y={y - r - 8}
+                y={y - r - 9}
                 textAnchor="middle"
-                fontSize={9}
-                fontWeight={700}
-                fill={colorFor(m.creator)}
+                fontSize={8.5}
+                fontWeight={750}
+                fill={NEW_MODEL_COLOR}
                 letterSpacing={0.8}
                 opacity={dim ? 0.15 : 1}
                 stroke="#ffffff"
-                strokeWidth={2.5}
+                strokeWidth={2.4}
                 paintOrder="stroke"
                 style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
               >
@@ -950,7 +972,7 @@ export default function App() {
             {newestModel && (
               <div className="mt-0.5 text-[10px] tracking-wide">
                 <span className="uppercase text-ink-300">Newest </span>
-                <span className="font-medium" style={{ color: colorFor(newestModel.creator) }}>
+                <span className="font-medium" style={{ color: NEW_MODEL_COLOR }}>
                   {newestModel.displayName}
                 </span>
               </div>
