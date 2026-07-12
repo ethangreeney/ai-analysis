@@ -29,10 +29,93 @@
   animation: newestPing 2.2s ease-in-out infinite;
 }
 
+@keyframes comparisonStripIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes alternativesPanelIn {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+@keyframes alternativeRowIn {
+  from {
+    opacity: 0;
+    transform: translateX(5px);
+  }
+}
+
+@keyframes modelPickerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px) scale(0.985);
+  }
+}
+
+@keyframes comparisonArrowIn {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes comparisonRingIn {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+}
+
+.comparison-strip {
+  animation: comparisonStripIn 170ms ease-out both;
+}
+
+.alternatives-panel {
+  animation: alternativesPanelIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.alternative-row {
+  animation: alternativeRowIn 170ms ease-out both;
+}
+
+.model-picker-menu {
+  transform-origin: top left;
+  animation: modelPickerIn 150ms ease-out both;
+}
+
+.comparison-arrow {
+  stroke-dasharray: 1;
+  animation: comparisonArrowIn 240ms ease-out both;
+}
+
+.comparison-ring,
+.alternative-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: comparisonRingIn 180ms ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .newest-glow {
     animation: none;
     opacity: 0.08;
+  }
+
+  .comparison-strip,
+  .alternatives-panel,
+  .alternative-row,
+  .model-picker-menu,
+  .comparison-arrow,
+  .comparison-ring,
+  .alternative-ring {
+    animation: none;
   }
 }
 

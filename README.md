@@ -19,6 +19,8 @@ The existing AI comparison charts are all a bit off. They use token price as a s
 - **Timeline**: every benchmarked model by release date. The dashed line is the record line — each step is the model that raised the all-time intelligence record when it shipped.
 - **Replay**: the scrubber under the chart rewinds the map to any past date (or press play to watch the frontier move). Old models that AA no longer hosts lack current speed/cost benchmarks, so the deep past is sparse on the scatter views — the timeline view carries the full history.
 - **Limits**: set a max wait and/or max cost per task; everything that doesn't fit fades out and the smartest model that does gets flagged as the top pick.
+- **Find alternatives**: choose the model you use now to get a ranked shortlist based on capability, response time, and task cost. Pick any recommendation to focus the chart on a direct comparison.
+- **Share a comparison**: the current model and considered alternative are saved in the URL. Shared links reopen with both points emphasized, a directional connector, and the surrounding models de-emphasized for context.
 
 Every control is mirrored into the URL hash, so any view — a metric, a search, a past date, a set of limits — is shareable by copying the address.
 

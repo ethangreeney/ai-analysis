@@ -160,6 +160,9 @@ export function MapChart({
   limits,
   bestPickSlug,
   colorDomain,
+  comparedSlugs,
+  alternativeSlugs,
+  onSelect,
 }: {
   models: Model[];
   yMetric: YMetric;
@@ -172,12 +175,18 @@ export function MapChart({
   limits: Limits;
   bestPickSlug: string | null;
   colorDomain: [number, number];
+  comparedSlugs: string[];
+  alternativeSlugs: Set<string>;
+  onSelect: (slug: string) => void;
 }) {
   const metric = Y_METRICS[yMetric];
   const xc = X_MODES[xMode];
   const timeline = xMode === "timeline";
   const searchActive = matchedSlugs !== null;
   const limited = limitsActive(limits);
+  const comparisonActive = comparedSlugs.length > 0;
+  const isCompared = (slug: string) => comparedSlugs.includes(slug);
+  const isAlternative = (slug: string) => comparedSlugs.length === 1 && alternativeSlugs.has(slug);
   const isMatch = (slug: string) => !searchActive || matchedSlugs!.has(slug);
   const fits = (m: Model) => !limited || qualifies(m, limits);
 
@@ -276,9 +285,25 @@ export function MapChart({
     [metricModels, recentCutoffMs],
   );
   const defaultRecentModels = useMemo(
-    () =>
-      recentModels.filter((m) => hasX(m) || xc.railDefault(m) || newestSlugs.has(m.slug)),
-    [newestSlugs, recentModels, xc],
+    () => {
+      const eligible = recentModels
+        .filter((m) => hasX(m) || xc.railDefault(m) || newestSlugs.has(m.slug))
+        .sort(
+          (a, b) =>
+            (b.releaseMs ?? 0) - (a.releaseMs ?? 0) || metric.value(b)! - metric.value(a)!,
+        );
+      const families = new Set<string>();
+      const concise: Model[] = [];
+      for (const model of eligible) {
+        const family = model.displayName.replace(/\s*\([^)]*\)\s*$/, "").toLowerCase();
+        if (families.has(family)) continue;
+        families.add(family);
+        concise.push(model);
+        if (concise.length === 24) break;
+      }
+      return concise;
+    },
+    [newestSlugs, recentModels, xc, metric],
   );
 
   const findModel = (slug: string | null) =>
@@ -302,9 +327,13 @@ export function MapChart({
 
     add(findModel(bestPickSlug));
     add(findModel(hoveredSlug));
+    comparedSlugs.forEach((slug) => add(findModel(slug)));
+    alternativeSlugs.forEach((slug) => add(findModel(slug)));
     return [...bySlug.values()];
   }, [
+    alternativeSlugs,
     bestPickSlug,
+    comparedSlugs,
     defaultRecentModels,
     frontier,
     hoveredSlug,
@@ -325,6 +354,8 @@ export function MapChart({
     metricModels.filter((m) => newestSlugs.has(m.slug)).forEach(add);
     add(findModel(bestPickSlug));
     add(findModel(hoveredSlug));
+    comparedSlugs.forEach((slug) => add(findModel(slug)));
+    alternativeSlugs.forEach((slug) => add(findModel(slug)));
 
     if (searchActive) {
       metricModels
@@ -342,7 +373,9 @@ export function MapChart({
 
     return [...bySlug.values()];
   }, [
+    alternativeSlugs,
     bestPickSlug,
+    comparedSlugs,
     defaultRecentModels,
     frontier,
     hoveredSlug,
@@ -380,18 +413,25 @@ export function MapChart({
     ].join(" ");
   }, [frontier, timeline, visibleModels]);
 
-  const isDim = (m: Model, isHovered: boolean) =>
-    isHovered
-      ? false
-      : (searchActive && !isMatch(m.slug)) ||
-        (limited && !fits(m)) ||
-        (!searchActive && !limited && hoveredSlug !== null);
+  const isDim = (m: Model, isHovered: boolean) => {
+    if (isHovered || isCompared(m.slug) || isAlternative(m.slug)) return false;
+    if (comparisonActive) return true;
+    return (
+      (searchActive && !isMatch(m.slug)) ||
+      (limited && !fits(m)) ||
+      (!searchActive && !limited && hoveredSlug !== null)
+    );
+  };
 
   // Draw order = stacking: hovered on top, then the pick, newest, search
   // matches, frontier, and finally the rest by selected metric value.
   const priority = (m: Model) =>
-    m.slug === hoveredSlug
-      ? 9
+    isCompared(m.slug)
+      ? 12 + comparedSlugs.indexOf(m.slug)
+      : m.slug === hoveredSlug
+      ? 11
+      : isAlternative(m.slug)
+        ? 10
       : m.slug === bestPickSlug
         ? 4
         : newestSlugs.has(m.slug)
@@ -440,6 +480,33 @@ export function MapChart({
       ? Math.max(0, Math.min(innerW, xScale(Math.min(cutValue, xHigh))))
       : null;
 
+  const comparisonPath = useMemo(() => {
+    if (comparedSlugs.length !== 2) return null;
+    const from = findModel(comparedSlugs[0]);
+    const to = findModel(comparedSlugs[1]);
+    if (!from || !to) return null;
+    const a = xy(from);
+    const b = xy(to);
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const distance = Math.hypot(dx, dy);
+    if (distance < 4) {
+      const offset = Math.max(a.r, b.r) + 5;
+      return `M${(a.x + offset).toFixed(1)},${a.y.toFixed(1)} C${(a.x + 62).toFixed(1)},${(
+        a.y - 52
+      ).toFixed(1)} ${(a.x + 62).toFixed(1)},${(a.y + 52).toFixed(1)} ${(
+        b.x + offset
+      ).toFixed(1)},${(b.y + 1).toFixed(1)}`;
+    }
+    const ux = dx / distance;
+    const uy = dy / distance;
+    const startPad = a.r + 6;
+    const endPad = b.r + 11;
+    return `M${(a.x + ux * startPad).toFixed(1)},${(a.y + uy * startPad).toFixed(
+      1,
+    )} L${(b.x - ux * endPad).toFixed(1)},${(b.y - uy * endPad).toFixed(1)}`;
+  }, [comparedSlugs, metricModels, xMode, yMetric]);
+
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -447,6 +514,19 @@ export function MapChart({
       preserveAspectRatio="xMidYMid meet"
       style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
     >
+      <defs>
+        <marker
+          id="comparison-arrow"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="7"
+          markerHeight="7"
+          orient="auto-start-reverse"
+        >
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#0a0a0a" />
+        </marker>
+      </defs>
       <g transform={`translate(${M.left}, ${M.top})`}>
         {/* Tier bands */}
         {tiers.map((t) => {
@@ -642,8 +722,25 @@ export function MapChart({
             strokeDasharray="5 5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            opacity={hoveredSlug ? 0.22 : 0.52}
+            opacity={comparisonActive ? 0.12 : hoveredSlug ? 0.22 : 0.52}
             style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
+          />
+        )}
+
+        {/* Directional comparison connector: current model → considered model. */}
+        {comparisonPath && (
+          <path
+            d={comparisonPath}
+            fill="none"
+            stroke="#0a0a0a"
+            strokeWidth={2}
+            strokeLinecap="round"
+            markerEnd="url(#comparison-arrow)"
+            opacity={0.9}
+            style={{ pointerEvents: "none" }}
+            pathLength={1}
+            className="comparison-arrow"
+            data-comparison-arrow
           />
         )}
 
@@ -656,10 +753,15 @@ export function MapChart({
           const isHovered = hoveredSlug === m.slug;
           const isOther = isDim(m, isHovered);
           const isLit = !isHovered && searchActive && isMatch(m.slug);
-          const isPick = m.slug === bestPickSlug;
-          const isNew = newestSlugs.has(m.slug) && !isPick;
+          const comparisonIndex = comparedSlugs.indexOf(m.slug);
+          const compared = comparisonIndex >= 0;
+          const alternative = isAlternative(m.slug);
+          const isPick = m.slug === bestPickSlug && !compared;
+          const isNew = newestSlugs.has(m.slug) && !isPick && !compared;
           const baseOp = opacityFor(metric.value(m)!);
-          let op = isHovered
+          let op = compared
+            ? 1
+            : isHovered
             ? 1
             : isOther
               ? onFrontier
@@ -672,14 +774,30 @@ export function MapChart({
           if (timeline && !isHovered && !isOther && !onFrontier && !isLit && !isNew && !isPick) {
             op = Math.min(op, 0.38);
           }
-          const stroke = isHovered || isLit ? "#0a0a0a" : "white";
-          const strokeW = isHovered ? 1.8 : onFrontier ? 1.6 : 1.2;
+          const stroke = compared || isHovered || isLit || alternative ? "#0a0a0a" : "white";
+          const strokeW = compared ? 2.2 : isHovered ? 1.8 : onFrontier ? 1.6 : 1.2;
           const dotR = onFrontier && !timeline ? r + 1.4 : r;
           return (
             <g
               key={m.slug}
               onMouseEnter={() => onHover(m.slug)}
               onMouseLeave={() => onHover(null)}
+              onFocus={() => onHover(m.slug)}
+              onBlur={() => onHover(null)}
+              onClick={() => onSelect(m.slug)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onSelect(m.slug);
+                }
+              }}
+              role={compared || alternative ? "button" : undefined}
+              tabIndex={compared || alternative ? 0 : undefined}
+              aria-label={
+                compared || alternative
+                  ? `${compared ? "Remove" : "Compare with"} ${m.displayName}`
+                  : undefined
+              }
               style={{ cursor: "pointer" }}
             >
               {(isHovered || isLit) && <circle cx={x} cy={y} r={dotR + 7} fill={c} fillOpacity={0.18} />}
@@ -711,6 +829,41 @@ export function MapChart({
                   <circle cx={x} cy={y} r={dotR + 8} fill="none" stroke={PICK_COLOR} strokeOpacity={0.25} strokeWidth={1} />
                 </g>
               )}
+              {alternative && (
+                <circle
+                  cx={x}
+                  cy={y}
+                  r={dotR + 4}
+                  fill="none"
+                  stroke="#0a0a0a"
+                  strokeOpacity={0.34}
+                  strokeWidth={1.2}
+                  className="alternative-ring"
+                  style={{ pointerEvents: "none" }}
+                />
+              )}
+              {compared && (
+                <g className="comparison-ring" style={{ pointerEvents: "none" }}>
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={dotR + 5}
+                    fill="none"
+                    stroke="#0a0a0a"
+                    strokeWidth={1.8}
+                    strokeDasharray={comparisonIndex === 0 ? undefined : "3 2"}
+                  />
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={dotR + 9}
+                    fill="none"
+                    stroke="#0a0a0a"
+                    strokeOpacity={0.18}
+                    strokeWidth={1}
+                  />
+                </g>
+              )}
               <circle
                 cx={x}
                 cy={y}
@@ -731,6 +884,7 @@ export function MapChart({
           const { x, y, r } = xy(m);
           const c = markerColor(m);
           const isHovered = hoveredSlug === l.slug;
+          const compared = isCompared(l.slug);
           const isOther = isDim(m, isHovered);
           const onFrontier = isFrontier(l.slug);
           const dir = l.anchor === "start" ? 1 : -1;
@@ -743,7 +897,7 @@ export function MapChart({
               d={`M${fromX.toFixed(1)},${y.toFixed(1)} L${toX.toFixed(1)},${l.y.toFixed(1)}`}
               fill="none"
               stroke={c}
-              strokeWidth={isHovered || onFrontier ? 1.3 : 1}
+              strokeWidth={compared || isHovered || onFrontier ? 1.3 : 1}
               strokeLinecap="round"
               opacity={isOther ? (onFrontier ? 0.2 : 0.08) : isHovered ? 0.58 : onFrontier ? 0.44 : 0.24}
               style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
@@ -755,10 +909,11 @@ export function MapChart({
         {labels.map((l) => {
           const m = metricModels.find((x) => x.slug === l.slug)!;
           const isHovered = hoveredSlug === l.slug;
+          const compared = isCompared(l.slug);
           const isOther = isDim(m, isHovered);
           const onFrontier = isFrontier(l.slug);
           const tier = tierFor(metric.value(m)!, tiers);
-          const baseOp = isHovered || onFrontier ? 1 : tier.emphasis;
+          const baseOp = compared || isHovered || onFrontier ? 1 : tier.emphasis;
           const op = isOther ? (onFrontier ? 0.34 : 0.12) : Math.max(onFrontier ? 0.9 : 0.68, baseOp);
           return (
             <text
@@ -767,8 +922,8 @@ export function MapChart({
               y={l.y}
               textAnchor={l.anchor}
               dominantBaseline="middle"
-              fontSize={isHovered || onFrontier ? 12 : 11}
-              fontWeight={isHovered || onFrontier ? 600 : 500}
+              fontSize={compared || isHovered || onFrontier ? 12 : 11}
+              fontWeight={compared || isHovered || onFrontier ? 600 : 500}
               fill={isHovered ? "#0a0a0a" : "#2f2f2f"}
               fillOpacity={op}
               stroke="#ffffff"
@@ -781,9 +936,34 @@ export function MapChart({
           );
         })}
 
+        {/* Persistent role tags make shared links self-explanatory. */}
+        {comparedSlugs.map((slug, index) => {
+          const m = findModel(slug);
+          if (!m) return null;
+          const { x, y, r } = xy(m);
+          return (
+            <text
+              key={`compared-${slug}`}
+              x={x}
+              y={y - r - 13}
+              textAnchor="middle"
+              fontSize={8.5}
+              fontWeight={750}
+              fill="#0a0a0a"
+              letterSpacing={0.8}
+              stroke="#ffffff"
+              strokeWidth={2.8}
+              paintOrder="stroke"
+              style={{ pointerEvents: "none" }}
+            >
+              {index === 0 ? "USING NOW" : "CONSIDERING"}
+            </text>
+          );
+        })}
+
         {/* "NEW" tag on the most recently released model(s) */}
         {metricModels
-          .filter((m) => newestSlugs.has(m.slug) && m.slug !== bestPickSlug)
+          .filter((m) => newestSlugs.has(m.slug) && m.slug !== bestPickSlug && !isCompared(m.slug))
           .map((m) => {
             const { x, y, r } = xy(m);
             const dim = (searchActive && !isMatch(m.slug)) || (limited && !fits(m));
@@ -811,7 +991,7 @@ export function MapChart({
         {/* "TOP PICK" tag on the best model under the current limits */}
         {(() => {
           const m = findModel(bestPickSlug);
-          if (!m) return null;
+          if (!m || isCompared(m.slug)) return null;
           const { x, y, r } = xy(m);
           return (
             <text
