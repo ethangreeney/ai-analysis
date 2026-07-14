@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-14T03:22:50.920Z",
+  "fetchedAt": "2026-07-14T06:20:32.247Z",
   "models": [
     {
       "slug": "claude-fable-5",
@@ -993,22 +993,6 @@
       "addedAt": "2026-07-09T18:05:34.459Z"
     },
     {
-      "slug": "kimi-k2-5",
-      "name": "Kimi K2.5 (Reasoning)",
-      "displayName": "Kimi K2.5",
-      "creator": "Kimi",
-      "intelligence": 38.1,
-      "codingIndex": 46.8,
-      "costPerTask": null,
-      "e2eLatency": 63.99357154070818,
-      "reasoningTime": 52.296740080287954,
-      "pricePerMillion": 1.185,
-      "outputTokensPerSecond": 52.221,
-      "ttft": 1.077,
-      "releaseDate": "2026-01-27",
-      "addedAt": "2026-01-27"
-    },
-    {
       "slug": "minimax-m2-7",
       "name": "MiniMax-M2.7",
       "displayName": "MiniMax-M2.7",
@@ -1327,6 +1311,22 @@
       "ttft": 6.189,
       "releaseDate": "2026-04-30",
       "addedAt": "2026-04-30"
+    },
+    {
+      "slug": "kimi-k2-5",
+      "name": "Kimi K2.5 (Reasoning)",
+      "displayName": "Kimi K2.5",
+      "creator": "Kimi",
+      "intelligence": 35.4,
+      "codingIndex": 46.8,
+      "costPerTask": null,
+      "e2eLatency": 63.99357154070818,
+      "reasoningTime": 52.296740080287954,
+      "pricePerMillion": 1.185,
+      "outputTokensPerSecond": 52.221,
+      "ttft": 1.077,
+      "releaseDate": "2026-01-27",
+      "addedAt": "2026-01-27"
     },
     {
       "slug": "mimo-v2-omni",
