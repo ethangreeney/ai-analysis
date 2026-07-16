@@ -74,7 +74,7 @@
 }
 
 .comparison-strip {
-  animation: comparisonStripIn 170ms ease-out both;
+  animation: comparisonStripIn 170ms ease-out;
 }
 
 .alternatives-panel {
@@ -100,6 +100,36 @@
   transform-box: fill-box;
   transform-origin: center;
   animation: comparisonRingIn 180ms ease-out both;
+}
+
+.mobile-alternatives {
+  scrollbar-width: none;
+}
+
+.mobile-alternatives::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .mobile-chart-scroll {
+    scrollbar-width: none;
+  }
+
+  .mobile-chart-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 950px) and (max-height: 520px) and (orientation: landscape) {
+  .app-shell {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .app-frame {
+    min-height: 680px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

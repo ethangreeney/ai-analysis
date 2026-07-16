@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MapChart } from "./MapChart";
 import {
   Model,
@@ -130,12 +130,12 @@ function ComparisonModel({
   onRemove: () => void;
 }) {
   return (
-    <div className="flex items-center gap-2 min-w-0">
+    <div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2">
       <span className="text-[9px] uppercase tracking-[0.14em] text-ink-300 whitespace-nowrap">
         {label}
       </span>
       {model ? (
-        <div className="flex items-center gap-1.5 min-w-0 rounded-full border border-ink-300 bg-white px-2.5 py-1">
+        <div className="flex w-full min-w-0 items-center gap-1.5 rounded-full border border-ink-300 bg-white px-2.5 py-1 sm:w-auto">
           <span className="truncate text-[11px] font-semibold text-ink-900">{model.displayName}</span>
           <button
             onClick={onRemove}
@@ -211,7 +211,7 @@ function ModelPicker({ models, onSelect }: { models: Model[]; onSelect: (slug: s
         <div
           id="current-model-options"
           role="listbox"
-          className="model-picker-menu absolute left-0 top-full z-40 mt-1.5 max-h-64 w-72 overflow-y-auto rounded-lg border border-ink-100 bg-white p-1 shadow-xl"
+          className="model-picker-menu absolute right-0 top-full z-40 mt-1.5 max-h-64 w-[calc(100vw-2rem)] max-w-72 overflow-y-auto rounded-lg border border-ink-100 bg-white p-1 shadow-xl sm:left-0 sm:right-auto"
         >
           {results.length ? (
             results.map((model, index) => (
@@ -604,6 +604,7 @@ export default function App() {
   const [comparedSlugs, setComparedSlugs] = useState<string[]>(initial.comparedSlugs);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const [optionsOn, setOptionsOn] = useState(initial.y !== "intelligence" || initial.limitsOn);
+  const chartScrollRef = useRef<HTMLDivElement>(null);
 
   const metric = Y_METRICS[yMetric];
   const xc = X_MODES[xMode];
@@ -826,6 +827,51 @@ export default function App() {
   useEffect(() => {
     if (timeline) setPlaying(false);
   }, [timeline]);
+
+  // When the chart is wider than a phone viewport, keep the active comparison
+  // in view instead of opening at the unrelated left edge of the map.
+  useEffect(() => {
+    const container = chartScrollRef.current;
+    if (!container || !baselineModel) return;
+
+    let frame = 0;
+    const focusComparison = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const containerRect = container.getBoundingClientRect();
+        const centers = [baselineModel.slug, candidateModel?.slug]
+          .filter((slug): slug is string => slug != null)
+          .map((slug) => container.querySelector<SVGGElement>(`[data-model-slug="${slug}"]`))
+          .filter((element): element is SVGGElement => element != null)
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            return rect.left - containerRect.left + container.scrollLeft + rect.width / 2;
+          });
+        if (!centers.length) return;
+
+        const left = Math.min(...centers);
+        const right = Math.max(...centers);
+        const target =
+          centers.length > 1 && right - left > container.clientWidth * 0.72
+            ? centers[centers.length - 1]
+            : (left + right) / 2;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        container.scrollTo({
+          left: Math.max(0, Math.min(maxScroll, target - container.clientWidth / 2)),
+          behavior: "smooth",
+        });
+      });
+    };
+
+    focusComparison();
+    const observer = new ResizeObserver(focusComparison);
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [baselineModel, candidateModel, xMode, yMetric]);
   const togglePlay = () => {
     if (!playing && asOf == null) setAsOf(minReleaseMs);
     setPlaying((p) => !p);
@@ -929,8 +975,8 @@ export default function App() {
   );
 
   return (
-    <div className="h-screen w-full flex flex-col overflow-hidden">
-      <div className="mx-auto max-w-[1400px] w-full px-4 sm:px-8 md:px-12 pt-6 pb-3 flex-1 flex flex-col min-h-0">
+    <div className="app-shell h-screen w-full flex flex-col overflow-hidden">
+      <div className="app-frame mx-auto max-w-[1400px] w-full px-4 sm:px-8 md:px-12 pt-6 pb-3 flex-1 flex flex-col min-h-0">
         <header className="shrink-0 flex items-end justify-between gap-8 pb-4 border-b border-ink-100">
           <div>
             <h1 className="text-2xl md:text-[28px] font-light tracking-tight text-ink-900 leading-tight">
@@ -1030,7 +1076,13 @@ export default function App() {
 
         {comparisonOn && (
           <div className="comparison-strip relative z-30 shrink-0 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-ink-100 py-2.5">
-            <div className="flex items-center gap-3 min-w-0">
+            <div
+              className={
+                baselineModel
+                  ? "grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto] items-end gap-2 sm:flex sm:w-auto sm:items-center sm:gap-3"
+                  : "flex min-w-0 items-center gap-3"
+              }
+            >
               {baselineModel ? (
                 <>
                   <ComparisonModel
@@ -1121,7 +1173,7 @@ export default function App() {
               </button>
             </div>
             {baselineModel && recommendedModels.length > 0 && (
-              <div className="xl:hidden basis-full flex items-center gap-2 overflow-x-auto pt-1">
+              <div className="mobile-alternatives xl:hidden basis-full flex items-center gap-2 overflow-x-auto pt-1">
                 <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-ink-300">
                   Top alternatives
                 </span>
@@ -1187,9 +1239,9 @@ export default function App() {
           </div>
         )}
 
-        <main className="flex-1 min-h-0 mt-3 relative">
+        <main className="chart-main flex-1 min-h-0 mt-3 relative">
           <div className="h-full w-full flex gap-3">
-            <div className="min-w-0 flex-1 relative overflow-x-auto">
+            <div ref={chartScrollRef} className="mobile-chart-scroll min-w-0 flex-1 relative overflow-x-auto">
               <div className={`h-full ${baselineModel ? "min-w-[780px]" : "min-w-[860px]"}`}>
                 <MapChart
                   models={asOfModels}

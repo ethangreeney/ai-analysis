@@ -780,6 +780,7 @@ export function MapChart({
           return (
             <g
               key={m.slug}
+              data-model-slug={m.slug}
               onMouseEnter={() => onHover(m.slug)}
               onMouseLeave={() => onHover(null)}
               onFocus={() => onHover(m.slug)}
