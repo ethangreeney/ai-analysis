@@ -35,4 +35,4 @@ npm run dev            # opens the chart in your browser
 
 `npm run fetch` discovers the model list from the live Artificial Analysis API and model metrics payload, then regenerates the local data file and README screenshot. Rows without the selected Y-axis metric are not plotted for that view. Priced rows without end-to-end response time sit on the timing n/a rail; rows without cost per task use a neutral color when surfaced by search.
 
-The hourly deploy also archives a dated copy of the data to `history/` whenever it changes, so day-by-day snapshots accumulate in the repo.
+The scheduled deploy checks for fresh data four times an hour and archives a dated copy whenever it changes, so day-by-day snapshots accumulate in the repo.

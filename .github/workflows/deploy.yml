@@ -1,6 +1,6 @@
 # Fetch fresh Artificial Analysis data, rebuild, and deploy to GitHub Pages.
 #
-# AA has no webhook, so the schedule polls hourly — but it only builds and
+# AA has no webhook, so the schedule polls four times an hour — but it only builds and
 # deploys when the fetched data actually differs from what the live site
 # serves (the build publishes its own models.json snapshot to diff against).
 # Pushes and manual runs always deploy. If the fetch fails (AA markup change,
@@ -12,11 +12,14 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "7 * * * *" # hourly, off the top-of-hour congestion
+    # GitHub can substantially delay or drop individual scheduled runs. Four
+    # staggered polls make one delayed run harmless while still skipping builds
+    # whenever Artificial Analysis has not changed.
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 
 permissions:
-  contents: write # hourly job commits dated snapshots to history/
+  contents: write # scheduled job commits dated snapshots to history/
   pages: write
   id-token: write
 
