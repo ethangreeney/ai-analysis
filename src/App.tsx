@@ -71,7 +71,7 @@ const comparisonSummary = (from: Model, to: Model, yMetric: YMetric) => {
   if (isPositiveFinite(from.costPerTask) && isPositiveFinite(to.costPerTask)) {
     const delta = to.costPerTask - from.costPerTask;
     parts.push(
-      Math.abs(delta) < 0.005
+      Math.abs(delta) < 0.0105
         ? "about the same cost"
         : `${fmtCost(Math.abs(delta))} ${delta < 0 ? "cheaper" : "pricier"}/task`,
     );
@@ -131,7 +131,7 @@ function ComparisonModel({
 }) {
   return (
     <div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2">
-      <span className="text-[9px] uppercase tracking-[0.14em] text-ink-300 whitespace-nowrap">
+      <span className="comparison-mobile-hide text-[9px] uppercase tracking-[0.14em] text-ink-300 whitespace-nowrap">
         {label}
       </span>
       {model ? (
@@ -140,7 +140,7 @@ function ComparisonModel({
           <button
             onClick={onRemove}
             aria-label={`Remove ${model.displayName}`}
-            className="shrink-0 text-[13px] leading-none text-ink-300 hover:text-ink-900"
+            className="comparison-mobile-hide shrink-0 text-[13px] leading-none text-ink-300 hover:text-ink-900"
           >
             ×
           </button>
@@ -169,7 +169,7 @@ function ModelPicker({ models, onSelect }: { models: Model[]; onSelect: (slug: s
   }, [models, value]);
 
   return (
-    <div className="relative w-56">
+    <div className="relative min-w-0 flex-1 sm:w-56 sm:flex-none">
       <input
         autoFocus
         type="text"
@@ -205,13 +205,13 @@ function ModelPicker({ models, onSelect }: { models: Model[]; onSelect: (slug: s
         aria-expanded={open}
         aria-controls="current-model-options"
         aria-activedescendant={open && results[activeIndex] ? `model-option-${results[activeIndex].slug}` : undefined}
-        className="w-full rounded-full border border-ink-300 px-3 py-1.5 text-[11px] text-ink-900 placeholder:text-ink-300 focus:border-ink-900 focus:outline-none"
+        className="tap-target w-full rounded-full border border-ink-300 px-3 py-1.5 text-[11px] text-ink-900 placeholder:text-ink-300 focus:border-ink-900 focus:outline-none"
       />
       {open && (
         <div
           id="current-model-options"
           role="listbox"
-          className="model-picker-menu absolute right-0 top-full z-40 mt-1.5 max-h-64 w-[calc(100vw-2rem)] max-w-72 overflow-y-auto rounded-lg border border-ink-100 bg-white p-1 shadow-xl sm:left-0 sm:right-auto"
+          className="model-picker-menu absolute left-0 top-full z-40 mt-1.5 max-h-64 w-[calc(100vw-2rem)] max-w-72 overflow-y-auto rounded-lg border border-ink-100 bg-white p-1 shadow-xl"
         >
           {results.length ? (
             results.map((model, index) => (
@@ -327,7 +327,8 @@ function SegmentSwitch<T extends string>({
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
-          className={`px-2.5 py-1 text-[11px] rounded-full transition-colors ${
+          aria-pressed={value === opt.value}
+          className={`tap-target rounded-full px-2.5 py-1 text-[11px] transition-colors ${
             value === opt.value ? "bg-ink-900 text-white font-medium" : "text-ink-500 hover:text-ink-900"
           }`}
         >
@@ -451,8 +452,8 @@ function SearchBox({
 }) {
   const active = value.trim().length > 0;
   return (
-    <div className="flex items-center gap-2">
-      <div className="relative">
+    <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
+      <div className="relative min-w-0 flex-1 sm:flex-none">
         <svg
           className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
           width="13"
@@ -473,13 +474,13 @@ function SearchBox({
           onChange={(e) => onChange(e.target.value)}
           placeholder="Search models…"
           aria-label="Search models"
-          className="w-36 sm:w-48 text-[12px] pl-7 pr-7 py-1.5 rounded-full border border-ink-100 text-ink-900 placeholder:text-ink-300 focus:outline-none focus:border-ink-300 transition-colors"
+          className="h-8 w-full rounded-full border border-ink-100 pl-7 pr-8 text-[12px] text-ink-900 placeholder:text-ink-300 transition-colors focus:border-ink-300 focus:outline-none sm:w-48"
         />
         {active && (
           <button
             onClick={() => onChange("")}
             aria-label="Clear search"
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-700 text-[14px] leading-none"
+            className="absolute right-0 top-0 flex h-full w-8 items-center justify-center text-[14px] leading-none text-ink-300 hover:text-ink-700"
           >
             ×
           </button>
@@ -540,18 +541,20 @@ function TimeScrubber({
   playing,
   onChange,
   onTogglePlay,
+  className = "",
 }: {
   value: number | null;
   playing: boolean;
   onChange: (v: number | null) => void;
   onTogglePlay: () => void;
+  className?: string;
 }) {
   return (
-    <div className="shrink-0 flex items-center gap-3 pt-2">
+    <div className={`${className} shrink-0 items-center gap-3 pt-2`}>
       <button
         onClick={onTogglePlay}
         aria-label={playing ? "Pause replay" : "Replay history"}
-        className="h-6 w-6 rounded-full border border-ink-100 flex items-center justify-center text-ink-700 hover:border-ink-300 transition-colors shrink-0"
+        className="tap-target-square flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-ink-100 text-ink-700 transition-colors hover:border-ink-300"
       >
         {playing ? (
           <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
@@ -677,14 +680,6 @@ export default function App() {
       const extremeCostTradeoff = costDelta < -Math.log(4);
       if (!hasImprovement || extremeSpeedTradeoff || extremeCostTradeoff) return [];
 
-      const speedNoWorse = !baselineHasSpeed || speedDelta >= 0;
-      const costNoWorse = !baselineHasCost || costDelta >= 0;
-      const clearUpgrade =
-        comparableDimensions >= 2 &&
-        metricDelta >= 0 &&
-        speedNoWorse &&
-        costNoWorse &&
-        (metricDelta > 0.5 || speedDelta > Math.log(1.05) || costDelta > Math.log(1.05));
       const speedNear =
         !baselineHasSpeed ||
         (model.e2eLatency! <= baselineModel.e2eLatency! * 1.15 &&
@@ -695,6 +690,14 @@ export default function App() {
         (model.costPerTask! <= baselineModel.costPerTask! * 1.25 &&
           model.costPerTask! - baselineModel.costPerTask! <=
             Math.max(0.01, baselineModel.costPerTask! * 0.1));
+      const speedNoWorse = !baselineHasSpeed || speedDelta >= 0;
+      const costNoWorse = costNear;
+      const clearUpgrade =
+        comparableDimensions >= 2 &&
+        metricDelta >= 0 &&
+        speedNoWorse &&
+        costNoWorse &&
+        (metricDelta > 0.5 || speedDelta > Math.log(1.05) || costDelta > Math.log(1.05));
       const nearUpgrade =
         comparableDimensions >= 2 &&
         !clearUpgrade &&
@@ -732,6 +735,10 @@ export default function App() {
   const recommendedModels = useMemo(
     () => recommendations.map((recommendation) => recommendation.model),
     [recommendations],
+  );
+  const quickAlternativeModels = useMemo(
+    () => recommendedModels.filter((model) => model.slug !== candidateModel?.slug),
+    [candidateModel, recommendedModels],
   );
   const alternativeSlugs = useMemo(
     () => new Set(candidateModel ? [] : recommendedModels.map((m) => m.slug)),
@@ -832,14 +839,19 @@ export default function App() {
   // in view instead of opening at the unrelated left edge of the map.
   useEffect(() => {
     const container = chartScrollRef.current;
-    if (!container || !baselineModel) return;
+    const focusedSlugs = baselineModel
+      ? [baselineModel.slug, candidateModel?.slug]
+      : matchedSlugs?.size === 1
+        ? [...matchedSlugs]
+        : [newestModel?.slug];
+    if (!container || !focusedSlugs.some((slug) => slug != null)) return;
 
     let frame = 0;
     const focusComparison = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const containerRect = container.getBoundingClientRect();
-        const centers = [baselineModel.slug, candidateModel?.slug]
+        const centers = focusedSlugs
           .filter((slug): slug is string => slug != null)
           .map((slug) => container.querySelector<SVGGElement>(`[data-model-slug="${slug}"]`))
           .filter((element): element is SVGGElement => element != null)
@@ -857,7 +869,10 @@ export default function App() {
             : (left + right) / 2;
         const maxScroll = container.scrollWidth - container.clientWidth;
         container.scrollTo({
-          left: Math.max(0, Math.min(maxScroll, target - container.clientWidth / 2)),
+          left:
+            container.clientWidth >= 700
+              ? 0
+              : Math.max(0, Math.min(maxScroll, target - container.clientWidth / 2)),
           behavior: "smooth",
         });
       });
@@ -871,7 +886,7 @@ export default function App() {
       observer.disconnect();
       cancelAnimationFrame(frame);
     };
-  }, [baselineModel, candidateModel, xMode, yMetric]);
+  }, [baselineModel, candidateModel, matchedSlugs, newestModel, xMode, yMetric]);
   const togglePlay = () => {
     if (!playing && asOf == null) setAsOf(minReleaseMs);
     setPlaying((p) => !p);
@@ -891,7 +906,7 @@ export default function App() {
       setMaxCost(h.maxCost);
       setComparedSlugs(h.comparedSlugs);
       setComparisonOn(h.comparedSlugs.length > 0);
-      if (h.y !== "intelligence" || h.limitsOn) setOptionsOn(true);
+      setOptionsOn(h.y !== "intelligence" || h.limitsOn);
       setPlaying(false);
     };
     window.addEventListener("hashchange", onHash);
@@ -948,7 +963,15 @@ export default function App() {
     setComparisonOn(false);
     setComparedSlugs([]);
   };
-  const copyComparisonLink = () => {
+  const copyComparisonLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopyState("copied");
+      return;
+    } catch {
+      // Older and embedded browsers may not expose the async clipboard API.
+    }
+
     const field = document.createElement("textarea");
     field.value = window.location.href;
     field.style.position = "fixed";
@@ -975,16 +998,21 @@ export default function App() {
   );
 
   return (
-    <div className="app-shell h-screen w-full flex flex-col overflow-hidden">
+    <div className={`app-shell h-screen w-full flex flex-col overflow-hidden ${comparisonOn ? "comparison-active" : ""}`}>
       <div className="app-frame mx-auto max-w-[1400px] w-full px-4 sm:px-8 md:px-12 pt-6 pb-3 flex-1 flex flex-col min-h-0">
         <header className="shrink-0 flex items-end justify-between gap-8 pb-4 border-b border-ink-100">
           <div>
             <h1 className="text-2xl md:text-[28px] font-light tracking-tight text-ink-900 leading-tight">
               Smart, fast, and cheap.
             </h1>
-            <p className="mt-1.5 text-[13px] text-ink-500 max-w-3xl leading-snug">{subtitle}</p>
+            <p className="comparison-mobile-hide mt-1 text-[11px] leading-snug text-ink-500 sm:hidden">
+              Up is {metric.noun}. {timeline ? "Newer is right." : xMode === "cost" ? "Right is cheaper." : "Right is faster."}
+            </p>
+            <p className="comparison-mobile-hide mt-1.5 hidden max-w-3xl text-[13px] leading-snug text-ink-500 sm:block">
+              {subtitle}
+            </p>
           </div>
-          <div className="hidden sm:block text-right shrink-0">
+          <div className="comparison-mobile-hide hidden sm:block text-right shrink-0">
             <div className="text-[10px] tracking-wide text-ink-300 uppercase">
               {effectiveAsOf == null ? `Updated ${fetchedDate}` : `As of ${fmtDate(effectiveAsOf)}`}
             </div>
@@ -1010,17 +1038,18 @@ export default function App() {
               onChange={setXMode}
             />
           </div>
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="comparison-mobile-hide flex w-full items-center gap-2 sm:w-auto md:gap-3">
             <button
               onClick={() => (comparisonOn ? clearComparison() : setComparisonOn(true))}
               aria-pressed={comparisonOn}
-              className={`px-2.5 py-1 text-[11px] rounded-full border transition-colors ${
+              className={`tap-target shrink-0 rounded-full border px-2.5 py-1 text-[11px] transition-colors ${
                 comparisonOn
                   ? "bg-ink-700 text-white border-ink-700 font-medium"
                   : "bg-ink-900 text-white border-ink-900 font-medium hover:bg-ink-700"
               }`}
             >
-              Find alternatives
+              <span className="sm:hidden">Compare</span>
+              <span className="hidden sm:inline">Find alternatives</span>
             </button>
             <SearchBox
               value={query}
@@ -1031,19 +1060,21 @@ export default function App() {
             <button
               onClick={() => setOptionsOn((value) => !value)}
               aria-expanded={optionsOn}
-              className={`px-2.5 py-1 text-[11px] rounded-full border transition-colors ${
+              aria-label="Options"
+              className={`tap-target-square shrink-0 rounded-full border px-2.5 py-1 text-[11px] transition-colors sm:w-auto ${
                 optionsOn
                   ? "border-ink-900 text-ink-900 font-medium"
                   : "border-ink-100 text-ink-500 hover:text-ink-900"
               }`}
             >
-              Options{yMetric !== "intelligence" || limitsOn ? " ·" : ""}
+              <span className="sm:hidden">⋯</span>
+              <span className="hidden sm:inline">Options{yMetric !== "intelligence" || limitsOn ? " ·" : ""}</span>
             </button>
           </div>
         </div>
 
         {optionsOn && (
-          <div className="shrink-0 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-ink-100 py-2.5">
+          <div className="comparison-mobile-hide shrink-0 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-ink-100 py-2.5">
             <div className="flex items-center gap-2">
               <span className="text-[10px] uppercase tracking-[0.12em] text-ink-300">Score</span>
               <SegmentSwitch
@@ -1063,7 +1094,7 @@ export default function App() {
             </div>
             <button
               onClick={() => setLimitsOn((value) => !value)}
-              className={`px-2.5 py-1 text-[11px] rounded-full border transition-colors ${
+              className={`tap-target rounded-full border px-2.5 py-1 text-[11px] transition-colors ${
                 limitsOn
                   ? "bg-ink-900 text-white border-ink-900 font-medium"
                   : "border-ink-100 text-ink-500 hover:text-ink-900"
@@ -1075,11 +1106,11 @@ export default function App() {
         )}
 
         {comparisonOn && (
-          <div className="comparison-strip relative z-30 shrink-0 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-ink-100 py-2.5">
+          <div className="comparison-strip relative z-30 shrink-0 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-ink-100 py-2 sm:py-2.5">
             <div
               className={
                 baselineModel
-                  ? "grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto] items-end gap-2 sm:flex sm:w-auto sm:items-center sm:gap-3"
+                  ? "grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-2 sm:flex sm:w-auto sm:items-center sm:gap-3"
                   : "flex min-w-0 items-center gap-3"
               }
             >
@@ -1109,18 +1140,25 @@ export default function App() {
                       }
                       aria-label="Swap the models"
                       title="Swap models"
-                      className="text-[14px] leading-none text-ink-300 hover:text-ink-900"
+                      className="comparison-mobile-hide text-[14px] leading-none text-ink-300 hover:text-ink-900"
                     >
                       ⇄
                     </button>
                   )}
                 </>
               ) : (
-                <div className="flex items-center gap-2">
-                  <span className="text-[9px] uppercase tracking-[0.14em] text-ink-300 whitespace-nowrap">
+                <div className="flex w-full min-w-0 items-center gap-2 sm:w-auto">
+                  <span className="comparison-mobile-hide text-[9px] uppercase tracking-[0.14em] text-ink-300 whitespace-nowrap">
                     Using now
                   </span>
                   <ModelPicker models={viewModels} onSelect={selectForComparison} />
+                  <button
+                    onClick={clearComparison}
+                    aria-label="Close comparison"
+                    className="comparison-mobile-show-flex tap-target-square hidden shrink-0 items-center justify-center rounded-full text-[16px] leading-none text-ink-400 hover:bg-ink-50 hover:text-ink-900"
+                  >
+                    ×
+                  </button>
                 </div>
               )}
             </div>
@@ -1154,40 +1192,47 @@ export default function App() {
                   onFocus={(event) => event.currentTarget.select()}
                   onClick={(event) => event.currentTarget.select()}
                   aria-label="Comparison link, selected for copying"
-                  className="w-48 rounded-full border border-ink-300 px-3 py-1.5 text-[10px] text-ink-700 focus:border-ink-900 focus:outline-none"
+                  className="w-36 rounded-full border border-ink-300 px-3 py-1.5 text-[10px] text-ink-700 focus:border-ink-900 focus:outline-none sm:w-48"
                 />
               ) : baselineModel ? (
                 <button
                   onClick={copyComparisonLink}
-                  className="rounded-full bg-ink-900 px-3 py-1.5 text-[11px] font-medium text-white hover:bg-ink-700"
+                  className="tap-target rounded-full bg-ink-900 px-3 py-1.5 text-[11px] font-medium text-white hover:bg-ink-700"
                 >
-                  {copyState === "copied" ? "Link copied" : "Copy link"}
+                  <span className="comparison-mobile-hide">
+                    {copyState === "copied" ? "Link copied" : "Copy link"}
+                  </span>
+                  <span className="comparison-mobile-show hidden">
+                    {copyState === "copied" ? "Copied" : "Copy"}
+                  </span>
                 </button>
               ) : null}
               <button
                 onClick={clearComparison}
                 aria-label="Close comparison"
-                className="text-[16px] leading-none text-ink-300 hover:text-ink-900"
+                className={`${baselineModel ? "" : "comparison-mobile-hide "}tap-target-square flex items-center justify-center rounded-full text-[16px] leading-none text-ink-400 hover:bg-ink-50 hover:text-ink-900`}
               >
                 ×
               </button>
             </div>
-            {baselineModel && recommendedModels.length > 0 && (
+            {baselineModel && quickAlternativeModels.length > 0 && (
               <div className="mobile-alternatives xl:hidden basis-full flex items-center gap-2 overflow-x-auto pt-1">
                 <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-ink-300">
-                  Top alternatives
+                  <span className="comparison-mobile-hide">Top alternatives</span>
+                  <span className="comparison-mobile-show hidden">Try</span>
                 </span>
-                {recommendedModels.map((model, index) => (
+                {quickAlternativeModels.map((model, index) => (
                   <button
                     key={model.slug}
                     onClick={() => selectForComparison(model.slug)}
-                    className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] ${
+                    className={`${index === 2 ? "comparison-mobile-hide " : ""}tap-target shrink-0 rounded-full border px-2.5 py-1 text-[10px] ${
                       candidateModel?.slug === model.slug
                         ? "border-ink-900 bg-ink-900 text-white"
                         : "border-ink-100 text-ink-700"
                     }`}
                   >
-                    {index + 1}. {model.displayName}
+                    <span className="comparison-mobile-hide">{index + 1}. </span>
+                    {model.displayName}
                   </button>
                 ))}
               </div>
@@ -1196,7 +1241,7 @@ export default function App() {
         )}
 
         {limitsOn && (
-          <div className="shrink-0 flex flex-wrap items-center gap-x-8 gap-y-2 border-b border-ink-100 py-2.5">
+          <div className="comparison-mobile-hide shrink-0 flex flex-wrap items-center gap-x-8 gap-y-2 border-b border-ink-100 py-2.5">
             <LimitSlider
               label="Max wait"
               range={WAIT_RANGE}
@@ -1281,10 +1326,16 @@ export default function App() {
         </main>
 
         {!timeline && (
-          <TimeScrubber value={asOf} playing={playing} onChange={setAsOf} onTogglePlay={togglePlay} />
+          <TimeScrubber
+            value={asOf}
+            playing={playing}
+            onChange={setAsOf}
+            onTogglePlay={togglePlay}
+            className="comparison-mobile-hide flex"
+          />
         )}
 
-        <footer className="shrink-0 pt-3 mt-2 border-t border-ink-100 text-[10px] text-ink-300 tracking-wide leading-snug">
+        <footer className="comparison-mobile-hide shrink-0 pt-3 mt-2 border-t border-ink-100 text-[10px] text-ink-300 tracking-wide leading-snug">
           Data from Artificial Analysis. {xc.footnote}
           {yMetric === "coding" &&
             " Cost figures are per Intelligence Index task — AA doesn't publish per-coding-task cost."}

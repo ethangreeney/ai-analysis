@@ -111,12 +111,36 @@
 }
 
 @media (max-width: 639px) {
+  .tap-target {
+    min-height: 32px;
+  }
+
+  .tap-target-square {
+    min-height: 32px;
+    min-width: 32px;
+  }
+
   .mobile-chart-scroll {
     scrollbar-width: none;
   }
 
   .mobile-chart-scroll::-webkit-scrollbar {
     display: none;
+  }
+}
+
+@media (max-width: 639px),
+  (max-width: 950px) and (max-height: 520px) and (orientation: landscape) {
+  .comparison-active .comparison-mobile-hide {
+    display: none;
+  }
+
+  .comparison-active .comparison-mobile-show {
+    display: inline;
+  }
+
+  .comparison-active .comparison-mobile-show-flex {
+    display: flex;
   }
 }
 
