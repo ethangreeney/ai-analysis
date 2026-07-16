@@ -394,8 +394,9 @@ export function MapChart({
   );
 
   // Frontier path. Scatter: polyline from the left edge through the frontier
-  // points. Timeline: a staircase — hold each record's level until the next
-  // record ships, then step up; extend the last record to the right edge.
+  // points, then down from the final point. Timeline: a staircase — hold each
+  // record's level until the next record ships, then step up; extend the last
+  // record to the right edge.
   const frontierPath = useMemo(() => {
     if (frontier.length === 0) return "";
     if (timeline) {
@@ -410,6 +411,7 @@ export function MapChart({
     return [
       `M0,${pts[0].y.toFixed(1)}`,
       ...pts.map((p) => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`),
+      `V${innerH}`,
     ].join(" ");
   }, [frontier, timeline, visibleModels]);
 
