@@ -760,6 +760,7 @@ export function MapChart({
           const alternative = isAlternative(m.slug);
           const isPick = m.slug === bestPickSlug && !compared;
           const isNew = newestSlugs.has(m.slug) && !isPick && !compared;
+          const keyboardInteractive = compared || alternative || isLit || isNew || isPick;
           const baseOp = opacityFor(metric.value(m)!);
           let op = compared
             ? 1
@@ -794,15 +795,26 @@ export function MapChart({
                   onSelect(m.slug);
                 }
               }}
-              role={compared || alternative ? "button" : undefined}
-              tabIndex={compared || alternative ? 0 : undefined}
+              role={keyboardInteractive ? "button" : undefined}
+              tabIndex={keyboardInteractive ? 0 : undefined}
               aria-label={
-                compared || alternative
-                  ? `${compared ? "Remove" : "Compare with"} ${m.displayName}`
+                keyboardInteractive
+                  ? compared
+                    ? `Remove ${m.displayName}`
+                    : comparisonActive
+                      ? `Compare with ${m.displayName}`
+                      : `Find alternatives for ${m.displayName}`
                   : undefined
               }
               style={{ cursor: "pointer" }}
             >
+              <circle
+                cx={x}
+                cy={y}
+                r={keyboardInteractive ? Math.max(dotR + 6, 16) : Math.max(dotR + 3, 10)}
+                className={keyboardInteractive ? "chart-hit-target" : undefined}
+                fill="transparent"
+              />
               {(isHovered || isLit) && <circle cx={x} cy={y} r={dotR + 7} fill={c} fillOpacity={0.18} />}
               {isNew && (
                 <g opacity={isOther ? 0.18 : 1} style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}>

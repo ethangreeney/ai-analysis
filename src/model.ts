@@ -51,7 +51,12 @@ export const fmtSecondsShort = (seconds: number) =>
 export const fmtDate = (ms: number | null) =>
   ms == null
     ? "—"
-    : new Date(ms).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    : new Date(ms).toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        timeZone: "UTC",
+      });
 
 export type YMetric = "intelligence" | "coding";
 

@@ -110,7 +110,21 @@
   display: none;
 }
 
-@media (max-width: 639px) {
+.tap-target {
+  min-height: 24px;
+}
+
+.tap-target-square {
+  min-height: 24px;
+  min-width: 24px;
+}
+
+.chart-hit-target {
+  r: 16px;
+}
+
+@media (max-width: 639px),
+  (max-width: 950px) and (max-height: 520px) and (orientation: landscape) {
   .tap-target {
     min-height: 32px;
   }
@@ -120,6 +134,12 @@
     min-width: 32px;
   }
 
+  .chart-hit-target {
+    r: 30px;
+  }
+}
+
+@media (max-width: 639px) {
   .mobile-chart-scroll {
     scrollbar-width: none;
   }
@@ -178,7 +198,7 @@ input[type="range"].scrub,
 input[type="range"].limit {
   -webkit-appearance: none;
   appearance: none;
-  height: 14px;
+  height: 24px;
   background: transparent;
   cursor: pointer;
 }
@@ -219,4 +239,16 @@ input[type="range"].limit::-moz-range-thumb {
 input[type="range"].scrub:hover::-webkit-slider-thumb,
 input[type="range"].limit:hover::-webkit-slider-thumb {
   transform: scale(1.15);
+}
+
+@media (max-width: 639px),
+  (max-width: 950px) and (max-height: 520px) and (orientation: landscape) {
+  input[type="range"].scrub,
+  input[type="range"].limit {
+    height: 32px;
+  }
+
+  input[type="text"] {
+    font-size: 16px;
+  }
 }

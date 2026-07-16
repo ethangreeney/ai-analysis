@@ -99,10 +99,11 @@ function readHash() {
   const knownSlugs = new Set(allModels.map((m) => m.slug));
   const from = p.get("from");
   const to = p.get("to");
-  const comparedSlugs = [from, to].filter(
-    (slug, index, slugs): slug is string =>
-      slug != null && knownSlugs.has(slug) && slugs.indexOf(slug) === index,
-  );
+  const comparedSlugs: string[] = [];
+  if (from != null && knownSlugs.has(from)) {
+    comparedSlugs.push(from);
+    if (to != null && to !== from && knownSlugs.has(to)) comparedSlugs.push(to);
+  }
   return {
     y,
     x,
@@ -226,7 +227,7 @@ function ModelPicker({ models, onSelect }: { models: Model[]; onSelect: (slug: s
                   onSelect(model.slug);
                   setOpen(false);
                 }}
-                className={`flex w-full items-baseline justify-between gap-3 rounded-md px-2.5 py-2 text-left ${
+                className={`tap-target flex w-full items-baseline justify-between gap-3 rounded-md px-2.5 py-2 text-left ${
                   index === activeIndex ? "bg-ink-50" : "hover:bg-ink-50"
                 }`}
               >
@@ -472,6 +473,12 @@ function SearchBox({
           name="model-search"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && active) {
+              event.stopPropagation();
+              onChange("");
+            }
+          }}
           placeholder="Search models…"
           aria-label="Search models"
           className="h-8 w-full rounded-full border border-ink-100 pl-7 pr-8 text-[12px] text-ink-900 placeholder:text-ink-300 transition-colors focus:border-ink-300 focus:outline-none sm:w-48"
@@ -487,7 +494,7 @@ function SearchBox({
         )}
       </div>
       {active && (
-        <span className="hidden sm:inline text-[10px] tabular-nums text-ink-500 whitespace-nowrap">
+        <span aria-live="polite" className="hidden sm:inline text-[10px] tabular-nums text-ink-500 whitespace-nowrap">
           {matchCount} {matchCount === 1 ? "match" : "matches"}
           {offViewCount > 0 && <span className="text-ink-300"> · {offViewCount} off view</span>}
         </span>
@@ -526,8 +533,9 @@ function LimitSlider({
           const u = Number.parseFloat(e.target.value);
           onChange(u >= 1 ? null : lo * Math.pow(hi / lo, u));
         }}
-        className="limit w-28 sm:w-32"
+        className="limit tap-target w-28 sm:w-32"
         aria-label={label}
+        aria-valuetext={value == null ? "Any" : fmt(value)}
       />
       <span className="text-[11px] font-medium tabular-nums text-ink-900 w-12">
         {value == null ? "any" : fmt(value)}
@@ -554,6 +562,7 @@ function TimeScrubber({
       <button
         onClick={onTogglePlay}
         aria-label={playing ? "Pause replay" : "Replay history"}
+        aria-pressed={playing}
         className="tap-target-square flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-ink-100 text-ink-700 transition-colors hover:border-ink-300"
       >
         {playing ? (
@@ -583,8 +592,9 @@ function TimeScrubber({
           // step as "today".
           onChange(fetchedAtMs - v < DAY_MS ? null : v);
         }}
-        className="scrub flex-1 min-w-0"
+        className="scrub tap-target flex-1 min-w-0"
         aria-label="View the map as of a past date"
+        aria-valuetext={value == null ? "Today" : fmtDate(value)}
       />
       <span className="text-[11px] tabular-nums text-ink-700 w-24 text-right shrink-0">
         {value == null ? "Today" : fmtDate(value)}
@@ -1094,6 +1104,7 @@ export default function App() {
             </div>
             <button
               onClick={() => setLimitsOn((value) => !value)}
+              aria-pressed={limitsOn}
               className={`tap-target rounded-full border px-2.5 py-1 text-[11px] transition-colors ${
                 limitsOn
                   ? "bg-ink-900 text-white border-ink-900 font-medium"
@@ -1276,7 +1287,8 @@ export default function App() {
                   setMaxWait(null);
                   setMaxCost(null);
                 }}
-                className="text-[11px] text-ink-500 underline decoration-ink-300 underline-offset-2 hover:text-ink-900"
+                aria-label="Clear limits"
+                className="tap-target px-2 text-[11px] text-ink-500 underline decoration-ink-300 underline-offset-2 hover:text-ink-900"
               >
                 Clear
               </button>
