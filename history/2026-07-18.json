@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-18T18:10:00.294Z",
+  "fetchedAt": "2026-07-18T19:35:19.834Z",
   "models": [
     {
       "slug": "claude-fable-5",
@@ -31,7 +31,7 @@
       "outputTokensPerSecond": 63.615,
       "ttft": 47.861,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "gpt-5-6-sol-xhigh",
@@ -47,7 +47,7 @@
       "outputTokensPerSecond": 61.935,
       "ttft": 24.044,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "kimi-k3",
@@ -79,7 +79,7 @@
       "outputTokensPerSecond": 58.641,
       "ttft": 8.528,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "claude-opus-4-8",
@@ -111,7 +111,7 @@
       "outputTokensPerSecond": 137.346,
       "ttft": 113.695,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "gpt-5-5",
@@ -159,7 +159,7 @@
       "outputTokensPerSecond": 56.941,
       "ttft": 3.943,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "claude-opus-4-7",
@@ -223,7 +223,7 @@
       "outputTokensPerSecond": 124.429,
       "ttft": 6.444,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "gpt-5-4",
@@ -255,7 +255,7 @@
       "outputTokensPerSecond": 180.321,
       "ttft": 57.488,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "glm-5-2",
@@ -335,7 +335,7 @@
       "outputTokensPerSecond": 56.686,
       "ttft": 2.509,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "gpt-5-6-luna-xhigh",
@@ -351,7 +351,7 @@
       "outputTokensPerSecond": 179.461,
       "ttft": 15.653,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "gpt-5-6-terra-high",
@@ -367,7 +367,7 @@
       "outputTokensPerSecond": 117.029,
       "ttft": 1.622,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "claude-sonnet-4-6-adaptive",
@@ -415,7 +415,7 @@
       "outputTokensPerSecond": 184.012,
       "ttft": 5.17,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "qwen3-7-max",
@@ -447,7 +447,7 @@
       "outputTokensPerSecond": 116.308,
       "ttft": 1.346,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "gemini-3-5-flash-medium",
@@ -671,7 +671,7 @@
       "outputTokensPerSecond": 52.563,
       "ttft": 0.948,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "hy3",
@@ -687,7 +687,7 @@
       "outputTokensPerSecond": 47.728,
       "ttft": 1.433,
       "releaseDate": "2026-07-06",
-      "addedAt": "2026-04-23"
+      "addedAt": "2026-07-06"
     },
     {
       "slug": "nex-n2-pro",
@@ -767,7 +767,7 @@
       "outputTokensPerSecond": 117.853,
       "ttft": 1.316,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "deepseek-v4-flash",
@@ -879,7 +879,7 @@
       "outputTokensPerSecond": 53.923,
       "ttft": 0.385,
       "releaseDate": "2026-06-16",
-      "addedAt": "2026-07-06T22:34:27.453Z"
+      "addedAt": "2026-06-16"
     },
     {
       "slug": "gemini-3-pro",
@@ -1023,7 +1023,7 @@
       "outputTokensPerSecond": 184.892,
       "ttft": 1.512,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "minimax-m2-7",
@@ -1519,7 +1519,7 @@
       "outputTokensPerSecond": 113.289,
       "ttft": 0.619,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "qwen3-5-27b",
@@ -1695,7 +1695,7 @@
       "outputTokensPerSecond": 179.91,
       "ttft": 1.047,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "grok-4",
@@ -2495,7 +2495,7 @@
       "outputTokensPerSecond": 173.412,
       "ttft": 0.565,
       "releaseDate": "2026-07-09",
-      "addedAt": "2026-07-09T18:05:34.459Z"
+      "addedAt": "2026-07-09"
     },
     {
       "slug": "hy3-non-reasoning",
