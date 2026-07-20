@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-20T22:15:18.261Z",
+  "fetchedAt": "2026-07-20T23:17:17.061Z",
   "models": [
     {
       "slug": "claude-fable-5",
@@ -728,7 +728,7 @@
       "creator": "DeepSeek",
       "intelligence": 40.8,
       "codingIndex": null,
-      "costPerTask": null,
+      "costPerTask": 0.04047005474394605,
       "e2eLatency": 36.622891210952254,
       "reasoningTime": 27.82225729734544,
       "pricePerMillion": 0.544,
