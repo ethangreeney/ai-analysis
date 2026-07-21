@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-21T16:08:28.457Z",
+  "fetchedAt": "2026-07-21T20:22:11.888Z",
   "models": [
     {
       "slug": "claude-fable-5",
@@ -3544,8 +3544,8 @@
       "intelligence": 20.1,
       "codingIndex": 22.6,
       "costPerTask": null,
-      "e2eLatency": 110.92073938495825,
-      "reasoningTime": 88.10064834316657,
+      "e2eLatency": 121.25328341061554,
+      "reasoningTime": 96.37060758289243,
       "pricePerMillion": 0.06,
       "outputTokensPerSecond": 27.417,
       "ttft": 0.435,
@@ -4391,7 +4391,7 @@
       "creator": "DeepSeek",
       "intelligence": 15.4,
       "codingIndex": 21.2,
-      "costPerTask": 0.11327942671806553,
+      "costPerTask": 0.045060217262052386,
       "e2eLatency": null,
       "reasoningTime": 0,
       "pricePerMillion": 1.209,
