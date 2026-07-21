@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-21T21:36:42.711Z",
+  "fetchedAt": "2026-07-21T22:31:02.090Z",
   "models": [
     {
       "slug": "claude-fable-5",
@@ -2871,7 +2871,7 @@
       "creator": "Arcee AI",
       "intelligence": 24.5,
       "codingIndex": null,
-      "costPerTask": null,
+      "costPerTask": 0.12639482369063987,
       "e2eLatency": 13.995182294198603,
       "reasoningTime": 10.385392195358849,
       "pricePerMillion": 0.395,
@@ -4647,7 +4647,7 @@
       "creator": "Meta",
       "intelligence": 14.3,
       "codingIndex": 16.3,
-      "costPerTask": 0.031591080063049636,
+      "costPerTask": 0.030242940326091084,
       "e2eLatency": 5.537699579432544,
       "reasoningTime": 0,
       "pricePerMillion": 0.475,
