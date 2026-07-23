@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-23T20:45:40.951Z",
+  "fetchedAt": "2026-07-23T21:46:12.770Z",
   "models": [
     {
       "slug": "claude-fable-5",
@@ -265,8 +265,8 @@
       "intelligence": 51.1,
       "codingIndex": 68.8,
       "costPerTask": 0.31873999156219923,
-      "e2eLatency": 16.08770481996511,
-      "reasoningTime": 11.747272435172057,
+      "e2eLatency": 15.159701848975152,
+      "reasoningTime": 11.011779440780177,
       "pricePerMillion": 2.15,
       "outputTokensPerSecond": 158.892,
       "ttft": 0.909,
