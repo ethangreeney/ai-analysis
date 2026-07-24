@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-24T22:44:42.649Z",
+  "fetchedAt": "2026-07-24T23:46:06.083Z",
   "models": [
     {
       "slug": "claude-opus-5",
@@ -3368,7 +3368,7 @@
       "creator": "Alibaba",
       "intelligence": 21.4,
       "codingIndex": 28.7,
-      "costPerTask": 0.1638454723745099,
+      "costPerTask": 0.22110983118112953,
       "e2eLatency": 49.82361316087244,
       "reasoningTime": 37.95284627589797,
       "pricePerMillion": 0.113,
