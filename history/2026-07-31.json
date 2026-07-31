@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-31T10:19:54.272Z",
+  "fetchedAt": "2026-07-31T12:21:29.494Z",
   "models": [
     {
       "slug": "claude-opus-5",
@@ -5424,6 +5424,22 @@
       "ttft": 0,
       "releaseDate": "2026-03-06",
       "addedAt": "2026-03-06"
+    },
+    {
+      "slug": "celeris-1",
+      "name": "Celeris-1",
+      "displayName": "Celeris-1",
+      "creator": "Celeris",
+      "intelligence": 11.8,
+      "codingIndex": 14.4,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 3,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-07-24",
+      "addedAt": "2026-07-24"
     },
     {
       "slug": "claude-3-opus",
