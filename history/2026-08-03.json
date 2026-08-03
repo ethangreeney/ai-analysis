@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-03T22:19:12.681Z",
+  "fetchedAt": "2026-08-03T23:30:28.788Z",
   "models": [
     {
       "slug": "claude-opus-5",
@@ -1851,7 +1851,7 @@
       "costPerTask": null,
       "e2eLatency": null,
       "reasoningTime": null,
-      "pricePerMillion": 0.107,
+      "pricePerMillion": 0.1,
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-23",
