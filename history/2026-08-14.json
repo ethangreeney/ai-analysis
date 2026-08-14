@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T20:04:41.998Z",
+  "fetchedAt": "2026-08-14T20:38:44.541Z",
   "models": [
     {
       "slug": "claude-opus-5",
@@ -2376,7 +2376,7 @@
       "creator": "InclusionAI",
       "intelligence": 31.7,
       "codingIndex": 42.8,
-      "costPerTask": 0.3451837452945369,
+      "costPerTask": 0.3600567233564948,
       "e2eLatency": 23.75881581083766,
       "reasoningTime": 16.498579195870136,
       "pricePerMillion": 0.85,
