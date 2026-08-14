@@ -23,13 +23,17 @@ permissions:
   pages: write
   id-token: write
 
+# cancel-in-progress lets a fresh poll replace a stuck older run. Without it a
+# single wedged run (e.g. a deploy left "waiting" after a Pages outage) holds
+# the group indefinitely and every later scheduled run cancels itself instead.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
