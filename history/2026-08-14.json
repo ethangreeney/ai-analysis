@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-14T19:30:57.844Z",
+  "fetchedAt": "2026-08-14T20:04:41.998Z",
   "models": [
     {
       "slug": "claude-opus-5",
@@ -2370,6 +2370,22 @@
       "addedAt": "2025-05-22"
     },
     {
+      "slug": "ring-2-6-1t",
+      "name": "Ring-2.6-1T",
+      "displayName": "Ring-2.6-1T",
+      "creator": "InclusionAI",
+      "intelligence": 31.7,
+      "codingIndex": 42.8,
+      "costPerTask": 0.3451837452945369,
+      "e2eLatency": 23.75881581083766,
+      "reasoningTime": 16.498579195870136,
+      "pricePerMillion": 0.85,
+      "outputTokensPerSecond": 123.278,
+      "ttft": 1.886,
+      "releaseDate": "2026-05-08",
+      "addedAt": "2026-05-08"
+    },
+    {
       "slug": "g9v3-39a5b",
       "name": "G9v3-39A5B",
       "displayName": "G9v3-39A5B",
@@ -2464,22 +2480,6 @@
       "ttft": 1.431,
       "releaseDate": "2026-04-22",
       "addedAt": "2026-04-22"
-    },
-    {
-      "slug": "ring-2-6-1t",
-      "name": "Ring-2.6-1T",
-      "displayName": "Ring-2.6-1T",
-      "creator": "InclusionAI",
-      "intelligence": 31.3,
-      "codingIndex": 42.8,
-      "costPerTask": 0.3451837452945369,
-      "e2eLatency": 23.75881581083766,
-      "reasoningTime": 16.498579195870136,
-      "pricePerMillion": 0.85,
-      "outputTokensPerSecond": 123.278,
-      "ttft": 1.886,
-      "releaseDate": "2026-05-08",
-      "addedAt": "2026-05-08"
     },
     {
       "slug": "deepseek-v3-1-terminus-reasoning",
@@ -4242,6 +4242,22 @@
       "addedAt": "2026-04-15"
     },
     {
+      "slug": "trinity-large-thinking",
+      "name": "Trinity Large Thinking",
+      "displayName": "Trinity Large Thinking",
+      "creator": "Arcee AI",
+      "intelligence": 18.7,
+      "codingIndex": 25.8,
+      "costPerTask": null,
+      "e2eLatency": 13.625886336121807,
+      "reasoningTime": 9.875933165697445,
+      "pricePerMillion": 0.395,
+      "outputTokensPerSecond": 212.296,
+      "ttft": 0.927,
+      "releaseDate": "2026-04-01",
+      "addedAt": "2026-04-01"
+    },
+    {
       "slug": "deepseek-r1-0120",
       "name": "DeepSeek R1 (Jan '25)",
       "displayName": "DeepSeek R1 (Jan)",
@@ -4304,22 +4320,6 @@
       "ttft": 0,
       "releaseDate": "2025-07-21",
       "addedAt": "2025-07-21"
-    },
-    {
-      "slug": "trinity-large-thinking",
-      "name": "Trinity Large Thinking",
-      "displayName": "Trinity Large Thinking",
-      "creator": "Arcee AI",
-      "intelligence": 18.4,
-      "codingIndex": 25.8,
-      "costPerTask": null,
-      "e2eLatency": 13.625886336121807,
-      "reasoningTime": 9.875933165697445,
-      "pricePerMillion": 0.395,
-      "outputTokensPerSecond": 212.296,
-      "ttft": 0.927,
-      "releaseDate": "2026-04-01",
-      "addedAt": "2026-04-01"
     },
     {
       "slug": "hypernova-60b",
