@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T01:58:59.324Z",
+  "fetchedAt": "2026-08-15T02:58:58.266Z",
   "models": [
     {
       "slug": "claude-opus-5",
@@ -2002,22 +2002,6 @@
       "addedAt": "2025-12-22"
     },
     {
-      "slug": "kat-coder-pro-v2",
-      "name": "KAT Coder Pro V2",
-      "displayName": "KAT-Coder-Pro V2",
-      "creator": "KwaiKAT",
-      "intelligence": 34.5,
-      "codingIndex": 59.5,
-      "costPerTask": null,
-      "e2eLatency": 6.259521347003763,
-      "reasoningTime": 0,
-      "pricePerMillion": 0.525,
-      "outputTokensPerSecond": 109.692,
-      "ttft": 1.05,
-      "releaseDate": "2026-03-27",
-      "addedAt": "2026-03-27"
-    },
-    {
       "slug": "minimax-m2-5",
       "name": "MiniMax-M2.5",
       "displayName": "MiniMax-M2.5",
@@ -2160,6 +2144,22 @@
       "ttft": 1.691,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
+    },
+    {
+      "slug": "kat-coder-pro-v2",
+      "name": "KAT Coder Pro V2",
+      "displayName": "KAT-Coder-Pro V2",
+      "creator": "KwaiKAT",
+      "intelligence": 33.7,
+      "codingIndex": 59.5,
+      "costPerTask": null,
+      "e2eLatency": 6.259521347003763,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.525,
+      "outputTokensPerSecond": 109.692,
+      "ttft": 1.05,
+      "releaseDate": "2026-03-27",
+      "addedAt": "2026-03-27"
     },
     {
       "slug": "kimi-k2-thinking",
