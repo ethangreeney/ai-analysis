@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-17T18:50:35.737Z",
+  "fetchedAt": "2026-08-17T20:02:10.542Z",
   "models": [
     {
       "slug": "claude-opus-5",
@@ -440,7 +440,7 @@
       "creator": "Z AI",
       "intelligence": 52.6,
       "codingIndex": 68.8,
-      "costPerTask": 0.32055302882770725,
+      "costPerTask": 0.3345801727010051,
       "e2eLatency": 17.519441589087442,
       "reasoningTime": 12.905230349269932,
       "pricePerMillion": 2.15,
@@ -1176,7 +1176,7 @@
       "creator": "Z AI",
       "intelligence": 41,
       "codingIndex": 55.8,
-      "costPerTask": 0.27461980720806817,
+      "costPerTask": 0.3042416609054816,
       "e2eLatency": 53.36170191657771,
       "reasoningTime": 45.855653810874394,
       "pricePerMillion": 2.15,
@@ -3432,7 +3432,7 @@
       "creator": "NVIDIA",
       "intelligence": 23.6,
       "codingIndex": 26.8,
-      "costPerTask": 0.06201365330864934,
+      "costPerTask": 0.06606307507104972,
       "e2eLatency": 9.332560059045196,
       "reasoningTime": 6.703844255236121,
       "pricePerMillion": 0.088,
