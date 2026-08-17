@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-17T14:11:37.262Z",
+  "fetchedAt": "2026-08-17T17:35:13.882Z",
   "models": [
     {
       "slug": "claude-opus-5",
@@ -153,7 +153,7 @@
       "intelligence": 58.1,
       "codingIndex": 71.8,
       "costPerTask": 1.1320379078897653,
-      "e2eLatency": 58.70094135659754,
+      "e2eLatency": 58.700941356597546,
       "reasoningTime": 44.817764666878034,
       "pricePerMillion": 3,
       "outputTokensPerSecond": 46.79,
