@@ -372,7 +372,9 @@ export function MapChart({
   // X scale. Speed and cost use a log scale, inverted so better (faster /
   // cheaper) sits on the right — waits and budgets are both felt
   // multiplicatively. The timeline is linear in release date, newer right.
-  const xVals = xModels.map((m) => xc.xValue(m)!);
+  // Like the value axis, the x domain crops to the models actually drawn —
+  // demoted outliers shouldn't stretch the canvas into empty space.
+  const xVals = visibleModels.filter(hasX).map((m) => xc.xValue(m)!);
   const xMin = xVals.length ? Math.min(...xVals) : 1;
   const xMax = xVals.length ? Math.max(...xVals) : 10;
   const xLow = xMin === xMax ? xMin * 0.8 : xMin * 0.9;
@@ -457,11 +459,10 @@ export function MapChart({
   );
 
   // Frontier path. Scatter: polyline from the left edge through the frontier
-  // points, ending on the final (fastest/cheapest) point — a terminal drop to
-  // the plot floor reads as the line diving into empty canvas now that the
-  // axis crops to the pack. Timeline: a staircase — hold each record's level
-  // until the next record ships, then step up; extend the last record to the
-  // right edge.
+  // points, then straight down to the plot floor — the drop closes the region
+  // so everything right of the line reads as "no model lives here". Timeline:
+  // a staircase — hold each record's level until the next record ships, then
+  // step up; extend the last record to the right edge.
   const frontierPath = useMemo(() => {
     if (frontier.length === 0) return "";
     if (timeline) {
@@ -476,6 +477,7 @@ export function MapChart({
     return [
       `M0,${pts[0].y.toFixed(1)}`,
       ...pts.map((p) => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`),
+      `V${innerH}`,
     ].join(" ");
   }, [frontier, timeline, visibleModels, metricMin, metricMax]);
 
