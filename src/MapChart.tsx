@@ -17,11 +17,24 @@ import {
   PICK_COLOR,
 } from "./model";
 
+/* Warm ink scale, mirrored from tailwind.config.js so the SVG (which cannot
+   read Tailwind classes for stroke/fill on every element) stays in step. */
+const INK_900 = "#161512";
+const INK_700 = "#403d38";
+const INK_500 = "#6f6b63";
+const INK_300 = "#b5b1a8";
+const INK_100 = "#e8e5de";
+const CARD = "#fffefc";
+const GRID = "#eeece6";
+const BAND = "#faf8f3";
+
+const FONT = "Inter, ui-sans-serif, system-ui, sans-serif";
+
 interface Tier {
   label: string;
   min: number;
   max: number;
-  shade: string;
+  banded: boolean;
   emphasis: number;
 }
 
@@ -29,28 +42,51 @@ interface TierBand {
   label: string;
   lower: number;
   upper: number;
-  shade: string;
+  banded: boolean;
   emphasis: number;
 }
 
+/* Bands alternate warm-tint / untinted rather than stepping through five
+   shades — an even ramp reads as five hard seams on a white card. */
 const RELATIVE_TIERS: TierBand[] = [
-  { label: "Leaders", lower: 0.82, upper: 1, shade: "#f7f7f2", emphasis: 1 },
-  { label: "Frontier Pack", lower: 0.64, upper: 0.82, shade: "#fafaf7", emphasis: 1 },
-  { label: "Competitive", lower: 0.46, upper: 0.64, shade: "#fafafa", emphasis: 0.85 },
-  { label: "Established", lower: 0.28, upper: 0.46, shade: "#fcfcfc", emphasis: 0.55 },
-  { label: "Trailing", lower: 0, upper: 0.28, shade: "#ffffff", emphasis: 0.3 },
+  { label: "Leaders", lower: 0.82, upper: 1, banded: true, emphasis: 1 },
+  { label: "Frontier pack", lower: 0.64, upper: 0.82, banded: false, emphasis: 1 },
+  { label: "Competitive", lower: 0.46, upper: 0.64, banded: true, emphasis: 0.85 },
+  { label: "Established", lower: 0.28, upper: 0.46, banded: false, emphasis: 0.6 },
+  { label: "Trailing", lower: 0, upper: 0.28, banded: true, emphasis: 0.4 },
 ];
 
 const METRIC_STEP = 5;
 const DAY_MS = 86_400_000;
+/** Points below the pack median at which a model stops shaping the default view. */
+const OUTLIER_GAP = 25;
+/** Variants of one family kept in the default landscape. */
+const FAMILY_VARIANT_CAP = 3;
+/** Total dots in the default landscape. */
+const DEFAULT_MODEL_CAP = 48;
+/** Names drawn by default (search and comparison raise this on their own). */
+const DEFAULT_LABEL_CAP = 10;
 
+/**
+ * Crop the value axis to what is actually on screen. Anchoring at zero left
+ * two-thirds of the canvas empty; a little padding below the lowest drawn dot
+ * and above the highest is all the breathing room the field needs.
+ */
 function metricBounds(values: number[], defaultMin: number, defaultMax: number) {
-  const min = values.length ? Math.min(...values) : defaultMin;
-  const max = values.length ? Math.max(...values) : defaultMax;
+  if (!values.length) return { min: defaultMin, max: defaultMax };
+  const min = Math.min(...values);
+  const max = Math.max(...values);
   return {
-    min: Math.min(defaultMin, Math.floor((min - 2) / METRIC_STEP) * METRIC_STEP),
-    max: Math.max(defaultMax, Math.ceil((max + 2) / METRIC_STEP) * METRIC_STEP),
+    min: Math.floor((min - 3) / METRIC_STEP) * METRIC_STEP,
+    max: Math.ceil((max + 2) / METRIC_STEP) * METRIC_STEP,
   };
+}
+
+function median(values: number[]): number | null {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = sorted.length >> 1;
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
 function relativeTiers(min: number, max: number): Tier[] {
@@ -59,7 +95,7 @@ function relativeTiers(min: number, max: number): Tier[] {
     label: tier.label,
     min: min + span * tier.lower,
     max: min + span * tier.upper,
-    shade: tier.shade,
+    banded: tier.banded,
     emphasis: tier.emphasis,
   }));
 }
@@ -76,7 +112,7 @@ interface Placed {
   text: string;
 }
 
-const labelWidth = (text: string) => text.length * 6.2;
+const labelWidth = (text: string) => text.length * 6.3;
 
 function placeLabels(
   models: Model[],
@@ -202,19 +238,136 @@ export function MapChart({
 
   const W = 1280;
   const H = 720;
-  const M = { top: 28, right: 60, bottom: 56, left: 142 };
+  const M = { top: 30, right: 64, bottom: 60, left: 150 };
   const innerW = W - M.left - M.right;
   const innerH = H - M.top - M.bottom;
   const untimedX = 18;
 
-  const metricValues = metricModels.map((m) => metric.value(m)).filter(isPositiveFinite);
+  const findModel = (slug: string | null) =>
+    slug ? metricModels.find((m) => m.slug === slug) : undefined;
+
+  const recentModels = useMemo(
+    () =>
+      metricModels
+        .filter((m) => m.releaseMs != null && m.releaseMs >= recentCutoffMs)
+        .sort((a, b) => b.releaseMs! - a.releaseMs!),
+    [metricModels, recentCutoffMs],
+  );
+
+  /**
+   * Default landscape: several variants per family so the shape of each lab's
+   * line-up is legible, capped so the field stays readable. Models sitting far
+   * below the pack (a fast, cheap, very low-scoring model) are demoted — they
+   * stretch the canvas into empty space and drag the frontier with them. They
+   * stay reachable through search, comparison and alternatives.
+   */
+  const { defaultRecentModels, packFloor } = useMemo(() => {
+    const eligible = recentModels
+      .filter((m) => hasX(m) || xc.railDefault(m) || newestSlugs.has(m.slug))
+      .sort(
+        (a, b) => (b.releaseMs ?? 0) - (a.releaseMs ?? 0) || metric.value(b)! - metric.value(a)!,
+      );
+    const families = new Map<string, number>();
+    const concise: Model[] = [];
+    for (const model of eligible) {
+      const family = model.displayName.replace(/\s*\([^)]*\)\s*$/, "").toLowerCase();
+      const seen = families.get(family) ?? 0;
+      if (seen >= FAMILY_VARIANT_CAP) continue;
+      families.set(family, seen + 1);
+      concise.push(model);
+      if (concise.length === DEFAULT_MODEL_CAP) break;
+    }
+    const pool = concise.length ? concise : metricModels;
+    const mid = median(pool.map((m) => metric.value(m)!));
+    const floor = mid == null ? -Infinity : mid - OUTLIER_GAP;
+    return {
+      defaultRecentModels: concise.filter((m) => metric.value(m)! >= floor),
+      packFloor: floor,
+    };
+  }, [metric, metricModels, newestSlugs, recentModels, xc]);
+
+  /** Timeline shows the whole record, so nothing is demoted there. */
+  const inPack = (m: Model) => timeline || metric.value(m)! >= packFloor;
+
+  // Frontier. Scatter views: Pareto on (metric ↑, x-value ↓) — models no
+  // other model beats on both axes, swept from best-x to worst-x keeping any
+  // point that raises the running-best metric. Far-below-pack models are held
+  // out of the sweep so the line does not dive into empty canvas to reach
+  // them. Timeline: the record line — swept by release date, keeping each
+  // model that raised the all-time record.
+  const frontier = useMemo(() => {
+    const source = timeline ? metricModels : xModels.filter(inPack);
+    const sweep = [...source].sort((a, b) =>
+      timeline
+        ? a.releaseMs! - b.releaseMs! || metric.value(b)! - metric.value(a)!
+        : xc.xValue(a)! - xc.xValue(b)! || metric.value(b)! - metric.value(a)!,
+    );
+    const keep: Model[] = [];
+    let bestValue = -Infinity;
+    for (const m of sweep) {
+      const value = metric.value(m)!;
+      if (value > bestValue) {
+        keep.push(m);
+        bestValue = value;
+      }
+    }
+    return timeline ? keep : keep.sort((a, b) => metric.value(a)! - metric.value(b)!);
+  }, [metric, metricModels, packFloor, timeline, xModels, xc]);
+  const frontierSlugs = useMemo(() => new Set(frontier.map((m) => m.slug)), [frontier]);
+  const isFrontier = (slug: string) => frontierSlugs.has(slug);
+
+  const visibleModels = useMemo(() => {
+    if (timeline) return metricModels;
+    const bySlug = new Map<string, Model>();
+    const add = (m: Model | undefined) => {
+      if (m) bySlug.set(m.slug, m);
+    };
+
+    frontier.forEach(add);
+    metricModels.filter((m) => newestSlugs.has(m.slug) && inPack(m)).forEach(add);
+
+    if (searchActive) {
+      metricModels.filter((m) => isMatch(m.slug)).forEach(add);
+    } else {
+      defaultRecentModels.forEach(add);
+    }
+
+    add(findModel(bestPickSlug));
+    add(findModel(hoveredSlug));
+    comparedSlugs.forEach((slug) => add(findModel(slug)));
+    alternativeSlugs.forEach((slug) => add(findModel(slug)));
+    return [...bySlug.values()];
+  }, [
+    alternativeSlugs,
+    bestPickSlug,
+    comparedSlugs,
+    defaultRecentModels,
+    frontier,
+    hoveredSlug,
+    matchedSlugs,
+    metricModels,
+    newestSlugs,
+    packFloor,
+    searchActive,
+    timeline,
+  ]);
+
+  // Value axis is cropped to the models actually drawn — surfacing a low model
+  // through search or comparison expands it again, on its own.
   const { min: metricMin, max: metricMax } = metricBounds(
-    metricValues,
+    visibleModels.map((m) => metric.value(m)!).filter(isPositiveFinite),
     metric.defaultMin,
     metric.defaultMax,
   );
   const tiers = relativeTiers(metricMin, metricMax);
   const yScale = scaleLinear().domain([metricMin, metricMax]).range([innerH, 0]);
+  const gridStep = metricMax - metricMin <= 30 ? 5 : 10;
+  const yTicks = useMemo(() => {
+    const first = Math.ceil(metricMin / gridStep) * gridStep;
+    const out: number[] = [];
+    for (let v = first; v <= metricMax; v += gridStep) out.push(v);
+    return out;
+  }, [gridStep, metricMax, metricMin]);
 
   // X scale. Speed and cost use a log scale, inverted so better (faster /
   // cheaper) sits on the right — waits and budgets are both felt
@@ -239,12 +392,12 @@ export function MapChart({
 
   const sizeScale = scaleLinear()
     .domain([metricMin, metricMax])
-    .range(timeline ? [4, 9.5] : [7, 12])
+    .range(timeline ? [4, 9.5] : [6.5, 11.5])
     .clamp(true);
 
   const opacityFor = (value: number) => {
     const t = (value - metricMin) / (metricMax - metricMin);
-    return 0.4 + 0.55 * Math.max(0, Math.min(1, t));
+    return 0.45 + 0.5 * Math.max(0, Math.min(1, t));
   };
 
   const xy = (m: Model) => ({
@@ -253,97 +406,6 @@ export function MapChart({
     r: sizeScale(metric.value(m)!),
   });
 
-  // Frontier. Scatter views: Pareto on (metric ↑, x-value ↓) — models no
-  // other model beats on both axes, swept from best-x to worst-x keeping any
-  // point that raises the running-best metric. Timeline: the record line —
-  // swept by release date, keeping each model that raised the all-time record.
-  const frontier = useMemo(() => {
-    const sweep = [...(timeline ? metricModels : xModels)].sort((a, b) =>
-      timeline
-        ? a.releaseMs! - b.releaseMs! || metric.value(b)! - metric.value(a)!
-        : xc.xValue(a)! - xc.xValue(b)! || metric.value(b)! - metric.value(a)!,
-    );
-    const keep: Model[] = [];
-    let bestValue = -Infinity;
-    for (const m of sweep) {
-      const value = metric.value(m)!;
-      if (value > bestValue) {
-        keep.push(m);
-        bestValue = value;
-      }
-    }
-    return timeline ? keep : keep.sort((a, b) => metric.value(a)! - metric.value(b)!);
-  }, [metric, metricModels, timeline, xModels, xc]);
-  const frontierSlugs = useMemo(() => new Set(frontier.map((m) => m.slug)), [frontier]);
-  const isFrontier = (slug: string) => frontierSlugs.has(slug);
-
-  const recentModels = useMemo(
-    () =>
-      metricModels
-        .filter((m) => m.releaseMs != null && m.releaseMs >= recentCutoffMs)
-        .sort((a, b) => b.releaseMs! - a.releaseMs!),
-    [metricModels, recentCutoffMs],
-  );
-  const defaultRecentModels = useMemo(
-    () => {
-      const eligible = recentModels
-        .filter((m) => hasX(m) || xc.railDefault(m) || newestSlugs.has(m.slug))
-        .sort(
-          (a, b) =>
-            (b.releaseMs ?? 0) - (a.releaseMs ?? 0) || metric.value(b)! - metric.value(a)!,
-        );
-      const families = new Set<string>();
-      const concise: Model[] = [];
-      for (const model of eligible) {
-        const family = model.displayName.replace(/\s*\([^)]*\)\s*$/, "").toLowerCase();
-        if (families.has(family)) continue;
-        families.add(family);
-        concise.push(model);
-        if (concise.length === 24) break;
-      }
-      return concise;
-    },
-    [newestSlugs, recentModels, xc, metric],
-  );
-
-  const findModel = (slug: string | null) =>
-    slug ? metricModels.find((m) => m.slug === slug) : undefined;
-
-  const visibleModels = useMemo(() => {
-    if (timeline) return metricModels;
-    const bySlug = new Map<string, Model>();
-    const add = (m: Model | undefined) => {
-      if (m) bySlug.set(m.slug, m);
-    };
-
-    frontier.forEach(add);
-    metricModels.filter((m) => newestSlugs.has(m.slug)).forEach(add);
-
-    if (searchActive) {
-      metricModels.filter((m) => isMatch(m.slug)).forEach(add);
-    } else {
-      defaultRecentModels.forEach(add);
-    }
-
-    add(findModel(bestPickSlug));
-    add(findModel(hoveredSlug));
-    comparedSlugs.forEach((slug) => add(findModel(slug)));
-    alternativeSlugs.forEach((slug) => add(findModel(slug)));
-    return [...bySlug.values()];
-  }, [
-    alternativeSlugs,
-    bestPickSlug,
-    comparedSlugs,
-    defaultRecentModels,
-    frontier,
-    hoveredSlug,
-    matchedSlugs,
-    metricModels,
-    newestSlugs,
-    searchActive,
-    timeline,
-  ]);
-
   const labeledModels = useMemo(() => {
     const bySlug = new Map<string, Model>();
     const add = (m: Model | undefined) => {
@@ -351,7 +413,7 @@ export function MapChart({
     };
 
     frontier.forEach(add);
-    metricModels.filter((m) => newestSlugs.has(m.slug)).forEach(add);
+    metricModels.filter((m) => newestSlugs.has(m.slug) && inPack(m)).forEach(add);
     add(findModel(bestPickSlug));
     add(findModel(hoveredSlug));
     comparedSlugs.forEach((slug) => add(findModel(slug)));
@@ -367,7 +429,7 @@ export function MapChart({
       (timeline ? recentModels : defaultRecentModels)
         .slice()
         .sort((a, b) => metric.value(b)! - metric.value(a)!)
-        .slice(0, 6)
+        .slice(0, DEFAULT_LABEL_CAP)
         .forEach(add);
     }
 
@@ -383,6 +445,7 @@ export function MapChart({
     metric,
     metricModels,
     newestSlugs,
+    packFloor,
     recentModels,
     searchActive,
     timeline,
@@ -390,13 +453,15 @@ export function MapChart({
 
   const labels = useMemo(
     () => placeLabels(labeledModels, xy, innerW, innerH, visibleModels),
-    [labeledModels, visibleModels],
+    [labeledModels, visibleModels, metricMin, metricMax],
   );
 
   // Frontier path. Scatter: polyline from the left edge through the frontier
-  // points, then down from the final point. Timeline: a staircase — hold each
-  // record's level until the next record ships, then step up; extend the last
-  // record to the right edge.
+  // points, ending on the final (fastest/cheapest) point — a terminal drop to
+  // the plot floor reads as the line diving into empty canvas now that the
+  // axis crops to the pack. Timeline: a staircase — hold each record's level
+  // until the next record ships, then step up; extend the last record to the
+  // right edge.
   const frontierPath = useMemo(() => {
     if (frontier.length === 0) return "";
     if (timeline) {
@@ -411,9 +476,19 @@ export function MapChart({
     return [
       `M0,${pts[0].y.toFixed(1)}`,
       ...pts.map((p) => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`),
-      `V${innerH}`,
     ].join(" ");
-  }, [frontier, timeline, visibleModels]);
+  }, [frontier, timeline, visibleModels, metricMin, metricMax]);
+
+  /** Anchor for the quiet frontier caption — the flat run nothing sits above. */
+  const frontierTag = useMemo(() => {
+    if (frontier.length < 2) return null;
+    if (timeline) {
+      const last = xy(frontier[frontier.length - 1]);
+      return { x: innerW - 4, y: last.y - 9, anchor: "end" as const };
+    }
+    const top = xy(frontier[frontier.length - 1]);
+    return { x: 6, y: top.y - 9, anchor: "start" as const };
+  }, [frontier, timeline, metricMin, metricMax]);
 
   const isDim = (m: Model, isHovered: boolean) => {
     if (isHovered || isCompared(m.slug) || isAlternative(m.slug)) return false;
@@ -482,6 +557,9 @@ export function MapChart({
       ? Math.max(0, Math.min(innerW, xScale(Math.min(cutValue, xHigh))))
       : null;
 
+  // Comparison connector: a gently bowed quadratic from the model in use to
+  // the one being considered. A straight rule read as a chart annotation; the
+  // bow reads as a move.
   const comparisonPath = useMemo(() => {
     if (comparedSlugs.length !== 2) return null;
     const from = findModel(comparedSlugs[0]);
@@ -494,43 +572,59 @@ export function MapChart({
     const distance = Math.hypot(dx, dy);
     if (distance < 4) {
       const offset = Math.max(a.r, b.r) + 5;
-      return `M${(a.x + offset).toFixed(1)},${a.y.toFixed(1)} C${(a.x + 62).toFixed(1)},${(
-        a.y - 52
-      ).toFixed(1)} ${(a.x + 62).toFixed(1)},${(a.y + 52).toFixed(1)} ${(
+      return `M${(a.x + offset).toFixed(1)},${a.y.toFixed(1)} C${(a.x + 58).toFixed(1)},${(
+        a.y - 48
+      ).toFixed(1)} ${(a.x + 58).toFixed(1)},${(a.y + 48).toFixed(1)} ${(
         b.x + offset
       ).toFixed(1)},${(b.y + 1).toFixed(1)}`;
     }
     const ux = dx / distance;
     const uy = dy / distance;
-    const startPad = a.r + 6;
-    const endPad = b.r + 11;
-    return `M${(a.x + ux * startPad).toFixed(1)},${(a.y + uy * startPad).toFixed(
+    const startPad = a.r + 7;
+    const endPad = b.r + 12;
+    const sx = a.x + ux * startPad;
+    const sy = a.y + uy * startPad;
+    const ex = b.x - ux * endPad;
+    const ey = b.y - uy * endPad;
+    // Control point rides the perpendicular at ~12% of the span, so short
+    // hops stay nearly straight and long ones arc without swinging wide.
+    const bow = Math.min(56, distance * 0.24);
+    const cx = (sx + ex) / 2 + uy * bow;
+    const cy = (sy + ey) / 2 - ux * bow;
+    return `M${sx.toFixed(1)},${sy.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${ex.toFixed(
       1,
-    )} L${(b.x - ux * endPad).toFixed(1)},${(b.y - uy * endPad).toFixed(1)}`;
-  }, [comparedSlugs, metricModels, xMode, yMetric]);
+    )},${ey.toFixed(1)}`;
+  }, [comparedSlugs, metricModels, xMode, yMetric, metricMin, metricMax]);
 
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
       className="w-full h-full select-none"
       preserveAspectRatio="xMidYMid meet"
-      style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
+      style={{ fontFamily: FONT }}
     >
       <defs>
         <marker
           id="comparison-arrow"
-          viewBox="0 0 10 10"
-          refX="8"
-          refY="5"
-          markerWidth="7"
-          markerHeight="7"
-          orient="auto-start-reverse"
+          viewBox="0 0 8 8"
+          refX="6.8"
+          refY="4"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto"
         >
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="#0a0a0a" />
+          <path d="M0.6,0.8 L7.4,4 L0.6,7.2 Z" fill={INK_900} />
         </marker>
+        {/* Dots sit on a white card; a whisper of shadow lifts them off it. */}
+        <filter id="dot-lift" x="-60%" y="-60%" width="220%" height="220%">
+          <feDropShadow dx="0" dy="0.6" stdDeviation="0.9" floodColor={INK_900} floodOpacity="0.2" />
+        </filter>
+        <filter id="dot-lift-strong" x="-80%" y="-80%" width="260%" height="260%">
+          <feDropShadow dx="0" dy="1.2" stdDeviation="2.2" floodColor={INK_900} floodOpacity="0.26" />
+        </filter>
       </defs>
       <g transform={`translate(${M.left}, ${M.top})`}>
-        {/* Tier bands */}
+        {/* Tier bands — warm alternation, no rules between them */}
         {tiers.map((t) => {
           const yTop = yScale(Math.min(t.max, metricMax));
           const yBottom = yScale(Math.max(t.min, metricMin));
@@ -538,71 +632,89 @@ export function MapChart({
           if (h <= 0) return null;
           return (
             <g key={t.label}>
-              <rect x={0} y={yTop} width={innerW} height={h} fill={t.shade} />
+              {t.banded && <rect x={0} y={yTop} width={innerW} height={h} fill={BAND} />}
               <text
-                x={-14}
+                x={-46}
                 y={(yTop + yBottom) / 2}
                 textAnchor="end"
                 dominantBaseline="middle"
                 fontSize={11}
-                fontWeight={t.emphasis > 0.7 ? 600 : 400}
-                fill={t.emphasis > 0.7 ? "#0a0a0a" : "#9b9b9b"}
-                letterSpacing={0.4}
+                fontWeight={500}
+                fill={t.emphasis > 0.7 ? INK_500 : INK_300}
               >
-                {t.label.toUpperCase()}
+                {t.label}
               </text>
             </g>
           );
         })}
 
-        {Array.from(
-          { length: Math.floor(metricMax / 10) - Math.ceil(metricMin / 10) + 1 },
-          (_, i) => (Math.ceil(metricMin / 10) + i) * 10,
-        ).map((v) => (
-          <line
-            key={`yt-${v}`}
-            x1={0}
-            x2={innerW}
-            y1={yScale(v)}
-            y2={yScale(v)}
-            stroke="#eaeaea"
-            strokeWidth={0.5}
-          />
+        {/* Value gridlines + readings */}
+        {yTicks.map((v) => (
+          <g key={`yt-${v}`}>
+            <line x1={0} x2={innerW} y1={yScale(v)} y2={yScale(v)} stroke={GRID} strokeWidth={1} />
+            <text
+              x={-12}
+              y={yScale(v)}
+              textAnchor="end"
+              dominantBaseline="middle"
+              fontSize={10.5}
+              fontWeight={450}
+              fill={INK_500}
+              style={{ fontVariantNumeric: "tabular-nums" }}
+            >
+              {v}
+            </text>
+          </g>
         ))}
 
-        {tiers.slice(0, -1).map((t) => (
-          <line
-            key={`sep-${t.label}`}
-            x1={0}
-            x2={innerW}
-            y1={yScale(t.min)}
-            y2={yScale(t.min)}
-            stroke="#e0e0e0"
-            strokeWidth={1}
-          />
-        ))}
+        {/* Vertical guides at the labelled x positions */}
+        {!timeline &&
+          xTicks.map((t) => (
+            <line
+              key={`xg-${t}`}
+              x1={xScale(t)}
+              x2={xScale(t)}
+              y1={0}
+              y2={innerH}
+              stroke={GRID}
+              strokeWidth={1}
+              opacity={0.75}
+            />
+          ))}
+        {timeline &&
+          timeTicks.map((t) => (
+            <line
+              key={`xg-${t.ms}`}
+              x1={xScale(t.ms)}
+              x2={xScale(t.ms)}
+              y1={0}
+              y2={innerH}
+              stroke={GRID}
+              strokeWidth={1}
+              opacity={t.major ? 1 : 0.6}
+            />
+          ))}
 
         {cutX != null && (
           <g style={{ pointerEvents: "none" }}>
-            <rect x={0} y={0} width={cutX} height={innerH} fill="#0a0a0a" opacity={0.035} />
+            <rect x={0} y={0} width={cutX} height={innerH} fill={INK_900} opacity={0.03} />
             <line
               x1={cutX}
               x2={cutX}
               y1={0}
               y2={innerH}
-              stroke="#0a0a0a"
+              stroke={INK_500}
               strokeWidth={1}
               strokeDasharray="3 4"
-              opacity={0.3}
+              opacity={0.35}
             />
             <text
               x={cutX}
-              y={-8}
+              y={-9}
               textAnchor="middle"
-              fontSize={9}
-              fontWeight={600}
-              fill="#3a3a3a"
-              letterSpacing={1.1}
+              fontSize={10.5}
+              fontWeight={550}
+              fill={INK_500}
             >
               {xc.cutLabel(cutValue!)}
             </text>
@@ -616,37 +728,29 @@ export function MapChart({
               x2={untimedX}
               y1={0}
               y2={innerH}
-              stroke="#d8d8d8"
+              stroke={INK_100}
               strokeWidth={1}
               strokeDasharray="2 5"
             />
-            <text
-              x={untimedX}
-              y={-8}
-              textAnchor="middle"
-              fontSize={9}
-              fontWeight={600}
-              fill="#9b9b9b"
-              letterSpacing={1.1}
-            >
+            <text x={untimedX} y={-9} textAnchor="middle" fontSize={10.5} fontWeight={500} fill={INK_300}>
               {xc.railCap}
             </text>
           </g>
         )}
 
         {/* X axis */}
-        <line x1={0} x2={innerW} y1={innerH} y2={innerH} stroke="#9b9b9b" />
+        <line x1={0} x2={innerW} y1={innerH} y2={innerH} stroke={INK_100} strokeWidth={1} />
         {!timeline &&
           xTicks.map((t) => (
             <g key={`xt-${t}`} transform={`translate(${xScale(t)}, 0)`}>
-              <line x1={0} x2={0} y1={innerH} y2={innerH + 5} stroke="#9b9b9b" strokeWidth={1} />
+              <line x1={0} x2={0} y1={innerH} y2={innerH + 4} stroke={INK_100} strokeWidth={1} />
               <text
                 x={0}
                 y={innerH + 18}
                 textAnchor="middle"
-                fontSize={11}
-                fontWeight={500}
-                fill="#3a3a3a"
+                fontSize={10.5}
+                fontWeight={450}
+                fill={INK_500}
                 style={{ fontVariantNumeric: "tabular-nums" }}
               >
                 {xc.fmtTick(t)}
@@ -656,77 +760,79 @@ export function MapChart({
         {timeline &&
           timeTicks.map((t) => (
             <g key={`xt-${t.ms}`} transform={`translate(${xScale(t.ms)}, 0)`}>
-              <line x1={0} x2={0} y1={innerH} y2={innerH + 5} stroke="#9b9b9b" strokeWidth={1} />
+              <line x1={0} x2={0} y1={innerH} y2={innerH + 4} stroke={INK_100} strokeWidth={1} />
               <text
                 x={0}
                 y={innerH + 18}
                 textAnchor="middle"
-                fontSize={11}
-                fontWeight={t.major ? 600 : 400}
-                fill={t.major ? "#0a0a0a" : "#6b6b6b"}
+                fontSize={10.5}
+                fontWeight={t.major ? 600 : 450}
+                fill={t.major ? INK_700 : INK_300}
                 style={{ fontVariantNumeric: "tabular-nums" }}
               >
                 {t.label}
               </text>
             </g>
           ))}
-        <text
-          x={innerW}
-          y={innerH + 40}
-          textAnchor="end"
-          fontSize={11}
-          fontWeight={600}
-          fill="#0a0a0a"
-          letterSpacing={1.4}
-        >
+        <text x={innerW} y={innerH + 42} textAnchor="end" fontSize={11.5} fontWeight={600} fill={INK_700}>
           {xc.rightCap}
         </text>
-        <text
-          x={0}
-          y={innerH + 40}
-          textAnchor="start"
-          fontSize={11}
-          fontWeight={500}
-          fill="#3a3a3a"
-          letterSpacing={1.4}
-        >
+        <text x={0} y={innerH + 42} textAnchor="start" fontSize={11.5} fontWeight={500} fill={INK_500}>
           {xc.leftCap}
         </text>
         <text
           x={innerW / 2}
-          y={innerH + 40}
+          y={innerH + 42}
           textAnchor="middle"
-          fontSize={10}
-          fill="#9b9b9b"
-          letterSpacing={1.2}
+          fontSize={11.5}
+          fontWeight={550}
+          fill={INK_500}
         >
           {xc.axisTitle}
         </text>
 
         <text
-          transform={`translate(-112, ${innerH / 2}) rotate(-90)`}
+          transform={`translate(-124, ${innerH / 2}) rotate(-90)`}
           textAnchor="middle"
-          fontSize={11}
-          fill="#0a0a0a"
-          fontWeight={500}
-          letterSpacing={1.4}
+          fontSize={11.5}
+          fontWeight={550}
+          fill={INK_500}
         >
           {metric.axisLabel}
         </text>
 
         {/* Frontier / record guide line */}
         {frontier.length > 1 && (
-          <path
-            d={frontierPath}
-            fill="none"
-            stroke="#bdbdbd"
-            strokeWidth={1.1}
-            strokeDasharray="5 5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity={comparisonActive ? 0.12 : hoveredSlug ? 0.22 : 0.52}
-            style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
-          />
+          <g style={{ pointerEvents: "none" }}>
+            <path
+              d={frontierPath}
+              fill="none"
+              stroke={INK_300}
+              strokeWidth={1}
+              strokeDasharray="4 5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity={comparisonActive ? 0.3 : hoveredSlug ? 0.5 : 0.95}
+              style={{ transition: "opacity 200ms ease-out" }}
+            />
+            {frontierTag && (
+              <text
+                x={frontierTag.x}
+                y={frontierTag.y}
+                textAnchor={frontierTag.anchor}
+                fontSize={10.5}
+                fontWeight={500}
+                fill={INK_300}
+                stroke={CARD}
+                strokeWidth={2.6}
+                paintOrder="stroke"
+                opacity={comparisonActive || hoveredSlug ? 0.4 : 1}
+                style={{ transition: "opacity 200ms ease-out" }}
+              >
+                {xc.frontierLabel}
+              </text>
+            )}
+          </g>
         )}
 
         {/* Directional comparison connector: current model → considered model. */}
@@ -734,11 +840,12 @@ export function MapChart({
           <path
             d={comparisonPath}
             fill="none"
-            stroke="#0a0a0a"
-            strokeWidth={2}
+            stroke={INK_900}
+            strokeWidth={1.5}
             strokeLinecap="round"
+            strokeLinejoin="round"
             markerEnd="url(#comparison-arrow)"
-            opacity={0.9}
+            opacity={0.85}
             style={{ pointerEvents: "none" }}
             pathLength={1}
             className="comparison-arrow"
@@ -771,15 +878,24 @@ export function MapChart({
                 ? 0.38
                 : Math.min(0.12, baseOp)
               : onFrontier || isLit || isNew || isPick
-                ? Math.max(0.86, baseOp)
-                : Math.min(0.5, baseOp);
+                ? Math.max(0.88, baseOp)
+                : Math.min(0.58, baseOp);
           // Timeline: damp the background cloud so the highlights carry it.
           if (timeline && !isHovered && !isOther && !onFrontier && !isLit && !isNew && !isPick) {
             op = Math.min(op, 0.38);
           }
-          const stroke = compared || isHovered || isLit || alternative ? "#0a0a0a" : "white";
-          const strokeW = compared ? 2.2 : isHovered ? 1.8 : onFrontier ? 1.6 : 1.2;
-          const dotR = onFrontier && !timeline ? r + 1.4 : r;
+          const prominent = compared || isHovered || isLit || isNew || isPick || onFrontier;
+          const stroke = compared || isHovered || isLit || alternative ? INK_900 : CARD;
+          const strokeW = compared ? 2 : isHovered ? 1.8 : 1.5;
+          const dotR = onFrontier && !timeline ? r + 1.2 : r;
+          // Shadows are cheap on the scatter's ~50 dots, not on the timeline's
+          // full field — there, only the dots doing work get the lift.
+          const lift =
+            isOther || (timeline && !prominent)
+              ? undefined
+              : compared || isHovered
+                ? "url(#dot-lift-strong)"
+                : "url(#dot-lift)";
           return (
             <g
               key={m.slug}
@@ -815,9 +931,14 @@ export function MapChart({
                 className={keyboardInteractive ? "chart-hit-target" : undefined}
                 fill="transparent"
               />
-              {(isHovered || isLit) && <circle cx={x} cy={y} r={dotR + 7} fill={c} fillOpacity={0.18} />}
+              {(isHovered || isLit) && (
+                <circle cx={x} cy={y} r={dotR + 7} fill={c} fillOpacity={0.16} />
+              )}
               {isNew && (
-                <g opacity={isOther ? 0.18 : 1} style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}>
+                <g
+                  opacity={isOther ? 0.18 : 1}
+                  style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
+                >
                   {!isOther && (
                     <circle
                       cx={x}
@@ -833,15 +954,23 @@ export function MapChart({
                     r={dotR + 3}
                     fill="none"
                     stroke={NEW_MODEL_COLOR}
-                    strokeOpacity={isOther ? 0.25 : 0.7}
+                    strokeOpacity={isOther ? 0.25 : 0.65}
                     strokeWidth={1.1}
                   />
                 </g>
               )}
               {isPick && (
                 <g style={{ pointerEvents: "none" }}>
-                  <circle cx={x} cy={y} r={dotR + 4.5} fill="none" stroke={PICK_COLOR} strokeWidth={1.5} />
-                  <circle cx={x} cy={y} r={dotR + 8} fill="none" stroke={PICK_COLOR} strokeOpacity={0.25} strokeWidth={1} />
+                  <circle cx={x} cy={y} r={dotR + 4.5} fill="none" stroke={PICK_COLOR} strokeWidth={1.4} />
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={dotR + 8}
+                    fill="none"
+                    stroke={PICK_COLOR}
+                    strokeOpacity={0.2}
+                    strokeWidth={1}
+                  />
                 </g>
               )}
               {alternative && (
@@ -850,8 +979,8 @@ export function MapChart({
                   cy={y}
                   r={dotR + 4}
                   fill="none"
-                  stroke="#0a0a0a"
-                  strokeOpacity={0.34}
+                  stroke={INK_700}
+                  strokeOpacity={0.4}
                   strokeWidth={1.2}
                   className="alternative-ring"
                   style={{ pointerEvents: "none" }}
@@ -864,8 +993,8 @@ export function MapChart({
                     cy={y}
                     r={dotR + 5}
                     fill="none"
-                    stroke="#0a0a0a"
-                    strokeWidth={1.8}
+                    stroke={INK_900}
+                    strokeWidth={1.6}
                     strokeDasharray={comparisonIndex === 0 ? undefined : "3 2"}
                   />
                   <circle
@@ -873,8 +1002,8 @@ export function MapChart({
                     cy={y}
                     r={dotR + 9}
                     fill="none"
-                    stroke="#0a0a0a"
-                    strokeOpacity={0.18}
+                    stroke={INK_900}
+                    strokeOpacity={0.15}
                     strokeWidth={1}
                   />
                 </g>
@@ -887,21 +1016,20 @@ export function MapChart({
                 fillOpacity={colored ? op : isOther ? 0.18 : onFrontier ? 0.72 : Math.min(op, 0.54)}
                 stroke={stroke}
                 strokeWidth={strokeW}
+                filter={lift}
                 style={{ transition: "all 200ms ease-out" }}
               />
             </g>
           );
         })}
 
-        {/* Label stems */}
+        {/* Leader lines */}
         {labels.map((l) => {
           const m = metricModels.find((x) => x.slug === l.slug)!;
           const { x, y, r } = xy(m);
-          const c = markerColor(m);
           const isHovered = hoveredSlug === l.slug;
           const compared = isCompared(l.slug);
           const isOther = isDim(m, isHovered);
-          const onFrontier = isFrontier(l.slug);
           const dir = l.anchor === "start" ? 1 : -1;
           const fromX = x + dir * (r + 3);
           const toX = l.anchor === "start" ? l.x - 5 : l.x + 5;
@@ -911,10 +1039,10 @@ export function MapChart({
               key={`stem-${l.slug}`}
               d={`M${fromX.toFixed(1)},${y.toFixed(1)} L${toX.toFixed(1)},${l.y.toFixed(1)}`}
               fill="none"
-              stroke={c}
-              strokeWidth={compared || isHovered || onFrontier ? 1.3 : 1}
+              stroke={compared || isHovered ? INK_300 : INK_100}
+              strokeWidth={1}
               strokeLinecap="round"
-              opacity={isOther ? (onFrontier ? 0.2 : 0.08) : isHovered ? 0.58 : onFrontier ? 0.44 : 0.24}
+              opacity={isOther ? 0.3 : 1}
               style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
             />
           );
@@ -928,8 +1056,9 @@ export function MapChart({
           const isOther = isDim(m, isHovered);
           const onFrontier = isFrontier(l.slug);
           const tier = tierFor(metric.value(m)!, tiers);
-          const baseOp = compared || isHovered || onFrontier ? 1 : tier.emphasis;
-          const op = isOther ? (onFrontier ? 0.34 : 0.12) : Math.max(onFrontier ? 0.9 : 0.68, baseOp);
+          const strong = compared || isHovered || onFrontier;
+          const baseOp = strong ? 1 : Math.max(0.7, tier.emphasis);
+          const op = isOther ? (onFrontier ? 0.32 : 0.14) : baseOp;
           return (
             <text
               key={`lbl-${l.slug}`}
@@ -937,11 +1066,11 @@ export function MapChart({
               y={l.y}
               textAnchor={l.anchor}
               dominantBaseline="middle"
-              fontSize={compared || isHovered || onFrontier ? 12 : 11}
-              fontWeight={compared || isHovered || onFrontier ? 600 : 500}
-              fill={isHovered ? "#0a0a0a" : "#2f2f2f"}
+              fontSize={strong ? 12 : 11.5}
+              fontWeight={strong ? 560 : 480}
+              fill={isHovered || compared ? INK_900 : INK_700}
               fillOpacity={op}
-              stroke="#ffffff"
+              stroke={CARD}
               strokeWidth={3}
               paintOrder="stroke"
               style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
@@ -962,23 +1091,28 @@ export function MapChart({
               x={x}
               y={y - r - 13}
               textAnchor="middle"
-              fontSize={8.5}
-              fontWeight={750}
-              fill="#0a0a0a"
-              letterSpacing={0.8}
-              stroke="#ffffff"
+              fontSize={10.5}
+              fontWeight={600}
+              fill={INK_900}
+              stroke={CARD}
               strokeWidth={2.8}
               paintOrder="stroke"
               style={{ pointerEvents: "none" }}
             >
-              {index === 0 ? "USING NOW" : "CONSIDERING"}
+              {index === 0 ? "Using now" : "Considering"}
             </text>
           );
         })}
 
-        {/* "NEW" tag on the most recently released model(s) */}
+        {/* "New" tag on the most recently released model(s) */}
         {metricModels
-          .filter((m) => newestSlugs.has(m.slug) && m.slug !== bestPickSlug && !isCompared(m.slug))
+          .filter(
+            (m) =>
+              newestSlugs.has(m.slug) &&
+              m.slug !== bestPickSlug &&
+              !isCompared(m.slug) &&
+              inPack(m),
+          )
           .map((m) => {
             const { x, y, r } = xy(m);
             const dim = (searchActive && !isMatch(m.slug)) || (limited && !fits(m));
@@ -986,24 +1120,23 @@ export function MapChart({
               <text
                 key={`new-${m.slug}`}
                 x={x}
-                y={y - r - 9}
+                y={y - r - 10}
                 textAnchor="middle"
-                fontSize={8.5}
-                fontWeight={750}
+                fontSize={10.5}
+                fontWeight={600}
                 fill={NEW_MODEL_COLOR}
-                letterSpacing={0.8}
                 opacity={dim ? 0.15 : 1}
-                stroke="#ffffff"
-                strokeWidth={2.4}
+                stroke={CARD}
+                strokeWidth={2.6}
                 paintOrder="stroke"
                 style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
               >
-                NEW
+                New
               </text>
             );
           })}
 
-        {/* "TOP PICK" tag on the best model under the current limits */}
+        {/* "Top pick" tag on the best model under the current limits */}
         {(() => {
           const m = findModel(bestPickSlug);
           if (!m || isCompared(m.slug)) return null;
@@ -1011,18 +1144,17 @@ export function MapChart({
           return (
             <text
               x={x}
-              y={y - r - 12}
+              y={y - r - 13}
               textAnchor="middle"
-              fontSize={8.5}
-              fontWeight={750}
+              fontSize={10.5}
+              fontWeight={600}
               fill={PICK_COLOR}
-              letterSpacing={0.8}
-              stroke="#ffffff"
-              strokeWidth={2.4}
+              stroke={CARD}
+              strokeWidth={2.6}
               paintOrder="stroke"
               style={{ pointerEvents: "none" }}
             >
-              TOP PICK
+              Top pick
             </text>
           );
         })()}

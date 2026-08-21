@@ -5,9 +5,20 @@
 @layer base {
   html {
     font-feature-settings: "cv11", "ss01", "ss03";
+    -webkit-text-size-adjust: 100%;
   }
   body {
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  }
+  /* Fraunces is only used for the masthead — let it size its optical axis. */
+  h1 {
+    font-optical-sizing: auto;
+  }
+  /* Keyboard focus reads as a warm hairline ring, never a browser blue box. */
+  :focus-visible {
+    outline: 2px solid #b5b1a8;
+    outline-offset: 2px;
+    border-radius: 9999px;
   }
 }
 
@@ -32,21 +43,21 @@
 @keyframes comparisonStripIn {
   from {
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 }
 
 @keyframes alternativesPanelIn {
   from {
     opacity: 0;
-    transform: translateX(12px);
+    transform: translateX(8px);
   }
 }
 
 @keyframes alternativeRowIn {
   from {
     opacity: 0;
-    transform: translateX(5px);
+    transform: translateY(3px);
   }
 }
 
@@ -74,15 +85,15 @@
 }
 
 .comparison-strip {
-  animation: comparisonStripIn 170ms ease-out;
+  animation: comparisonStripIn 160ms ease-out;
 }
 
 .alternatives-panel {
-  animation: alternativesPanelIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: alternativesPanelIn 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .alternative-row {
-  animation: alternativeRowIn 170ms ease-out both;
+  animation: alternativeRowIn 150ms ease-out both;
 }
 
 .model-picker-menu {
@@ -193,8 +204,7 @@
   }
 }
 
-/* Hairline sliders (time scrubber + limit knobs) in the ink palette. */
-input[type="range"].scrub,
+/* Hairline limit knobs in the warm ink palette. */
 input[type="range"].limit {
   -webkit-appearance: none;
   appearance: none;
@@ -202,19 +212,16 @@ input[type="range"].limit {
   background: transparent;
   cursor: pointer;
 }
-input[type="range"].scrub::-webkit-slider-runnable-track,
 input[type="range"].limit::-webkit-slider-runnable-track {
   height: 2px;
   border-radius: 1px;
-  background: #e4e4e4;
+  background: #e8e5de;
 }
-input[type="range"].scrub::-moz-range-track,
 input[type="range"].limit::-moz-range-track {
   height: 2px;
   border-radius: 1px;
-  background: #e4e4e4;
+  background: #e8e5de;
 }
-input[type="range"].scrub::-webkit-slider-thumb,
 input[type="range"].limit::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -222,33 +229,36 @@ input[type="range"].limit::-webkit-slider-thumb {
   height: 12px;
   width: 12px;
   border-radius: 9999px;
-  background: #0a0a0a;
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 0 1px #d4d4d4;
-  transition: transform 0.1s ease;
+  background: #161512;
+  border: 2px solid #fffefc;
+  box-shadow: 0 0 0 1px #b5b1a8;
+  transition: transform 0.12s ease;
 }
-input[type="range"].scrub::-moz-range-thumb,
 input[type="range"].limit::-moz-range-thumb {
   height: 12px;
   width: 12px;
   border-radius: 9999px;
-  background: #0a0a0a;
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 0 1px #d4d4d4;
+  background: #161512;
+  border: 2px solid #fffefc;
+  box-shadow: 0 0 0 1px #b5b1a8;
 }
-input[type="range"].scrub:hover::-webkit-slider-thumb,
 input[type="range"].limit:hover::-webkit-slider-thumb {
-  transform: scale(1.15);
+  transform: scale(1.12);
 }
 
 @media (max-width: 639px),
   (max-width: 950px) and (max-height: 520px) and (orientation: landscape) {
-  input[type="range"].scrub,
   input[type="range"].limit {
     height: 32px;
   }
 
   input[type="text"] {
     font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  input[type="range"].limit:hover::-webkit-slider-thumb {
+    transform: none;
   }
 }

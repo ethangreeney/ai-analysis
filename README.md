@@ -17,12 +17,16 @@ The existing AI comparison charts are all a bit off. They use token price as a s
 - **Speed** (default): up is smarter, right is faster, colour is cost. The dashed line is the Pareto frontier — models no other model beats on both axes.
 - **Cost**: up is smarter, right is cheaper per task, colour is wait.
 - **Timeline**: every benchmarked model by release date. The dashed line is the record line — each step is the model that raised the all-time intelligence record when it shipped.
-- **Replay**: the scrubber under the chart rewinds the map to any past date (or press play to watch the frontier move). Old models that AA no longer hosts lack current speed/cost benchmarks, so the deep past is sparse on the scatter views — the timeline view carries the full history.
 - **Limits**: set a max wait and/or max cost per task; everything that doesn't fit fades out and the smartest model that does gets flagged as the top pick.
-- **Find alternatives**: choose the model you use now to get a ranked shortlist based on capability, response time, and task cost. Pick any recommendation to focus the chart on a direct comparison.
+- **Find alternatives**: choose the model you use now to get a ranked shortlist of five, based on capability, response time, and task cost. Pick any of them — or click any dot — to focus the chart on a direct comparison.
+- **Relative comparison stats**: the comparison strip reports differences the way you'd repeat them out loud — "+3.3 intelligence", "1.3× faster", "1.4× pricier per task" — never raw cents or seconds, which mean nothing out of context.
 - **Share a comparison**: the current model and considered alternative are saved in the URL. Shared links reopen with both points emphasized, a directional connector, and the surrounding models de-emphasized for context.
 
-Every control is mirrored into the URL hash, so any view — a metric, a search, a past date, a set of limits — is shareable by copying the address.
+## Reading the map
+
+The default view is a landscape, not a full census: recent releases plus the frontier, capped so the field stays legible, with a limited number of variants per model family. The value axis is cropped to the models actually drawn rather than anchored at zero, and models far below the pack are demoted out of the default view — search or a comparison brings any of them back.
+
+Every control is mirrored into the URL hash, so any view — a metric, a search, a set of limits, a comparison — is shareable by copying the address.
 
 ## Run it
 
