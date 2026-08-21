@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-21T16:12:57.872Z",
+  "fetchedAt": "2026-08-21T17:36:38.095Z",
   "models": [
     {
       "slug": "claude-opus-5",
@@ -516,7 +516,7 @@
     {
       "slug": "qwen3-8-27b",
       "name": "Qwen3.8 27B",
-      "displayName": "Qwen3.8 27B",
+      "displayName": "Qwen3.8 27B (xhigh)",
       "creator": "Alibaba",
       "intelligence": 52,
       "codingIndex": 68.1,
