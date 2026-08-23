@@ -6,15 +6,11 @@ import {
   XMode,
   Y_METRICS,
   X_MODES,
-  Limits,
   isPositiveFinite,
-  limitsActive,
   makeColorNorm,
-  qualifies,
   rampColor,
   NEUTRAL_DOT_COLOR,
   NEW_MODEL_COLOR,
-  PICK_COLOR,
 } from "./model";
 
 /* Warm ink scale, mirrored from tailwind.config.js so the SVG (which cannot
@@ -193,12 +189,11 @@ export function MapChart({
   matchedSlugs,
   newestSlugs,
   recentCutoffMs,
-  limits,
-  bestPickSlug,
   colorDomain,
   comparedSlugs,
   alternativeSlugs,
   onSelect,
+  height = 720,
 }: {
   models: Model[];
   yMetric: YMetric;
@@ -208,23 +203,22 @@ export function MapChart({
   matchedSlugs: Set<string> | null;
   newestSlugs: Set<string>;
   recentCutoffMs: number;
-  limits: Limits;
-  bestPickSlug: string | null;
   colorDomain: [number, number];
   comparedSlugs: string[];
   alternativeSlugs: Set<string>;
   onSelect: (slug: string) => void;
+  /** Canvas height in viewBox units; the width stays 1280 so text keeps its
+      relative size while the plot takes the shape of its container. */
+  height?: number;
 }) {
   const metric = Y_METRICS[yMetric];
   const xc = X_MODES[xMode];
   const timeline = xMode === "timeline";
   const searchActive = matchedSlugs !== null;
-  const limited = limitsActive(limits);
   const comparisonActive = comparedSlugs.length > 0;
   const isCompared = (slug: string) => comparedSlugs.includes(slug);
   const isAlternative = (slug: string) => comparedSlugs.length === 1 && alternativeSlugs.has(slug);
   const isMatch = (slug: string) => !searchActive || matchedSlugs!.has(slug);
-  const fits = (m: Model) => !limited || qualifies(m, limits);
 
   const metricModels = useMemo(
     () =>
@@ -237,7 +231,7 @@ export function MapChart({
   const xModels = useMemo(() => metricModels.filter(hasX), [metricModels, xc]);
 
   const W = 1280;
-  const H = 720;
+  const H = height;
   const M = { top: 30, right: 64, bottom: 60, left: 150 };
   const innerW = W - M.left - M.right;
   const innerH = H - M.top - M.bottom;
@@ -332,14 +326,12 @@ export function MapChart({
       defaultRecentModels.forEach(add);
     }
 
-    add(findModel(bestPickSlug));
     add(findModel(hoveredSlug));
     comparedSlugs.forEach((slug) => add(findModel(slug)));
     alternativeSlugs.forEach((slug) => add(findModel(slug)));
     return [...bySlug.values()];
   }, [
     alternativeSlugs,
-    bestPickSlug,
     comparedSlugs,
     defaultRecentModels,
     frontier,
@@ -416,7 +408,6 @@ export function MapChart({
 
     frontier.forEach(add);
     metricModels.filter((m) => newestSlugs.has(m.slug) && inPack(m)).forEach(add);
-    add(findModel(bestPickSlug));
     add(findModel(hoveredSlug));
     comparedSlugs.forEach((slug) => add(findModel(slug)));
     alternativeSlugs.forEach((slug) => add(findModel(slug)));
@@ -438,7 +429,6 @@ export function MapChart({
     return [...bySlug.values()];
   }, [
     alternativeSlugs,
-    bestPickSlug,
     comparedSlugs,
     defaultRecentModels,
     frontier,
@@ -495,15 +485,11 @@ export function MapChart({
   const isDim = (m: Model, isHovered: boolean) => {
     if (isHovered || isCompared(m.slug) || isAlternative(m.slug)) return false;
     if (comparisonActive) return true;
-    return (
-      (searchActive && !isMatch(m.slug)) ||
-      (limited && !fits(m)) ||
-      (!searchActive && !limited && hoveredSlug !== null)
-    );
+    return (searchActive && !isMatch(m.slug)) || (!searchActive && hoveredSlug !== null);
   };
 
-  // Draw order = stacking: hovered on top, then the pick, newest, search
-  // matches, frontier, and finally the rest by selected metric value.
+  // Draw order = stacking: hovered on top, then newest, search matches,
+  // frontier, and finally the rest by selected metric value.
   const priority = (m: Model) =>
     isCompared(m.slug)
       ? 12 + comparedSlugs.indexOf(m.slug)
@@ -511,8 +497,6 @@ export function MapChart({
       ? 11
       : isAlternative(m.slug)
         ? 10
-      : m.slug === bestPickSlug
-        ? 4
         : newestSlugs.has(m.slug)
           ? 3
           : searchActive && isMatch(m.slug)
@@ -549,15 +533,6 @@ export function MapChart({
   }, [timeline, xMin, xMax, xVals.length]);
 
   const hasVisibleUntimed = !timeline && visibleModels.some((m) => !hasX(m));
-
-  // Shaded region for the limit that lives on the current X axis (worse side
-  // is always the left, both scatter scales are inverted).
-  const cutValue =
-    xMode === "speed" ? limits.maxWait : xMode === "cost" ? limits.maxCost : null;
-  const cutX =
-    cutValue != null && !timeline
-      ? Math.max(0, Math.min(innerW, xScale(Math.min(cutValue, xHigh))))
-      : null;
 
   // Comparison connector: a gently bowed quadratic from the model in use to
   // the one being considered. A straight rule read as a chart annotation; the
@@ -696,32 +671,6 @@ export function MapChart({
               opacity={t.major ? 1 : 0.6}
             />
           ))}
-
-        {cutX != null && (
-          <g style={{ pointerEvents: "none" }}>
-            <rect x={0} y={0} width={cutX} height={innerH} fill={INK_900} opacity={0.03} />
-            <line
-              x1={cutX}
-              x2={cutX}
-              y1={0}
-              y2={innerH}
-              stroke={INK_500}
-              strokeWidth={1}
-              strokeDasharray="3 4"
-              opacity={0.35}
-            />
-            <text
-              x={cutX}
-              y={-9}
-              textAnchor="middle"
-              fontSize={10.5}
-              fontWeight={550}
-              fill={INK_500}
-            >
-              {xc.cutLabel(cutValue!)}
-            </text>
-          </g>
-        )}
 
         {hasVisibleUntimed && (
           <g style={{ pointerEvents: "none" }}>
@@ -867,9 +816,8 @@ export function MapChart({
           const comparisonIndex = comparedSlugs.indexOf(m.slug);
           const compared = comparisonIndex >= 0;
           const alternative = isAlternative(m.slug);
-          const isPick = m.slug === bestPickSlug && !compared;
-          const isNew = newestSlugs.has(m.slug) && !isPick && !compared;
-          const keyboardInteractive = compared || alternative || isLit || isNew || isPick;
+          const isNew = newestSlugs.has(m.slug) && !compared;
+          const keyboardInteractive = compared || alternative || isLit || isNew;
           const baseOp = opacityFor(metric.value(m)!);
           let op = compared
             ? 1
@@ -879,14 +827,14 @@ export function MapChart({
               ? onFrontier
                 ? 0.38
                 : Math.min(0.12, baseOp)
-              : onFrontier || isLit || isNew || isPick
+              : onFrontier || isLit || isNew
                 ? Math.max(0.88, baseOp)
                 : Math.min(0.58, baseOp);
           // Timeline: damp the background cloud so the highlights carry it.
-          if (timeline && !isHovered && !isOther && !onFrontier && !isLit && !isNew && !isPick) {
+          if (timeline && !isHovered && !isOther && !onFrontier && !isLit && !isNew) {
             op = Math.min(op, 0.38);
           }
-          const prominent = compared || isHovered || isLit || isNew || isPick || onFrontier;
+          const prominent = compared || isHovered || isLit || isNew || onFrontier;
           const stroke = compared || isHovered || isLit || alternative ? INK_900 : CARD;
           const strokeW = compared ? 2 : isHovered ? 1.8 : 1.5;
           const dotR = onFrontier && !timeline ? r + 1.2 : r;
@@ -958,20 +906,6 @@ export function MapChart({
                     stroke={NEW_MODEL_COLOR}
                     strokeOpacity={isOther ? 0.25 : 0.65}
                     strokeWidth={1.1}
-                  />
-                </g>
-              )}
-              {isPick && (
-                <g style={{ pointerEvents: "none" }}>
-                  <circle cx={x} cy={y} r={dotR + 4.5} fill="none" stroke={PICK_COLOR} strokeWidth={1.4} />
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={dotR + 8}
-                    fill="none"
-                    stroke={PICK_COLOR}
-                    strokeOpacity={0.2}
-                    strokeWidth={1}
                   />
                 </g>
               )}
@@ -1108,16 +1042,10 @@ export function MapChart({
 
         {/* "New" tag on the most recently released model(s) */}
         {metricModels
-          .filter(
-            (m) =>
-              newestSlugs.has(m.slug) &&
-              m.slug !== bestPickSlug &&
-              !isCompared(m.slug) &&
-              inPack(m),
-          )
+          .filter((m) => newestSlugs.has(m.slug) && !isCompared(m.slug) && inPack(m))
           .map((m) => {
             const { x, y, r } = xy(m);
-            const dim = (searchActive && !isMatch(m.slug)) || (limited && !fits(m));
+            const dim = searchActive && !isMatch(m.slug);
             return (
               <text
                 key={`new-${m.slug}`}
@@ -1137,29 +1065,6 @@ export function MapChart({
               </text>
             );
           })}
-
-        {/* "Top pick" tag on the best model under the current limits */}
-        {(() => {
-          const m = findModel(bestPickSlug);
-          if (!m || isCompared(m.slug)) return null;
-          const { x, y, r } = xy(m);
-          return (
-            <text
-              x={x}
-              y={y - r - 13}
-              textAnchor="middle"
-              fontSize={10.5}
-              fontWeight={600}
-              fill={PICK_COLOR}
-              stroke={CARD}
-              strokeWidth={2.6}
-              paintOrder="stroke"
-              style={{ pointerEvents: "none" }}
-            >
-              Top pick
-            </text>
-          );
-        })()}
       </g>
     </svg>
   );

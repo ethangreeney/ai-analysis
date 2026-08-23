@@ -48,9 +48,14 @@ export const fmtSeconds = (seconds: number | null) =>
   seconds == null ? "—" : `${seconds.toFixed(1)} s`;
 export const fmtSecondsShort = (seconds: number) =>
   seconds < 10 ? `${seconds.toFixed(1)}s` : `${Math.round(seconds)}s`;
-/** "1.3×", "2×", "14×" — trailing .0 dropped so multiples read clean. */
+/** "0.06×", "0.6×", "1.3×", "14×" — trailing .0 dropped so multiples read clean. */
 export const fmtMultiple = (ratio: number) => {
-  const r = ratio >= 10 ? Math.round(ratio).toString() : ratio.toFixed(1).replace(/\.0$/, "");
+  const r =
+    ratio >= 10
+      ? Math.round(ratio).toString()
+      : ratio >= 0.095
+        ? ratio.toFixed(1).replace(/\.0$/, "")
+        : ratio.toFixed(2).replace(/0$/, "");
   return `${r}×`;
 };
 const fmtScore = (v: number) => Number(v.toFixed(1)).toString();
@@ -74,7 +79,7 @@ export interface RelativeStat {
   key: "metric" | "speed" | "cost";
   /** Headline figure: "+3.3", "1.3×", "≈", or "—" when unknowable. */
   value: string;
-  /** Reads after the value: "intelligence", "faster", "pricier per task". */
+  /** Reads after the value: "intelligence", "faster", "the cost per task". */
   label: string;
   /** Optional context shown small: "52.7 → 56". */
   detail?: string;
@@ -131,15 +136,24 @@ export function relativeStats(from: Model, to: Model, metric: MetricConfig): Rel
   };
 
   ratioStat("speed", from.e2eLatency, to.e2eLatency, "faster", "slower", "same speed", "speed unknown");
-  ratioStat(
-    "cost",
-    from.costPerTask,
-    to.costPerTask,
-    "cheaper per task",
-    "pricier per task",
-    "same cost per task",
-    "cost unknown",
-  );
+
+  // Cost reads as a plain multiple of what you pay now — "0.6× the cost" is
+  // instantly graspable where "1.6× cheaper" makes people do division.
+  if (!isPositiveFinite(from.costPerTask) || !isPositiveFinite(to.costPerTask)) {
+    stats.push({ key: "cost", value: "—", label: "cost unknown", direction: 0 });
+  } else {
+    const costRatio = to.costPerTask / from.costPerTask;
+    if (costRatio > 0.95 && costRatio < 1.05) {
+      stats.push({ key: "cost", value: "≈", label: "same cost per task", direction: 0 });
+    } else {
+      stats.push({
+        key: "cost",
+        value: fmtMultiple(costRatio),
+        label: "the cost per task",
+        direction: costRatio < 1 ? 1 : -1,
+      });
+    }
+  }
   return stats;
 }
 
@@ -194,7 +208,6 @@ export interface XModeConfig {
   railDefault: (m: Model) => boolean;
   frontierLabel: string;
   frontierNote: (metricNoun: string) => string;
-  cutLabel: (v: number) => string;
   subtitle: string;
   footnote: string;
 }
@@ -216,7 +229,6 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     frontierLabel: "2D frontier",
     frontierNote: (noun) =>
       `This line shows models no other model beats on both ${noun} and speed.`,
-    cutLabel: (v) => `Max wait ${fmtSecondsShort(v)}`,
     subtitle:
       "Shows task cost, not token price; end-to-end wait, not tokens/sec. Up is intelligence, right is faster, color is cost.",
     footnote:
@@ -238,7 +250,6 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     frontierLabel: "2D frontier",
     frontierNote: (noun) =>
       `This line shows models no other model beats on both ${noun} and price.`,
-    cutLabel: (v) => `Max ${fmtCost(v)}`,
     subtitle:
       "Shows what a task really costs, not token price. Up is intelligence, right is cheaper per task, color is end-to-end wait.",
     footnote:
@@ -260,7 +271,6 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     frontierLabel: "record line",
     frontierNote: (noun) =>
       `Each step is the model that raised the all-time ${noun} record when it shipped.`,
-    cutLabel: () => "",
     subtitle:
       "Every benchmarked model by release date. Up is intelligence, right is newer, color is task cost.",
     footnote:
@@ -277,7 +287,6 @@ const RAMP_MID = [192, 150, 78]; // warm ochre
 const RAMP_HOT = [185, 50, 38]; // saturated deep red
 export const NEUTRAL_DOT_COLOR = "#6d7781";
 export const NEW_MODEL_COLOR = "#C96442";
-export const PICK_COLOR = "#161512";
 
 export function rampColor(t: number): string {
   const u = Math.max(0, Math.min(1, t));
@@ -295,16 +304,3 @@ export function makeColorNorm([min, max]: [number, number]) {
   return scaleLog().domain([low, high]).range([0, 1]).clamp(true);
 }
 
-export interface Limits {
-  maxWait: number | null;
-  maxCost: number | null;
-}
-
-export const NO_LIMITS: Limits = { maxWait: null, maxCost: null };
-
-export const limitsActive = (l: Limits) => l.maxWait != null || l.maxCost != null;
-
-/** A model with unknown wait/cost never qualifies under a limit on that axis. */
-export const qualifies = (m: Model, l: Limits) =>
-  (l.maxWait == null || (isPositiveFinite(m.e2eLatency) && m.e2eLatency <= l.maxWait)) &&
-  (l.maxCost == null || (isPositiveFinite(m.costPerTask) && m.costPerTask <= l.maxCost));

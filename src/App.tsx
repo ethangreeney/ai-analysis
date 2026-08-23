@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MapChart } from "./MapChart";
+import { Changelog } from "./Changelog";
+import { ComparisonCard } from "./ComparisonCard";
 import {
   Model,
   YMetric,
   XMode,
   Y_METRICS,
   X_MODES,
-  Limits,
-  NO_LIMITS,
   RelativeStat,
   relativeStats,
   allModels,
@@ -15,28 +15,17 @@ import {
   fmtCost,
   fmtDate,
   fmtSeconds,
-  fmtSecondsShort,
   isPositiveFinite,
-  limitsActive,
-  makeColorNorm,
-  qualifies,
   rampColor,
-  NEUTRAL_DOT_COLOR,
-  NEW_MODEL_COLOR,
 } from "./model";
 
 const RECENT_WINDOW_MONTHS = 6;
 const DAY_MS = 86_400_000;
 const REPO_URL = "https://github.com/ethangreeney/ai-analysis";
 const CARD_SHADOW = "0 1px 3px rgba(23,20,10,0.04), 0 8px 24px rgba(23,20,10,0.04)";
+const CHART_WIDTH = 1280;
+const CHART_BASE_HEIGHT = 720;
 const SAGE = { background: "#eaeee2", color: "#5b6b4c" };
-
-const dataRange = (values: (number | null)[]): [number, number] => {
-  const v = values.filter(isPositiveFinite);
-  return v.length ? [Math.min(...v) * 0.9, Math.max(...v) * 1.1] : [1, 10];
-};
-const WAIT_RANGE = dataRange(allModels.map((m) => m.e2eLatency));
-const COST_RANGE = dataRange(allModels.map((m) => m.costPerTask));
 
 const fmtIndex = (v: number | null) => (v == null ? "—" : v.toFixed(1));
 
@@ -55,17 +44,13 @@ const compactStats = (stats: RelativeStat[]) =>
     .map((stat) => (stat.value === "≈" ? stat.label : `${stat.value} ${stat.label}`))
     .join(" · ");
 
-// Shareable state lives in the URL hash: #y=coding&x=cost&q=claude&wait=30&cost=1
+// Shareable state lives in the URL hash: #y=coding&x=cost&q=claude&from=a&to=b
 function readHash() {
   const p = new URLSearchParams(window.location.hash.slice(1));
   const y: YMetric = p.get("y") === "coding" ? "coding" : "intelligence";
   const xRaw = p.get("x");
   const x: XMode = xRaw === "cost" || xRaw === "timeline" ? xRaw : "speed";
   const q = p.get("q") ?? "";
-  const wait = Number.parseFloat(p.get("wait") ?? "");
-  const cost = Number.parseFloat(p.get("cost") ?? "");
-  const maxWait = Number.isFinite(wait) && wait > 0 ? wait : null;
-  const maxCost = Number.isFinite(cost) && cost > 0 ? cost : null;
   const knownSlugs = new Set(allModels.map((m) => m.slug));
   const from = p.get("from");
   const to = p.get("to");
@@ -74,189 +59,11 @@ function readHash() {
     comparedSlugs.push(from);
     if (to != null && to !== from && knownSlugs.has(to)) comparedSlugs.push(to);
   }
-  return {
-    y,
-    x,
-    q,
-    maxWait,
-    maxCost,
-    limitsOn: maxWait != null || maxCost != null,
-    comparedSlugs,
-  };
+  return { y, x, q, comparedSlugs };
 }
 const initial = readHash();
 
-const trimNum = (v: number) => String(Number(v.toPrecision(3)));
-
-/** A model in the hero row: ramp dot, quiet role, name. */
-function ModelChip({
-  role,
-  model,
-  color,
-  onRemove,
-}: {
-  role: string;
-  model: Model;
-  color: string;
-  onRemove: () => void;
-}) {
-  return (
-    <div className="flex min-w-0 items-center gap-2 rounded-full border border-ink-100 bg-paper py-1.5 pl-2.5 pr-1.5">
-      <span
-        className="h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-card"
-        style={{ background: color }}
-        aria-hidden
-      />
-      <span className="comparison-mobile-hide shrink-0 text-[11px] text-ink-500">{role}</span>
-      <span className="comparison-mobile-hide shrink-0 text-ink-300" aria-hidden>
-        ·
-      </span>
-      <span className="truncate text-[12.5px] font-semibold leading-tight text-ink-900">
-        {model.displayName}
-      </span>
-      <button
-        onClick={onRemove}
-        aria-label={`Remove ${model.displayName}`}
-        className="tap-target-square flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[14px] leading-none text-ink-300 transition-colors hover:bg-ink-100 hover:text-ink-900"
-      >
-        ×
-      </button>
-    </div>
-  );
-}
-
-/** Big relative figure, quiet label underneath. Built to be screenshotted. */
-function StatBlock({ stat }: { stat: RelativeStat }) {
-  const unknown = stat.value === "—";
-  return (
-    <div className="min-w-0">
-      <div
-        className={`text-[20px] font-semibold leading-none tabular-nums ${
-          unknown ? "text-ink-300" : "text-ink-900"
-        }`}
-      >
-        {stat.value}
-      </div>
-      <div
-        className={`mt-1.5 text-[11px] leading-snug ${unknown ? "text-ink-300" : "text-ink-500"}`}
-      >
-        {stat.label}
-        {stat.detail && (
-          <span className="comparison-mobile-hide">
-            <span className="text-ink-300"> · </span>
-            <span className="tabular-nums text-ink-300">{stat.detail}</span>
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ModelPicker({ models, onSelect }: { models: Model[]; onSelect: (slug: string) => void }) {
-  const [value, setValue] = useState("");
-  const [open, setOpen] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const results = useMemo(() => {
-    const query = value.trim().toLowerCase();
-    const matches = query
-      ? models.filter(
-          (model) =>
-            model.displayName.toLowerCase().includes(query) ||
-            model.creator.toLowerCase().includes(query),
-        )
-      : models;
-    return matches.slice(0, 7);
-  }, [models, value]);
-
-  // Opening the picker is the whole point of "Find alternatives" — land the
-  // caret in it without a second click, even when autoFocus loses the race.
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  return (
-    <div className="relative min-w-0 flex-1 sm:w-64 sm:flex-none">
-      <input
-        ref={inputRef}
-        autoFocus
-        type="text"
-        value={value}
-        onFocus={() => setOpen(true)}
-        onChange={(event) => {
-          setValue(event.target.value);
-          setOpen(true);
-          setActiveIndex(0);
-        }}
-        onKeyDown={(event) => {
-          if (event.key === "Escape") {
-            event.stopPropagation();
-            setOpen(false);
-          } else if (event.key === "ArrowDown" && results.length) {
-            event.preventDefault();
-            setOpen(true);
-            setActiveIndex((index) => Math.min(index + 1, results.length - 1));
-          } else if (event.key === "ArrowUp" && results.length) {
-            event.preventDefault();
-            setOpen(true);
-            setActiveIndex((index) => Math.max(index - 1, 0));
-          } else if (event.key === "Enter" && open && results[activeIndex]) {
-            event.preventDefault();
-            onSelect(results[activeIndex].slug);
-            setOpen(false);
-          }
-        }}
-        placeholder="Which model do you use now?"
-        aria-label="Choose the model you use now"
-        role="combobox"
-        aria-autocomplete="list"
-        aria-expanded={open}
-        aria-controls="current-model-options"
-        aria-activedescendant={
-          open && results[activeIndex] ? `model-option-${results[activeIndex].slug}` : undefined
-        }
-        className="tap-target h-9 w-full rounded-full border border-ink-300 bg-card px-3.5 text-[12.5px] text-ink-900 placeholder:text-ink-300 focus:border-ink-900 focus:outline-none"
-      />
-      {open && (
-        <div
-          id="current-model-options"
-          role="listbox"
-          className="model-picker-menu absolute left-0 top-full z-40 mt-2 max-h-64 w-[calc(100vw-2rem)] max-w-80 overflow-y-auto rounded-xl border border-ink-100 bg-card p-1.5"
-          style={{ boxShadow: "0 1px 2px rgba(23,20,10,0.05), 0 16px 40px rgba(23,20,10,0.10)" }}
-        >
-          {results.length ? (
-            results.map((model, index) => (
-              <button
-                key={model.slug}
-                id={`model-option-${model.slug}`}
-                role="option"
-                aria-selected={index === activeIndex}
-                tabIndex={-1}
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => {
-                  onSelect(model.slug);
-                  setOpen(false);
-                }}
-                className={`tap-target flex w-full items-baseline justify-between gap-3 rounded-lg px-2.5 py-2 text-left transition-colors ${
-                  index === activeIndex ? "bg-ink-50" : "hover:bg-ink-50"
-                }`}
-              >
-                <span className="text-[12px] font-medium leading-tight text-ink-900">
-                  {model.displayName}
-                </span>
-                <span className="shrink-0 text-[11px] text-ink-300">{model.creator}</span>
-              </button>
-            ))
-          ) : (
-            <div className="px-2.5 py-3 text-[12px] text-ink-500">No matching model</div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function AlternativesPanel({
+function AlternativesList({
   baseline,
   alternatives,
   selectedSlug,
@@ -271,15 +78,9 @@ function AlternativesPanel({
 }) {
   const metric = Y_METRICS[yMetric];
   return (
-    <aside className="alternatives-panel hidden xl:flex w-[19.5rem] shrink-0 flex-col self-stretch overflow-y-auto border-l border-ink-100 px-4 py-4">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-[13px] font-semibold leading-none text-ink-900">Top alternatives</h2>
-        <span className="text-[11px] text-ink-300">Best first</span>
-      </div>
-      <p className="mt-1.5 text-[11px] leading-snug text-ink-500">
-        Compared with {baseline.displayName}.
-      </p>
-      <div className="mt-2.5 divide-y divide-ink-100">
+    <div className="alternatives-panel px-1">
+      <h2 className="text-[12.5px] font-semibold leading-none text-ink-900">Top alternatives</h2>
+      <div className="mt-1.5 divide-y divide-ink-100">
         {alternatives.length ? (
           alternatives.map(({ model, tier }, index) => {
             const selected = model.slug === selectedSlug;
@@ -323,7 +124,7 @@ function AlternativesPanel({
           </div>
         )}
       </div>
-    </aside>
+    </div>
   );
 }
 
@@ -416,7 +217,7 @@ function ColorLegend({
   );
 }
 
-function HoverCard({ m, yMetric, caption }: { m: Model; yMetric: YMetric; caption?: string }) {
+function HoverCard({ m, yMetric }: { m: Model; yMetric: YMetric }) {
   const active = Y_METRICS[yMetric];
   const other = Y_METRICS[yMetric === "intelligence" ? "coding" : "intelligence"];
   const rows = [
@@ -434,14 +235,7 @@ function HoverCard({ m, yMetric, caption }: { m: Model; yMetric: YMetric; captio
       className="pointer-events-none absolute top-3 right-3 w-[18.5rem] rounded-xl border border-ink-100 bg-card/95 px-4 py-3.5 text-ink-900 z-20 backdrop-blur"
       style={{ boxShadow: "0 1px 2px rgba(23,20,10,0.04), 0 18px 48px rgba(23,20,10,0.10)" }}
     >
-      <div className="flex items-baseline justify-between gap-3">
-        <div className="text-[11.5px] text-ink-500">{m.creator}</div>
-        {caption && (
-          <div className="rounded-full bg-ink-50 px-2 py-0.5 text-[10.5px] font-medium leading-none text-ink-700">
-            {caption}
-          </div>
-        )}
-      </div>
+      <div className="text-[11.5px] text-ink-500">{m.creator}</div>
       <div className="mt-1.5 text-[15px] font-semibold leading-tight text-ink-900">
         {m.displayName}
       </div>
@@ -460,21 +254,49 @@ function HoverCard({ m, yMetric, caption }: { m: Model; yMetric: YMetric; captio
   );
 }
 
-// Search — spotlight matching models, dim the rest.
+/**
+ * The one control: typing spotlights matches on the map, and picking a result
+ * drops that model straight into the comparison. Search and "which model do I
+ * use?" were the same question all along.
+ */
 function SearchBox({
   value,
   onChange,
+  results,
+  onSelect,
   matchCount,
   offViewCount,
 }: {
   value: string;
   onChange: (v: string) => void;
+  results: Model[];
+  onSelect: (slug: string) => void;
   matchCount: number | null;
   offViewCount: number;
 }) {
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
   const active = value.trim().length > 0;
+  const menuOpen = open && active && results.length > 0;
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onMouseDown = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onMouseDown);
+    return () => document.removeEventListener("mousedown", onMouseDown);
+  }, [menuOpen]);
+
+  const pick = (slug: string) => {
+    onSelect(slug);
+    onChange("");
+    setOpen(false);
+  };
+
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
+    <div ref={rootRef} className="relative flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
       <div className="relative min-w-0 flex-1 sm:flex-none">
         <svg
           className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -493,16 +315,40 @@ function SearchBox({
           type="text"
           name="model-search"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={menuOpen}
+          aria-controls="model-search-results"
+          aria-activedescendant={
+            menuOpen && results[activeIndex] ? `search-option-${results[activeIndex].slug}` : undefined
+          }
+          onFocus={() => setOpen(true)}
+          onChange={(e) => {
+            onChange(e.target.value);
+            setOpen(true);
+            setActiveIndex(0);
+          }}
           onKeyDown={(event) => {
             if (event.key === "Escape" && active) {
               event.stopPropagation();
               onChange("");
+              setOpen(false);
+            } else if (event.key === "ArrowDown" && results.length) {
+              event.preventDefault();
+              setOpen(true);
+              setActiveIndex((i) => Math.min(i + 1, results.length - 1));
+            } else if (event.key === "ArrowUp" && results.length) {
+              event.preventDefault();
+              setActiveIndex((i) => Math.max(i - 1, 0));
+            } else if (event.key === "Enter" && menuOpen && results[activeIndex]) {
+              event.preventDefault();
+              pick(results[activeIndex].slug);
+              event.currentTarget.blur();
             }
           }}
-          placeholder="Search models…"
+          placeholder="Search or compare a model…"
           aria-label="Search models"
-          className="h-8 w-full rounded-full border border-ink-100 bg-card pl-8 pr-8 text-[12px] text-ink-900 placeholder:text-ink-300 transition-colors focus:border-ink-300 focus:outline-none sm:w-44"
+          className="h-8 w-full rounded-full border border-ink-100 bg-card pl-8 pr-8 text-[12px] text-ink-900 placeholder:text-ink-300 transition-colors focus:border-ink-300 focus:outline-none sm:w-56"
         />
         {active && (
           <button
@@ -512,6 +358,34 @@ function SearchBox({
           >
             ×
           </button>
+        )}
+        {menuOpen && (
+          <div
+            id="model-search-results"
+            role="listbox"
+            className="model-picker-menu absolute left-0 top-full z-40 mt-2 max-h-72 w-[calc(100vw-2rem)] max-w-80 overflow-y-auto rounded-xl border border-ink-100 bg-card p-1.5"
+            style={{ boxShadow: "0 1px 2px rgba(23,20,10,0.05), 0 16px 40px rgba(23,20,10,0.10)" }}
+          >
+            {results.map((model, index) => (
+              <button
+                key={model.slug}
+                id={`search-option-${model.slug}`}
+                role="option"
+                aria-selected={index === activeIndex}
+                tabIndex={-1}
+                onMouseEnter={() => setActiveIndex(index)}
+                onClick={() => pick(model.slug)}
+                className={`tap-target flex w-full items-baseline justify-between gap-3 rounded-lg px-2.5 py-2 text-left transition-colors ${
+                  index === activeIndex ? "bg-ink-50" : "hover:bg-ink-50"
+                }`}
+              >
+                <span className="min-w-0 truncate text-[12px] font-medium leading-tight text-ink-900">
+                  {model.displayName}
+                </span>
+                <span className="shrink-0 text-[11px] text-ink-300">{model.creator}</span>
+              </button>
+            ))}
+          </div>
         )}
       </div>
       {active && (
@@ -527,60 +401,37 @@ function SearchBox({
   );
 }
 
-// One limit knob: log-mapped slider where the far right means "any".
-function LimitSlider({
-  label,
-  range,
-  value,
-  onChange,
-  fmt,
-}: {
-  label: string;
-  range: [number, number];
-  value: number | null;
-  onChange: (v: number | null) => void;
-  fmt: (v: number) => string;
-}) {
-  const [lo, hi] = range;
-  const t = value == null ? 1 : Math.max(0, Math.min(1, Math.log(value / lo) / Math.log(hi / lo)));
-  return (
-    <label className="flex items-center gap-2">
-      <span className="text-[11.5px] text-ink-500 whitespace-nowrap">{label}</span>
-      <input
-        type="range"
-        name={label}
-        min={0}
-        max={1}
-        step={0.005}
-        value={t}
-        onChange={(e) => {
-          const u = Number.parseFloat(e.target.value);
-          onChange(u >= 1 ? null : lo * Math.pow(hi / lo, u));
-        }}
-        className="limit tap-target w-28 sm:w-32"
-        aria-label={label}
-        aria-valuetext={value == null ? "Any" : fmt(value)}
-      />
-      <span className="w-12 text-[11.5px] font-medium tabular-nums text-ink-900">
-        {value == null ? "any" : fmt(value)}
-      </span>
-    </label>
-  );
-}
-
 export default function App() {
   const [yMetric, setYMetric] = useState<YMetric>(initial.y);
   const [xMode, setXMode] = useState<XMode>(initial.x);
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [query, setQuery] = useState(initial.q);
-  const [limitsOn, setLimitsOn] = useState(initial.limitsOn);
-  const [maxWait, setMaxWait] = useState<number | null>(initial.maxWait);
-  const [maxCost, setMaxCost] = useState<number | null>(initial.maxCost);
-  const [comparisonOn, setComparisonOn] = useState(initial.comparedSlugs.length > 0);
   const [comparedSlugs, setComparedSlugs] = useState<string[]>(initial.comparedSlugs);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
-  const [optionsOn, setOptionsOn] = useState(initial.y !== "intelligence" || initial.limitsOn);
   const chartScrollRef = useRef<HTMLDivElement>(null);
+  const chartCanvasRef = useRef<HTMLDivElement>(null);
+  const [chartHeight, setChartHeight] = useState(CHART_BASE_HEIGHT);
+
+  // The chart draws on a fixed 1280-unit width and takes its height from the
+  // space it actually has, so it fills the card instead of letterboxing inside
+  // it. Clamped so extreme layouts never flatten or stretch the plot.
+  useEffect(() => {
+    const el = chartCanvasRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      if (width < 1 || height < 1) return;
+      const next = Math.round(
+        Math.min(1150, Math.max(540, (CHART_WIDTH * height) / width)),
+      );
+      setChartHeight((prev) => (Math.abs(prev - next) > 6 ? next : prev));
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Comparison isn't a mode you switch on — clicking any dot starts one.
+  const comparisonOn = comparedSlugs.length > 0;
 
   const metric = Y_METRICS[yMetric];
   const xc = X_MODES[xMode];
@@ -726,14 +577,6 @@ export default function App() {
     const v = viewModels.map((m) => xc.colorValue(m)).filter(isPositiveFinite);
     return v.length ? [Math.min(...v), Math.max(...v)] : [1, 10];
   }, [viewModels, xc]);
-  // Chips carry the same ramp color the dot has on the map, so the strip and
-  // the chart read as one picture.
-  const colorNorm = useMemo(() => makeColorNorm(colorDomain), [colorDomain]);
-  const dotColor = (model: Model) => {
-    const v = xc.colorValue(model);
-    return isPositiveFinite(v) ? rampColor(colorNorm(v)) : NEUTRAL_DOT_COLOR;
-  };
-
   const recentCutoffMs = useMemo(() => {
     const cutoff = new Date(fetchedAtMs);
     cutoff.setUTCMonth(cutoff.getUTCMonth() - RECENT_WINDOW_MONTHS);
@@ -790,16 +633,12 @@ export default function App() {
     return [...matchedSlugs].filter((slug) => !plottable.has(slug)).length;
   }, [matchedSlugs, viewModels]);
 
-  const limits: Limits = limitsOn ? { maxWait, maxCost } : NO_LIMITS;
-  const limited = limitsActive(limits);
-  const bestPick = useMemo(() => {
-    if (!limited) return null;
-    return (
-      viewModels
-        .filter((m) => qualifies(m, limits) && (!matchedSlugs || matchedSlugs.has(m.slug)))
-        .sort((a, b) => metric.value(b)! - metric.value(a)!)[0] ?? null
-    );
-  }, [limited, matchedSlugs, maxCost, maxWait, metric, viewModels]);
+  // The search dropdown offers what the current view can actually plot, so a
+  // pick never lands in a comparison that immediately says "not in this view".
+  const searchResults = useMemo(() => {
+    if (!matchedSlugs) return [];
+    return viewModels.filter((m) => matchedSlugs.has(m.slug)).slice(0, 7);
+  }, [matchedSlugs, viewModels]);
 
   // When the chart is wider than a phone viewport, keep the active comparison
   // in view instead of opening at the unrelated left edge of the map.
@@ -862,12 +701,7 @@ export default function App() {
       setYMetric(h.y);
       setXMode(h.x);
       setQuery(h.q);
-      setLimitsOn(h.limitsOn);
-      setMaxWait(h.maxWait);
-      setMaxCost(h.maxCost);
       setComparedSlugs(h.comparedSlugs);
-      setComparisonOn(h.comparedSlugs.length > 0);
-      setOptionsOn(h.y !== "intelligence" || h.limitsOn);
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -879,8 +713,6 @@ export default function App() {
     if (yMetric !== "intelligence") p.set("y", yMetric);
     if (xMode !== "speed") p.set("x", xMode);
     if (query.trim()) p.set("q", query.trim());
-    if (limitsOn && maxWait != null) p.set("wait", trimNum(maxWait));
-    if (limitsOn && maxCost != null) p.set("cost", trimNum(maxCost));
     if (comparedSlugs[0]) p.set("from", comparedSlugs[0]);
     if (comparedSlugs[1]) p.set("to", comparedSlugs[1]);
     const hash = p.toString();
@@ -892,16 +724,12 @@ export default function App() {
       // Sandboxed/about:blank documents (README screenshot capture) refuse
       // replaceState — the URL mirror is best-effort there.
     }
-  }, [yMetric, xMode, query, limitsOn, maxWait, maxCost, comparedSlugs]);
+  }, [yMetric, xMode, query, comparedSlugs]);
 
-  useEffect(
-    () => setCopyState("idle"),
-    [yMetric, xMode, query, limitsOn, maxWait, maxCost, comparedSlugs],
-  );
+  useEffect(() => setCopyState("idle"), [yMetric, xMode, query, comparedSlugs]);
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || !comparisonOn) return;
-      setComparisonOn(false);
       setComparedSlugs([]);
     };
     window.addEventListener("keydown", onKeyDown);
@@ -909,7 +737,6 @@ export default function App() {
   }, [comparisonOn]);
 
   const selectForComparison = (slug: string) => {
-    setComparisonOn(true);
     setComparedSlugs((current) => {
       if (current[0] === slug) return current.slice(1);
       if (current[1] === slug) return current.slice(0, 1);
@@ -918,10 +745,7 @@ export default function App() {
     });
     setHoveredSlug(null);
   };
-  const clearComparison = () => {
-    setComparisonOn(false);
-    setComparedSlugs([]);
-  };
+  const clearComparison = () => setComparedSlugs([]);
   const copyComparisonLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -947,7 +771,6 @@ export default function App() {
   };
 
   const hovered = hoveredSlug ? viewModels.find((m) => m.slug === hoveredSlug) : null;
-  const cardModel = hovered ?? (limited ? bestPick : null);
   const subtitle = xc.subtitle.replace("Up is intelligence", `Up is ${metric.noun}`);
   const stats =
     baselineModel && candidateModel
@@ -956,6 +779,7 @@ export default function App() {
   const comparisonUnavailable = comparedModels.find(
     (model) => !viewModels.some((visible) => visible.slug === model.slug),
   );
+  const shareUrl = window.location.href;
 
   return (
     <div
@@ -984,16 +808,8 @@ export default function App() {
               {subtitle}
             </p>
           </div>
-          <div className="comparison-mobile-hide hidden shrink-0 text-right sm:block">
-            <div className="text-[11.5px] text-ink-500">Updated {fmtDate(fetchedAtMs)}</div>
-            {newestModel && (
-              <div className="mt-1 text-[11.5px] text-ink-500">
-                Newest:{" "}
-                <span className="font-medium" style={{ color: NEW_MODEL_COLOR }}>
-                  {newestModel.displayName}
-                </span>
-              </div>
-            )}
+          <div className="comparison-mobile-hide hidden shrink-0 sm:block">
+            <Changelog models={allModels} onSelect={selectForComparison} />
           </div>
         </header>
 
@@ -1007,270 +823,56 @@ export default function App() {
             value={xMode}
             onChange={setXMode}
           />
-          <div className="comparison-mobile-hide ml-auto flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+          {/* Full width on phones — squeezed beside the axis switch there was
+              barely room for the word "Search". */}
+          <div className="flex w-full min-w-0 items-center gap-2 sm:ml-auto sm:w-auto sm:gap-3">
             <SearchBox
               value={query}
               onChange={setQuery}
+              results={searchResults}
+              onSelect={selectForComparison}
               matchCount={matchCount}
               offViewCount={offViewCount}
             />
-            <button
-              onClick={() => (comparisonOn ? clearComparison() : setComparisonOn(true))}
-              aria-pressed={comparisonOn}
-              className={`tap-target h-8 shrink-0 rounded-full border px-3.5 text-[12px] font-semibold transition-colors ${
-                comparisonOn
-                  ? "border-ink-900 bg-ink-900 text-paper"
-                  : "border-ink-300 bg-card text-ink-900 hover:border-ink-900 hover:bg-ink-50"
-              }`}
-            >
-              <span className="sm:hidden">Compare</span>
-              <span className="hidden sm:inline">Find alternatives</span>
-            </button>
-            <button
-              onClick={() => setOptionsOn((value) => !value)}
-              aria-expanded={optionsOn}
-              aria-label="Options"
-              className={`tap-target-square h-8 shrink-0 rounded-full border px-3 text-[12px] transition-colors ${
-                optionsOn
-                  ? "border-ink-300 bg-ink-50 font-medium text-ink-900"
-                  : "border-transparent text-ink-500 hover:bg-ink-50 hover:text-ink-900"
-              }`}
-            >
-              <span className="sm:hidden">⋯</span>
-              <span className="hidden sm:inline">
-                Options{yMetric !== "intelligence" || limitsOn ? " ·" : ""}
-              </span>
-            </button>
           </div>
         </div>
 
-        {optionsOn && (
-          <div className="comparison-mobile-hide shrink-0 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-ink-100 py-2.5">
-            <div className="flex items-center gap-2">
-              <span className="text-[11.5px] text-ink-500">Score</span>
-              <SegmentSwitch
-                ariaLabel="Score"
-                options={(Object.keys(Y_METRICS) as YMetric[]).map((k) => ({
-                  value: k,
-                  label: Y_METRICS[k].label,
-                }))}
-                value={yMetric}
-                onChange={setYMetric}
-              />
-            </div>
-            <div className="hidden md:block">
-              <FrontierLegend label={xc.frontierLabel} note={xc.frontierNote(metric.noun)} />
-            </div>
-            <div className="hidden md:block">
-              <ColorLegend title={xc.colorTitle} domain={colorDomain} fmt={xc.fmtColor} />
-            </div>
-            <button
-              onClick={() => setLimitsOn((value) => !value)}
-              aria-pressed={limitsOn}
-              className={`tap-target rounded-full border px-3 py-1 text-[11.5px] transition-colors ${
-                limitsOn
-                  ? "border-ink-900 bg-ink-900 font-medium text-paper"
-                  : "border-ink-100 text-ink-500 hover:text-ink-900"
-              }`}
-            >
-              {limitsOn ? "Limits on" : "Set limits"}
-            </button>
-          </div>
-        )}
-
-        {limitsOn && (
-          <div className="comparison-mobile-hide shrink-0 flex flex-wrap items-center gap-x-8 gap-y-2 border-b border-ink-100 py-2.5">
-            <LimitSlider
-              label="Max wait"
-              range={WAIT_RANGE}
-              value={maxWait}
-              onChange={setMaxWait}
-              fmt={fmtSecondsShort}
-            />
-            <LimitSlider
-              label="Max cost/task"
-              range={COST_RANGE}
-              value={maxCost}
-              onChange={setMaxCost}
-              fmt={fmtCost}
-            />
-            <div className="text-[11.5px] text-ink-500">
-              {limited ? (
-                bestPick ? (
-                  <>
-                    Top pick under these limits:{" "}
-                    <span className="font-semibold text-ink-900">{bestPick.displayName}</span>
-                  </>
-                ) : (
-                  "No model fits these limits."
+        {baselineModel && (
+          <div className="mt-3 shrink-0 lg:hidden">
+            <ComparisonCard
+              baseline={baselineModel}
+              candidate={candidateModel}
+              stats={comparisonUnavailable ? [] : stats}
+              metric={metric}
+              unavailableName={comparisonUnavailable?.displayName ?? null}
+              copyState={copyState}
+              shareUrl={shareUrl}
+              onSwap={() =>
+                setComparedSlugs((current) =>
+                  current.length === 2 ? [current[1], current[0]] : current,
                 )
-              ) : (
-                "Drag a slider to set a limit — the smartest model that fits gets flagged."
-              )}
-            </div>
-            {limited && (
-              <button
-                onClick={() => {
-                  setMaxWait(null);
-                  setMaxCost(null);
-                }}
-                aria-label="Clear limits"
-                className="tap-target px-2 text-[11.5px] text-ink-500 underline decoration-ink-300 underline-offset-2 hover:text-ink-900"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-        )}
-
-        {comparisonOn && (
-          <div
-            className="comparison-strip relative z-30 mt-3 shrink-0 rounded-2xl border border-ink-100 bg-card px-4 py-3.5 sm:px-5 sm:py-4"
-            style={{ boxShadow: CARD_SHADOW }}
-          >
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-              {baselineModel ? (
-                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 sm:flex-none sm:flex-nowrap sm:gap-2.5">
-                  <ModelChip
-                    role="Using now"
-                    model={baselineModel}
-                    color={dotColor(baselineModel)}
-                    onRemove={() => setComparedSlugs((current) => current.slice(1))}
-                  />
-                  {candidateModel ? (
-                    <button
-                      onClick={() =>
-                        setComparedSlugs((current) =>
-                          current.length === 2 ? [current[1], current[0]] : current,
-                        )
-                      }
-                      aria-label="Swap the models"
-                      title="Swap models"
-                      className="tap-target-square flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[13px] leading-none text-ink-300 transition-colors hover:bg-ink-50 hover:text-ink-900"
-                    >
-                      ⇄
-                    </button>
-                  ) : (
-                    <span className="shrink-0 text-ink-300" aria-hidden>
-                      →
-                    </span>
-                  )}
-                  {candidateModel ? (
-                    <ModelChip
-                      role="Considering"
-                      model={candidateModel}
-                      color={dotColor(candidateModel)}
-                      onRemove={() => setComparedSlugs((current) => current.slice(0, 1))}
-                    />
-                  ) : (
-                    <span className="truncate rounded-full border border-dashed border-ink-300 px-3 py-1.5 text-[12px] text-ink-500">
-                      Considering · nothing yet
-                    </span>
-                  )}
-                </div>
-              ) : (
-                <div className="flex w-full min-w-0 items-center gap-2 sm:w-auto">
-                  <span className="comparison-mobile-hide shrink-0 text-[12px] text-ink-500">
-                    Using now
-                  </span>
-                  <ModelPicker models={viewModels} onSelect={selectForComparison} />
-                  <button
-                    onClick={clearComparison}
-                    aria-label="Close comparison"
-                    className="comparison-mobile-show-flex tap-target-square hidden shrink-0 items-center justify-center rounded-full text-[16px] leading-none text-ink-300 hover:bg-ink-50 hover:text-ink-900"
-                  >
-                    ×
-                  </button>
-                </div>
-              )}
-
-              {baselineModel && (
-                <div className="hidden h-9 w-px shrink-0 bg-ink-100 sm:block" aria-hidden />
-              )}
-
-              {baselineModel &&
-                (comparisonUnavailable ? (
-                  <p className="min-w-0 flex-1 text-[12px] leading-snug text-ink-500">
-                    <span className="font-semibold text-ink-900">
-                      {comparisonUnavailable.displayName}
-                    </span>{" "}
-                    isn’t available in this view.
-                  </p>
-                ) : stats.length ? (
-                  <div className="flex w-full min-w-0 items-start justify-between gap-4 sm:w-auto sm:flex-1 sm:justify-start sm:gap-9">
-                    {stats.map((stat) => (
-                      <StatBlock key={stat.key} stat={stat} />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="min-w-0 flex-1 text-[12px] leading-snug text-ink-500">
-                    Pick a challenger from the shortlist, or click any dot.
-                  </p>
-                ))}
-
-              <div className="ml-auto flex shrink-0 items-center gap-2">
-                {baselineModel && copyState === "failed" ? (
-                  <input
-                    autoFocus
-                    readOnly
-                    value={window.location.href}
-                    onFocus={(event) => event.currentTarget.select()}
-                    onClick={(event) => event.currentTarget.select()}
-                    aria-label="Comparison link, selected for copying"
-                    className="w-36 rounded-full border border-ink-300 px-3 py-1.5 text-[11px] text-ink-700 focus:border-ink-900 focus:outline-none sm:w-48"
-                  />
-                ) : baselineModel ? (
-                  <button
-                    onClick={copyComparisonLink}
-                    className="tap-target h-8 rounded-full bg-ink-900 px-3.5 text-[12px] font-medium text-paper transition-colors hover:bg-ink-700"
-                  >
-                    <span className="comparison-mobile-hide">
-                      {copyState === "copied" ? "Link copied" : "Copy link"}
-                    </span>
-                    <span className="comparison-mobile-show hidden">
-                      {copyState === "copied" ? "Copied" : "Copy"}
-                    </span>
-                  </button>
-                ) : null}
-                <button
-                  onClick={clearComparison}
-                  aria-label="Close comparison"
-                  className={`${
-                    baselineModel ? "" : "comparison-mobile-hide "
-                  }tap-target-square flex items-center justify-center rounded-full text-[16px] leading-none text-ink-300 hover:bg-ink-50 hover:text-ink-900`}
-                >
-                  ×
-                </button>
-              </div>
-            </div>
-
-            {baselineModel && quickAlternatives.length > 0 && (
-              <div className="mobile-alternatives xl:hidden mt-3 flex items-stretch gap-2 overflow-x-auto border-t border-ink-100 pt-3">
-                <span className="shrink-0 self-center text-[11px] text-ink-500">
-                  <span className="comparison-mobile-hide">Top alternatives</span>
-                  <span className="comparison-mobile-show hidden">Try</span>
-                </span>
+              }
+              onClearBaseline={() => setComparedSlugs((current) => current.slice(1))}
+              onClearCandidate={() => setComparedSlugs((current) => current.slice(0, 1))}
+              onClose={clearComparison}
+              onCopyLink={copyComparisonLink}
+            />
+            {quickAlternatives.length > 0 && (
+              <div className="mobile-alternatives lg:hidden mt-2 flex max-w-[520px] items-stretch gap-2 overflow-x-auto">
                 {quickAlternatives.map(({ model }, index) => (
                   <button
                     key={model.slug}
                     onClick={() => selectForComparison(model.slug)}
                     className={`${
-                      index >= 2 ? "comparison-mobile-hide " : ""
+                      index >= 3 ? "comparison-mobile-hide " : ""
                     }tap-target shrink-0 rounded-xl border px-3 py-1.5 text-left transition-colors ${
                       candidateModel?.slug === model.slug
                         ? "border-ink-900 bg-ink-900 text-paper"
-                        : "border-ink-100 bg-paper text-ink-900 hover:border-ink-300"
+                        : "border-ink-100 bg-card text-ink-900 hover:border-ink-300"
                     }`}
                   >
                     <span className="block whitespace-nowrap text-[11.5px] font-semibold leading-tight">
                       {model.displayName}
-                    </span>
-                    <span
-                      className={`comparison-mobile-hide block whitespace-nowrap text-[10.5px] leading-snug tabular-nums ${
-                        candidateModel?.slug === model.slug ? "text-ink-300" : "text-ink-500"
-                      }`}
-                    >
-                      {compactStats(relativeStats(baselineModel, model, metric))}
                     </span>
                   </button>
                 ))}
@@ -1288,8 +890,16 @@ export default function App() {
               ref={chartScrollRef}
               className="mobile-chart-scroll relative min-w-0 flex-1 overflow-x-auto"
             >
-              <div className={`h-full ${baselineModel ? "min-w-[780px]" : "min-w-[860px]"}`}>
+              {/* Wide screens fit the whole chart, no scrolling. Narrow ones
+                  scroll a canvas sized from the height available — sizing it to
+                  a fixed width instead just letterboxes the plot inside a
+                  mostly empty scroll area. */}
+              <div
+                ref={chartCanvasRef}
+                className="h-full w-full max-lg:aspect-[16/9] max-lg:w-auto max-lg:min-w-full"
+              >
                 <MapChart
+                  height={chartHeight}
                   models={allModels}
                   yMetric={yMetric}
                   xMode={xMode}
@@ -1298,46 +908,77 @@ export default function App() {
                   matchedSlugs={matchedSlugs}
                   newestSlugs={newestSlugs}
                   recentCutoffMs={recentCutoffMs}
-                  limits={limits}
-                  bestPickSlug={bestPick?.slug ?? null}
                   colorDomain={colorDomain}
                   comparedSlugs={comparedSlugs}
                   alternativeSlugs={alternativeSlugs}
                   onSelect={selectForComparison}
                 />
               </div>
-              {cardModel && (
-                <HoverCard
-                  m={cardModel}
-                  yMetric={yMetric}
-                  caption={!hovered && cardModel === bestPick ? "Top pick" : undefined}
-                />
-              )}
+              {hovered && <HoverCard m={hovered} yMetric={yMetric} />}
             </div>
             {baselineModel && (
-              <AlternativesPanel
-                baseline={baselineModel}
-                alternatives={recommendations}
-                selectedSlug={candidateModel?.slug ?? null}
-                yMetric={yMetric}
-                onSelect={selectForComparison}
-              />
+              <aside className="hidden lg:flex w-[20rem] xl:w-[23rem] shrink-0 flex-col gap-3 self-stretch overflow-y-auto border-l border-ink-100 bg-paper p-3.5">
+                <ComparisonCard
+                  baseline={baselineModel}
+                  candidate={candidateModel}
+                  stats={comparisonUnavailable ? [] : stats}
+                  metric={metric}
+                  unavailableName={comparisonUnavailable?.displayName ?? null}
+                  copyState={copyState}
+                  shareUrl={shareUrl}
+                  onSwap={() =>
+                    setComparedSlugs((current) =>
+                      current.length === 2 ? [current[1], current[0]] : current,
+                    )
+                  }
+                  onClearBaseline={() => setComparedSlugs((current) => current.slice(1))}
+                  onClearCandidate={() => setComparedSlugs((current) => current.slice(0, 1))}
+                  onClose={clearComparison}
+                  onCopyLink={copyComparisonLink}
+                />
+                <AlternativesList
+                  baseline={baselineModel}
+                  alternatives={recommendations}
+                  selectedSlug={candidateModel?.slug ?? null}
+                  yMetric={yMetric}
+                  onSelect={selectForComparison}
+                />
+              </aside>
             )}
           </div>
         </main>
 
-        <footer className="comparison-mobile-hide shrink-0 pt-3 mt-3 border-t border-ink-100 text-[11px] leading-snug text-ink-500">
-          Data from Artificial Analysis. {xc.footnote}
-          {yMetric === "coding" &&
-            " Cost figures are per Intelligence Index task — AA doesn’t publish per-coding-task cost."}{" "}
-          <a
-            href={REPO_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="underline decoration-ink-300 underline-offset-2 transition-colors hover:text-ink-900"
-          >
-            Source on GitHub
-          </a>
+        <footer className="comparison-mobile-hide shrink-0 pt-2.5 mt-3 border-t border-ink-100">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <SegmentSwitch
+              ariaLabel="Score"
+              options={(Object.keys(Y_METRICS) as YMetric[]).map((k) => ({
+                value: k,
+                label: Y_METRICS[k].label,
+              }))}
+              value={yMetric}
+              onChange={setYMetric}
+            />
+            <div className="hidden md:block">
+              <FrontierLegend label={xc.frontierLabel} note={xc.frontierNote(metric.noun)} />
+            </div>
+            <div className="hidden lg:block">
+              <ColorLegend title={xc.colorTitle} domain={colorDomain} fmt={xc.fmtColor} />
+            </div>
+            <a
+              href={REPO_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="ml-auto text-[11px] text-ink-500 underline decoration-ink-300 underline-offset-2 transition-colors hover:text-ink-900"
+            >
+              Data from Artificial Analysis · Source
+            </a>
+          </div>
+          <p className="hidden xl:block pt-2 text-[11px] leading-snug text-ink-300">
+            {xc.footnote}
+            {yMetric === "coding" &&
+              " Cost figures are per Intelligence Index task — AA doesn’t publish per-coding-task cost."}
+          </p>
         </footer>
       </div>
     </div>
