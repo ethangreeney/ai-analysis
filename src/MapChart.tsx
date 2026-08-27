@@ -378,6 +378,12 @@ export function MapChart({
         .range([0, innerW])
     : scaleLog().domain([xHigh, xLow]).range([0, innerW]);
 
+  // Every path below is laid out in scale space, so it has to be recomputed
+  // whenever the canvas or either domain moves — not only when the data behind
+  // it changes. Without this the frontier keeps the shape it had before the
+  // comparison rail resized the chart, until an unrelated re-render fixes it.
+  const geometry = [innerW, innerH, xMin, xMax, metricMin, metricMax].join(":");
+
   const colorNorm = useMemo(() => makeColorNorm(colorDomain), [colorDomain]);
   const markerColor = (m: Model) => {
     const v = xc.colorValue(m);
@@ -445,7 +451,7 @@ export function MapChart({
 
   const labels = useMemo(
     () => placeLabels(labeledModels, xy, innerW, innerH, visibleModels),
-    [labeledModels, visibleModels, metricMin, metricMax],
+    [labeledModels, visibleModels, geometry],
   );
 
   // Frontier path. Scatter: polyline from the left edge through the frontier
@@ -469,7 +475,7 @@ export function MapChart({
       ...pts.map((p) => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`),
       `V${innerH}`,
     ].join(" ");
-  }, [frontier, timeline, visibleModels, metricMin, metricMax]);
+  }, [frontier, timeline, geometry]);
 
   /** Anchor for the quiet frontier caption — the flat run nothing sits above. */
   const frontierTag = useMemo(() => {
@@ -480,7 +486,7 @@ export function MapChart({
     }
     const top = xy(frontier[frontier.length - 1]);
     return { x: 6, y: top.y - 9, anchor: "start" as const };
-  }, [frontier, timeline, metricMin, metricMax]);
+  }, [frontier, timeline, geometry]);
 
   const isDim = (m: Model, isHovered: boolean) => {
     if (isHovered || isCompared(m.slug) || isAlternative(m.slug)) return false;
@@ -571,7 +577,7 @@ export function MapChart({
     return `M${sx.toFixed(1)},${sy.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${ex.toFixed(
       1,
     )},${ey.toFixed(1)}`;
-  }, [comparedSlugs, metricModels, xMode, yMetric, metricMin, metricMax]);
+  }, [comparedSlugs, metricModels, xMode, yMetric, geometry]);
 
   return (
     <svg
