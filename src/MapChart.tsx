@@ -485,7 +485,10 @@ export function MapChart({
       return { x: innerW - 4, y: last.y - 9, anchor: "end" as const };
     }
     const top = xy(frontier[frontier.length - 1]);
-    return { x: 6, y: top.y - 9, anchor: "start" as const };
+    // When the leader itself sits at the left edge, the caption would land on
+    // its dot and "New" tag — tuck it under the line there instead.
+    const crowded = top.x < 70;
+    return { x: 6, y: crowded ? top.y + top.r + 16 : top.y - 9, anchor: "start" as const };
   }, [frontier, timeline, geometry]);
 
   const isDim = (m: Model, isHovered: boolean) => {

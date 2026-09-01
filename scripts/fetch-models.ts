@@ -37,6 +37,11 @@ interface ModelSeed {
 interface ScrapedRow {
   slug: string;
   displayName?: string;
+  // Identity fields, only from the site's own model records. They let a model
+  // AA has published on the site but not yet in the API still make the map.
+  name?: string;
+  creator?: string;
+  releaseDate?: string;
   costPerTask?: number; // weighted average USD per AA Intelligence Index task
   pricePerMillion?: number;
   e2eLatencyTotal?: number; // input + reasoning + answer (seconds)
@@ -145,9 +150,10 @@ function scrapeModels(html: string): Map<string, ScrapedRow> {
     });
   }
 
-  // AA's Next.js stream now exposes model data with camelCase fields. The
-  // model detail page may only include a selected subset, so this is enrichment
-  // rather than the source of truth for row discovery.
+  // AA's Next.js stream now exposes model data with camelCase fields. These are
+  // the site's own model records, so they also carry the identity a model needs
+  // (name, creator, release date) — which matters because AA publishes new
+  // models here days before they reach the JSON API.
   const nextEntryStarts = findAllRegex(html, /\{\\"id\\":\\"/g).map((entry) => entry.index);
   for (let i = 0; i < nextEntryStarts.length; i += 1) {
     const start = nextEntryStarts[i];
@@ -163,6 +169,20 @@ function scrapeModels(html: string): Map<string, ScrapedRow> {
     if (shortName) {
       current.displayName = decodeHtml(decodeJsonString(shortName)).replace(/\s+/g, " ").trim();
     }
+
+    // The first "name" in a record is the model's own (nested objects such as
+    // "release" come later). The creator is a nested record that starts with
+    // its own "id", so it lands in the next slice; pick it up from there.
+    const name = entry.match(/\\"name\\":\\"([^\\"]+)\\"/)?.[1];
+    if (name && !current.name) current.name = decodeHtml(decodeJsonString(name)).replace(/\s+/g, " ").trim();
+    const releaseDate = entry.match(/\\"releaseDate\\":\\"(\d{4}-\d{2}-\d{2})/)?.[1];
+    if (releaseDate) current.releaseDate = releaseDate;
+    if (/\\"creator\\":$/.test(entry.trimEnd())) {
+      const creator = html.slice(end, end + 600).match(/\\"name\\":\\"([^\\"]+)\\"/)?.[1];
+      if (creator) current.creator = decodeHtml(decodeJsonString(creator)).trim();
+    }
+    const blended = entry.match(/\\"price1mBlended0To3To1\\":([0-9.eE+\-]+)/)?.[1];
+    if (blended) current.pricePerMillion = parseFloat(blended);
 
     const costPerTask = entry.match(
       /\\"intelligenceIndexCostPerTask\\":\{\\"cost\\":\{\\"total\\":([0-9.eE+\-]+)/,
@@ -297,6 +317,9 @@ function mergeMetrics(
       ...current,
       ...row,
       displayName: row.displayName ?? current.displayName,
+      name: row.name ?? current.name,
+      creator: row.creator ?? current.creator,
+      releaseDate: row.releaseDate ?? current.releaseDate,
       costPerTask: positiveFinite(row.costPerTask) ? row.costPerTask : current.costPerTask,
       e2eLatencyTotal: positiveFinite(row.e2eLatencyTotal) ? row.e2eLatencyTotal : current.e2eLatencyTotal,
       e2eInputTime: row.e2eInputTime ?? current.e2eInputTime,
@@ -327,26 +350,44 @@ function decodeJsonString(text: string): string {
   }
 }
 
+/** A site record complete enough to stand on its own when the API lacks it. */
+function isSiteOnlyCandidate(row: ScrapedRow): boolean {
+  return (
+    !!row.name &&
+    !!row.creator &&
+    positiveFinite(row.intelligence) &&
+    (positiveFinite(row.e2eLatencyTotal) || positiveFinite(row.costPerTask))
+  );
+}
+
 function buildModelSeeds(
   metrics: Map<string, ScrapedRow>,
   apiModels: ApiModel[],
 ): ModelSeed[] {
   const apiBySlug = new Map(apiModels.map((model) => [model.slug, model]));
+  const intelligenceOf = (slug: string) =>
+    apiBySlug.get(slug)?.evaluations?.artificial_analysis_intelligence_index ??
+    metrics.get(slug)?.intelligence ??
+    0;
+
   const seeds = apiModels
     .filter((api) => positiveFinite(api.evaluations?.artificial_analysis_intelligence_index))
     .map((api) => ({
       slug: api.slug,
       displayName: metrics.get(api.slug)?.displayName ?? api.name,
-    }))
-    .sort((a, b) => {
-      const ai =
-        apiBySlug.get(a.slug)?.evaluations?.artificial_analysis_intelligence_index ?? 0;
-      const bi =
-        apiBySlug.get(b.slug)?.evaluations?.artificial_analysis_intelligence_index ?? 0;
-      return bi - ai || a.slug.localeCompare(b.slug);
-    });
+    }));
 
-  console.log(`discovered ${seeds.length} API model slugs with intelligence metrics`);
+  // New releases show up on the site before the API. Admit any site record
+  // that is complete on its own so the map never lags AA's own pages.
+  const siteOnly = [...metrics.values()].filter(
+    (row) => !apiBySlug.has(row.slug) && isSiteOnlyCandidate(row),
+  );
+  for (const row of siteOnly) seeds.push({ slug: row.slug, displayName: row.displayName ?? row.name! });
+
+  seeds.sort((a, b) => intelligenceOf(b.slug) - intelligenceOf(a.slug) || a.slug.localeCompare(b.slug));
+
+  console.log(`discovered ${seeds.length} model slugs with intelligence metrics`);
+  if (siteOnly.length) console.log(`site-only (not yet in API): ${siteOnly.map((r) => r.slug).join(", ")}`);
   return seeds;
 }
 
@@ -501,23 +542,23 @@ async function main() {
     const api = apiBySlug.get(slug);
     if (!api) {
       missingApi.push(slug);
-      continue;
+      if (!sc || !isSiteOnlyCandidate(sc)) continue;
     }
 
     out.push({
       slug,
-      name: api.name,
-      displayName: displayName ?? api.name,
-      creator: api.model_creator?.name ?? "Unknown",
-      intelligence: api.evaluations?.artificial_analysis_intelligence_index ?? sc?.intelligence ?? 0,
-      codingIndex: api.evaluations?.artificial_analysis_coding_index ?? null,
+      name: api?.name ?? sc!.name!,
+      displayName: displayName ?? api?.name ?? sc!.name!,
+      creator: api?.model_creator?.name ?? sc?.creator ?? "Unknown",
+      intelligence: api?.evaluations?.artificial_analysis_intelligence_index ?? sc?.intelligence ?? 0,
+      codingIndex: api?.evaluations?.artificial_analysis_coding_index ?? null,
       costPerTask: positiveFinite(sc?.costPerTask) ? sc.costPerTask : null,
       e2eLatency: positiveFinite(sc?.e2eLatencyTotal) ? sc.e2eLatencyTotal : null,
       reasoningTime: sc?.e2eReasoningTime ?? null,
-      pricePerMillion: sc?.pricePerMillion ?? api.pricing?.price_1m_blended_3_to_1 ?? 0,
-      outputTokensPerSecond: api.median_output_tokens_per_second ?? 0,
-      ttft: api.median_time_to_first_token_seconds ?? 0,
-      releaseDate: api.release_date ?? sc?.releaseDate,
+      pricePerMillion: sc?.pricePerMillion ?? api?.pricing?.price_1m_blended_3_to_1 ?? 0,
+      outputTokensPerSecond: api?.median_output_tokens_per_second ?? 0,
+      ttft: api?.median_time_to_first_token_seconds ?? 0,
+      releaseDate: api?.release_date ?? sc?.releaseDate,
     });
     if (!positiveFinite(sc?.costPerTask)) missingCost.push(slug);
   }
@@ -532,7 +573,7 @@ async function main() {
   }
   warnList("rows without coding index", missingCoding);
   warnList("rows without end-to-end response time", missingLatency);
-  warnList("rows without exact API match", missingApi);
+  warnList("rows served from the site only (no API entry yet)", missingApi);
   warnList("rows without scraped/fallback metrics", missingMetrics);
   warnList("rows without cost per task", missingCost);
   console.log(`built ${out.length} model rows`);
