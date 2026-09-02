@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useDeferredValue, useMemo } from "react";
 import { scaleLinear, scaleLog } from "d3-scale";
 import {
   Model,
@@ -190,7 +190,7 @@ export function MapChart({
   newestSlugs,
   recentCutoffMs,
   colorDomain,
-  colorCap = null,
+  colorCap: colorCapProp = null,
   comparedSlugs,
   alternativeSlugs,
   onSelect,
@@ -218,37 +218,29 @@ export function MapChart({
   const xc = X_MODES[xMode];
   const timeline = xMode === "timeline";
   const searchActive = matchedSlugs !== null;
+  // Let the legend handle track the pointer at full rate while the chart
+  // catches up at whatever rate it can render.
+  const colorCap = useDeferredValue(colorCapProp);
   const comparisonActive = comparedSlugs.length > 0;
   const isCompared = (slug: string) => comparedSlugs.includes(slug);
   const isAlternative = (slug: string) => comparedSlugs.length === 1 && alternativeSlugs.has(slug);
   const isMatch = (slug: string) => !searchActive || matchedSlugs!.has(slug);
 
-  const plottable = (m: Model) =>
-    isPositiveFinite(metric.value(m)) && (!timeline || m.releaseMs != null);
-  // A capped model is out of play everywhere — frontier, labels, defaults —
-  // so the line genuinely shows the best you can get under the cap.
+  const metricModels = useMemo(
+    () =>
+      models.filter(
+        (m) => isPositiveFinite(metric.value(m)) && (!timeline || m.releaseMs != null),
+      ),
+    [metric, models, timeline],
+  );
+  // The cap only ever takes models away from the view you already had — it
+  // never pulls cheaper ones in to fill the gaps, and the canvas is framed
+  // on the uncapped view so nothing moves while the handle is dragged.
   const overCap = (m: Model) => {
     const v = xc.colorValue(m);
     return colorCap != null && isPositiveFinite(v) && v > colorCap;
   };
-  const metricModels = useMemo(
-    () => models.filter((m) => plottable(m) && !overCap(m)),
-    [colorCap, metric, models, timeline, xc],
-  );
-  // What the cap took away, kept as faint ghosts so the trade-off stays visible.
-  const cappedModels = useMemo(
-    () =>
-      colorCap == null
-        ? []
-        : models.filter(
-            (m) =>
-              plottable(m) &&
-              overCap(m) &&
-              isPositiveFinite(xc.xValue(m)) &&
-              (timeline || (m.releaseMs != null && m.releaseMs >= recentCutoffMs)),
-          ),
-    [colorCap, metric, models, recentCutoffMs, timeline, xc],
-  );
+  const underCap = (m: Model) => !overCap(m);
   const hasX = (m: Model) => isPositiveFinite(xc.xValue(m));
   const xModels = useMemo(() => metricModels.filter(hasX), [metricModels, xc]);
 
@@ -311,8 +303,7 @@ export function MapChart({
   // out of the sweep so the line does not dive into empty canvas to reach
   // them. Timeline: the record line — swept by release date, keeping each
   // model that raised the all-time record.
-  const frontier = useMemo(() => {
-    const source = timeline ? metricModels : xModels.filter(inPack);
+  const sweepFrontier = (source: Model[]) => {
     const sweep = [...source].sort((a, b) =>
       timeline
         ? a.releaseMs! - b.releaseMs! || metric.value(b)! - metric.value(a)!
@@ -328,17 +319,29 @@ export function MapChart({
       }
     }
     return timeline ? keep : keep.sort((a, b) => metric.value(a)! - metric.value(b)!);
-  }, [metric, metricModels, packFloor, timeline, xModels, xc]);
+  };
+  /** The frontier with no cap — what frames the canvas. */
+  const fullFrontier = useMemo(
+    () => sweepFrontier(timeline ? metricModels : xModels.filter(inPack)),
+    [metric, metricModels, packFloor, timeline, xModels, xc],
+  );
+  /** The frontier you can actually afford — what is drawn. */
+  const frontier = useMemo(
+    () => (colorCap == null ? fullFrontier : sweepFrontier((timeline ? metricModels : xModels.filter(inPack)).filter(underCap))),
+    [colorCap, fullFrontier, metric, metricModels, packFloor, timeline, xModels, xc],
+  );
   const frontierSlugs = useMemo(() => new Set(frontier.map((m) => m.slug)), [frontier]);
   const isFrontier = (slug: string) => frontierSlugs.has(slug);
 
-  const visibleModels = useMemo(() => {
+  /** Everything the view would show with no cap; the cap subtracts from this. */
+  const framedModels = useMemo(() => {
     if (timeline) return metricModels;
     const bySlug = new Map<string, Model>();
     const add = (m: Model | undefined) => {
       if (m) bySlug.set(m.slug, m);
     };
 
+    fullFrontier.forEach(add);
     frontier.forEach(add);
     metricModels.filter((m) => newestSlugs.has(m.slug) && inPack(m)).forEach(add);
 
@@ -357,6 +360,7 @@ export function MapChart({
     comparedSlugs,
     defaultRecentModels,
     frontier,
+    fullFrontier,
     hoveredSlug,
     matchedSlugs,
     metricModels,
@@ -365,11 +369,20 @@ export function MapChart({
     searchActive,
     timeline,
   ]);
+  const visibleModels = useMemo(
+    () => (colorCap == null ? framedModels : framedModels.filter(underCap)),
+    [colorCap, framedModels, xc],
+  );
+  // What the cap took away, kept as faint ghosts so the trade-off stays visible.
+  const cappedModels = useMemo(
+    () => (colorCap == null ? [] : framedModels.filter((m) => overCap(m) && hasX(m))),
+    [colorCap, framedModels, xc],
+  );
 
   // Value axis is cropped to the models actually drawn — surfacing a low model
   // through search or comparison expands it again, on its own.
   const { min: metricMin, max: metricMax } = metricBounds(
-    visibleModels.map((m) => metric.value(m)!).filter(isPositiveFinite),
+    framedModels.map((m) => metric.value(m)!).filter(isPositiveFinite),
     metric.defaultMin,
     metric.defaultMax,
   );
@@ -388,7 +401,7 @@ export function MapChart({
   // multiplicatively. The timeline is linear in release date, newer right.
   // Like the value axis, the x domain crops to the models actually drawn —
   // demoted outliers shouldn't stretch the canvas into empty space.
-  const xVals = visibleModels.filter(hasX).map((m) => xc.xValue(m)!);
+  const xVals = framedModels.filter(hasX).map((m) => xc.xValue(m)!);
   const xMin = xVals.length ? Math.min(...xVals) : 1;
   const xMax = xVals.length ? Math.max(...xVals) : 10;
   const xLow = xMin === xMax ? xMin * 0.8 : xMin * 0.9;
@@ -454,9 +467,10 @@ export function MapChart({
         .forEach(add);
     }
 
-    return [...bySlug.values()];
+    return [...bySlug.values()].filter(underCap);
   }, [
     alternativeSlugs,
+    colorCap,
     comparedSlugs,
     defaultRecentModels,
     frontier,
@@ -469,6 +483,7 @@ export function MapChart({
     recentModels,
     searchActive,
     timeline,
+    xc,
   ]);
 
   const labels = useMemo(
@@ -1093,7 +1108,7 @@ export function MapChart({
 
         {/* "New" tag on the most recently released model(s) */}
         {metricModels
-          .filter((m) => newestSlugs.has(m.slug) && !isCompared(m.slug) && inPack(m))
+          .filter((m) => newestSlugs.has(m.slug) && !isCompared(m.slug) && inPack(m) && underCap(m))
           .map((m) => {
             const { x, y, r } = xy(m);
             const dim = searchActive && !isMatch(m.slug);

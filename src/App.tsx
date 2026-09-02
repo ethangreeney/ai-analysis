@@ -214,11 +214,18 @@ function ColorLegend({
   onCapChange: (cap: number | null) => void;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [dragging, setDragging] = useState(false);
+  // While dragging, the handle follows the pointer directly and the cap is
+  // committed once per frame — the chart behind it is far heavier than the
+  // handle, and must never hold it back.
+  const [draft, setDraft] = useState<number | null>(null);
+  const pending = useRef<number | null>(null);
+  const frame = useRef(0);
   const stops = [0, 0.25, 0.5, 0.75, 1].map((t) => rampColor(t));
   // Same log mapping the dots use, so the handle sits where its color is.
   const norm = makeColorNorm(domain);
-  const t = cap == null ? 1 : norm(cap);
+  const committed = cap == null ? 1 : norm(cap);
+  const t = draft ?? committed;
+  const dragging = draft != null;
   const active = cap != null;
 
   const capAt = (fraction: number) => {
@@ -226,10 +233,29 @@ function ColorLegend({
     // Parking the handle back at the right end clears the cap entirely.
     onCapChange(u >= 0.985 ? null : norm.invert(u));
   };
-  const dragTo = (clientX: number) => {
+  const fractionAt = (clientX: number) => {
     const rect = trackRef.current?.getBoundingClientRect();
-    if (!rect || rect.width < 1) return;
-    capAt((clientX - rect.left) / rect.width);
+    if (!rect || rect.width < 1) return null;
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  };
+  const dragTo = (clientX: number) => {
+    const u = fractionAt(clientX);
+    if (u == null) return;
+    setDraft(u);
+    pending.current = u;
+    if (!frame.current) {
+      frame.current = requestAnimationFrame(() => {
+        frame.current = 0;
+        if (pending.current != null) capAt(pending.current);
+      });
+    }
+  };
+  const endDrag = () => {
+    if (frame.current) cancelAnimationFrame(frame.current);
+    frame.current = 0;
+    if (pending.current != null) capAt(pending.current);
+    pending.current = null;
+    setDraft(null);
   };
 
   return (
@@ -245,12 +271,11 @@ function ColorLegend({
         onPointerDown={(e) => {
           e.preventDefault();
           e.currentTarget.setPointerCapture(e.pointerId);
-          setDragging(true);
           dragTo(e.clientX);
         }}
         onPointerMove={(e) => dragging && dragTo(e.clientX)}
-        onPointerUp={() => setDragging(false)}
-        onPointerCancel={() => setDragging(false)}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
       >
         <div
           className="h-2 rounded-full"
@@ -258,8 +283,8 @@ function ColorLegend({
         />
         {/* Everything past the cap is out of play — wash it out. */}
         <div
-          className="pointer-events-none absolute top-2 bottom-2 right-0 rounded-r-full bg-paper/85 transition-[left] duration-75"
-          style={{ left: `${t * 100}%`, opacity: active ? 1 : 0 }}
+          className="pointer-events-none absolute top-2 bottom-2 right-0 rounded-r-full bg-paper/85"
+          style={{ left: `${t * 100}%`, opacity: active || dragging ? 1 : 0 }}
         />
         <div
           role="slider"
@@ -801,24 +826,29 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  // Mirror the view into the URL hash so any state is shareable.
+  // Mirror the view into the URL hash so any state is shareable. Debounced:
+  // a drag produces dozens of updates a second, and Chrome starts ignoring
+  // replaceState calls when they come that fast.
   useEffect(() => {
-    const p = new URLSearchParams();
-    if (yMetric !== "intelligence") p.set("y", yMetric);
-    if (xMode !== "speed") p.set("x", xMode);
-    if (query.trim()) p.set("q", query.trim());
-    if (comparedSlugs[0]) p.set("from", comparedSlugs[0]);
-    if (comparedSlugs[1]) p.set("to", comparedSlugs[1]);
-    if (colorCap != null) p.set("cap", colorCap.toPrecision(3));
-    const hash = p.toString();
-    const next = hash ? `#${hash}` : "";
-    if (next === location.hash) return;
-    try {
-      history.replaceState(null, "", `${location.pathname}${location.search}${next}`);
-    } catch {
-      // Sandboxed/about:blank documents (README screenshot capture) refuse
-      // replaceState — the URL mirror is best-effort there.
-    }
+    const timer = setTimeout(() => {
+      const p = new URLSearchParams();
+      if (yMetric !== "intelligence") p.set("y", yMetric);
+      if (xMode !== "speed") p.set("x", xMode);
+      if (query.trim()) p.set("q", query.trim());
+      if (comparedSlugs[0]) p.set("from", comparedSlugs[0]);
+      if (comparedSlugs[1]) p.set("to", comparedSlugs[1]);
+      if (colorCap != null) p.set("cap", colorCap.toPrecision(3));
+      const hash = p.toString();
+      const next = hash ? `#${hash}` : "";
+      if (next === location.hash) return;
+      try {
+        history.replaceState(null, "", `${location.pathname}${location.search}${next}`);
+      } catch {
+        // Sandboxed/about:blank documents (README screenshot capture) refuse
+        // replaceState — the URL mirror is best-effort there.
+      }
+    }, 200);
+    return () => clearTimeout(timer);
   }, [yMetric, xMode, query, comparedSlugs, colorCap]);
 
   useEffect(() => setCopyState("idle"), [yMetric, xMode, query, comparedSlugs]);
