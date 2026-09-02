@@ -190,6 +190,7 @@ export function MapChart({
   newestSlugs,
   recentCutoffMs,
   colorDomain,
+  colorCap = null,
   comparedSlugs,
   alternativeSlugs,
   onSelect,
@@ -204,6 +205,8 @@ export function MapChart({
   newestSlugs: Set<string>;
   recentCutoffMs: number;
   colorDomain: [number, number];
+  /** Upper bound on the color value; models above it leave the map as ghosts. */
+  colorCap?: number | null;
   comparedSlugs: string[];
   alternativeSlugs: Set<string>;
   onSelect: (slug: string) => void;
@@ -220,12 +223,31 @@ export function MapChart({
   const isAlternative = (slug: string) => comparedSlugs.length === 1 && alternativeSlugs.has(slug);
   const isMatch = (slug: string) => !searchActive || matchedSlugs!.has(slug);
 
+  const plottable = (m: Model) =>
+    isPositiveFinite(metric.value(m)) && (!timeline || m.releaseMs != null);
+  // A capped model is out of play everywhere — frontier, labels, defaults —
+  // so the line genuinely shows the best you can get under the cap.
+  const overCap = (m: Model) => {
+    const v = xc.colorValue(m);
+    return colorCap != null && isPositiveFinite(v) && v > colorCap;
+  };
   const metricModels = useMemo(
+    () => models.filter((m) => plottable(m) && !overCap(m)),
+    [colorCap, metric, models, timeline, xc],
+  );
+  // What the cap took away, kept as faint ghosts so the trade-off stays visible.
+  const cappedModels = useMemo(
     () =>
-      models.filter(
-        (m) => isPositiveFinite(metric.value(m)) && (!timeline || m.releaseMs != null),
-      ),
-    [metric, models, timeline],
+      colorCap == null
+        ? []
+        : models.filter(
+            (m) =>
+              plottable(m) &&
+              overCap(m) &&
+              isPositiveFinite(xc.xValue(m)) &&
+              (timeline || (m.releaseMs != null && m.releaseMs >= recentCutoffMs)),
+          ),
+    [colorCap, metric, models, recentCutoffMs, timeline, xc],
   );
   const hasX = (m: Model) => isPositiveFinite(xc.xValue(m));
   const xModels = useMemo(() => metricModels.filter(hasX), [metricModels, xc]);
@@ -812,6 +834,26 @@ export function MapChart({
             data-comparison-arrow
           />
         )}
+
+        {/* Ghosts of models the cap removed */}
+        {cappedModels.map((m) => {
+          const { x, y, r } = xy(m);
+          if (x < 0 || x > innerW || y < 0 || y > innerH) return null;
+          return (
+            <circle
+              key={`capped-${m.slug}`}
+              cx={x}
+              cy={y}
+              r={r * 0.85}
+              fill="none"
+              stroke={markerColor(m)}
+              strokeWidth={1}
+              strokeDasharray="2 2"
+              opacity={0.28}
+              style={{ pointerEvents: "none" }}
+            />
+          );
+        })}
 
         {/* Dots */}
         {ordered.map((m) => {

@@ -16,6 +16,7 @@ import {
   fmtDate,
   fmtSeconds,
   isPositiveFinite,
+  makeColorNorm,
   rampColor,
 } from "./model";
 
@@ -44,13 +45,15 @@ const compactStats = (stats: RelativeStat[]) =>
     .map((stat) => (stat.value === "≈" ? stat.label : `${stat.value} ${stat.label}`))
     .join(" · ");
 
-// Shareable state lives in the URL hash: #y=coding&x=cost&q=claude&from=a&to=b
+// Shareable state lives in the URL hash: #y=coding&x=cost&q=claude&from=a&to=b&cap=1.5
 function readHash() {
   const p = new URLSearchParams(window.location.hash.slice(1));
   const y: YMetric = p.get("y") === "coding" ? "coding" : "intelligence";
   const xRaw = p.get("x");
   const x: XMode = xRaw === "cost" || xRaw === "timeline" ? xRaw : "speed";
   const q = p.get("q") ?? "";
+  const capRaw = Number(p.get("cap"));
+  const cap = isPositiveFinite(capRaw) ? capRaw : null;
   const knownSlugs = new Set(allModels.map((m) => m.slug));
   const from = p.get("from");
   const to = p.get("to");
@@ -59,7 +62,7 @@ function readHash() {
     comparedSlugs.push(from);
     if (to != null && to !== from && knownSlugs.has(to)) comparedSlugs.push(to);
   }
-  return { y, x, q, comparedSlugs };
+  return { y, x, q, cap, comparedSlugs };
 }
 const initial = readHash();
 
@@ -193,26 +196,109 @@ function FrontierLegend({ label, note }: { label: string; note: string }) {
 }
 
 // Color legend — low (blue) end labeled with the data minimum, high (red)
-// end with the maximum, so the ramp can be decoded to actual values.
+// end with the maximum, so the ramp can be decoded to actual values. The
+// ramp doubles as a cap: drag its handle in from the right and everything
+// pricier (or slower, in Cost view) drops out of the map, so the frontier
+// answers "what's the best I can get for this much?".
 function ColorLegend({
   title,
   domain,
   fmt,
+  cap,
+  onCapChange,
 }: {
   title: string;
   domain: [number, number];
   fmt: (v: number) => string;
+  cap: number | null;
+  onCapChange: (cap: number | null) => void;
 }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging] = useState(false);
   const stops = [0, 0.25, 0.5, 0.75, 1].map((t) => rampColor(t));
+  // Same log mapping the dots use, so the handle sits where its color is.
+  const norm = makeColorNorm(domain);
+  const t = cap == null ? 1 : norm(cap);
+  const active = cap != null;
+
+  const capAt = (fraction: number) => {
+    const u = Math.max(0, Math.min(1, fraction));
+    // Parking the handle back at the right end clears the cap entirely.
+    onCapChange(u >= 0.985 ? null : norm.invert(u));
+  };
+  const dragTo = (clientX: number) => {
+    const rect = trackRef.current?.getBoundingClientRect();
+    if (!rect || rect.width < 1) return;
+    capAt((clientX - rect.left) / rect.width);
+  };
+
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[11.5px] text-ink-700">{title}</span>
+      <span className="text-[11.5px] text-ink-700">
+        {title}
+        {active && <span className="text-ink-500"> cap</span>}
+      </span>
       <span className="text-[11px] tabular-nums text-ink-500">{fmt(domain[0])}</span>
       <div
-        className="h-2 w-32 rounded-full"
-        style={{ background: `linear-gradient(to right, ${stops.join(", ")})` }}
-      />
-      <span className="text-[11px] tabular-nums text-ink-500">{fmt(domain[1])}</span>
+        ref={trackRef}
+        className="relative h-2 w-56 cursor-ew-resize touch-none rounded-full py-2 -my-2 box-content"
+        onPointerDown={(e) => {
+          e.preventDefault();
+          e.currentTarget.setPointerCapture(e.pointerId);
+          setDragging(true);
+          dragTo(e.clientX);
+        }}
+        onPointerMove={(e) => dragging && dragTo(e.clientX)}
+        onPointerUp={() => setDragging(false)}
+        onPointerCancel={() => setDragging(false)}
+      >
+        <div
+          className="h-2 rounded-full"
+          style={{ background: `linear-gradient(to right, ${stops.join(", ")})` }}
+        />
+        {/* Everything past the cap is out of play — wash it out. */}
+        <div
+          className="pointer-events-none absolute top-2 bottom-2 right-0 rounded-r-full bg-paper/85 transition-[left] duration-75"
+          style={{ left: `${t * 100}%`, opacity: active ? 1 : 0 }}
+        />
+        <div
+          role="slider"
+          tabIndex={0}
+          aria-label={`${title} cap`}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(t * 100)}
+          aria-valuetext={active ? `up to ${fmt(cap)}` : "no cap"}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowLeft") capAt(t - 0.03);
+            else if (e.key === "ArrowRight") capAt(t + 0.03);
+            else if (e.key === "Home" || e.key === "Escape") onCapChange(null);
+            else return;
+            e.preventDefault();
+          }}
+          className={`absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-card outline-none transition-[transform,border-color] focus-visible:ring-2 focus-visible:ring-ink-300 ${
+            active || dragging ? "border-ink-900 scale-110" : "border-ink-500"
+          }`}
+          style={{ left: `${t * 100}%`, boxShadow: CARD_SHADOW }}
+        />
+      </div>
+      <span
+        className={`min-w-[2.75rem] text-[11px] tabular-nums ${
+          active ? "font-semibold text-ink-900" : "text-ink-500"
+        }`}
+      >
+        {active ? `≤ ${fmt(cap)}` : fmt(domain[1])}
+      </span>
+      {active && (
+        <button
+          type="button"
+          onClick={() => onCapChange(null)}
+          className="-ml-1 rounded px-1 text-[11px] text-ink-500 transition-colors hover:text-ink-900"
+          aria-label="Clear cap"
+        >
+          ×
+        </button>
+      )}
     </div>
   );
 }
@@ -404,6 +490,13 @@ function SearchBox({
 export default function App() {
   const [yMetric, setYMetric] = useState<YMetric>(initial.y);
   const [xMode, setXMode] = useState<XMode>(initial.x);
+  // Cap on whatever the color ramp encodes — cost per task in Speed and
+  // Timeline views, wait in Cost view. Cleared when the axis changes meaning.
+  const [colorCap, setColorCap] = useState<number | null>(initial.cap);
+  const changeXMode = (next: XMode) => {
+    setXMode(next);
+    setColorCap(null);
+  };
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [query, setQuery] = useState(initial.q);
   const [comparedSlugs, setComparedSlugs] = useState<string[]>(initial.comparedSlugs);
@@ -700,6 +793,7 @@ export default function App() {
       const h = readHash();
       setYMetric(h.y);
       setXMode(h.x);
+      setColorCap(h.cap);
       setQuery(h.q);
       setComparedSlugs(h.comparedSlugs);
     };
@@ -715,6 +809,7 @@ export default function App() {
     if (query.trim()) p.set("q", query.trim());
     if (comparedSlugs[0]) p.set("from", comparedSlugs[0]);
     if (comparedSlugs[1]) p.set("to", comparedSlugs[1]);
+    if (colorCap != null) p.set("cap", colorCap.toPrecision(3));
     const hash = p.toString();
     const next = hash ? `#${hash}` : "";
     if (next === location.hash) return;
@@ -724,7 +819,7 @@ export default function App() {
       // Sandboxed/about:blank documents (README screenshot capture) refuse
       // replaceState — the URL mirror is best-effort there.
     }
-  }, [yMetric, xMode, query, comparedSlugs]);
+  }, [yMetric, xMode, query, comparedSlugs, colorCap]);
 
   useEffect(() => setCopyState("idle"), [yMetric, xMode, query, comparedSlugs]);
   useEffect(() => {
@@ -821,7 +916,7 @@ export default function App() {
               label: X_MODES[k].label,
             }))}
             value={xMode}
-            onChange={setXMode}
+            onChange={changeXMode}
           />
           {/* Full width on phones — squeezed beside the axis switch there was
               barely room for the word "Search". */}
@@ -909,6 +1004,7 @@ export default function App() {
                   newestSlugs={newestSlugs}
                   recentCutoffMs={recentCutoffMs}
                   colorDomain={colorDomain}
+                  colorCap={colorCap}
                   comparedSlugs={comparedSlugs}
                   alternativeSlugs={alternativeSlugs}
                   onSelect={selectForComparison}
@@ -963,7 +1059,13 @@ export default function App() {
               <FrontierLegend label={xc.frontierLabel} note={xc.frontierNote(metric.noun)} />
             </div>
             <div className="hidden lg:block">
-              <ColorLegend title={xc.colorTitle} domain={colorDomain} fmt={xc.fmtColor} />
+              <ColorLegend
+                title={xc.colorTitle}
+                domain={colorDomain}
+                fmt={xc.fmtColor}
+                cap={colorCap}
+                onCapChange={setColorCap}
+              />
             </div>
             <a
               href={REPO_URL}
