@@ -4,9 +4,11 @@
 
 **[Open the live map →](https://ethangreeney.github.io/ai-analysis/)**
 
-![Every frontier model: up is smarter, right is faster, color is cost](docs/screenshot.png)
+![Tour: compare two models, drag a cost cap, flip between speed, cost and timeline](docs/tour.gif)
 
 ## Read it in a glance
+
+![Every frontier model: up is smarter, right is faster, color is cost](docs/screenshot.png)
 
 **Up is smarter. Right is faster. Color is cost.** The dashed line is the frontier: models no other model beats on both axes. If a model isn't on the line, something is smarter *and* faster.
 
