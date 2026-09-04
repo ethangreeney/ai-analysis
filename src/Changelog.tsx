@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fetchedAtMs, fmtDate, Y_METRICS, NEW_MODEL_COLOR, type Model } from "./model";
+import {
+  fetchedAtMs,
+  fmtDate,
+  intelligenceIndexVersion,
+  Y_METRICS,
+  NEW_MODEL_COLOR,
+  type Model,
+} from "./model";
 
 const RECENT_COUNT = 12;
 
@@ -165,7 +172,9 @@ export function Changelog({
           </div>
 
           <div className="border-t border-ink-100 px-3.5 py-2 text-[11px] leading-tight text-ink-500">
-            {Y_METRICS.intelligence.rowLabel} score shown. Data updated {fmtDate(fetchedAtMs)}.
+            {Y_METRICS.intelligence.rowLabel} score shown
+            {intelligenceIndexVersion ? ` (index v${intelligenceIndexVersion})` : ""}. Data updated{" "}
+            {fmtDate(fetchedAtMs)}.
           </div>
         </div>
       )}

@@ -579,6 +579,11 @@ async function main() {
   console.log(`built ${out.length} model rows`);
 
   const fetchedAt = new Date().toISOString();
+  // AA re-bases the Intelligence Index now and then (v4.1 → v4.2 moved every
+  // model by 6–12 points). Record which version a snapshot was scored on so
+  // the site can say so and day-to-day history can be read across a change.
+  const intelligenceIndexVersion = html.match(/Intelligence Index v(\d+(?:\.\d+)?)/)?.[1] ?? null;
+  console.log(`intelligence index version: ${intelligenceIndexVersion ?? "unknown"}`);
 
   // First-seen tracking: keep each model's original addedAt, stamp newly seen
   // slugs with this run's timestamp. Drives the "newest model" highlight in the
@@ -612,7 +617,10 @@ async function main() {
   if (fresh.length) console.log(`newly added this run: ${fresh.join(", ")}`);
 
   mkdirSync(dirname(OUT_PATH), { recursive: true });
-  writeFileSync(OUT_PATH, JSON.stringify({ fetchedAt, models: stamped }, null, 2));
+  writeFileSync(
+    OUT_PATH,
+    JSON.stringify({ fetchedAt, intelligenceIndexVersion, models: stamped }, null, 2),
+  );
   console.log(`wrote ${OUT_PATH}`);
 
   if (process.env.SKIP_SCREENSHOT) {

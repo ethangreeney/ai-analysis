@@ -22,12 +22,15 @@ export interface Model {
 
 interface RawSnapshot {
   fetchedAt: string;
+  /** Which revision of the AA Intelligence Index the scores were taken from. */
+  intelligenceIndexVersion?: string | null;
   models: Omit<Model, "releaseMs">[];
 }
 
 const raw = data as RawSnapshot;
 
 export const fetchedAtMs = Date.parse(raw.fetchedAt);
+export const intelligenceIndexVersion = raw.intelligenceIndexVersion ?? null;
 
 export const isPositiveFinite = (value: number | null | undefined): value is number =>
   typeof value === "number" && Number.isFinite(value) && value > 0;

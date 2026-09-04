@@ -12,6 +12,7 @@ import {
   relativeStats,
   allModels,
   fetchedAtMs,
+  intelligenceIndexVersion,
   fmtCost,
   fmtDate,
   fmtSeconds,
@@ -1108,6 +1109,7 @@ export default function App() {
           </div>
           <p className="hidden xl:block pt-2 text-[11px] leading-snug text-ink-300">
             {xc.footnote}
+            {intelligenceIndexVersion && ` Scores are AA Intelligence Index v${intelligenceIndexVersion}.`}
             {yMetric === "coding" &&
               " Cost figures are per Intelligence Index task — AA doesn’t publish per-coding-task cost."}
           </p>
