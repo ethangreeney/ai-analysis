@@ -1,5 +1,6 @@
 {
-  "fetchedAt": "2026-09-04T23:01:54.165Z",
+  "fetchedAt": "2026-09-04T23:03:03.990Z",
+  "intelligenceIndexVersion": "4.2",
   "models": [
     {
       "slug": "claude-fable-5-1",
