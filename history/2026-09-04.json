@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-04T00:22:22.624Z",
+  "fetchedAt": "2026-09-04T03:20:35.168Z",
   "models": [
     {
       "slug": "claude-fable-5-1",
@@ -1928,10 +1928,10 @@
       "creator": "NVIDIA",
       "intelligence": 38.3,
       "codingIndex": 49.3,
-      "costPerTask": 0.3858557594812817,
+      "costPerTask": 0.31374086294174913,
       "e2eLatency": 19.577799006825387,
       "reasoningTime": 13.836851512780273,
-      "pricePerMillion": 1.175,
+      "pricePerMillion": 1.1,
       "outputTokensPerSecond": 148.311,
       "ttft": 1.819,
       "releaseDate": "2026-06-04",
@@ -2360,10 +2360,10 @@
       "creator": "Meta",
       "intelligence": 35.1,
       "codingIndex": 49,
-      "costPerTask": 0.060452972387452196,
+      "costPerTask": 0.04734434382196308,
       "e2eLatency": 23.657901388101468,
       "reasoningTime": 18.283337422481182,
-      "pricePerMillion": 0.58125,
+      "pricePerMillion": 0.6375,
       "outputTokensPerSecond": 108.305,
       "ttft": 0.353,
       "releaseDate": "2026-08-10",
