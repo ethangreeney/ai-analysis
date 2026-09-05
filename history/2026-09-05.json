@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-05T01:19:22.790Z",
+  "fetchedAt": "2026-09-05T05:50:38.120Z",
   "intelligenceIndexVersion": "4.2",
   "models": [
     {
@@ -137,7 +137,7 @@
       "creator": "Meta",
       "intelligence": 52.7,
       "codingIndex": 76.3,
-      "costPerTask": 0.9526699657431213,
+      "costPerTask": 0.9587870562431213,
       "e2eLatency": 31.838115862871774,
       "reasoningTime": 10.51976920309678,
       "pricePerMillion": 2,
@@ -1049,7 +1049,7 @@
       "creator": "Google",
       "intelligence": 38.3,
       "codingIndex": 68.7,
-      "costPerTask": 0.29113642988035915,
+      "costPerTask": 0.33503368841662706,
       "e2eLatency": 35.12856869902462,
       "reasoningTime": 0,
       "pricePerMillion": 4.5,
