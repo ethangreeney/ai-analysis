@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-11T05:05:17.036Z",
+  "fetchedAt": "2026-09-11T09:33:19.283Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -817,6 +817,22 @@
       "ttft": 1.028,
       "releaseDate": "2026-08-13",
       "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "agnes-3-0-flash",
+      "name": "Agnes 3.0 Flash",
+      "displayName": "Agnes 3.0 Flash",
+      "creator": "Sapiens AI",
+      "intelligence": 35.5,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": 11.660735539157233,
+      "reasoningTime": 7.914041773750419,
+      "pricePerMillion": 0.07500000000000001,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-09-11",
+      "addedAt": "2026-09-11"
     },
     {
       "slug": "grok-4-6-low",
