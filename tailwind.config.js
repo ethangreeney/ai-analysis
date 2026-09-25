@@ -4,21 +4,23 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Inter"', "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ['"Fraunces"', "Georgia", "ui-serif", "serif"],
-        mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
+        sans: ['"Geist"', "ui-sans-serif", "system-ui", "sans-serif"],
+        // No serif any more: one clean sans everywhere reads more like a tool.
+        serif: ['"Geist"', "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ['"Geist Mono"', "ui-monospace", "monospace"],
       },
       colors: {
         ink: {
-          900: "#161512",
-          700: "#403d38",
-          500: "#6f6b63",
-          300: "#b5b1a8",
-          100: "#e8e5de",
-          50: "#f2f0eb",
+          900: "#0e0f11",
+          700: "#3a3d43",
+          500: "#6a6f78",
+          300: "#b3b7be",
+          100: "#e7e8eb",
+          50: "#f4f5f6",
         },
-        paper: "#f7f5f0",
-        card: "#fffefc",
+        paper: "#ffffff",
+        card: "#ffffff",
+        wash: "#f9fafb",
       },
     },
   },

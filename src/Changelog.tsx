@@ -4,7 +4,6 @@ import {
   fmtDate,
   intelligenceIndexVersion,
   Y_METRICS,
-  NEW_MODEL_COLOR,
   type Model,
 } from "./model";
 
@@ -90,18 +89,12 @@ export function Changelog({
         type="button"
         onClick={() => setOpen((wasOpen) => !wasOpen)}
         aria-expanded={open}
-        aria-label={`Recently added models. Newest: ${newest.displayName}`}
-        className={`tap-target inline-flex items-center gap-1.5 rounded-full border border-transparent px-2.5 py-1 text-[11.5px] leading-none transition-colors hover:bg-ink-50 ${
-          open ? "bg-ink-50 text-ink-900" : "text-ink-500"
+        aria-label={`All recently added models. Newest: ${newest.displayName}`}
+        className={`-my-1 -mr-1.5 inline-flex items-center gap-1 rounded-full px-1.5 py-1 text-[11px] leading-none transition-colors hover:text-ink-900 ${
+          open ? "text-ink-900" : "text-ink-500"
         }`}
       >
-        <span>Newest</span>
-        <span aria-hidden className="text-ink-300">
-          ·
-        </span>
-        <span className="font-medium" style={{ color: NEW_MODEL_COLOR }}>
-          {newest.displayName}
-        </span>
+        <span>All releases</span>
         <svg
           width="9"
           height="6"
@@ -122,9 +115,9 @@ export function Changelog({
 
       {open && (
         <div
-          className="absolute right-0 top-full z-40 mt-2 w-80 overflow-hidden rounded-2xl border border-ink-100 bg-card text-left"
+          className="popover-in absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-xl border border-ink-100 bg-card text-left"
           style={{
-            boxShadow: "0 1px 3px rgba(23,20,10,0.04), 0 8px 24px rgba(23,20,10,0.04)",
+            boxShadow: "0 1px 2px rgba(14,15,17,0.05), 0 18px 48px rgba(14,15,17,0.12)",
           }}
         >
           <div className="px-3.5 pb-2 pt-3 text-[12.5px] font-semibold text-ink-900">
@@ -172,9 +165,9 @@ export function Changelog({
           </div>
 
           <div className="border-t border-ink-100 px-3.5 py-2 text-[11px] leading-tight text-ink-500">
-            {Y_METRICS.intelligence.rowLabel} score shown
-            {intelligenceIndexVersion ? ` (index v${intelligenceIndexVersion})` : ""}. Data updated{" "}
-            {fmtDate(fetchedAtMs)}.
+            {`${Y_METRICS.intelligence.rowLabel} score shown. Pick one to compare it with what it replaces. Index v${
+              intelligenceIndexVersion ?? "—"
+            }, updated ${fmtDate(fetchedAtMs)}.`}
           </div>
         </div>
       )}

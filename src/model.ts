@@ -35,12 +35,39 @@ export const intelligenceIndexVersion = raw.intelligenceIndexVersion ?? null;
 export const isPositiveFinite = (value: number | null | undefined): value is number =>
   typeof value === "number" && Number.isFinite(value) && value > 0;
 
+/**
+ * "(max with fallback)" is AA's note that Anthropic's adaptive models fall back
+ * to a default when a request can't run at full effort. True, but it doubled the
+ * length of every Claude label for a detail no one chooses a model on.
+ */
+const tidyName = (name: string) =>
+  name.replace(/ with fallback\)/, ")").replace(/\s*\(with fallback\)\s*$/, "");
+
 export const allModels: Model[] = raw.models
   .filter((m) => isPositiveFinite(m.intelligence))
   .map((m) => {
     const ms = m.releaseDate ? Date.parse(m.releaseDate) : NaN;
-    return { ...m, releaseMs: Number.isFinite(ms) ? ms : null };
+    return {
+      ...m,
+      displayName: tidyName(m.displayName),
+      releaseMs: Number.isFinite(ms) ? ms : null,
+    };
   });
+
+const EFFORT = /\s*\(((?:non-)?reasoning(?:, [a-z]+)?|max|xhigh|high|medium|low|minimal)\)\s*$/i;
+
+/**
+ * A model's name split into what it is and how hard it's thinking, so labels can
+ * set the effort level quieter than the name: "Claude Opus 5.5" + "max".
+ */
+export function nameParts(m: Model): { base: string; effort: string | null } {
+  const match = m.displayName.match(EFFORT);
+  if (!match) return { base: m.displayName, effort: null };
+  return { base: m.displayName.slice(0, match.index).trim(), effort: match[1].toLowerCase() };
+}
+
+/** The release a variant belongs to: "GPT-6 Sol (high)" → "GPT-6 Sol". */
+export const familyOf = (m: Model) => m.displayName.replace(/\s*\([^)]*\)\s*$/, "").trim();
 
 export const hasCost = (m: Model) => isPositiveFinite(m.costPerTask);
 export const hasLatency = (m: Model) => isPositiveFinite(m.e2eLatency);
@@ -220,14 +247,14 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     label: "Speed",
     xValue: (m) => m.e2eLatency,
     colorValue: (m) => m.costPerTask,
-    colorTitle: "cost/task",
+    colorTitle: "Cost per task",
     fmtColor: (v) => fmtCost(v),
     fmtTick: (v) => `${v}s`,
     xTicks: [5, 10, 30, 100, 200],
     axisTitle: "End-to-end response time",
     leftCap: "← Slower",
     rightCap: "Faster →",
-    railCap: "No timing data",
+    railCap: "Not timed yet",
     railDefault: hasCost,
     frontierLabel: "2D frontier",
     frontierNote: (noun) =>
@@ -241,14 +268,14 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     label: "Cost",
     xValue: (m) => m.costPerTask,
     colorValue: (m) => m.e2eLatency,
-    colorTitle: "wait",
+    colorTitle: "Wait",
     fmtColor: (v) => fmtSecondsShort(v),
     fmtTick: (v) => (v >= 1 ? `$${v}` : `$${v.toFixed(2)}`),
     xTicks: [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30],
     axisTitle: "Cost per intelligence-index task",
     leftCap: "← Pricier",
     rightCap: "Cheaper →",
-    railCap: "No cost data",
+    railCap: "No cost yet",
     railDefault: () => false,
     frontierLabel: "2D frontier",
     frontierNote: (noun) =>
@@ -262,7 +289,7 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     label: "Timeline",
     xValue: (m) => m.releaseMs,
     colorValue: (m) => m.costPerTask,
-    colorTitle: "cost/task",
+    colorTitle: "Cost per task",
     fmtColor: (v) => fmtCost(v),
     fmtTick: () => "",
     xTicks: [],
@@ -289,7 +316,27 @@ const RAMP_COLD = [29, 96, 165]; // saturated deep blue
 const RAMP_MID = [192, 150, 78]; // warm ochre
 const RAMP_HOT = [185, 50, 38]; // saturated deep red
 export const NEUTRAL_DOT_COLOR = "#6d7781";
-export const NEW_MODEL_COLOR = "#C96442";
+export const NEW_MODEL_COLOR = "#0e0f11";
+
+/**
+ * Colour is who made it. It's the first thing people look for on a map like
+ * this ("where's OpenAI?"), and one meaning everywhere beats a cost ramp that
+ * turned forty dots the same terracotta. Fixed order, never cycled; checked
+ * for colour-blind separation in OKLab (every pair ≥ 16.5 for normal vision,
+ * worst simulated pair 6.8, backed by labels and the legend).
+ */
+export const LABS: { name: string; color: string }[] = [
+  { name: "OpenAI", color: "#10a37f" },
+  { name: "Anthropic", color: "#e0662f" },
+  { name: "Google", color: "#2d5bd2" },
+  { name: "SpaceXAI", color: "#24272c" },
+  { name: "Meta", color: "#b760d8" },
+  { name: "DeepSeek", color: "#56b4e9" },
+  { name: "Alibaba", color: "#ebb526" },
+];
+export const OTHER_LAB_COLOR = "#c3c7cd";
+const LAB_COLOR = new Map(LABS.map((l) => [l.name, l.color]));
+export const labColor = (creator: string) => LAB_COLOR.get(creator) ?? OTHER_LAB_COLOR;
 
 export function rampColor(t: number): string {
   const u = Math.max(0, Math.min(1, t));

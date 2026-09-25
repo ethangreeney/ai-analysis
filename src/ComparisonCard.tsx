@@ -50,10 +50,9 @@ function StatCell({ stat }: { stat: RelativeStat }) {
   return (
     <div className="min-w-0">
       <div
-        className={`font-serif text-[26px] leading-none tabular-nums sm:text-[29px] ${
+        className={`text-[24px] font-semibold leading-none tracking-[-0.02em] tabular-nums sm:text-[26px] ${
           unknown ? "text-ink-300" : "text-ink-900"
         }`}
-        style={{ fontOpticalSizing: "auto" }}
       >
         {stat.value}
       </div>
@@ -106,8 +105,8 @@ export function ComparisonCard({
   return (
     <section
       aria-label="Model comparison"
-      className="comparison-strip relative z-30 w-full max-w-[520px] shrink-0 rounded-2xl border border-ink-100 bg-card px-4 py-3.5 sm:px-5 sm:py-4"
-      style={{ boxShadow: "0 1px 3px rgba(23,20,10,0.04), 0 8px 24px rgba(23,20,10,0.04)" }}
+      className="comparison-strip relative z-30 w-full max-w-[520px] shrink-0 rounded-xl border border-ink-100 bg-card px-4 py-3.5 sm:px-5 sm:py-4"
+      style={{ boxShadow: "0 1px 3px rgba(14,15,17,0.04), 0 8px 24px rgba(14,15,17,0.04)" }}
     >
       <header className="flex items-start justify-between gap-3">
         <p className="min-w-0 truncate text-[11.5px] leading-none text-ink-500">

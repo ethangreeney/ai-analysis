@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo } from "react";
+import { useDeferredValue, useMemo, useRef } from "react";
 import { scaleLinear, scaleLog } from "d3-scale";
 import {
   Model,
@@ -7,50 +7,27 @@ import {
   Y_METRICS,
   X_MODES,
   isPositiveFinite,
-  makeColorNorm,
-  rampColor,
-  NEUTRAL_DOT_COLOR,
+  labColor,
   NEW_MODEL_COLOR,
+  nameParts,
 } from "./model";
 
 /* Warm ink scale, mirrored from tailwind.config.js so the SVG (which cannot
    read Tailwind classes for stroke/fill on every element) stays in step. */
-const INK_900 = "#161512";
-const INK_700 = "#403d38";
-const INK_500 = "#6f6b63";
-const INK_300 = "#b5b1a8";
-const INK_100 = "#e8e5de";
-const CARD = "#fffefc";
-const GRID = "#eeece6";
-const BAND = "#faf8f3";
+const INK_900 = "#0e0f11";
+const INK_700 = "#3a3d43";
+const INK_500 = "#6a6f78";
+const INK_300 = "#b3b7be";
+const INK_100 = "#e7e8eb";
+const CARD = "#ffffff";
+const GRID = "#f0f1f3";
+const LANE = "#f7f8f9";
 
-const FONT = "Inter, ui-sans-serif, system-ui, sans-serif";
+/** Width of the lane that holds models whose x value isn't measured yet. */
+const LANE_W = 44;
+const LANE_GAP = 18;
 
-interface Tier {
-  label: string;
-  min: number;
-  max: number;
-  banded: boolean;
-  emphasis: number;
-}
-
-interface TierBand {
-  label: string;
-  lower: number;
-  upper: number;
-  banded: boolean;
-  emphasis: number;
-}
-
-/* Bands alternate warm-tint / untinted rather than stepping through five
-   shades — an even ramp reads as five hard seams on a white card. */
-const RELATIVE_TIERS: TierBand[] = [
-  { label: "Leaders", lower: 0.82, upper: 1, banded: true, emphasis: 1 },
-  { label: "Frontier pack", lower: 0.64, upper: 0.82, banded: false, emphasis: 1 },
-  { label: "Competitive", lower: 0.46, upper: 0.64, banded: true, emphasis: 0.85 },
-  { label: "Established", lower: 0.28, upper: 0.46, banded: false, emphasis: 0.6 },
-  { label: "Trailing", lower: 0, upper: 0.28, banded: true, emphasis: 0.4 },
-];
+const FONT = "Geist, ui-sans-serif, system-ui, sans-serif";
 
 const METRIC_STEP = 5;
 const DAY_MS = 86_400_000;
@@ -85,21 +62,6 @@ function median(values: number[]): number | null {
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
-function relativeTiers(min: number, max: number): Tier[] {
-  const span = Math.max(1, max - min);
-  return RELATIVE_TIERS.map((tier) => ({
-    label: tier.label,
-    min: min + span * tier.lower,
-    max: min + span * tier.upper,
-    banded: tier.banded,
-    emphasis: tier.emphasis,
-  }));
-}
-
-function tierFor(intel: number, tiers: Tier[]): Tier {
-  return tiers.find((t) => intel >= t.min && intel <= t.max) ?? tiers[tiers.length - 1];
-}
-
 interface Placed {
   slug: string;
   x: number;
@@ -115,16 +77,21 @@ function placeLabels(
   xy: (m: Model) => { x: number; y: number; r: number },
   innerW: number,
   innerH: number,
-  obstacleModels = models,
+  obstacleModels: Model[],
+  textOf: (m: Model) => string,
+  isKey: (m: Model) => boolean,
 ): Placed[] {
   const cands = models
     .map((m) => {
       const { x, y, r } = xy(m);
-      const anchor: "start" | "end" = x + r + 130 < innerW ? "start" : "end";
+      const text = textOf(m);
+      const anchor: "start" | "end" = x + r + 12 + labelWidth(text) < innerW ? "start" : "end";
       const off = anchor === "start" ? r + 8 : -(r + 8);
-      return { slug: m.slug, x: x + off, y, anchor, text: m.displayName, baseY: y };
+      return { slug: m.slug, x: x + off, y, anchor, text, baseY: y, key: isKey(m) };
     })
-    .sort((a, b) => a.baseY - b.baseY);
+    // Key labels (frontier, newest, the ones you're pointing at) claim space
+    // first; the rest only land if they fit right beside their dot.
+    .sort((a, b) => Number(b.key) - Number(a.key) || a.baseY - b.baseY);
   const placed: Placed[] = [];
   const labelH = 15;
   const labelPad = 4;
@@ -154,7 +121,9 @@ function placeLabels(
     a.y2 + labelPad > b.y1;
 
   for (const c of cands) {
-    const offsets = [0, 18, -18, 36, -36, 54, -54, 72, -72, 90, -90];
+    // Long leader lines read as clutter: key labels may travel a little,
+    // everything else sits beside its dot or not at all.
+    const offsets = c.key ? [0, 16, -16, 32, -32, 48, -48] : [0, 14, -14];
     let y: number | null = null;
 
     for (const offset of offsets) {
@@ -187,14 +156,16 @@ export function MapChart({
   onHover,
   hoveredSlug,
   matchedSlugs,
+  spotlightSlugs = null,
   newestSlugs,
   recentCutoffMs,
-  colorDomain,
   colorCap: colorCapProp = null,
   comparedSlugs,
   alternativeSlugs,
   onSelect,
   height = 720,
+  referenceMs = null,
+  referenceLabel = "",
 }: {
   models: Model[];
   yMetric: YMetric;
@@ -202,14 +173,18 @@ export function MapChart({
   onHover: (slug: string | null) => void;
   hoveredSlug: string | null;
   matchedSlugs: Set<string> | null;
+  /** Highlight these without re-framing the map (previewing a release). */
+  spotlightSlugs?: Set<string> | null;
   newestSlugs: Set<string>;
   recentCutoffMs: number;
-  colorDomain: [number, number];
   /** Upper bound on the color value; models above it leave the map as ghosts. */
   colorCap?: number | null;
   comparedSlugs: string[];
   alternativeSlugs: Set<string>;
   onSelect: (slug: string) => void;
+  /** Timeline only: a "this long ago" marker for the progress read-out. */
+  referenceMs?: number | null;
+  referenceLabel?: string;
   /** Canvas height in viewBox units; the width stays 1280 so text keeps its
       relative size while the plot takes the shape of its container. */
   height?: number;
@@ -217,14 +192,17 @@ export function MapChart({
   const metric = Y_METRICS[yMetric];
   const xc = X_MODES[xMode];
   const timeline = xMode === "timeline";
-  const searchActive = matchedSlugs !== null;
+  // A search re-frames the map around its matches; a spotlight only lights
+  // models up where they already sit, so pointing at something never moves it.
+  const highlight = matchedSlugs ?? spotlightSlugs;
+  const searchActive = highlight !== null;
   // Let the legend handle track the pointer at full rate while the chart
   // catches up at whatever rate it can render.
   const colorCap = useDeferredValue(colorCapProp);
   const comparisonActive = comparedSlugs.length > 0;
   const isCompared = (slug: string) => comparedSlugs.includes(slug);
   const isAlternative = (slug: string) => comparedSlugs.length === 1 && alternativeSlugs.has(slug);
-  const isMatch = (slug: string) => !searchActive || matchedSlugs!.has(slug);
+  const isMatch = (slug: string) => !searchActive || highlight!.has(slug);
 
   const metricModels = useMemo(
     () =>
@@ -246,10 +224,10 @@ export function MapChart({
 
   const W = 1280;
   const H = height;
-  const M = { top: 30, right: 64, bottom: 60, left: 150 };
+  const M = { top: 30, right: 40, bottom: 60, left: 84 };
   const innerW = W - M.left - M.right;
   const innerH = H - M.top - M.bottom;
-  const untimedX = 18;
+  const untimedX = LANE_W / 2;
 
   const findModel = (slug: string | null) =>
     slug ? metricModels.find((m) => m.slug === slug) : undefined;
@@ -345,10 +323,11 @@ export function MapChart({
     frontier.forEach(add);
     metricModels.filter((m) => newestSlugs.has(m.slug) && inPack(m)).forEach(add);
 
-    if (searchActive) {
-      metricModels.filter((m) => isMatch(m.slug)).forEach(add);
+    if (matchedSlugs) {
+      metricModels.filter((m) => matchedSlugs.has(m.slug)).forEach(add);
     } else {
       defaultRecentModels.forEach(add);
+      if (spotlightSlugs) metricModels.filter((m) => spotlightSlugs.has(m.slug)).forEach(add);
     }
 
     add(findModel(hoveredSlug));
@@ -367,6 +346,7 @@ export function MapChart({
     newestSlugs,
     packFloor,
     searchActive,
+    spotlightSlugs,
     timeline,
   ]);
   const visibleModels = useMemo(
@@ -386,7 +366,6 @@ export function MapChart({
     metric.defaultMin,
     metric.defaultMax,
   );
-  const tiers = relativeTiers(metricMin, metricMax);
   const yScale = scaleLinear().domain([metricMin, metricMax]).range([innerH, 0]);
   const gridStep = metricMax - metricMin <= 30 ? 5 : 10;
   const yTicks = useMemo(() => {
@@ -402,6 +381,10 @@ export function MapChart({
   // Like the value axis, the x domain crops to the models actually drawn —
   // demoted outliers shouldn't stretch the canvas into empty space.
   const xVals = framedModels.filter(hasX).map((m) => xc.xValue(m)!);
+  // Models with no measured x get their own lane, set apart from the axis, so
+  // an untimed release never reads as the slowest thing on the map.
+  const hasLane = !timeline && framedModels.some((m) => !hasX(m));
+  const plotX0 = hasLane ? LANE_W + LANE_GAP : 0;
   const xMin = xVals.length ? Math.min(...xVals) : 1;
   const xMax = xVals.length ? Math.max(...xVals) : 10;
   const xLow = xMin === xMax ? xMin * 0.8 : xMin * 0.9;
@@ -410,20 +393,16 @@ export function MapChart({
   const xScale = timeline
     ? scaleLinear()
         .domain([xMin - timeSpan * 0.02, xMax + timeSpan * 0.04])
-        .range([0, innerW])
-    : scaleLog().domain([xHigh, xLow]).range([0, innerW]);
+        .range([plotX0, innerW])
+    : scaleLog().domain([xHigh, xLow]).range([plotX0, innerW]);
 
   // Every path below is laid out in scale space, so it has to be recomputed
   // whenever the canvas or either domain moves — not only when the data behind
   // it changes. Without this the frontier keeps the shape it had before the
   // comparison rail resized the chart, until an unrelated re-render fixes it.
-  const geometry = [innerW, innerH, xMin, xMax, metricMin, metricMax].join(":");
+  const geometry = [innerW, innerH, xMin, xMax, metricMin, metricMax, plotX0].join(":");
 
-  const colorNorm = useMemo(() => makeColorNorm(colorDomain), [colorDomain]);
-  const markerColor = (m: Model) => {
-    const v = xc.colorValue(m);
-    return isPositiveFinite(v) ? rampColor(colorNorm(v)) : NEUTRAL_DOT_COLOR;
-  };
+  const markerColor = (m: Model) => labColor(m.creator);
 
   const sizeScale = scaleLinear()
     .domain([metricMin, metricMax])
@@ -482,13 +461,34 @@ export function MapChart({
     packFloor,
     recentModels,
     searchActive,
+    spotlightSlugs,
     timeline,
     xc,
   ]);
 
+  const isNewest = (m: Model) => newestSlugs.has(m.slug) && !isCompared(m.slug);
+  const labelText = (m: Model) => {
+    const { base, effort } = nameParts(m);
+    return `${isNewest(m) ? "New " : ""}${base}${effort ? ` ${effort}` : ""}`;
+  };
   const labels = useMemo(
-    () => placeLabels(labeledModels, xy, innerW, innerH, visibleModels),
-    [labeledModels, visibleModels, geometry],
+    () =>
+      placeLabels(
+        labeledModels,
+        xy,
+        innerW,
+        innerH,
+        visibleModels,
+        labelText,
+        (m) =>
+          isFrontier(m.slug) ||
+          newestSlugs.has(m.slug) ||
+          isCompared(m.slug) ||
+          m.slug === hoveredSlug ||
+          isAlternative(m.slug) ||
+          (searchActive && isMatch(m.slug)),
+      ),
+    [labeledModels, visibleModels, geometry, comparedSlugs, newestSlugs, hoveredSlug],
   );
 
   // Frontier path. Scatter: polyline from the left edge through the frontier
@@ -508,26 +508,36 @@ export function MapChart({
     }
     const pts = [...frontier].reverse().map((m) => xy(m));
     return [
-      `M0,${pts[0].y.toFixed(1)}`,
+      `M${plotX0},${pts[0].y.toFixed(1)}`,
       ...pts.map((p) => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`),
-      `V${innerH}`,
     ].join(" ");
   }, [frontier, timeline, geometry]);
+
+  /** The region the frontier encloses — everything you can actually get. */
+  const frontierArea = useMemo(() => {
+    if (frontier.length < 2) return "";
+    if (timeline) {
+      const x0 = xy(frontier[0]).x;
+      return `${frontierPath} V${innerH} H${x0.toFixed(1)} Z`;
+    }
+    return `${frontierPath} V${innerH} H${plotX0} Z`;
+  }, [frontierPath, frontier, timeline, geometry]);
 
   /** Anchor for the quiet frontier caption — the flat run nothing sits above. */
   const frontierTag = useMemo(() => {
     if (frontier.length < 2) return null;
-    if (timeline) {
-      const last = xy(frontier[frontier.length - 1]);
-      return { x: innerW - 4, y: last.y - 9, anchor: "end" as const };
-    }
-    const top = xy(frontier[frontier.length - 1]);
-    // When the leader itself sits at the left edge, the caption would land on
-    // its dot and "New" tag — tuck it under the line there instead.
-    const crowded = top.x < 70;
-    return { x: 6, y: crowded ? top.y + top.r + 16 : top.y - 9, anchor: "start" as const };
+    // The timeline's record line is named in the legend; a caption at its
+    // end only ever collided with the newest record holder's label.
+    if (timeline) return null;
+    // The fastest end of the line drops straight to the floor, and the corner
+    // beside that drop (fast but weak) is almost always empty — a caption there
+    // never lands on the leaders' labels at the top.
+    const fastest = xy(frontier[0]);
+    return { x: fastest.x - 8, y: innerH - 10, anchor: "end" as const };
   }, [frontier, timeline, geometry]);
 
+  /** Hovering only quietens the field; search and comparison mute it. */
+  const softDim = !comparisonActive && !searchActive && hoveredSlug !== null;
   const isDim = (m: Model, isHovered: boolean) => {
     if (isHovered || isCompared(m.slug) || isAlternative(m.slug)) return false;
     if (comparisonActive) return true;
@@ -578,7 +588,11 @@ export function MapChart({
     return ticks;
   }, [timeline, xMin, xMax, xVals.length]);
 
-  const hasVisibleUntimed = !timeline && visibleModels.some((m) => !hasX(m));
+  // Motion bookkeeping. Dots and labels play their entrance once; React
+  // re-inserts nodes when hover changes stacking order, and a re-inserted node
+  // would otherwise replay its entrance.
+  const entered = useRef(new Set<string>());
+  const viewKey = `${xMode}|${yMetric}|${geometry}`;
 
   // Comparison connector: a gently bowed quadratic from the model in use to
   // the one being considered. A straight rule read as a chart annotation; the
@@ -638,43 +652,73 @@ export function MapChart({
         >
           <path d="M0.6,0.8 L7.4,4 L0.6,7.2 Z" fill={INK_900} />
         </marker>
-        {/* Dots sit on a white card; a whisper of shadow lifts them off it. */}
-        <filter id="dot-lift" x="-60%" y="-60%" width="220%" height="220%">
-          <feDropShadow dx="0" dy="0.6" stdDeviation="0.9" floodColor={INK_900} floodOpacity="0.2" />
+        {/* Contact shadow for the dot in your hand, so it lifts off the page. */}
+        <filter id="dot-lift-strong" x="-80%" y="-80%" width="260%" height="280%">
+          <feDropShadow dx="0" dy="2.4" stdDeviation="2.6" floodColor={INK_900} floodOpacity="0.2" />
         </filter>
-        <filter id="dot-lift-strong" x="-80%" y="-80%" width="260%" height="260%">
-          <feDropShadow dx="0" dy="1.2" stdDeviation="2.2" floodColor={INK_900} floodOpacity="0.26" />
-        </filter>
+        <linearGradient id="frontier-wash" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={INK_900} stopOpacity="0.045" />
+          <stop offset="100%" stopColor={INK_900} stopOpacity="0.01" />
+        </linearGradient>
+        <pattern
+          id="lane-hatch"
+          width="7"
+          height="7"
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(45)"
+        >
+          <line x1="0" y1="0" x2="0" y2="7" stroke={INK_100} strokeWidth="1" />
+        </pattern>
       </defs>
       <g transform={`translate(${M.left}, ${M.top})`}>
-        {/* Tier bands — warm alternation, no rules between them */}
-        {tiers.map((t) => {
-          const yTop = yScale(Math.min(t.max, metricMax));
-          const yBottom = yScale(Math.max(t.min, metricMin));
-          const h = yBottom - yTop;
-          if (h <= 0) return null;
-          return (
-            <g key={t.label}>
-              {t.banded && <rect x={0} y={yTop} width={innerW} height={h} fill={BAND} />}
-              <text
-                x={-46}
-                y={(yTop + yBottom) / 2}
-                textAnchor="end"
-                dominantBaseline="middle"
-                fontSize={11}
-                fontWeight={500}
-                fill={t.emphasis > 0.7 ? INK_500 : INK_300}
-              >
-                {t.label}
-              </text>
-            </g>
-          );
-        })}
+        {/* Lane for models whose x isn't measured: its own column, hatched,
+            outside the axis — "we don't know yet", not "slowest". */}
+        {hasLane && (
+          <g style={{ pointerEvents: "none" }}>
+            <rect x={0} y={-4} width={LANE_W} height={innerH + 8} rx={10} fill={LANE} />
+            <rect
+              x={0}
+              y={-4}
+              width={LANE_W}
+              height={innerH + 8}
+              rx={10}
+              fill="url(#lane-hatch)"
+              opacity={0.7}
+            />
+            <text
+              x={LANE_W / 2}
+              y={innerH + 18}
+              textAnchor="middle"
+              fontSize={10}
+              fontWeight={500}
+              fill={INK_500}
+            >
+              {xc.railCap?.split(" ").slice(0, 2).join(" ")}
+            </text>
+            <text
+              x={LANE_W / 2}
+              y={innerH + 31}
+              textAnchor="middle"
+              fontSize={10}
+              fontWeight={500}
+              fill={INK_500}
+            >
+              {xc.railCap?.split(" ").slice(2).join(" ")}
+            </text>
+          </g>
+        )}
 
         {/* Value gridlines + readings */}
         {yTicks.map((v) => (
           <g key={`yt-${v}`}>
-            <line x1={0} x2={innerW} y1={yScale(v)} y2={yScale(v)} stroke={GRID} strokeWidth={1} />
+            <line
+              x1={plotX0}
+              x2={innerW}
+              y1={yScale(v)}
+              y2={yScale(v)}
+              stroke={GRID}
+              strokeWidth={1}
+            />
             <text
               x={-12}
               y={yScale(v)}
@@ -718,25 +762,8 @@ export function MapChart({
             />
           ))}
 
-        {hasVisibleUntimed && (
-          <g style={{ pointerEvents: "none" }}>
-            <line
-              x1={untimedX}
-              x2={untimedX}
-              y1={0}
-              y2={innerH}
-              stroke={INK_100}
-              strokeWidth={1}
-              strokeDasharray="2 5"
-            />
-            <text x={untimedX} y={-9} textAnchor="middle" fontSize={10.5} fontWeight={500} fill={INK_300}>
-              {xc.railCap}
-            </text>
-          </g>
-        )}
-
         {/* X axis */}
-        <line x1={0} x2={innerW} y1={innerH} y2={innerH} stroke={INK_100} strokeWidth={1} />
+        <line x1={plotX0} x2={innerW} y1={innerH} y2={innerH} stroke={INK_100} strokeWidth={1} />
         {!timeline &&
           xTicks.map((t) => (
             <g key={`xt-${t}`} transform={`translate(${xScale(t)}, 0)`}>
@@ -774,11 +801,11 @@ export function MapChart({
         <text x={innerW} y={innerH + 42} textAnchor="end" fontSize={11.5} fontWeight={600} fill={INK_700}>
           {xc.rightCap}
         </text>
-        <text x={0} y={innerH + 42} textAnchor="start" fontSize={11.5} fontWeight={500} fill={INK_500}>
+        <text x={plotX0} y={innerH + 42} textAnchor="start" fontSize={11.5} fontWeight={500} fill={INK_500}>
           {xc.leftCap}
         </text>
         <text
-          x={innerW / 2}
+          x={(plotX0 + innerW) / 2}
           y={innerH + 42}
           textAnchor="middle"
           fontSize={11.5}
@@ -789,7 +816,7 @@ export function MapChart({
         </text>
 
         <text
-          transform={`translate(-124, ${innerH / 2}) rotate(-90)`}
+          transform={`translate(-58, ${innerH / 2}) rotate(-90)`}
           textAnchor="middle"
           fontSize={11.5}
           fontWeight={550}
@@ -798,33 +825,69 @@ export function MapChart({
           {metric.axisLabel}
         </text>
 
-        {/* Frontier / record guide line */}
+        {timeline && referenceMs != null && referenceMs > xMin && (
+          <g
+            key={`ref-${referenceMs}-${viewKey}`}
+            className="label-in"
+            transform={`translate(${xScale(referenceMs).toFixed(1)}, 0)`}
+            style={{ pointerEvents: "none", animationDelay: "0ms" }}
+          >
+            <line y1={-6} y2={innerH} stroke={INK_500} strokeWidth={1} strokeDasharray="2 3" />
+            <text
+              x={6}
+              y={innerH - 8}
+              fontSize={10.5}
+              fontWeight={550}
+              fill={INK_500}
+              stroke={CARD}
+              strokeWidth={3}
+              paintOrder="stroke"
+            >
+              {referenceLabel}
+            </text>
+          </g>
+        )}
+
+        {/* Frontier / record guide line — drawn in left to right whenever the
+            view changes, so the eye follows it rather than finding it. */}
         {frontier.length > 1 && (
-          <g style={{ pointerEvents: "none" }}>
+          <g
+            style={{
+              pointerEvents: "none",
+              opacity: comparisonActive ? 0.3 : hoveredSlug ? 0.55 : 1,
+              transition: "opacity 240ms ease-out",
+            }}
+          >
             <path
+              key={`frontier-area-${viewKey}`}
+              className="frontier-fill"
+              d={frontierArea}
+              fill="url(#frontier-wash)"
+            />
+            <path
+              key={`frontier-${viewKey}`}
+              className="frontier-draw"
               d={frontierPath}
               fill="none"
-              stroke={INK_300}
-              strokeWidth={1}
-              strokeDasharray="4 5"
+              stroke={INK_700}
+              strokeWidth={1.4}
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity={comparisonActive ? 0.3 : hoveredSlug ? 0.5 : 0.95}
-              style={{ transition: "opacity 200ms ease-out" }}
             />
             {frontierTag && (
               <text
+                key={`frontier-tag-${viewKey}`}
+                className="label-in"
                 x={frontierTag.x}
                 y={frontierTag.y}
                 textAnchor={frontierTag.anchor}
                 fontSize={10.5}
                 fontWeight={500}
-                fill={INK_300}
+                fill={INK_500}
                 stroke={CARD}
                 strokeWidth={2.6}
                 paintOrder="stroke"
-                opacity={comparisonActive || hoveredSlug ? 0.4 : 1}
-                style={{ transition: "opacity 200ms ease-out" }}
+                style={{ animationDelay: "650ms" }}
               >
                 {xc.frontierLabel}
               </text>
@@ -835,6 +898,7 @@ export function MapChart({
         {/* Directional comparison connector: current model → considered model. */}
         {comparisonPath && (
           <path
+            key={`arc-${comparedSlugs.join(">")}-${viewKey}`}
             d={comparisonPath}
             fill="none"
             stroke={INK_900}
@@ -860,62 +924,64 @@ export function MapChart({
               cx={x}
               cy={y}
               r={r * 0.85}
-              fill="none"
-              stroke={markerColor(m)}
-              strokeWidth={1}
-              strokeDasharray="2 2"
-              opacity={0.28}
+              fill={markerColor(m)}
+              opacity={0.1}
               style={{ pointerEvents: "none" }}
             />
           );
         })}
 
-        {/* Dots */}
+        {/* Dots. Each sits in a positioned group whose transform transitions,
+            so switching view or score glides every model to its new place. */}
         {ordered.map((m) => {
           const { x, y, r } = xy(m);
-          const colored = isPositiveFinite(xc.colorValue(m));
+          const timed = timeline || hasX(m);
           const c = markerColor(m);
           const onFrontier = isFrontier(m.slug);
           const isHovered = hoveredSlug === m.slug;
           const isOther = isDim(m, isHovered);
+          const quiet = isOther && softDim;
           const isLit = !isHovered && searchActive && isMatch(m.slug);
           const comparisonIndex = comparedSlugs.indexOf(m.slug);
           const compared = comparisonIndex >= 0;
           const alternative = isAlternative(m.slug);
-          const isNew = newestSlugs.has(m.slug) && !compared;
+          const isNew = isNewest(m);
           const keyboardInteractive = compared || alternative || isLit || isNew;
           const baseOp = opacityFor(metric.value(m)!);
           let op = compared
             ? 1
             : isHovered
-            ? 1
-            : isOther
-              ? onFrontier
-                ? 0.38
-                : Math.min(0.12, baseOp)
-              : onFrontier || isLit || isNew
-                ? Math.max(0.88, baseOp)
-                : Math.min(0.58, baseOp);
+              ? 1
+              : isOther
+                ? quiet
+                  ? Math.min(0.42, baseOp)
+                  : onFrontier
+                    ? 0.38
+                    : Math.min(0.12, baseOp)
+                : onFrontier || isLit || isNew
+                  ? Math.max(0.9, baseOp)
+                  : Math.min(0.62, baseOp);
           // Timeline: damp the background cloud so the highlights carry it.
           if (timeline && !isHovered && !isOther && !onFrontier && !isLit && !isNew) {
             op = Math.min(op, 0.38);
           }
-          const prominent = compared || isHovered || isLit || isNew || onFrontier;
-          const stroke = compared || isHovered || isLit || alternative ? INK_900 : CARD;
-          const strokeW = compared ? 2 : isHovered ? 1.8 : 1.5;
+          // Hollow means "not measured yet": the model has no x position.
+          const hollow = !timed;
+          const stroke = compared || isHovered || isLit || alternative ? INK_900 : hollow ? c : CARD;
+          const strokeW = compared ? 2 : isHovered ? 1.8 : hollow ? 1.6 : 1.5;
           const dotR = onFrontier && !timeline ? r + 1.2 : r;
-          // Shadows are cheap on the scatter's ~50 dots, not on the timeline's
-          // full field — there, only the dots doing work get the lift.
-          const lift =
-            isOther || (timeline && !prominent)
-              ? undefined
-              : compared || isHovered
-                ? "url(#dot-lift-strong)"
-                : "url(#dot-lift)";
+          // Shadows and sheen are cheap on the scatter's ~50 dots, not on the
+          // timeline's full field — there, only the dots doing work get them.
+          // Flat dots; only the one in your hand lifts off the page.
+          const lift = compared || isHovered ? "url(#dot-lift-strong)" : undefined;
+          const entering = !entered.current.has(m.slug);
+          const enterDelay = Math.round(80 + Math.max(0, Math.min(1, x / innerW)) * 520);
           return (
             <g
               key={m.slug}
               data-model-slug={m.slug}
+              className="dot-pos"
+              style={{ transform: `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px)`, cursor: "pointer" }}
               onMouseEnter={() => onHover(m.slug)}
               onMouseLeave={() => onHover(null)}
               onFocus={() => onHover(m.slug)}
@@ -935,92 +1001,88 @@ export function MapChart({
                     ? `Remove ${m.displayName}`
                     : comparisonActive
                       ? `Compare with ${m.displayName}`
-                      : `Find alternatives for ${m.displayName}`
+                      : `Compare ${m.displayName}`
                   : undefined
               }
-              style={{ cursor: "pointer" }}
             >
-              <circle
-                cx={x}
-                cy={y}
-                r={keyboardInteractive ? Math.max(dotR + 6, 16) : Math.max(dotR + 3, 10)}
-                className={keyboardInteractive ? "chart-hit-target" : undefined}
-                fill="transparent"
-              />
-              {(isHovered || isLit) && (
-                <circle cx={x} cy={y} r={dotR + 7} fill={c} fillOpacity={0.16} />
-              )}
-              {isNew && (
-                <g
-                  opacity={isOther ? 0.18 : 1}
-                  style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
-                >
-                  {!isOther && (
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={dotR + 7}
-                      fill={NEW_MODEL_COLOR}
-                      className="newest-glow"
-                    />
-                  )}
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={dotR + 3}
-                    fill="none"
-                    stroke={NEW_MODEL_COLOR}
-                    strokeOpacity={isOther ? 0.25 : 0.65}
-                    strokeWidth={1.1}
-                  />
-                </g>
-              )}
-              {alternative && (
+              <g
+                className={`dot-body${entering ? " dot-enter" : ""}${isHovered ? " is-hovered" : ""}`}
+                style={entering ? { animationDelay: `${enterDelay}ms` } : undefined}
+                onAnimationEnd={() => entered.current.add(m.slug)}
+              >
                 <circle
-                  cx={x}
-                  cy={y}
-                  r={dotR + 4}
-                  fill="none"
-                  stroke={INK_700}
-                  strokeOpacity={0.4}
-                  strokeWidth={1.2}
-                  className="alternative-ring"
-                  style={{ pointerEvents: "none" }}
+                  r={keyboardInteractive ? Math.max(dotR + 6, 16) : Math.max(dotR + 3, 10)}
+                  className={keyboardInteractive ? "chart-hit-target" : undefined}
+                  fill="transparent"
                 />
-              )}
+                {(isHovered || isLit) && <circle r={dotR + 7} fill={c} fillOpacity={0.16} />}
+                {isNew && (
+                  <g
+                    opacity={isOther && !quiet ? 0.18 : 1}
+                    style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
+                  >
+                    {!isOther && <circle r={dotR + 7} fill={c} className="newest-glow" />}
+                    <circle
+                      r={dotR + 3.5}
+                      fill="none"
+                      stroke={c}
+                      strokeOpacity={isOther ? 0.3 : 0.7}
+                      strokeWidth={1.2}
+                    />
+                  </g>
+                )}
+                {alternative && (
+                  <circle
+                    r={dotR + 4}
+                    fill="none"
+                    stroke={INK_700}
+                    strokeOpacity={0.4}
+                    strokeWidth={1.2}
+                    className="alternative-ring"
+                    style={{ pointerEvents: "none" }}
+                  />
+                )}
+                {compared && (
+                  <g className="comparison-ring" style={{ pointerEvents: "none" }}>
+                    <circle
+                      r={dotR + 5}
+                      fill="none"
+                      stroke={INK_900}
+                      strokeWidth={1.6}
+                      strokeDasharray={comparisonIndex === 0 ? undefined : "3 2"}
+                    />
+                    <circle r={dotR + 9} fill="none" stroke={INK_900} strokeOpacity={0.15} strokeWidth={1} />
+                  </g>
+                )}
+                <circle
+                  r={dotR}
+                  fill={hollow ? CARD : c}
+                  fillOpacity={hollow ? Math.max(op, 0.9) : op}
+                  stroke={stroke}
+                  strokeOpacity={hollow && !compared && !isHovered ? Math.max(op, 0.55) : 1}
+                  strokeWidth={strokeW}
+                  strokeDasharray={!timed && !compared && !isHovered ? "3 2.2" : undefined}
+                  filter={lift}
+                  className="dot-core"
+                />
+              </g>
+              {/* Persistent role tags make shared links self-explanatory. */}
               {compared && (
-                <g className="comparison-ring" style={{ pointerEvents: "none" }}>
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={dotR + 5}
-                    fill="none"
-                    stroke={INK_900}
-                    strokeWidth={1.6}
-                    strokeDasharray={comparisonIndex === 0 ? undefined : "3 2"}
-                  />
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={dotR + 9}
-                    fill="none"
-                    stroke={INK_900}
-                    strokeOpacity={0.15}
-                    strokeWidth={1}
-                  />
-                </g>
+                <text
+                  y={-r - 14}
+                  textAnchor="middle"
+                  fontSize={10.5}
+                  fontWeight={600}
+                  fill={INK_900}
+                  stroke={CARD}
+                  strokeWidth={2.8}
+                  paintOrder="stroke"
+                  className="label-in"
+                  style={{ pointerEvents: "none" }}
+                >
+                  {comparisonIndex === 0 ? "Using now" : "Considering"}
+                </text>
               )}
-              <circle
-                cx={x}
-                cy={y}
-                r={dotR}
-                fill={c}
-                fillOpacity={colored ? op : isOther ? 0.18 : onFrontier ? 0.72 : Math.min(op, 0.54)}
-                stroke={stroke}
-                strokeWidth={strokeW}
-                filter={lift}
-                style={{ transition: "all 200ms ease-out" }}
-              />
             </g>
           );
         })}
@@ -1035,35 +1097,39 @@ export function MapChart({
           const dir = l.anchor === "start" ? 1 : -1;
           const fromX = x + dir * (r + 3);
           const toX = l.anchor === "start" ? l.x - 5 : l.x + 5;
-
+          const key = `${viewKey}|stem|${l.slug}`;
+          const entering = !entered.current.has(key);
           return (
             <path
-              key={`stem-${l.slug}`}
+              key={key}
               d={`M${fromX.toFixed(1)},${y.toFixed(1)} L${toX.toFixed(1)},${l.y.toFixed(1)}`}
               fill="none"
               stroke={compared || isHovered ? INK_300 : INK_100}
               strokeWidth={1}
               strokeLinecap="round"
-              opacity={isOther ? 0.3 : 1}
-              style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
+              opacity={isOther ? (softDim ? 0.5 : 0.3) : 1}
+              className={entering ? "label-in" : undefined}
+              onAnimationEnd={() => entered.current.add(key)}
+              style={{ pointerEvents: "none", transition: "opacity 180ms ease-out" }}
             />
           );
         })}
 
-        {/* Labels */}
+        {/* Labels: name in ink, effort level quieter, "New" in the accent. */}
         {labels.map((l) => {
           const m = metricModels.find((x) => x.slug === l.slug)!;
           const isHovered = hoveredSlug === l.slug;
           const compared = isCompared(l.slug);
           const isOther = isDim(m, isHovered);
           const onFrontier = isFrontier(l.slug);
-          const tier = tierFor(metric.value(m)!, tiers);
-          const strong = compared || isHovered || onFrontier;
-          const baseOp = strong ? 1 : Math.max(0.7, tier.emphasis);
-          const op = isOther ? (onFrontier ? 0.32 : 0.14) : baseOp;
+          const strong = compared || isHovered || onFrontier || isNewest(m);
+          const op = isOther ? (softDim ? 0.42 : onFrontier ? 0.32 : 0.14) : strong ? 1 : 0.8;
+          const { base, effort } = nameParts(m);
+          const key = `${viewKey}|label|${l.slug}`;
+          const entering = !entered.current.has(key);
           return (
             <text
-              key={`lbl-${l.slug}`}
+              key={key}
               x={l.x}
               y={l.y}
               textAnchor={l.anchor}
@@ -1075,62 +1141,24 @@ export function MapChart({
               stroke={CARD}
               strokeWidth={3}
               paintOrder="stroke"
-              style={{ pointerEvents: "none", transition: "all 180ms ease-out" }}
+              className={entering ? "label-in" : undefined}
+              onAnimationEnd={() => entered.current.add(key)}
+              style={{ pointerEvents: "none", transition: "fill-opacity 180ms ease-out" }}
             >
-              {l.text}
+              {isNewest(m) && (
+                <tspan fill={NEW_MODEL_COLOR} fontWeight={650}>
+                  {"New "}
+                </tspan>
+              )}
+              <tspan>{base}</tspan>
+              {effort && (
+                <tspan fill={INK_500} fontWeight={450}>
+                  {` ${effort}`}
+                </tspan>
+              )}
             </text>
           );
         })}
-
-        {/* Persistent role tags make shared links self-explanatory. */}
-        {comparedSlugs.map((slug, index) => {
-          const m = findModel(slug);
-          if (!m) return null;
-          const { x, y, r } = xy(m);
-          return (
-            <text
-              key={`compared-${slug}`}
-              x={x}
-              y={y - r - 13}
-              textAnchor="middle"
-              fontSize={10.5}
-              fontWeight={600}
-              fill={INK_900}
-              stroke={CARD}
-              strokeWidth={2.8}
-              paintOrder="stroke"
-              style={{ pointerEvents: "none" }}
-            >
-              {index === 0 ? "Using now" : "Considering"}
-            </text>
-          );
-        })}
-
-        {/* "New" tag on the most recently released model(s) */}
-        {metricModels
-          .filter((m) => newestSlugs.has(m.slug) && !isCompared(m.slug) && inPack(m) && underCap(m))
-          .map((m) => {
-            const { x, y, r } = xy(m);
-            const dim = searchActive && !isMatch(m.slug);
-            return (
-              <text
-                key={`new-${m.slug}`}
-                x={x}
-                y={y - r - 10}
-                textAnchor="middle"
-                fontSize={10.5}
-                fontWeight={600}
-                fill={NEW_MODEL_COLOR}
-                opacity={dim ? 0.15 : 1}
-                stroke={CARD}
-                strokeWidth={2.6}
-                paintOrder="stroke"
-                style={{ pointerEvents: "none", transition: "opacity 200ms ease-out" }}
-              >
-                New
-              </text>
-            );
-          })}
       </g>
     </svg>
   );

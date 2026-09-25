@@ -4,27 +4,33 @@
 
 **[Open the live map →](https://ethangreeney.github.io/ai-analysis/)**
 
-![Tour: compare two models, drag a cost cap, flip between speed, cost and timeline](docs/tour.gif)
+![Tour: open a new release as a comparison, drag a budget, flip between speed, cost and timeline](docs/tour.gif)
 
 ## Read it in a glance
 
-![Every frontier model: up is smarter, right is faster, color is cost](docs/screenshot.png)
+![Every frontier model: up is smarter, right is faster, color is the lab](docs/screenshot.png)
 
-**Up is smarter. Right is faster. Color is cost.** The dashed line is the frontier: models no other model beats on both axes. If a model isn't on the line, something is smarter *and* faster.
+**Up is smarter. Right is faster. Color is the lab.** The line is the frontier: models no other model beats on both axes. If a model isn't on the line, something is smarter *and* faster. Models not timed yet sit in their own lane on the left instead of pretending to be slow.
 
 Flip the axis to **Cost** to see smart-and-cheap instead, or **Timeline** to watch the intelligence record get broken release by release.
 
+## See how fast it's moving
+
+The timeline answers **"how much better is today than a year ago?"** in three numbers: how much smarter the best model got, and how much cheaper and faster last year's best is to match now. Click any of them to open that exact comparison.
+
+![Progress in the last year: +34.6 points at the top, 31× cheaper and 27× faster for the same smarts](docs/progress.png)
+
 ## Set a budget
 
-Drag the cost cap in from the right. Everything pricier fades to a ghost, and the frontier redraws to show **the best you can get for that much**.
+Drag the budget slider left. Everything pricier fades out, and the frontier redraws to show **the best you can get for that much**.
 
-![Cap set at $1.28 per task: pricier models fade out and the frontier redraws](docs/cap.png)
+![Budget set at $1.20 per task: pricier models fade out and the frontier redraws](docs/cap.png)
 
 ## Compare what you use now
 
-Click any dot, then a second one. The card says it in plain terms: **+1.6 intelligence, 3.5× faster, 0.2× the cost per task.** Copy the link and the whole comparison travels with it.
+Click any dot, then a second one, or click a release under **Latest releases** to see it against the version it replaces. The card says it in plain terms: **+6.8 intelligence, about the same cost per task.** Copy the link and the whole comparison travels with it.
 
-![Claude Opus 4.7 vs Gemini 3.8 Flash: +1.6 intelligence, 3.5× faster, 0.2× the cost](docs/compare.png)
+![Claude Opus 5 vs Claude Opus 5.5: +6.8 intelligence at about the same cost per task](docs/compare.png)
 
 ## Why these numbers
 

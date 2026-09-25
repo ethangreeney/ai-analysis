@@ -4,19 +4,14 @@
 
 @layer base {
   html {
-    font-feature-settings: "cv11", "ss01", "ss03";
     -webkit-text-size-adjust: 100%;
   }
   body {
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
   }
-  /* Fraunces is only used for the masthead — let it size its optical axis. */
-  h1 {
-    font-optical-sizing: auto;
-  }
-  /* Keyboard focus reads as a warm hairline ring, never a browser blue box. */
+  /* Keyboard focus reads as a quiet hairline ring, never a browser blue box. */
   :focus-visible {
-    outline: 2px solid #b5b1a8;
+    outline: 2px solid #b3b7be;
     outline-offset: 2px;
     border-radius: 9999px;
   }
@@ -208,5 +203,149 @@
   (max-width: 950px) and (max-height: 520px) and (orientation: landscape) {
   input[type="text"] {
     font-size: 16px;
+  }
+}
+
+/* ───────────── Motion layer ─────────────
+   Motion here explains change: dots glide to where a new view puts them, the
+   frontier draws itself in the direction you read it, and new things arrive
+   from where they belong. Everything is off under reduced motion. */
+
+/* Every dot glides when the view, score or canvas changes. */
+.dot-pos {
+  transition: transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hover gives the dot a small, springy lift. */
+.dot-body {
+  transform-origin: 0 0;
+  transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.dot-body.is-hovered {
+  transform: scale(1.16);
+}
+
+@keyframes dotIn {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+}
+/* "backwards" (not "both") so the hover transform takes over once it's done. */
+.dot-enter {
+  animation: dotIn 560ms cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
+}
+
+@keyframes labelIn {
+  from {
+    opacity: 0;
+  }
+}
+.label-in {
+  animation: labelIn 360ms ease-out 420ms backwards;
+}
+
+/* The frontier reveals left to right after the dots have settled. */
+@keyframes frontierIn {
+  from {
+    clip-path: inset(-20px 100% -20px 0);
+    opacity: 0.2;
+  }
+  to {
+    clip-path: inset(-20px 0 -20px 0);
+    opacity: 1;
+  }
+}
+.frontier-draw {
+  animation: frontierIn 900ms cubic-bezier(0.65, 0, 0.35, 1) 260ms backwards;
+}
+
+@keyframes releaseIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.release-row {
+  animation: releaseIn 480ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.release-strip {
+  scrollbar-width: none;
+}
+.release-strip::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes popoverIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+.popover-in {
+  transform-origin: top right;
+  animation: popoverIn 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hoverCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.97);
+  }
+}
+.hover-card {
+  animation: hoverCardIn 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.page-in {
+  animation: pageIn 560ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot-pos,
+  .dot-body,
+  .release-card {
+    transition: none;
+  }
+  .dot-enter,
+  .label-in,
+  .frontier-draw,
+  .release-card,
+  .release-dot,
+  .popover-in,
+  .hover-card,
+  .page-in {
+    animation: none;
+  }
+  .dot-body.is-hovered,
+  .release-card:hover {
+    transform: none;
+  }
+}
+
+/* Progress read-out: the panel settles in, each row follows. */
+.progress-panel {
+  animation: popoverIn 420ms cubic-bezier(0.22, 1, 0.36, 1) 200ms backwards;
+}
+.progress-row {
+  animation: releaseIn 460ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.progress-row:nth-child(1) { animation-delay: 260ms; }
+.progress-row:nth-child(2) { animation-delay: 320ms; }
+.progress-row:nth-child(3) { animation-delay: 380ms; }
+@media (prefers-reduced-motion: reduce) {
+  .progress-panel,
+  .progress-row {
+    animation: none;
   }
 }

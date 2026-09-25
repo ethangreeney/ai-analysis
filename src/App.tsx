@@ -1,7 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MapChart } from "./MapChart";
 import { Changelog } from "./Changelog";
 import { ComparisonCard } from "./ComparisonCard";
+import { ReleaseStrip } from "./ReleaseStrip";
+import { ProgressPanel } from "./ProgressPanel";
+import { PROGRESS_SPANS, ProgressSpan, progressSince } from "./progress";
+import { predecessorOf, recentReleases, type Release } from "./releases";
 import {
   Model,
   YMetric,
@@ -15,19 +19,22 @@ import {
   intelligenceIndexVersion,
   fmtCost,
   fmtDate,
-  fmtSeconds,
   isPositiveFinite,
   makeColorNorm,
-  rampColor,
+  nameParts,
+  LABS,
+  OTHER_LAB_COLOR,
+  labColor,
 } from "./model";
 
 const RECENT_WINDOW_MONTHS = 6;
 const DAY_MS = 86_400_000;
 const REPO_URL = "https://github.com/ethangreeney/ai-analysis";
-const CARD_SHADOW = "0 1px 3px rgba(23,20,10,0.04), 0 8px 24px rgba(23,20,10,0.04)";
+const CARD_SHADOW = "0 1px 3px rgba(14,15,17,0.04), 0 8px 24px rgba(14,15,17,0.04)";
 const CHART_WIDTH = 1280;
 const CHART_BASE_HEIGHT = 720;
-const SAGE = { background: "#eaeee2", color: "#5b6b4c" };
+const UPGRADE = "#17804a";
+const HOVER_CARD_W = 244;
 
 const fmtIndex = (v: number | null) => (v == null ? "—" : v.toFixed(1));
 
@@ -109,10 +116,10 @@ function AlternativesList({
                   </span>
                   {tier !== "tradeoff" && (
                     <span
-                      className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none"
-                      style={tier === "clear" ? SAGE : { background: "#f2f0eb", color: "#6f6b63" }}
+                      className="shrink-0 text-[10.5px] font-medium leading-none"
+                      style={{ color: tier === "clear" ? UPGRADE : "#6a6f78" }}
                     >
-                      {tier === "clear" ? "Clear upgrade" : "Small tradeoff"}
+                      {tier === "clear" ? "Better on all" : "Small tradeoff"}
                     </span>
                   )}
                 </div>
@@ -144,27 +151,81 @@ function SegmentSwitch<T extends string>({
   onChange: (value: T) => void;
   ariaLabel?: string;
 }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [thumb, setThumb] = useState<{ left: number; width: number; ready: boolean } | null>(null);
+
+  // The white thumb slides between segments instead of snapping, so a switch
+  // reads as one control changing state rather than two buttons swapping.
+  useLayoutEffect(() => {
+    const track = trackRef.current;
+    const button = track?.querySelector<HTMLButtonElement>(`[data-value="${value}"]`);
+    if (!track || !button) return;
+    const measure = () =>
+      setThumb((prev) => ({
+        left: button.offsetLeft,
+        width: button.offsetWidth,
+        ready: prev != null,
+      }));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, [value]);
+
   return (
     <div
+      ref={trackRef}
       role="group"
       aria-label={ariaLabel}
-      className="flex w-fit items-center gap-0.5 rounded-full bg-ink-50 p-0.5"
+      className="relative flex w-fit items-center gap-0.5 rounded-full bg-ink-50 p-0.5 ring-1 ring-inset ring-ink-100/70"
     >
+      {thumb && (
+        <span
+          aria-hidden
+          className="absolute top-0.5 bottom-0.5 rounded-full bg-card shadow-[0_1px_2px_rgba(14,15,17,0.08),0_2px_6px_rgba(14,15,17,0.04)]"
+          style={{
+            left: thumb.left,
+            width: thumb.width,
+            transition: thumb.ready
+              ? "left 320ms cubic-bezier(0.22, 1, 0.36, 1), width 320ms cubic-bezier(0.22, 1, 0.36, 1)"
+              : "none",
+          }}
+        />
+      )}
       {options.map((opt) => (
         <button
           key={opt.value}
+          data-value={opt.value}
           onClick={() => onChange(opt.value)}
           aria-pressed={value === opt.value}
-          className={`tap-target rounded-full px-3 py-1.5 text-[12px] leading-none transition-colors ${
-            value === opt.value
-              ? "border border-ink-100 bg-card font-semibold text-ink-900 shadow-[0_1px_2px_rgba(23,20,10,0.06)]"
-              : "border border-transparent text-ink-500 hover:text-ink-900"
+          className={`tap-target relative rounded-full border border-transparent px-3 py-1.5 text-[12px] leading-none transition-colors duration-200 ${
+            value === opt.value ? "font-semibold text-ink-900" : "text-ink-500 hover:text-ink-900"
           }`}
         >
           {opt.label}
         </button>
       ))}
     </div>
+  );
+}
+
+/** Who made what. Pointing at a lab lights up its models on the map. */
+function LabLegend({ onPreview }: { onPreview: (creator: string | null) => void }) {
+  const items = [...LABS, { name: "Other", color: OTHER_LAB_COLOR }];
+  return (
+    <ul className="flex flex-wrap items-center gap-x-3.5 gap-y-1" aria-label="Labs">
+      {items.map((lab) => (
+        <li
+          key={lab.name}
+          className="flex cursor-default items-center gap-1.5 text-[11.5px] text-ink-700 transition-colors hover:text-ink-900"
+          onMouseEnter={() => onPreview(lab.name)}
+          onMouseLeave={() => onPreview(null)}
+        >
+          <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: lab.color }} aria-hidden />
+          {lab.name}
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -177,9 +238,8 @@ function FrontierLegend({ label, note }: { label: string; note: string }) {
           y1="3"
           x2="31"
           y2="3"
-          stroke="#b5b1a8"
-          strokeWidth="1.25"
-          strokeDasharray="3 3"
+          stroke="#3a3d43"
+          strokeWidth="1.4"
           strokeLinecap="round"
         />
       </svg>
@@ -221,8 +281,7 @@ function ColorLegend({
   const [draft, setDraft] = useState<number | null>(null);
   const pending = useRef<number | null>(null);
   const frame = useRef(0);
-  const stops = [0, 0.25, 0.5, 0.75, 1].map((t) => rampColor(t));
-  // Same log mapping the dots use, so the handle sits where its color is.
+  // Log mapping: budgets and waits are felt in multiples, not dollars.
   const norm = makeColorNorm(domain);
   const committed = cap == null ? 1 : norm(cap);
   const t = draft ?? committed;
@@ -260,15 +319,13 @@ function ColorLegend({
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-[11.5px] text-ink-700">
-        {title}
-        {active && <span className="text-ink-500"> cap</span>}
+    <div className="flex items-center gap-3" title="Drag left to set a budget">
+      <span className="text-[12px] leading-none text-ink-500">
+        {title === "Wait" ? "Max wait" : "Max cost per task"}
       </span>
-      <span className="text-[11px] tabular-nums text-ink-500">{fmt(domain[0])}</span>
       <div
         ref={trackRef}
-        className="relative h-2 w-56 cursor-ew-resize touch-none rounded-full py-2 -my-2 box-content"
+        className="relative h-1 w-36 cursor-ew-resize touch-none rounded-full py-2.5 -my-2.5 box-content xl:w-44"
         onPointerDown={(e) => {
           e.preventDefault();
           e.currentTarget.setPointerCapture(e.pointerId);
@@ -278,14 +335,12 @@ function ColorLegend({
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
+        <div className="h-1 rounded-full bg-ink-100" />
         <div
-          className="h-2 rounded-full"
-          style={{ background: `linear-gradient(to right, ${stops.join(", ")})` }}
-        />
-        {/* Everything past the cap is out of play — wash it out. */}
-        <div
-          className="pointer-events-none absolute top-2 bottom-2 right-0 rounded-r-full bg-paper/85"
-          style={{ left: `${t * 100}%`, opacity: active || dragging ? 1 : 0 }}
+          className={`pointer-events-none absolute left-0 top-2.5 h-1 rounded-full transition-colors ${
+            active || dragging ? "bg-ink-900" : "bg-ink-300"
+          }`}
+          style={{ width: `${t * 100}%` }}
         />
         <div
           role="slider"
@@ -302,18 +357,22 @@ function ColorLegend({
             else return;
             e.preventDefault();
           }}
-          className={`absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-card outline-none transition-[transform,border-color] focus-visible:ring-2 focus-visible:ring-ink-300 ${
-            active || dragging ? "border-ink-900 scale-110" : "border-ink-500"
+          className={`absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border bg-card outline-none transition-[transform,border-color,box-shadow] duration-200 focus-visible:ring-2 focus-visible:ring-ink-300 active:cursor-grabbing ${
+            dragging
+              ? "scale-110 border-ink-900 shadow-[0_2px_8px_rgba(14,15,17,0.22)]"
+              : active
+                ? "border-ink-900 shadow-[0_1px_3px_rgba(14,15,17,0.18)]"
+                : "border-ink-300 shadow-[0_1px_3px_rgba(14,15,17,0.14)] hover:scale-110"
           }`}
-          style={{ left: `${t * 100}%`, boxShadow: CARD_SHADOW }}
+          style={{ left: `${t * 100}%` }}
         />
       </div>
       <span
-        className={`min-w-[2.75rem] text-[11px] tabular-nums ${
-          active ? "font-semibold text-ink-900" : "text-ink-500"
+        className={`min-w-[3rem] text-[12px] leading-none tabular-nums ${
+          active || dragging ? "font-medium text-ink-900" : "text-ink-500"
         }`}
       >
-        {active ? `≤ ${fmt(cap)}` : fmt(domain[1])}
+        {active ? `≤ ${fmt(cap)}` : dragging ? `≤ ${fmt(norm.invert(t))}` : "Any"}
       </span>
       {active && (
         <button
@@ -329,38 +388,76 @@ function ColorLegend({
   );
 }
 
-function HoverCard({ m, yMetric }: { m: Model; yMetric: YMetric }) {
+/** A compact read-out that sits beside the dot you're pointing at. */
+function HoverCard({
+  m,
+  yMetric,
+  position,
+  baseline,
+}: {
+  m: Model;
+  yMetric: YMetric;
+  position: { left: number; top: number };
+  baseline: Model | null;
+}) {
   const active = Y_METRICS[yMetric];
   const other = Y_METRICS[yMetric === "intelligence" ? "coding" : "intelligence"];
-  const rows = [
-    { label: active.rowLabel, value: fmtIndex(active.value(m)) },
-    ...(isPositiveFinite(other.value(m))
-      ? [{ label: other.rowLabel, value: fmtIndex(other.value(m)) }]
-      : []),
-    { label: "Cost per task", value: fmtCost(m.costPerTask) },
-    { label: "End-to-end response time", value: fmtSeconds(m.e2eLatency) },
-    { label: "Released", value: fmtDate(m.releaseMs) },
+  const { base, effort } = nameParts(m);
+  const stats = [
+    { label: active.noun, value: fmtIndex(active.value(m)) },
+    {
+      label: isPositiveFinite(m.e2eLatency) ? "wait" : "not timed yet",
+      value: isPositiveFinite(m.e2eLatency) ? `${m.e2eLatency.toFixed(m.e2eLatency < 10 ? 1 : 0)}s` : "—",
+    },
+    { label: "per task", value: fmtCost(m.costPerTask) },
   ];
+  const otherValue = other.value(m);
+  const hint =
+    baseline == null
+      ? "Click to compare"
+      : baseline.slug === m.slug
+        ? "Click to remove"
+        : `Click to compare with ${nameParts(baseline).base}`;
 
   return (
     <div
-      className="pointer-events-none absolute top-3 right-3 w-[18.5rem] rounded-xl border border-ink-100 bg-card/95 px-4 py-3.5 text-ink-900 z-20 backdrop-blur"
-      style={{ boxShadow: "0 1px 2px rgba(23,20,10,0.04), 0 18px 48px rgba(23,20,10,0.10)" }}
+      key={m.slug}
+      className="hover-card pointer-events-none absolute z-20 rounded-xl border border-ink-100 bg-card/95 px-3.5 pb-2.5 pt-3 text-ink-900 backdrop-blur"
+      style={{
+        left: position.left,
+        top: position.top,
+        width: HOVER_CARD_W,
+        boxShadow: "0 1px 2px rgba(14,15,17,0.05), 0 14px 36px rgba(14,15,17,0.12)",
+      }}
     >
-      <div className="text-[11.5px] text-ink-500">{m.creator}</div>
-      <div className="mt-1.5 text-[15px] font-semibold leading-tight text-ink-900">
-        {m.displayName}
+      <div className="flex items-center justify-between gap-3 text-[11px] leading-none text-ink-500">
+        <span className="flex min-w-0 items-center gap-1.5">
+          <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: labColor(m.creator) }} aria-hidden />
+          <span className="truncate">{m.creator}</span>
+        </span>
+        <span className="shrink-0 tabular-nums">{fmtDate(m.releaseMs)}</span>
       </div>
-      <div className="mt-3 divide-y divide-ink-100 text-[12px]">
-        {rows.map((row) => (
-          <div
-            key={row.label}
-            className="flex items-baseline justify-between gap-5 py-2 first:pt-0 last:pb-0"
-          >
-            <span className="text-ink-500">{row.label}</span>
-            <span className="font-semibold tabular-nums text-ink-900">{row.value}</span>
+      <div className="mt-1.5 text-[14px] font-semibold leading-tight text-ink-900">
+        {base}
+        {effort && <span className="font-normal text-ink-500"> {effort}</span>}
+      </div>
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        {stats.map((stat) => (
+          <div key={stat.label} className="min-w-0">
+            <div className="text-[15px] font-semibold leading-none tabular-nums text-ink-900">
+              {stat.value}
+            </div>
+            <div className="mt-1 truncate text-[10.5px] leading-none text-ink-500">{stat.label}</div>
           </div>
         ))}
+      </div>
+      <div className="mt-3 flex items-center justify-between gap-3 border-t border-ink-100 pt-2 text-[10.5px] leading-none">
+        <span className="truncate text-ink-500">{hint}</span>
+        {isPositiveFinite(otherValue) && (
+          <span className="shrink-0 tabular-nums text-ink-300">
+            {other.rowLabel.replace(" index", "")} {fmtIndex(otherValue)}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -378,6 +475,7 @@ function SearchBox({
   onSelect,
   matchCount,
   offViewCount,
+  placeholder,
 }: {
   value: string;
   onChange: (v: string) => void;
@@ -385,6 +483,7 @@ function SearchBox({
   onSelect: (slug: string) => void;
   matchCount: number | null;
   offViewCount: number;
+  placeholder: string;
 }) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -416,7 +515,7 @@ function SearchBox({
           height="13"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#b5b1a8"
+          stroke="#b3b7be"
           strokeWidth="2.4"
           aria-hidden
         >
@@ -458,9 +557,9 @@ function SearchBox({
               event.currentTarget.blur();
             }
           }}
-          placeholder="Search or compare a model…"
+          placeholder={placeholder}
           aria-label="Search models"
-          className="h-8 w-full rounded-full border border-ink-100 bg-card pl-8 pr-8 text-[12px] text-ink-900 placeholder:text-ink-300 transition-colors focus:border-ink-300 focus:outline-none sm:w-56"
+          className="h-8 w-full rounded-full border border-ink-100 bg-card pl-8 pr-8 text-[12px] text-ink-900 shadow-[0_1px_2px_rgba(14,15,17,0.04)] placeholder:text-ink-500 transition-[border-color,box-shadow] focus:border-ink-300 focus:shadow-[0_0_0_4px_rgba(14,15,17,0.04)] focus:outline-none sm:w-60"
         />
         {active && (
           <button
@@ -476,7 +575,7 @@ function SearchBox({
             id="model-search-results"
             role="listbox"
             className="model-picker-menu absolute left-0 top-full z-40 mt-2 max-h-72 w-[calc(100vw-2rem)] max-w-80 overflow-y-auto rounded-xl border border-ink-100 bg-card p-1.5"
-            style={{ boxShadow: "0 1px 2px rgba(23,20,10,0.05), 0 16px 40px rgba(23,20,10,0.10)" }}
+            style={{ boxShadow: "0 1px 2px rgba(14,15,17,0.05), 0 16px 40px rgba(14,15,17,0.10)" }}
           >
             {results.map((model, index) => (
               <button
@@ -524,6 +623,9 @@ export default function App() {
     setColorCap(null);
   };
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const [hoverPos, setHoverPos] = useState<{ left: number; top: number } | null>(null);
+  // Pointing at a release card spotlights every variant of it on the map.
+  const [previewSlugs, setPreviewSlugs] = useState<Set<string> | null>(null);
   const [query, setQuery] = useState(initial.q);
   const [comparedSlugs, setComparedSlugs] = useState<string[]>(initial.comparedSlugs);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
@@ -729,6 +831,38 @@ export default function App() {
     [metric, newestSlugs, viewModels],
   );
 
+  const releases = useMemo(() => recentReleases(allModels, metric), [metric]);
+  const activeReleaseKey =
+    releases.find(
+      (release) =>
+        comparedSlugs[comparedSlugs.length - 1] === release.flagship.slug &&
+        (release.predecessor ? comparedSlugs[0] === release.predecessor.slug : comparedSlugs.length === 1),
+    )?.key ?? null;
+  /** A release opens as the upgrade question: what it replaces → the release. */
+  const openModelAsUpgrade = (model: Model) => {
+    const before = predecessorOf(model, allModels, metric);
+    setQuery("");
+    setPreviewSlugs(null);
+    setComparedSlugs(before ? [before.slug, model.slug] : [model.slug]);
+  };
+  const [progressSpan, setProgressSpan] = useState<ProgressSpan>("1y");
+  const progress = useMemo(
+    () => (xMode === "timeline" ? progressSince(allModels, metric, progressSpan) : null),
+    [xMode, metric, progressSpan],
+  );
+  const compareModels = (pair: [Model, Model]) => {
+    setQuery("");
+    setPreviewSlugs(null);
+    setComparedSlugs([pair[0].slug, pair[1].slug]);
+  };
+  const openRelease = (release: Release) => {
+    if (release.key === activeReleaseKey) {
+      setComparedSlugs([]);
+      return;
+    }
+    openModelAsUpgrade(release.flagship);
+  };
+
   // Search matches every model, so matches that can't be plotted on the
   // current view are reported as "off view" instead of silently vanishing.
   const matchedSlugs = useMemo(() => {
@@ -897,7 +1031,33 @@ export default function App() {
   };
 
   const hovered = hoveredSlug ? viewModels.find((m) => m.slug === hoveredSlug) : null;
-  const subtitle = xc.subtitle.replace("Up is intelligence", `Up is ${metric.noun}`);
+
+  // Anchor the hover card beside the dot, flipping to the left near the right
+  // edge — reading a value shouldn't mean looking to the far corner.
+  useLayoutEffect(() => {
+    const container = chartScrollRef.current;
+    const dot = hoveredSlug
+      ? container?.querySelector<SVGCircleElement>(`[data-model-slug="${hoveredSlug}"] .dot-core`)
+      : null;
+    if (!container || !dot) {
+      setHoverPos(null);
+      return;
+    }
+    const box = container.getBoundingClientRect();
+    const rect = dot.getBoundingClientRect();
+    const cx = rect.left - box.left + container.scrollLeft + rect.width / 2;
+    const cy = rect.top - box.top + rect.height / 2;
+    const gap = rect.width / 2 + 16;
+    const fitsRight = cx + gap + HOVER_CARD_W < container.scrollLeft + container.clientWidth - 8;
+    const left = fitsRight ? cx + gap : cx - gap - HOVER_CARD_W;
+    const top = Math.max(8, Math.min(container.clientHeight - 150, cy - 34));
+    setHoverPos({ left, top });
+  }, [hoveredSlug, xMode, yMetric, chartHeight]);
+  const searchPlaceholder = !baselineModel
+    ? "Search models…"
+    : !candidateModel
+      ? "Compare it with…"
+      : "Search models…";
   const stats =
     baselineModel && candidateModel
       ? relativeStats(baselineModel, candidateModel, metric)
@@ -914,32 +1074,52 @@ export default function App() {
       }`}
     >
       <div className="app-frame mx-auto max-w-[1400px] w-full px-4 sm:px-8 md:px-12 pt-6 pb-3 flex-1 flex flex-col min-h-0">
-        <header className="shrink-0 flex items-end justify-between gap-8 pb-4">
-          <div className="min-w-0">
-            <h1
-              className="font-serif text-[26px] md:text-[30px] leading-none tracking-[-0.015em] text-ink-900"
-              style={{ fontWeight: 560 }}
-            >
-              Smart, fast, and <span className="italic">cheap.</span>
+        <header className="shrink-0 flex flex-wrap items-end justify-between gap-x-10 gap-y-4 pb-4">
+          <div className="page-in min-w-0 max-w-[30rem]">
+            <h1 className="text-[24px] font-semibold leading-none tracking-[-0.03em] text-ink-900 md:text-[28px]">
+              Smart, fast, and cheap.
             </h1>
-            <p className="comparison-mobile-hide mt-2 text-[12px] leading-snug text-ink-500 sm:hidden">
-              Up is {metric.noun}.{" "}
-              {timeline
-                ? "Newer is right."
-                : xMode === "cost"
-                  ? "Right is cheaper."
-                  : "Right is faster."}
+            <p className="comparison-mobile-hide mt-2 text-[13px] leading-snug text-ink-500">
+              Frontier AI models compared on intelligence, speed, and cost per task.
             </p>
-            <p className="comparison-mobile-hide mt-2 hidden max-w-3xl text-[13px] leading-snug text-ink-500 sm:block">
-              {subtitle}
-            </p>
+            <a
+              href={REPO_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="comparison-mobile-hide mt-1 inline-block text-[11.5px] text-ink-500 transition-colors hover:text-ink-900"
+            >
+              Data from Artificial Analysis
+              {intelligenceIndexVersion && `, Index v${intelligenceIndexVersion}`}, updated{" "}
+              {fmtDate(fetchedAtMs)}
+              <span className="ml-1 underline decoration-ink-300 underline-offset-2">Source</span>
+            </a>
           </div>
-          <div className="comparison-mobile-hide hidden shrink-0 sm:block">
-            <Changelog models={allModels} onSelect={selectForComparison} />
+          <div className="comparison-mobile-hide min-w-0 max-w-full">
+            <ReleaseStrip
+              releases={releases}
+              metric={metric}
+              activeKey={activeReleaseKey}
+              onOpen={openRelease}
+              onPreview={(release) =>
+                setPreviewSlugs(release ? new Set(release.models.map((m) => m.slug)) : null)
+              }
+              allReleases={
+                <Changelog
+                  models={allModels}
+                  onSelect={(slug) => {
+                    const model = allModels.find((m) => m.slug === slug);
+                    if (model) openModelAsUpgrade(model);
+                  }}
+                />
+              }
+            />
           </div>
         </header>
 
-        <div className="shrink-0 flex flex-wrap items-center gap-2 border-y border-ink-100 py-2.5 sm:gap-3">
+        <div
+          className="page-in shrink-0 flex flex-wrap items-center gap-2 border-y border-ink-100 py-2.5 sm:gap-3"
+          style={{ animationDelay: "60ms" }}
+        >
           <SegmentSwitch
             ariaLabel="Horizontal axis"
             options={(Object.keys(X_MODES) as XMode[]).map((k) => ({
@@ -949,6 +1129,16 @@ export default function App() {
             value={xMode}
             onChange={changeXMode}
           />
+          <span className="mx-1 hidden h-4 w-px bg-ink-100 lg:block" aria-hidden />
+          <div className="hidden lg:block">
+            <ColorLegend
+              title={xc.colorTitle}
+              domain={colorDomain}
+              fmt={xc.fmtColor}
+              cap={colorCap}
+              onCapChange={setColorCap}
+            />
+          </div>
           {/* Full width on phones — squeezed beside the axis switch there was
               barely room for the word "Search". */}
           <div className="flex w-full min-w-0 items-center gap-2 sm:ml-auto sm:w-auto sm:gap-3">
@@ -959,6 +1149,7 @@ export default function App() {
               onSelect={selectForComparison}
               matchCount={matchCount}
               offViewCount={offViewCount}
+              placeholder={searchPlaceholder}
             />
           </div>
         </div>
@@ -1007,9 +1198,12 @@ export default function App() {
           </div>
         )}
 
-        <main className="chart-main relative mt-3 min-h-0 flex-1">
+        <main
+          className="page-in chart-main relative mt-3 min-h-0 flex-1"
+          style={{ animationDelay: "120ms" }}
+        >
           <div
-            className="flex h-full w-full overflow-hidden rounded-2xl border border-ink-100 bg-card"
+            className="flex h-full w-full overflow-hidden rounded-xl border border-ink-100 bg-card"
             style={{ boxShadow: CARD_SHADOW }}
           >
             <div
@@ -1032,19 +1226,44 @@ export default function App() {
                   onHover={setHoveredSlug}
                   hoveredSlug={hoveredSlug}
                   matchedSlugs={matchedSlugs}
+                  spotlightSlugs={previewSlugs}
                   newestSlugs={newestSlugs}
                   recentCutoffMs={recentCutoffMs}
-                  colorDomain={colorDomain}
                   colorCap={colorCap}
                   comparedSlugs={comparedSlugs}
                   alternativeSlugs={alternativeSlugs}
                   onSelect={selectForComparison}
+                  referenceMs={progress && !comparisonOn ? progress.sinceMs : null}
+                  referenceLabel={`${PROGRESS_SPANS.find((s) => s.key === progressSpan)!.label} ago`}
                 />
               </div>
-              {hovered && <HoverCard m={hovered} yMetric={yMetric} />}
+              {progress && !comparisonOn && (
+                <div
+                  className="absolute z-10 hidden lg:block"
+                  style={{ left: "calc(6.6% + 28px)", top: 24 }}
+                >
+                  <ProgressPanel
+                    progress={progress}
+                    span={progressSpan}
+                    onSpan={setProgressSpan}
+                    onPreview={(pair) =>
+                      setPreviewSlugs(pair ? new Set(pair.map((m) => m.slug)) : null)
+                    }
+                    onCompare={compareModels}
+                  />
+                </div>
+              )}
+              {hovered && hoverPos && (
+                <HoverCard
+                  m={hovered}
+                  yMetric={yMetric}
+                  position={hoverPos}
+                  baseline={baselineModel}
+                />
+              )}
             </div>
             {baselineModel && (
-              <aside className="hidden lg:flex w-[20rem] xl:w-[23rem] shrink-0 flex-col gap-3 self-stretch overflow-y-auto border-l border-ink-100 bg-paper p-3.5">
+              <aside className="hidden lg:flex w-[20rem] xl:w-[23rem] shrink-0 flex-col gap-3 self-stretch overflow-y-auto border-l border-ink-100 bg-wash p-3.5">
                 <ComparisonCard
                   baseline={baselineModel}
                   candidate={candidateModel}
@@ -1075,7 +1294,10 @@ export default function App() {
           </div>
         </main>
 
-        <footer className="comparison-mobile-hide shrink-0 pt-2.5 mt-3 border-t border-ink-100">
+        <footer
+          className="page-in comparison-mobile-hide shrink-0 mt-3 border-t border-ink-100 pt-2.5"
+          style={{ animationDelay: "180ms" }}
+        >
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <SegmentSwitch
               ariaLabel="Score"
@@ -1086,33 +1308,43 @@ export default function App() {
               value={yMetric}
               onChange={setYMetric}
             />
+            <div className="w-full md:w-auto">
+              <LabLegend
+                onPreview={(creator) => {
+                  if (!creator) return setPreviewSlugs(null);
+                  const named = new Set(LABS.map((l) => l.name));
+                  setPreviewSlugs(
+                    new Set(
+                      allModels
+                        .filter((m) =>
+                          creator === "Other" ? !named.has(m.creator) : m.creator === creator,
+                        )
+                        .map((m) => m.slug),
+                    ),
+                  );
+                }}
+              />
+            </div>
+            <span className="hidden h-4 w-px bg-ink-100 md:block" aria-hidden />
             <div className="hidden md:block">
               <FrontierLegend label={xc.frontierLabel} note={xc.frontierNote(metric.noun)} />
             </div>
-            <div className="hidden lg:block">
-              <ColorLegend
-                title={xc.colorTitle}
-                domain={colorDomain}
-                fmt={xc.fmtColor}
-                cap={colorCap}
-                onCapChange={setColorCap}
-              />
+            <div className="hidden items-center gap-2 xl:flex">
+              <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden className="shrink-0">
+                <circle
+                  cx="6"
+                  cy="6"
+                  r="4.6"
+                  fill="#ffffff"
+                  stroke="#b3b7be"
+                  strokeWidth="1.3"
+                  strokeDasharray="2.4 1.8"
+                />
+              </svg>
+              <span className="text-[11.5px] text-ink-700">Not measured yet</span>
             </div>
-            <a
-              href={REPO_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="ml-auto text-[11px] text-ink-500 underline decoration-ink-300 underline-offset-2 transition-colors hover:text-ink-900"
-            >
-              Data from Artificial Analysis · Source
-            </a>
+
           </div>
-          <p className="hidden xl:block pt-2 text-[11px] leading-snug text-ink-300">
-            {xc.footnote}
-            {intelligenceIndexVersion && ` Scores are AA Intelligence Index v${intelligenceIndexVersion}.`}
-            {yMetric === "coding" &&
-              " Cost figures are per Intelligence Index task — AA doesn’t publish per-coding-task cost."}
-          </p>
         </footer>
       </div>
     </div>
