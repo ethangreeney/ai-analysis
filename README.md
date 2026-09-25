@@ -4,7 +4,7 @@
 
 **[Open the live map →](https://ethangreeney.github.io/ai-analysis/)**
 
-![Tour: open a new release as a comparison, drag a budget, flip between speed, cost and timeline](docs/tour.gif)
+![Tour: open a new release to see why it matters, view a whole lineup, drag a budget, flip between speed, cost and timeline](docs/tour.gif)
 
 ## Read it in a glance
 
@@ -14,11 +14,19 @@
 
 Flip the axis to **Cost** to see smart-and-cheap instead, or **Timeline** to watch the intelligence record get broken release by release.
 
+## See why a new release matters
+
+**Latest releases** gives every launch one line on what it did best: **the smartest model yet**, **12× cheaper than anything as smart**, **1.6× faster than anything as smart**, or simply how far it moved past the version it replaces.
+
+Click one and the map draws **its own line** against **the version it replaces** (dashed) and **the best of everything** (light). Each setting on the line is labelled by effort, so you can see which one to pick. Switch to the whole lineup (all of GPT-6, say) with one click.
+
+![MiMo-V2.6-Pro in focus on the cost view: 12× cheaper than anything as smart, sitting on the frontier](docs/focus.png)
+
 ## See how fast it's moving
 
-The timeline answers **"how much better is today than a year ago?"** in three numbers: how much smarter the best model got, and how much cheaper and faster last year's best is to match now. Click any of them to open that exact comparison.
+The timeline answers **"how much better is today than a year ago?"** in three plain sentences: where last year's best model would rank today, and how much cheaper and faster the same smarts are now. Click any of them to open that exact comparison.
 
-![Progress in the last year: +34.6 points at the top, 31× cheaper and 27× faster for the same smarts](docs/progress.png)
+![Progress in the last year: the best model from a year ago now ranks #92, and the same smarts cost 31× less and arrive 27× faster](docs/progress.png)
 
 ## Set a budget
 
@@ -28,7 +36,7 @@ Drag the budget slider left. Everything pricier fades out, and the frontier redr
 
 ## Compare what you use now
 
-Click any dot, then a second one, or click a release under **Latest releases** to see it against the version it replaces. The card says it in plain terms: **+6.8 intelligence, about the same cost per task.** Copy the link and the whole comparison travels with it.
+Click any dot, then a second one, or open a release and hit **Compare** to see it against the version it replaces. The card says it in plain terms: **+6.8 intelligence, about the same cost per task.** Copy the link and the whole comparison travels with it.
 
 ![Claude Opus 5 vs Claude Opus 5.5: +6.8 intelligence at about the same cost per task](docs/compare.png)
 
