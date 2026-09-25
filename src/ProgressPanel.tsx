@@ -113,7 +113,10 @@ export function ProgressPanel({
               onMouseLeave={() => onPreview(null)}
               onFocus={() => onPreview(row.pair)}
               onBlur={() => onPreview(null)}
-              onClick={() => onCompare(row.pair)}
+              onClick={() => {
+                onPreview(null);
+                onCompare(row.pair);
+              }}
               title="Compare these two on the map"
               className="group block w-full rounded-md px-1.5 py-2 text-left transition-colors hover:bg-wash"
             >

@@ -208,7 +208,11 @@ export function FocusPanel({
                   className="cursor-pointer border-t border-ink-100 transition-colors hover:bg-wash"
                   onMouseEnter={() => onHoverModel(m.slug)}
                   onMouseLeave={() => onHoverModel(null)}
-                  onClick={() => onPickModel(m)}
+                  onClick={() => {
+                    // The panel is replaced on click, so this row never sees the mouse leave.
+                    onHoverModel(null);
+                    onPickModel(m);
+                  }}
                   title="Click to compare"
                 >
                   <td className="truncate py-1.5 pr-2 text-ink-900" title={m.displayName}>

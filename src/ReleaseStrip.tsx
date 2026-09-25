@@ -74,7 +74,10 @@ export function ReleaseStrip({
             <li key={release.key} className="release-row" style={{ animationDelay: `${80 + index * 50}ms` }}>
               <button
                 type="button"
-                onClick={() => onOpen(release)}
+                onClick={() => {
+                  onPreview(null);
+                  onOpen(release);
+                }}
                 onMouseEnter={() => onPreview(release)}
                 onMouseLeave={() => onPreview(null)}
                 onFocus={() => onPreview(release)}

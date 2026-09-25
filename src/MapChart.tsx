@@ -789,6 +789,15 @@ export function MapChart({
       className="w-full h-full select-none"
       preserveAspectRatio="xMidYMid meet"
       style={{ fontFamily: FONT }}
+      // Lifting the hovered dot to the top re-inserts it in the DOM, and the
+      // browser can then miss its mouseleave. So the pointer itself is the
+      // truth: every move re-reads which dot (if any) is under it.
+      onPointerMove={(event) => {
+        const dot = (event.target as Element).closest?.("[data-model-slug]");
+        const slug = dot?.getAttribute("data-model-slug") ?? null;
+        if (slug !== hoveredSlug) onHover(slug);
+      }}
+      onPointerLeave={() => hoveredSlug && onHover(null)}
     >
       <defs>
         <marker
