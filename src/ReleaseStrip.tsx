@@ -4,6 +4,7 @@ import type { Release } from "./releases";
 
 const UP = "#17804a";
 const DOWN = "#b42318";
+const DAY_MS = 86_400_000;
 
 const fmtDay = (ms: number) =>
   new Date(ms).toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" });
@@ -12,6 +13,30 @@ const fmtDelta = (d: number) => {
   if (Math.abs(d) < 0.05) return "±0";
   return `${d > 0 ? "+" : "−"}${Math.abs(d).toFixed(1)}`;
 };
+
+/** "3 days ago" reads faster than a date when the point is freshness. */
+const ago = (ms: number) => {
+  const days = Math.floor((Date.now() - ms) / DAY_MS);
+  if (days <= 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days < 14) return `${days} days ago`;
+  return fmtDay(ms);
+};
+
+/** The gain over the release it replaces, said the way people say it. */
+function verdict(delta: number | null, predecessor: string | null) {
+  const v = (lead: string, rest: string, tone: string | null) => ({ lead, rest, tone, text: lead + rest });
+  if (delta == null || !predecessor) return v("A brand-new line", "", null);
+  if (delta >= 5) return v("Big jump", ` over ${predecessor}`, UP);
+  if (delta >= 2) return v("Clear step up", ` from ${predecessor}`, UP);
+  if (delta >= 0.5) return v("Small step up", ` from ${predecessor}`, UP);
+  if (delta > -0.5) return v("About the same", ` as ${predecessor}`, null);
+  return v("Behind", ` ${predecessor}`, DOWN);
+}
+
+/** Rank as a phrase; only the top of the table is worth shouting about. */
+const standing = (rank: number) =>
+  rank === 1 ? "New #1" : rank <= 3 ? "Top 3" : rank <= 10 ? "Top 10" : null;
 
 /**
  * The front door for "something new came out — is it any good?". A plain table,
@@ -37,15 +62,17 @@ export function ReleaseStrip({
   if (!releases.length) return null;
 
   return (
-    <section aria-label="Latest releases" className="w-full min-w-0 sm:w-[31rem]">
-      <div className="flex items-center justify-between gap-4 border-b border-ink-100 pb-1.5 text-[11px] leading-none text-ink-500">
+    <section aria-label="Latest releases" className="w-full min-w-0 sm:w-[25rem]">
+      <div className="flex items-center justify-between gap-4 pb-1 text-[11px] leading-none text-ink-500">
         <h2 className="font-medium text-ink-900">Latest releases</h2>
         {allReleases}
       </div>
-      <ul>
+      <ul className="grid">
         {releases.map((release, index) => {
           const active = release.key === activeKey;
           const delta = release.delta;
+          const v = verdict(delta, release.predecessorLabel);
+          const badge = standing(release.rank);
           return (
             <li key={release.key} className="release-row" style={{ animationDelay: `${80 + index * 50}ms` }}>
               <button
@@ -56,47 +83,47 @@ export function ReleaseStrip({
                 onFocus={() => onPreview(release)}
                 onBlur={() => onPreview(null)}
                 aria-pressed={active}
+                title={`#${release.rank} on ${metric.noun}${
+                  release.predecessorLabel && delta != null
+                    ? `, ${fmtDelta(delta)} points vs ${release.predecessorLabel}`
+                    : ""
+                }. Click to compare.`}
                 aria-label={`${release.family} by ${release.creator}, released ${fmtDay(
                   release.releaseMs,
-                )}. Ranked ${release.rank} on ${metric.noun}.${
-                  release.predecessorLabel && delta != null
-                    ? ` ${fmtDelta(delta)} over ${release.predecessorLabel}.`
-                    : ""
-                } Compare on the map.`}
-                className={`group flex w-full items-baseline gap-4 border-b border-ink-100 px-1 py-[7px] text-left text-[12.5px] leading-none transition-colors ${
+                )}. Ranked ${release.rank} on ${metric.noun}. ${v.text}. Compare on the map.`}
+                className={`group -mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-lg px-2 py-[5px] text-left transition-colors ${
                   active ? "bg-ink-50" : "hover:bg-wash"
                 }`}
               >
-                <span className="min-w-0 flex-1 truncate">
-                  <span className="font-medium text-ink-900">{release.family}</span>
-                  <span className="ml-2 text-[11.5px] text-ink-500">
-                    {release.creator} · {fmtDay(release.releaseMs)}
+                <span className="min-w-0 flex-1">
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className="truncate text-[13.5px] font-semibold leading-tight text-ink-900">
+                      {release.family}
+                    </span>
+                    {badge && (
+                      <span
+                        className={`shrink-0 rounded-full px-1.5 py-[3px] text-[10px] font-medium leading-none ${
+                          release.rank === 1 ? "bg-ink-900 text-white" : "bg-ink-50 text-ink-700"
+                        }`}
+                      >
+                        {badge}
+                      </span>
+                    )}
+                  </span>
+                  <span className="mt-0.5 block truncate text-[12px] leading-tight text-ink-500">
+                    <span className="font-medium" style={v.tone ? { color: v.tone } : undefined}>
+                      {v.lead}
+                    </span>
+                    {v.rest}
                   </span>
                 </span>
-                <span
-                  className="hidden w-8 shrink-0 text-right tabular-nums text-ink-700 sm:inline"
-                  title={`Ranks #${release.rank} among every release on ${metric.noun}`}
-                >
-                  #{release.rank}
-                </span>
-                <span className="w-[8.5rem] shrink-0 truncate text-right text-[11.5px] text-ink-500">
-                  {release.predecessorLabel && delta != null ? (
-                    <>
-                      <span
-                        className="font-medium tabular-nums"
-                        style={{ color: delta > 0.05 ? UP : delta < -0.05 ? DOWN : undefined }}
-                      >
-                        {fmtDelta(delta)}
-                      </span>{" "}
-                      vs {release.predecessorLabel}
-                    </>
-                  ) : (
-                    "New line"
-                  )}
+                <span className="shrink-0 text-right text-[11px] leading-tight text-ink-500">
+                  <span className="block">{release.creator}</span>
+                  <span className="block">{ago(release.releaseMs)}</span>
                 </span>
                 <span
                   aria-hidden
-                  className="w-3 shrink-0 text-right text-ink-300 transition-transform group-hover:translate-x-0.5 group-hover:text-ink-700"
+                  className="shrink-0 text-ink-300 transition-transform group-hover:translate-x-0.5 group-hover:text-ink-700"
                 >
                   →
                 </span>

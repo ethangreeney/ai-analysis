@@ -1,4 +1,5 @@
-import { Model, fmtCost, fmtMultiple, nameParts } from "./model";
+import type { ReactNode } from "react";
+import { Model, fmtMultiple, nameParts } from "./model";
 import { PROGRESS_SPANS, Progress, ProgressSpan, Gain } from "./progress";
 
 const short = (m: Model) => {
@@ -6,23 +7,25 @@ const short = (m: Model) => {
   return effort ? `${base} ${effort}` : base;
 };
 
-const fmtValue = (g: Gain, v: number) =>
-  g.unit === "task"
-    ? fmtCost(v)
-    : g.unit === "tokens"
-      ? `$${v < 1 ? v.toFixed(2) : v.toFixed(v < 10 ? 2 : 0)}`
-      : g.unit === "wait"
-        ? `${v < 10 ? v.toFixed(1) : v.toFixed(0)}s`
-        : `${Math.round(v)} tok/s`;
+const SPAN_AGO: Record<ProgressSpan, string> = {
+  "6m": "6 months ago",
+  "1y": "a year ago",
+  "2y": "2 years ago",
+};
 
-const unitNote = (g: Gain) =>
-  g.unit === "task"
-    ? "per task"
-    : g.unit === "tokens"
-      ? "per 1M tokens"
-      : g.unit === "wait"
-        ? "wait"
-        : "output speed";
+/** Money the way people say it: 11¢, $3.44. */
+const money = (v: number) => (v < 1 ? `${Math.max(1, Math.round(v * 100))}¢` : `$${v.toFixed(2)}`);
+const seconds = (v: number) => (v < 10 ? v.toFixed(1) : Math.round(v).toString());
+
+function cheaperLine(g: Gain) {
+  const unit = g.unit === "task" ? " a task" : " per million tokens";
+  return `${short(g.now)} matches it for ${money(g.nowValue)}${unit} instead of ${money(g.thenValue)}.`;
+}
+function fasterLine(g: Gain) {
+  if (g.unit === "wait")
+    return `${short(g.now)} answers in ${seconds(g.nowValue)} seconds instead of ${seconds(g.thenValue)}.`;
+  return `${short(g.now)} writes ${Math.round(g.nowValue)} tokens a second instead of ${Math.round(g.thenValue)}.`;
+}
 
 /**
  * The timeline's headline: how far the field moved in a chosen window. Each
@@ -42,12 +45,16 @@ export function ProgressPanel({
   onPreview: (pair: [Model, Model] | null) => void;
   onCompare: (pair: [Model, Model]) => void;
 }) {
-  const rows: { key: string; big: string; title: string; detail: string; pair: [Model, Model] }[] = [
+  const ago = SPAN_AGO[span];
+  const rows: { key: string; head: ReactNode; detail: string; pair: [Model, Model] }[] = [
     {
-      key: "smarter",
-      big: `+${progress.points.toFixed(1)}`,
-      title: "points smarter at the top",
-      detail: `${short(progress.thenBest)} → ${short(progress.nowBest)}`,
+      key: "rank",
+      head: (
+        <>
+          The best AI from {ago} now ranks <strong>#{progress.thenRankToday}</strong>
+        </>
+      ),
+      detail: `That was ${short(progress.thenBest)}. ${progress.thenRankToday - 1} releases have beaten it since.`,
       pair: [progress.thenBest, progress.nowBest],
     },
   ];
@@ -55,9 +62,12 @@ export function ProgressPanel({
     const g = progress.cheaper;
     rows.push({
       key: "cheaper",
-      big: fmtMultiple(g.ratio),
-      title: "cheaper for the same smarts",
-      detail: `${short(g.now)}, ${fmtValue(g, g.thenValue)} → ${fmtValue(g, g.nowValue)} ${unitNote(g)}`,
+      head: (
+        <>
+          The same smarts now cost <strong>{fmtMultiple(g.ratio)} less</strong>
+        </>
+      ),
+      detail: cheaperLine(g),
       pair: [g.then, g.now],
     });
   }
@@ -65,9 +75,12 @@ export function ProgressPanel({
     const g = progress.faster;
     rows.push({
       key: "faster",
-      big: fmtMultiple(g.ratio),
-      title: "faster for the same smarts",
-      detail: `${short(g.now)}, ${fmtValue(g, g.thenValue)} → ${fmtValue(g, g.nowValue)} ${unitNote(g)}`,
+      head: (
+        <>
+          And arrive <strong>{fmtMultiple(g.ratio)} faster</strong>
+        </>
+      ),
+      detail: fasterLine(g),
       pair: [g.then, g.now],
     });
   }
@@ -79,7 +92,7 @@ export function ProgressPanel({
       style={{ boxShadow: "0 1px 2px rgba(14,15,17,0.04), 0 8px 24px rgba(14,15,17,0.06)" }}
     >
       <div className="flex items-center justify-between gap-3 px-1">
-        <h2 className="text-[12px] font-medium text-ink-900">Progress in the last</h2>
+        <h2 className="text-[13px] font-semibold tracking-[-0.01em] text-ink-900">How far AI has come</h2>
         <div className="flex rounded-md bg-ink-50 p-0.5" role="group" aria-label="Time window">
           {PROGRESS_SPANS.map((s) => (
             <button
@@ -98,7 +111,7 @@ export function ProgressPanel({
           ))}
         </div>
       </div>
-      <ul className="mt-2">
+      <ul className="mt-1.5 grid gap-0.5">
         {rows.map((row) => (
           <li key={`${span}-${row.key}`} className="progress-row">
             <button
@@ -108,17 +121,13 @@ export function ProgressPanel({
               onFocus={() => onPreview(row.pair)}
               onBlur={() => onPreview(null)}
               onClick={() => onCompare(row.pair)}
-              className="group flex w-full items-baseline gap-3 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-wash"
+              title="Compare these two on the map"
+              className="group block w-full rounded-md px-1.5 py-2 text-left transition-colors hover:bg-wash"
             >
-              <span className="w-[4.25rem] shrink-0 text-[22px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-ink-900">
-                {row.big}
+              <span className="block text-[14px] leading-snug text-ink-900 [&_strong]:font-semibold">
+                {row.head}
               </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[12px] leading-tight text-ink-900">{row.title}</span>
-                <span className="mt-0.5 block truncate text-[11px] leading-tight text-ink-500">
-                  {row.detail}
-                </span>
-              </span>
+              <span className="mt-0.5 block text-[12px] leading-snug text-ink-500">{row.detail}</span>
             </button>
           </li>
         ))}

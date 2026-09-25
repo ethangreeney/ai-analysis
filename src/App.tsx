@@ -1171,7 +1171,7 @@ export default function App() {
       }`}
     >
       <div className="app-frame mx-auto max-w-[1400px] w-full px-4 sm:px-8 md:px-12 pt-6 pb-3 flex-1 flex flex-col min-h-0">
-        <header className="shrink-0 flex flex-wrap items-end justify-between gap-x-10 gap-y-4 pb-4">
+        <header className="shrink-0 flex flex-wrap items-start justify-between gap-x-10 gap-y-4 pb-4">
           <div className="page-in min-w-0 max-w-[30rem]">
             <h1 className="text-[24px] font-semibold leading-none tracking-[-0.03em] text-ink-900 md:text-[28px]">
               Smart, fast, and cheap.
@@ -1191,7 +1191,7 @@ export default function App() {
               <span className="ml-1 underline decoration-ink-300 underline-offset-2">Source</span>
             </a>
           </div>
-          <div className="comparison-mobile-hide min-w-0 max-w-full">
+          <div className="comparison-mobile-hide w-full min-w-0 max-w-full sm:w-auto">
             <ReleaseStrip
               releases={releases}
               metric={metric}

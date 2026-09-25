@@ -1,4 +1,4 @@
-import { Model, MetricConfig, isPositiveFinite } from "./model";
+import { Model, MetricConfig, familyOf, isPositiveFinite } from "./model";
 
 const DAY_MS = 86_400_000;
 
@@ -26,6 +26,8 @@ export interface Progress {
   thenBest: Model;
   nowBest: Model;
   points: number;
+  /** Where the old champion would rank today, counting each release once. */
+  thenRankToday: number;
   /** Then-best's level of smarts, bought as cheaply as today allows. */
   cheaper: Gain | null;
   /** Then-best's level of smarts, as fast as today allows. */
@@ -79,8 +81,20 @@ export function progressSince(
     return ratio > 1 ? { then: thenBest, now, thenValue, nowValue, ratio, unit } : null;
   };
 
+  // One entry per release family (Opus 5.5 is one release, not five effort
+  // levels), so "ranks #40" means forty launches, not forty variants.
+  const familyBest = new Map<string, number>();
+  for (const m of pool) {
+    const key = `${m.creator}|${familyOf(m)}`;
+    familyBest.set(key, Math.max(familyBest.get(key) ?? 0, score(m)));
+  }
+  const ownFamily = `${thenBest.creator}|${familyOf(thenBest)}`;
+  const thenRankToday =
+    1 + [...familyBest].filter(([key, best]) => key !== ownFamily && best > bar).length;
+
   return {
     sinceMs,
+    thenRankToday,
     thenBest,
     nowBest,
     points: score(nowBest) - bar,
