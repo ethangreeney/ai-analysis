@@ -727,19 +727,22 @@ export default function App() {
   const chartScrollRef = useRef<HTMLDivElement>(null);
   const chartCanvasRef = useRef<HTMLDivElement>(null);
   const [chartHeight, setChartHeight] = useState(CHART_BASE_HEIGHT);
+  const [chartWidth, setChartWidth] = useState(CHART_WIDTH);
 
-  // The chart draws on a fixed 1280-unit width and takes its height from the
-  // space it actually has, so it fills the card instead of letterboxing inside
-  // it. Clamped so extreme layouts never flatten or stretch the plot.
+  // The chart draws at the size it's shown, so its text is real pixels and
+  // doesn't shrink when the side rail takes some width. Below a minimum width
+  // (phones) it keeps a wider canvas and scales down instead of cramming.
+  // Height comes from the space available, clamped so extreme layouts never
+  // flatten or stretch the plot.
   useEffect(() => {
     const el = chartCanvasRef.current;
     if (!el || typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
       if (width < 1 || height < 1) return;
-      const next = Math.round(
-        Math.min(1150, Math.max(540, (CHART_WIDTH * height) / width)),
-      );
+      const w = Math.round(Math.min(1600, Math.max(960, width)));
+      const next = Math.round(Math.min(1150, Math.max(540, (w * height) / width)));
+      setChartWidth((prev) => (Math.abs(prev - w) > 6 ? w : prev));
       setChartHeight((prev) => (Math.abs(prev - next) > 6 ? next : prev));
     });
     observer.observe(el);
@@ -926,7 +929,8 @@ export default function App() {
     [metric, newestSlugs, viewModels],
   );
 
-  const releases = useMemo(() => recentReleases(allModels, metric), [metric]);
+  // Six fit the side rail; the phone header keeps it to three.
+  const releases = useMemo(() => recentReleases(allModels, metric, { limit: 6 }), [metric]);
   const activeReleaseKey =
     releases.find(
       (release) =>
@@ -1163,6 +1167,28 @@ export default function App() {
     (model) => !viewModels.some((visible) => visible.slug === model.slug),
   );
   const shareUrl = window.location.href;
+  const releaseList = (variant: "header" | "rail") => (
+    <ReleaseStrip
+      variant={variant}
+      releases={variant === "rail" ? releases : releases.slice(0, 3)}
+      metric={metric}
+      activeKey={activeReleaseKey}
+      onOpen={openRelease}
+      onPreview={(release) =>
+        setPreviewSlugs(release ? new Set(release.models.map((m) => m.slug)) : null)
+      }
+      allReleases={
+        <Changelog
+          models={allModels}
+          panelWidth={variant === "rail" ? "w-[16rem] 2xl:w-[18rem]" : "w-80"}
+          onSelect={(slug) => {
+            const model = allModels.find((m) => m.slug === slug);
+            if (model) openModelAsUpgrade(model);
+          }}
+        />
+      }
+    />
+  );
 
   return (
     <div
@@ -1191,25 +1217,8 @@ export default function App() {
               <span className="ml-1 underline decoration-ink-300 underline-offset-2">Source</span>
             </a>
           </div>
-          <div className="comparison-mobile-hide w-full min-w-0 max-w-full sm:w-auto">
-            <ReleaseStrip
-              releases={releases}
-              metric={metric}
-              activeKey={activeReleaseKey}
-              onOpen={openRelease}
-              onPreview={(release) =>
-                setPreviewSlugs(release ? new Set(release.models.map((m) => m.slug)) : null)
-              }
-              allReleases={
-                <Changelog
-                  models={allModels}
-                  onSelect={(slug) => {
-                    const model = allModels.find((m) => m.slug === slug);
-                    if (model) openModelAsUpgrade(model);
-                  }}
-                />
-              }
-            />
+          <div className="comparison-mobile-hide w-full min-w-0 max-w-full sm:w-auto xl:hidden">
+            {releaseList("header")}
           </div>
         </header>
 
@@ -1319,6 +1328,7 @@ export default function App() {
               >
                 <MapChart
                   height={chartHeight}
+                  width={chartWidth}
                   models={allModels}
                   yMetric={yMetric}
                   xMode={xMode}
@@ -1340,7 +1350,8 @@ export default function App() {
               {progress && !comparisonOn && (
                 <div
                   className="absolute z-10 hidden lg:block"
-                  style={{ left: "calc(6.6% + 28px)", top: 24 }}
+                  // Just inside the plot's left edge (84 units of margin + a gutter).
+                  style={{ left: `${(112 / chartWidth) * 100}%`, top: 24 }}
                 >
                   <ProgressPanel
                     progress={progress}
@@ -1363,6 +1374,14 @@ export default function App() {
                 />
               )}
             </div>
+            {/* The rail is the details panel: new releases until you pick
+                something, then the comparison. On a laptop, height is what
+                the chart is short of, so this lives beside it, not above. */}
+            {!baselineModel && (
+              <aside className="hidden w-[18rem] shrink-0 flex-col self-stretch overflow-y-auto border-l border-ink-100 p-4 xl:flex 2xl:w-[20rem]">
+                {releaseList("rail")}
+              </aside>
+            )}
             {baselineModel && (
               <aside className="hidden lg:flex w-[20rem] xl:w-[23rem] shrink-0 flex-col gap-3 self-stretch overflow-y-auto border-l border-ink-100 bg-wash p-3.5">
                 <ComparisonCard

@@ -50,7 +50,10 @@ export function ReleaseStrip({
   onOpen,
   onPreview,
   allReleases,
+  variant = "header",
 }: {
+  /** "rail": the side panel beside the chart, with room to breathe. */
+  variant?: "header" | "rail";
   releases: Release[];
   metric: MetricConfig;
   activeKey: string | null;
@@ -60,14 +63,24 @@ export function ReleaseStrip({
   allReleases: ReactNode;
 }) {
   if (!releases.length) return null;
+  const rail = variant === "rail";
 
   return (
-    <section aria-label="Latest releases" className="w-full min-w-0 sm:w-[25rem]">
-      <div className="flex items-center justify-between gap-4 pb-1 text-[11px] leading-none text-ink-500">
-        <h2 className="font-medium text-ink-900">Latest releases</h2>
+    <section
+      aria-label="Latest releases"
+      className={rail ? "flex w-full min-w-0 flex-col" : "w-full min-w-0 sm:w-[25rem]"}
+    >
+      <div
+        className={`flex items-center justify-between gap-4 text-ink-500 ${
+          rail ? "pb-2 text-[11.5px] leading-none" : "pb-1 text-[11px] leading-none"
+        }`}
+      >
+        <h2 className={`font-semibold text-ink-900 ${rail ? "text-[13px] tracking-[-0.01em]" : "font-medium"}`}>
+          Latest releases
+        </h2>
         {allReleases}
       </div>
-      <ul className="grid">
+      <ul className={rail ? "grid gap-0.5" : "grid"}>
         {releases.map((release, index) => {
           const active = release.key === activeKey;
           const delta = release.delta;
@@ -91,7 +104,9 @@ export function ReleaseStrip({
                 aria-label={`${release.family} by ${release.creator}, released ${fmtDay(
                   release.releaseMs,
                 )}. Ranked ${release.rank} on ${metric.noun}. ${v.text}. Compare on the map.`}
-                className={`group -mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-lg px-2 py-[5px] text-left transition-colors ${
+                className={`group -mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-lg px-2 text-left transition-colors ${
+                  rail ? "py-2" : "py-[5px]"
+                } ${
                   active ? "bg-ink-50" : "hover:bg-wash"
                 }`}
               >
@@ -110,17 +125,26 @@ export function ReleaseStrip({
                       </span>
                     )}
                   </span>
-                  <span className="mt-0.5 block truncate text-[12px] leading-tight text-ink-500">
+                  <span
+                    className={`mt-0.5 block text-[12px] leading-tight text-ink-500 ${rail ? "" : "truncate"}`}
+                  >
                     <span className="font-medium" style={v.tone ? { color: v.tone } : undefined}>
                       {v.lead}
                     </span>
                     {v.rest}
                   </span>
+                  {rail && (
+                    <span className="mt-1 block text-[11px] leading-tight text-ink-500">
+                      {release.creator} · {ago(release.releaseMs)}
+                    </span>
+                  )}
                 </span>
-                <span className="shrink-0 text-right text-[11px] leading-tight text-ink-500">
-                  <span className="block">{release.creator}</span>
-                  <span className="block">{ago(release.releaseMs)}</span>
-                </span>
+                {!rail && (
+                  <span className="shrink-0 text-right text-[11px] leading-tight text-ink-500">
+                    <span className="block">{release.creator}</span>
+                    <span className="block">{ago(release.releaseMs)}</span>
+                  </span>
+                )}
                 <span
                   aria-hidden
                   className="shrink-0 text-ink-300 transition-transform group-hover:translate-x-0.5 group-hover:text-ink-700"
@@ -132,6 +156,11 @@ export function ReleaseStrip({
           );
         })}
       </ul>
+      {rail && (
+        <p className="mt-3 border-t border-ink-100 pt-3 text-[11.5px] leading-snug text-ink-500">
+          Pick a release to see it against the version it replaces.
+        </p>
+      )}
     </section>
   );
 }

@@ -34,9 +34,12 @@ interface Group {
 export function Changelog({
   models,
   onSelect,
+  panelWidth = "w-80",
 }: {
   models: Model[];
   onSelect: (slug: string) => void;
+  /** Tailwind width for the dropdown; the side rail needs it to fit inside. */
+  panelWidth?: string;
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -115,7 +118,7 @@ export function Changelog({
 
       {open && (
         <div
-          className="popover-in absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-xl border border-ink-100 bg-card text-left"
+          className={`popover-in absolute right-0 top-full z-50 mt-2 ${panelWidth} overflow-hidden rounded-xl border border-ink-100 bg-card text-left`}
           style={{
             boxShadow: "0 1px 2px rgba(14,15,17,0.05), 0 18px 48px rgba(14,15,17,0.12)",
           }}

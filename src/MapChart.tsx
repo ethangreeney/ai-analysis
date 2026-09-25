@@ -168,6 +168,7 @@ export function MapChart({
   alternativeSlugs,
   onSelect,
   height = 720,
+  width = 1280,
   referenceMs = null,
   referenceLabel = "",
   colorBy = "value",
@@ -192,9 +193,11 @@ export function MapChart({
   referenceLabel?: string;
   /** Dots show the third number (cost, or wait in Cost view) or the lab. */
   colorBy?: ColorBy;
-  /** Canvas height in viewBox units; the width stays 1280 so text keeps its
+  /** Canvas height in viewBox units; with the width below, text keeps its
       relative size while the plot takes the shape of its container. */
   height?: number;
+  /** Canvas width in viewBox units: the pixel width it's drawn at. */
+  width?: number;
 }) {
   const metric = Y_METRICS[yMetric];
   const xc = X_MODES[xMode];
@@ -229,7 +232,7 @@ export function MapChart({
   const hasX = (m: Model) => isPositiveFinite(xc.xValue(m));
   const xModels = useMemo(() => metricModels.filter(hasX), [metricModels, xc]);
 
-  const W = 1280;
+  const W = width;
   const H = height;
   const M = { top: 30, right: 40, bottom: 60, left: 84 };
   const innerW = W - M.left - M.right;
