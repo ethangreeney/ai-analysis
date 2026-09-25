@@ -843,17 +843,7 @@ export function MapChart({
               fontWeight={500}
               fill={INK_500}
             >
-              {xc.railCap?.split(" ").slice(0, 2).join(" ")}
-            </text>
-            <text
-              x={LANE_W / 2}
-              y={innerH + 31}
-              textAnchor="middle"
-              fontSize={10}
-              fontWeight={500}
-              fill={INK_500}
-            >
-              {xc.railCap?.split(" ").slice(2).join(" ")}
+              {xc.railCap}
             </text>
           </g>
         )}
