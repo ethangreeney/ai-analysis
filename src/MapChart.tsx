@@ -91,7 +91,7 @@ function placeLabels(
       const text = textOf(m);
       const anchor: "start" | "end" = x + r + 12 + labelWidth(text) < innerW ? "start" : "end";
       const off = anchor === "start" ? r + 8 : -(r + 8);
-      return { slug: m.slug, x: x + off, y, anchor, text, baseY: y, key: isKey(m) };
+      return { slug: m.slug, x: x + off, y, anchor, text, baseY: y, key: isKey(m), dotX: x, r };
     })
     // Key labels (frontier, newest, the ones you're pointing at) claim space
     // first; the rest only land if they fit right beside their dot.
@@ -127,26 +127,40 @@ function placeLabels(
   for (const c of cands) {
     // Long leader lines read as clutter: key labels may travel a little,
     // everything else sits beside its dot or not at all.
-    const offsets = c.key ? [0, 16, -16, 32, -32, 48, -48] : [0, 14, -14];
-    let y: number | null = null;
+    const offsets = c.key ? [0, 16, -16, 32, -32, 48, -48, 64, -64] : [0, 14, -14];
+    // Key labels that find no room on their preferred side try the other.
+    const flipped: "start" | "end" = c.anchor === "start" ? "end" : "start";
+    const flipX = flipped === "start" ? c.dotX + c.r + 8 : c.dotX - (c.r + 8);
+    const flipFits =
+      flipped === "start" ? flipX + labelWidth(c.text) < innerW : flipX - labelWidth(c.text) > 0;
+    const sides: { anchor: "start" | "end"; x: number }[] = c.key && flipFits
+      ? [
+          { anchor: c.anchor, x: c.x },
+          { anchor: flipped, x: flipX },
+        ]
+      : [{ anchor: c.anchor, x: c.x }];
+    let spot: { y: number; anchor: "start" | "end"; x: number } | null = null;
 
-    for (const offset of offsets) {
-      const candidateY = Math.max(12, Math.min(innerH - 12, c.baseY + offset));
-      const rect = rectFor({ ...c, y: candidateY });
-      if (
-        !placed.some((p) => overlaps(rect, rectFor(p))) &&
-        !dotRects.some((dot) => overlaps(rect, dot))
-      ) {
-        y = candidateY;
-        break;
+    for (const side of sides) {
+      for (const offset of offsets) {
+        const candidateY = Math.max(12, Math.min(innerH - 12, c.baseY + offset));
+        const rect = rectFor({ ...c, ...side, y: candidateY });
+        if (
+          !placed.some((p) => overlaps(rect, rectFor(p))) &&
+          !dotRects.some((dot) => overlaps(rect, dot))
+        ) {
+          spot = { y: candidateY, ...side };
+          break;
+        }
       }
+      if (spot) break;
     }
-    if (y == null) continue;
+    if (spot == null) continue;
     placed.push({
       slug: c.slug,
-      x: c.x,
-      y: Math.max(12, Math.min(innerH - 12, y)),
-      anchor: c.anchor,
+      x: spot.x,
+      y: Math.max(12, Math.min(innerH - 12, spot.y)),
+      anchor: spot.anchor,
       text: c.text,
     });
   }
@@ -172,7 +186,13 @@ export function MapChart({
   referenceMs = null,
   referenceLabel = "",
   colorBy = "value",
+  focusSlugs = null,
+  ghostSlugs = null,
 }: {
+  /** A release (or lineup) in focus: its own frontier is drawn over the map. */
+  focusSlugs?: Set<string> | null;
+  /** The release it replaces, drawn dashed for contrast. */
+  ghostSlugs?: Set<string> | null;
   models: Model[];
   yMetric: YMetric;
   xMode: XMode;
@@ -340,6 +360,8 @@ export function MapChart({
       if (spotlightSlugs) metricModels.filter((m) => spotlightSlugs.has(m.slug)).forEach(add);
     }
 
+    if (focusSlugs) metricModels.filter((m) => focusSlugs.has(m.slug)).forEach(add);
+    if (ghostSlugs) metricModels.filter((m) => ghostSlugs.has(m.slug)).forEach(add);
     add(findModel(hoveredSlug));
     comparedSlugs.forEach((slug) => add(findModel(slug)));
     alternativeSlugs.forEach((slug) => add(findModel(slug)));
@@ -348,6 +370,8 @@ export function MapChart({
     alternativeSlugs,
     comparedSlugs,
     defaultRecentModels,
+    focusSlugs,
+    ghostSlugs,
     frontier,
     fullFrontier,
     hoveredSlug,
@@ -440,6 +464,16 @@ export function MapChart({
       if (m) bySlug.set(m.slug, m);
     };
 
+    // In focus, only the release (and the one it replaces) is named; the
+    // faded field stays unlabelled so the two lines read cleanly.
+    if (focusSlugs) {
+      metricModels
+        .filter((m) => focusSlugs.has(m.slug) || ghostSlugs?.has(m.slug))
+        .forEach(add);
+      add(findModel(hoveredSlug));
+      comparedSlugs.forEach((slug) => add(findModel(slug)));
+      return [...bySlug.values()].filter(underCap);
+    }
     frontier.forEach(add);
     metricModels.filter((m) => newestSlugs.has(m.slug) && inPack(m)).forEach(add);
     add(findModel(hoveredSlug));
@@ -466,6 +500,8 @@ export function MapChart({
     colorCap,
     comparedSlugs,
     defaultRecentModels,
+    focusSlugs,
+    ghostSlugs,
     frontier,
     hoveredSlug,
     matchedSlugs,
@@ -492,17 +528,29 @@ export function MapChart({
         xy,
         innerW,
         innerH,
-        visibleModels,
+        // In focus the faded field is backdrop: only the lit dots block labels.
+        focusSlugs
+          ? visibleModels.filter(
+              (m) =>
+                focusSlugs.has(m.slug) ||
+                ghostSlugs?.has(m.slug) ||
+                isCompared(m.slug) ||
+                m.slug === hoveredSlug,
+            )
+          : visibleModels,
         labelText,
         (m) =>
-          isFrontier(m.slug) ||
+          // In focus, the release's own labels outrank everything else.
+          focusSlugs
+            ? focusSlugs.has(m.slug) || isCompared(m.slug) || m.slug === hoveredSlug
+            : isFrontier(m.slug) ||
           newestSlugs.has(m.slug) ||
           isCompared(m.slug) ||
           m.slug === hoveredSlug ||
           isAlternative(m.slug) ||
-          (searchActive && isMatch(m.slug)),
+          (searchActive && isMatch(m.slug) && !ghostSlugs?.has(m.slug)),
       ),
-    [labeledModels, visibleModels, geometry, comparedSlugs, newestSlugs, hoveredSlug],
+    [labeledModels, visibleModels, geometry, comparedSlugs, newestSlugs, hoveredSlug, ghostSlugs, focusSlugs],
   );
 
   // Frontier path. Scatter: polyline from the left edge through the frontier
@@ -528,6 +576,34 @@ export function MapChart({
       `V${innerH}`,
     ].join(" ");
   }, [frontier, timeline, geometry]);
+
+  /**
+   * A release's own frontier: the best trade-offs among just its models,
+   * joined point to point. No run-out to the edges: it is a line-up, not a
+   * boundary of the whole field.
+   */
+  const groupPath = (slugs: Set<string> | null) => {
+    // A release's settings share one date, so on the timeline its "curve"
+    // would be a vertical scribble: the highlight alone says enough there.
+    if (!slugs || timeline) return "";
+    const members = metricModels.filter(
+      (m) => slugs.has(m.slug) && (timeline || hasX(m)) && underCap(m),
+    );
+    if (members.length < 2) return "";
+    const pts = sweepFrontier(members)
+      .map((m) => xy(m))
+      .sort((a, b) => a.x - b.x);
+    return pts.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  };
+  const focusPath = useMemo(
+    () => groupPath(focusSlugs),
+    [focusSlugs, metricModels, geometry, colorCap, metric, timeline, xc],
+  );
+  const ghostPath = useMemo(
+    () => groupPath(ghostSlugs),
+    [ghostSlugs, metricModels, geometry, colorCap, metric, timeline, xc],
+  );
+  const focusActive = focusSlugs != null;
 
   /** The region the frontier encloses — everything you can actually get. */
   const frontierArea = useMemo(() => {
@@ -870,7 +946,7 @@ export function MapChart({
           <g
             style={{
               pointerEvents: "none",
-              opacity: comparisonActive ? 0.3 : hoveredSlug ? 0.55 : 1,
+              opacity: comparisonActive ? 0.3 : focusActive ? 0.45 : hoveredSlug ? 0.55 : 1,
               transition: "opacity 240ms ease-out",
             }}
           >
@@ -907,6 +983,37 @@ export function MapChart({
               >
                 {xc.frontierLabel}
               </text>
+            )}
+          </g>
+        )}
+
+        {/* The release in focus: its own frontier, and the one it replaces. */}
+        {focusActive && !comparisonActive && (
+          <g style={{ pointerEvents: "none" }}>
+            {ghostPath && (
+              <path
+                key={`ghost-${viewKey}-${ghostPath.length}`}
+                className="frontier-draw"
+                d={ghostPath}
+                fill="none"
+                stroke={INK_500}
+                strokeWidth={1.6}
+                strokeDasharray="5 4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            )}
+            {focusPath && (
+              <path
+                key={`focus-${viewKey}-${focusPath.length}`}
+                className="frontier-draw"
+                d={focusPath}
+                fill="none"
+                stroke={INK_900}
+                strokeWidth={2.4}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             )}
           </g>
         )}
@@ -979,6 +1086,8 @@ export function MapChart({
                   : // Bands are categories: keep them near full strength so the
                     // red never washes out into pink.
                     Math.max(0.82, Math.min(0.9, baseOp));
+          // The release being replaced stays readable but steps back.
+          if (focusActive && ghostSlugs?.has(m.slug) && !isHovered) op = Math.min(op, 0.55);
           // Timeline: damp the background cloud so the highlights carry it.
           if (timeline && !isHovered && !isOther && !onFrontier && !isLit && !isNew) {
             op = Math.min(op, 0.38);
@@ -986,7 +1095,14 @@ export function MapChart({
           // Hollow means "not measured yet": the model has no x position.
           // A missing colour value is just a pale grey dot ("No data").
           const hollow = !timed;
-          const stroke = compared || isHovered || isLit || alternative ? INK_900 : hollow ? c : CARD;
+          // In focus the line carries the emphasis, so its dots keep a plain
+          // white edge instead of search's black ring.
+          const stroke =
+            compared || isHovered || (isLit && !focusActive) || alternative
+              ? INK_900
+              : hollow
+                ? c
+                : CARD;
           const strokeW = compared ? 2 : isHovered ? 1.8 : hollow ? 1.6 : 1.5;
           const dotR = onFrontier && !timeline ? r + 1.2 : r;
           // Shadows and sheen are cheap on the scatter's ~50 dots, not on the
@@ -1034,7 +1150,9 @@ export function MapChart({
                   className={keyboardInteractive ? "chart-hit-target" : undefined}
                   fill="transparent"
                 />
-                {(isHovered || isLit) && <circle r={dotR + 7} fill={c} fillOpacity={0.16} />}
+                {(isHovered || (isLit && !focusActive)) && (
+                  <circle r={dotR + 7} fill={c} fillOpacity={0.16} />
+                )}
                 {isNew && (
                   <g
                     opacity={isOther && !quiet ? 0.18 : 1}

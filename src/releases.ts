@@ -147,3 +147,64 @@ export function predecessorOf(model: Model, models: Model[], metric: MetricConfi
   const pred = predecessorFamily(family, all);
   return pred ? matchVariant(model, pred.models) : null;
 }
+
+export type FocusScope = "release" | "lineup";
+
+/**
+ * The wider lineup a release belongs to: the family name minus its last word.
+ * "GPT-6 Sol" → "GPT-6" (Sol, Astra, Luna); "Claude Opus 5.5" → "Claude Opus";
+ * "Grok 4.7" → "Grok". A one-word family has no lineup.
+ */
+export function lineupOf(family: string): string | null {
+  const words = family.trim().split(/\s+/);
+  return words.length >= 2 ? words.slice(0, -1).join(" ") : null;
+}
+
+export interface Focus {
+  release: Release;
+  scope: FocusScope;
+  /** What the focus line is drawn through. */
+  models: Model[];
+  label: string;
+  /** The release it replaces, drawn dashed for contrast (release scope only). */
+  ghost: Model[];
+  ghostLabel: string | null;
+  /** Label for the wider lineup, when there is one. */
+  lineupLabel: string | null;
+}
+
+/** Everything the map needs to spotlight one release, or its whole lineup. */
+export function focusFor(
+  key: string,
+  scope: FocusScope,
+  models: Model[],
+  metric: MetricConfig,
+): Focus | null {
+  const [creator] = key.split("|");
+  const member = models.find((m) => `${m.creator}|${familyOf(m)}` === key);
+  if (!member) return null;
+  const release = releaseFor(member, models, metric);
+  if (!release) return null;
+  const scored = models.filter((m) => isPositiveFinite(metric.value(m)) && m.creator === creator);
+  const prefix = lineupOf(release.family);
+  const lineupLabel = prefix ? `All ${prefix}` : null;
+  const inLineup = (m: Model) => {
+    const f = familyOf(m);
+    return prefix != null && (f === prefix || f.startsWith(`${prefix} `));
+  };
+  const lineup = scope === "lineup" && prefix != null;
+  const members = lineup ? scored.filter(inLineup) : scored.filter((m) => familyOf(m) === release.family);
+  const ghost =
+    !lineup && release.predecessorLabel
+      ? scored.filter((m) => familyOf(m) === release.predecessorLabel)
+      : [];
+  return {
+    release,
+    scope: lineup ? "lineup" : "release",
+    models: members,
+    label: lineup ? lineupLabel! : release.family,
+    ghost,
+    ghostLabel: ghost.length ? release.predecessorLabel : null,
+    lineupLabel,
+  };
+}

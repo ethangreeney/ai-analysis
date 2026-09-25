@@ -15,7 +15,7 @@ const fmtDelta = (d: number) => {
 };
 
 /** "3 days ago" reads faster than a date when the point is freshness. */
-const ago = (ms: number) => {
+export const ago = (ms: number) => {
   const days = Math.floor((Date.now() - ms) / DAY_MS);
   if (days <= 0) return "Today";
   if (days === 1) return "Yesterday";
@@ -24,7 +24,7 @@ const ago = (ms: number) => {
 };
 
 /** The gain over the release it replaces, said the way people say it. */
-function verdict(delta: number | null, predecessor: string | null) {
+export function verdict(delta: number | null, predecessor: string | null) {
   const v = (lead: string, rest: string, tone: string | null) => ({ lead, rest, tone, text: lead + rest });
   if (delta == null || !predecessor) return v("A brand-new line", "", null);
   if (delta >= 5) return v("Big jump", ` over ${predecessor}`, UP);
@@ -35,7 +35,7 @@ function verdict(delta: number | null, predecessor: string | null) {
 }
 
 /** Rank as a phrase; only the top of the table is worth shouting about. */
-const standing = (rank: number) =>
+export const standing = (rank: number) =>
   rank === 1 ? "New #1" : rank <= 3 ? "Top 3" : rank <= 10 ? "Top 10" : null;
 
 /**

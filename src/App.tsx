@@ -5,7 +5,14 @@ import { ComparisonCard } from "./ComparisonCard";
 import { ReleaseStrip } from "./ReleaseStrip";
 import { ProgressPanel } from "./ProgressPanel";
 import { PROGRESS_SPANS, ProgressSpan, progressSince } from "./progress";
-import { predecessorOf, recentReleases, type Release } from "./releases";
+import {
+  focusFor,
+  predecessorOf,
+  recentReleases,
+  type FocusScope,
+  type Release,
+} from "./releases";
+import { FocusPanel } from "./FocusPanel";
 import {
   Model,
   YMetric,
@@ -30,6 +37,7 @@ import {
   bandIndex,
   type ColorBy,
   type XModeConfig,
+  familyOf,
 } from "./model";
 
 const RECENT_WINDOW_MONTHS = 6;
@@ -76,7 +84,10 @@ function readHash() {
     if (to != null && to !== from && knownSlugs.has(to)) comparedSlugs.push(to);
   }
   const c: ColorBy = p.get("c") === "lab" ? "lab" : "value";
-  return { y, x, q, cap, comparedSlugs, c };
+  const f = p.get("f");
+  const focusKey = f && allModels.some((m) => `${m.creator}|${familyOf(m)}` === f) ? f : null;
+  const focusScope: FocusScope = p.get("fs") === "lineup" ? "lineup" : "release";
+  return { y, x, q, cap, comparedSlugs, c, focusKey, focusScope };
 }
 const initial = readHash();
 
@@ -710,6 +721,9 @@ export default function App() {
   const [yMetric, setYMetric] = useState<YMetric>(initial.y);
   const [xMode, setXMode] = useState<XMode>(initial.x);
   const [colorBy, setColorBy] = useState<ColorBy>(initial.c);
+  // A release in focus: its own frontier drawn over the map, details in the rail.
+  const [focusKey, setFocusKey] = useState<string | null>(initial.focusKey);
+  const [focusScope, setFocusScope] = useState<FocusScope>(initial.focusScope);
   // Cap on whatever the color ramp encodes — cost per task in Speed and
   // Timeline views, wait in Cost view. Cleared when the axis changes meaning.
   const [colorCap, setColorCap] = useState<number | null>(initial.cap);
@@ -954,12 +968,34 @@ export default function App() {
     setPreviewSlugs(null);
     setComparedSlugs([pair[0].slug, pair[1].slug]);
   };
+  const focus = useMemo(
+    () => (focusKey ? focusFor(focusKey, focusScope, allModels, metric) : null),
+    [focusKey, focusScope, metric],
+  );
+  const focusSets = useMemo(() => {
+    if (!focus) return null;
+    const lit = new Set(focus.models.map((m) => m.slug));
+    const ghost = new Set(focus.ghost.map((m) => m.slug));
+    return { lit, ghost, all: new Set([...lit, ...ghost]) };
+  }, [focus]);
+  /** Picking a release puts it in focus; picking it again lets go. */
   const openRelease = (release: Release) => {
-    if (release.key === activeReleaseKey) {
-      setComparedSlugs([]);
+    setQuery("");
+    setPreviewSlugs(null);
+    setComparedSlugs([]);
+    if (release.key === focusKey) {
+      setFocusKey(null);
       return;
     }
-    openModelAsUpgrade(release.flagship);
+    setFocusKey(release.key);
+    setFocusScope("release");
+  };
+  const focusModelFamily = (model: Model) => {
+    setQuery("");
+    setPreviewSlugs(null);
+    setComparedSlugs([]);
+    setFocusKey(`${model.creator}|${familyOf(model)}`);
+    setFocusScope("release");
   };
 
   // Search matches every model, so matches that can't be plotted on the
@@ -1056,6 +1092,8 @@ export default function App() {
       setQuery(h.q);
       setComparedSlugs(h.comparedSlugs);
       setColorBy(h.c);
+      setFocusKey(h.focusKey);
+      setFocusScope(h.focusScope);
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -1074,6 +1112,10 @@ export default function App() {
       if (comparedSlugs[1]) p.set("to", comparedSlugs[1]);
       if (colorCap != null) p.set("cap", colorCap.toPrecision(3));
       if (colorBy === "lab") p.set("c", "lab");
+      if (focusKey) {
+        p.set("f", focusKey);
+        if (focusScope === "lineup") p.set("fs", "lineup");
+      }
       const hash = p.toString();
       const next = hash ? `#${hash}` : "";
       if (next === location.hash) return;
@@ -1085,7 +1127,7 @@ export default function App() {
       }
     }, 200);
     return () => clearTimeout(timer);
-  }, [yMetric, xMode, query, comparedSlugs, colorCap, colorBy]);
+  }, [yMetric, xMode, query, comparedSlugs, colorCap, colorBy, focusKey, focusScope]);
 
   useEffect(() => setCopyState("idle"), [yMetric, xMode, query, comparedSlugs]);
   useEffect(() => {
@@ -1167,12 +1209,27 @@ export default function App() {
     (model) => !viewModels.some((visible) => visible.slug === model.slug),
   );
   const shareUrl = window.location.href;
+  const focusPanel = (compact: boolean) =>
+    focus && (
+      <FocusPanel
+        focus={focus}
+        metric={metric}
+        compact={compact}
+        onScope={setFocusScope}
+        onClose={() => setFocusKey(null)}
+        onCompare={() => openModelAsUpgrade(focus.release.flagship)}
+        onHoverModel={setHoveredSlug}
+        onPickModel={(m) =>
+          focus.scope === "release" ? openModelAsUpgrade(m) : setComparedSlugs([m.slug])
+        }
+      />
+    );
   const releaseList = (variant: "header" | "rail") => (
     <ReleaseStrip
       variant={variant}
       releases={variant === "rail" ? releases : releases.slice(0, 3)}
       metric={metric}
-      activeKey={activeReleaseKey}
+      activeKey={focusKey ?? activeReleaseKey}
       onOpen={openRelease}
       onPreview={(release) =>
         setPreviewSlugs(release ? new Set(release.models.map((m) => m.slug)) : null)
@@ -1183,7 +1240,7 @@ export default function App() {
           panelWidth={variant === "rail" ? "w-[16rem] 2xl:w-[18rem]" : "w-80"}
           onSelect={(slug) => {
             const model = allModels.find((m) => m.slug === slug);
-            if (model) openModelAsUpgrade(model);
+            if (model) focusModelFamily(model);
           }}
         />
       }
@@ -1262,6 +1319,11 @@ export default function App() {
           </div>
         </div>
 
+        {focus && !baselineModel && (
+          <div className="mt-3 shrink-0 rounded-lg border border-ink-100 px-3 py-2 xl:hidden">
+            {focusPanel(true)}
+          </div>
+        )}
         {baselineModel && (
           <div className="mt-3 shrink-0 lg:hidden">
             <ComparisonCard
@@ -1335,7 +1397,9 @@ export default function App() {
                   onHover={setHoveredSlug}
                   hoveredSlug={hoveredSlug}
                   matchedSlugs={matchedSlugs}
-                  spotlightSlugs={previewSlugs}
+                  spotlightSlugs={previewSlugs ?? (comparisonOn ? null : focusSets?.all ?? null)}
+                  focusSlugs={comparisonOn ? null : focusSets?.lit ?? null}
+                  ghostSlugs={comparisonOn ? null : focusSets?.ghost ?? null}
                   newestSlugs={newestSlugs}
                   recentCutoffMs={recentCutoffMs}
                   colorCap={colorCap}
@@ -1379,7 +1443,7 @@ export default function App() {
                 the chart is short of, so this lives beside it, not above. */}
             {!baselineModel && (
               <aside className="hidden w-[18rem] shrink-0 flex-col self-stretch overflow-y-auto border-l border-ink-100 p-4 xl:flex 2xl:w-[20rem]">
-                {releaseList("rail")}
+                {focus ? focusPanel(false) : releaseList("rail")}
               </aside>
             )}
             {baselineModel && (
