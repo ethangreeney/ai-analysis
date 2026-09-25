@@ -25,6 +25,11 @@ import {
   LABS,
   OTHER_LAB_COLOR,
   labColor,
+  BAND_COLORS,
+  NO_DATA_COLOR,
+  bandIndex,
+  type ColorBy,
+  type XModeConfig,
 } from "./model";
 
 const RECENT_WINDOW_MONTHS = 6;
@@ -70,7 +75,8 @@ function readHash() {
     comparedSlugs.push(from);
     if (to != null && to !== from && knownSlugs.has(to)) comparedSlugs.push(to);
   }
-  return { y, x, q, cap, comparedSlugs };
+  const c: ColorBy = p.get("c") === "lab" ? "lab" : "value";
+  return { y, x, q, cap, comparedSlugs, c };
 }
 const initial = readHash();
 
@@ -209,23 +215,79 @@ function SegmentSwitch<T extends string>({
   );
 }
 
-/** Who made what. Pointing at a lab lights up its models on the map. */
-function LabLegend({ onPreview }: { onPreview: (creator: string | null) => void }) {
-  const items = [...LABS, { name: "Other", color: OTHER_LAB_COLOR }];
+/**
+ * What the dot colours mean, and a switch between the two meanings: the third
+ * number (cost, or wait in Cost view), or who made the model. Pointing at a
+ * swatch lights up those models on the map.
+ */
+function ColorKey({
+  xc,
+  colorBy,
+  onColorBy,
+  onPreview,
+}: {
+  xc: XModeConfig;
+  colorBy: ColorBy;
+  onColorBy: (c: ColorBy) => void;
+  onPreview: (key: string | null) => void;
+}) {
+  const items =
+    colorBy === "lab"
+      ? [...LABS, { name: "Other", color: OTHER_LAB_COLOR }].map((l) => ({
+          key: l.name,
+          label: l.name,
+          color: l.color,
+        }))
+      : [
+          ...xc.bandLabels.map((label, i) => ({ key: String(i), label, color: BAND_COLORS[i] })),
+          { key: "none", label: "No data", color: NO_DATA_COLOR },
+        ];
+  const valueLabel = xc.colorTitle === "Wait" ? "Wait" : "Cost";
   return (
-    <ul className="flex flex-wrap items-center gap-x-3.5 gap-y-1" aria-label="Labs">
-      {items.map((lab) => (
-        <li
-          key={lab.name}
-          className="flex cursor-default items-center gap-1.5 text-[11.5px] text-ink-700 transition-colors hover:text-ink-900"
-          onMouseEnter={() => onPreview(lab.name)}
-          onMouseLeave={() => onPreview(null)}
-        >
-          <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: lab.color }} aria-hidden />
-          {lab.name}
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+      <div
+        role="group"
+        aria-label="Colour dots by"
+        className="flex items-center gap-0.5 rounded-md bg-ink-50 p-0.5 ring-1 ring-inset ring-ink-100/70"
+      >
+        {(
+          [
+            ["value", valueLabel],
+            ["lab", "Lab"],
+          ] as [ColorBy, string][]
+        ).map(([value, label]) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => onColorBy(value)}
+            aria-pressed={colorBy === value}
+            className={`rounded px-2 py-1 text-[11px] leading-none transition-colors ${
+              colorBy === value
+                ? "bg-card font-medium text-ink-900 shadow-[0_1px_2px_rgba(14,15,17,0.08)]"
+                : "text-ink-500 hover:text-ink-900"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <ul
+        className="flex flex-wrap items-center gap-x-3 gap-y-1"
+        aria-label={colorBy === "lab" ? "Labs" : `${xc.colorTitle} bands`}
+      >
+        {items.map((item) => (
+          <li
+            key={`${colorBy}-${item.key}`}
+            className="flex cursor-default items-center gap-1.5 text-[11.5px] tabular-nums text-ink-700 transition-colors hover:text-ink-900"
+            onMouseEnter={() => onPreview(item.key)}
+            onMouseLeave={() => onPreview(null)}
+          >
+            <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: item.color }} aria-hidden />
+            {item.label}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -267,12 +329,17 @@ function ColorLegend({
   fmt,
   cap,
   onCapChange,
+  bands,
+  banded,
 }: {
   title: string;
   domain: [number, number];
   fmt: (v: number) => string;
   cap: number | null;
   onCapChange: (cap: number | null) => void;
+  /** Band edges; when the dots wear these colours the track does too. */
+  bands: number[];
+  banded: boolean;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   // While dragging, the handle follows the pointer directly and the cap is
@@ -335,13 +402,36 @@ function ColorLegend({
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
-        <div className="h-1 rounded-full bg-ink-100" />
-        <div
-          className={`pointer-events-none absolute left-0 top-2.5 h-1 rounded-full transition-colors ${
-            active || dragging ? "bg-ink-900" : "bg-ink-300"
-          }`}
-          style={{ width: `${t * 100}%` }}
-        />
+        {banded ? (
+          <>
+            {/* The track is the legend: the same bands the dots wear. */}
+            <div
+              className="h-1 rounded-full"
+              style={{
+                background: `linear-gradient(to right, ${BAND_COLORS.map((c, i) => {
+                  const from = i === 0 ? 0 : norm(bands[i - 1]) * 100;
+                  const to = i === bands.length ? 100 : norm(bands[i]) * 100;
+                  return `${c} ${from.toFixed(1)}% ${to.toFixed(1)}%`;
+                }).join(", ")})`,
+              }}
+            />
+            {/* Everything past the cap is out of play: wash it out. */}
+            <div
+              className="pointer-events-none absolute right-0 top-2.5 h-1 rounded-r-full bg-card/80"
+              style={{ left: `${t * 100}%`, opacity: active || dragging ? 1 : 0 }}
+            />
+          </>
+        ) : (
+          <>
+            <div className="h-1 rounded-full bg-ink-100" />
+            <div
+              className={`pointer-events-none absolute left-0 top-2.5 h-1 rounded-full transition-colors ${
+                active || dragging ? "bg-ink-900" : "bg-ink-300"
+              }`}
+              style={{ width: `${t * 100}%` }}
+            />
+          </>
+        )}
         <div
           role="slider"
           tabIndex={0}
@@ -394,7 +484,9 @@ function HoverCard({
   yMetric,
   position,
   baseline,
+  showLab = false,
 }: {
+  showLab?: boolean;
   m: Model;
   yMetric: YMetric;
   position: { left: number; top: number };
@@ -432,7 +524,9 @@ function HoverCard({
     >
       <div className="flex items-center justify-between gap-3 text-[11px] leading-none text-ink-500">
         <span className="flex min-w-0 items-center gap-1.5">
-          <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: labColor(m.creator) }} aria-hidden />
+          {showLab && (
+            <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: labColor(m.creator) }} aria-hidden />
+          )}
           <span className="truncate">{m.creator}</span>
         </span>
         <span className="shrink-0 tabular-nums">{fmtDate(m.releaseMs)}</span>
@@ -615,6 +709,7 @@ function SearchBox({
 export default function App() {
   const [yMetric, setYMetric] = useState<YMetric>(initial.y);
   const [xMode, setXMode] = useState<XMode>(initial.x);
+  const [colorBy, setColorBy] = useState<ColorBy>(initial.c);
   // Cap on whatever the color ramp encodes — cost per task in Speed and
   // Timeline views, wait in Cost view. Cleared when the axis changes meaning.
   const [colorCap, setColorCap] = useState<number | null>(initial.cap);
@@ -956,6 +1051,7 @@ export default function App() {
       setColorCap(h.cap);
       setQuery(h.q);
       setComparedSlugs(h.comparedSlugs);
+      setColorBy(h.c);
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -973,6 +1069,7 @@ export default function App() {
       if (comparedSlugs[0]) p.set("from", comparedSlugs[0]);
       if (comparedSlugs[1]) p.set("to", comparedSlugs[1]);
       if (colorCap != null) p.set("cap", colorCap.toPrecision(3));
+      if (colorBy === "lab") p.set("c", "lab");
       const hash = p.toString();
       const next = hash ? `#${hash}` : "";
       if (next === location.hash) return;
@@ -984,7 +1081,7 @@ export default function App() {
       }
     }, 200);
     return () => clearTimeout(timer);
-  }, [yMetric, xMode, query, comparedSlugs, colorCap]);
+  }, [yMetric, xMode, query, comparedSlugs, colorCap, colorBy]);
 
   useEffect(() => setCopyState("idle"), [yMetric, xMode, query, comparedSlugs]);
   useEffect(() => {
@@ -1137,6 +1234,8 @@ export default function App() {
               fmt={xc.fmtColor}
               cap={colorCap}
               onCapChange={setColorCap}
+              bands={xc.bands}
+              banded={colorBy === "value"}
             />
           </div>
           {/* Full width on phones — squeezed beside the axis switch there was
@@ -1234,6 +1333,7 @@ export default function App() {
                   alternativeSlugs={alternativeSlugs}
                   onSelect={selectForComparison}
                   referenceMs={progress && !comparisonOn ? progress.sinceMs : null}
+                  colorBy={colorBy}
                   referenceLabel={`${PROGRESS_SPANS.find((s) => s.key === progressSpan)!.label} ago`}
                 />
               </div>
@@ -1259,6 +1359,7 @@ export default function App() {
                   yMetric={yMetric}
                   position={hoverPos}
                   baseline={baselineModel}
+                  showLab={colorBy === "lab"}
                 />
               )}
             </div>
@@ -1309,19 +1410,21 @@ export default function App() {
               onChange={setYMetric}
             />
             <div className="w-full md:w-auto">
-              <LabLegend
-                onPreview={(creator) => {
-                  if (!creator) return setPreviewSlugs(null);
+              <ColorKey
+                xc={xc}
+                colorBy={colorBy}
+                onColorBy={setColorBy}
+                onPreview={(key) => {
+                  if (key == null) return setPreviewSlugs(null);
                   const named = new Set(LABS.map((l) => l.name));
-                  setPreviewSlugs(
-                    new Set(
-                      allModels
-                        .filter((m) =>
-                          creator === "Other" ? !named.has(m.creator) : m.creator === creator,
-                        )
-                        .map((m) => m.slug),
-                    ),
-                  );
+                  const inGroup = (m: Model) => {
+                    if (colorBy === "lab")
+                      return key === "Other" ? !named.has(m.creator) : m.creator === key;
+                    const v = xc.colorValue(m);
+                    if (key === "none") return !isPositiveFinite(v);
+                    return isPositiveFinite(v) && bandIndex(v, xc.bands) === Number(key);
+                  };
+                  setPreviewSlugs(new Set(allModels.filter(inGroup).map((m) => m.slug)));
                 }}
               />
             </div>

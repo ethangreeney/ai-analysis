@@ -8,6 +8,10 @@ import {
   X_MODES,
   isPositiveFinite,
   labColor,
+  BAND_COLORS,
+  NO_DATA_COLOR,
+  bandIndex,
+  type ColorBy,
   NEW_MODEL_COLOR,
   nameParts,
 } from "./model";
@@ -166,6 +170,7 @@ export function MapChart({
   height = 720,
   referenceMs = null,
   referenceLabel = "",
+  colorBy = "value",
 }: {
   models: Model[];
   yMetric: YMetric;
@@ -185,6 +190,8 @@ export function MapChart({
   /** Timeline only: a "this long ago" marker for the progress read-out. */
   referenceMs?: number | null;
   referenceLabel?: string;
+  /** Dots show the third number (cost, or wait in Cost view) or the lab. */
+  colorBy?: ColorBy;
   /** Canvas height in viewBox units; the width stays 1280 so text keeps its
       relative size while the plot takes the shape of its container. */
   height?: number;
@@ -402,7 +409,11 @@ export function MapChart({
   // comparison rail resized the chart, until an unrelated re-render fixes it.
   const geometry = [innerW, innerH, xMin, xMax, metricMin, metricMax, plotX0].join(":");
 
-  const markerColor = (m: Model) => labColor(m.creator);
+  const markerColor = (m: Model) => {
+    if (colorBy === "lab") return labColor(m.creator);
+    const v = xc.colorValue(m);
+    return isPositiveFinite(v) ? BAND_COLORS[bandIndex(v, xc.bands)] : NO_DATA_COLOR;
+  };
 
   const sizeScale = scaleLinear()
     .domain([metricMin, metricMax])
@@ -510,6 +521,8 @@ export function MapChart({
     return [
       `M${plotX0},${pts[0].y.toFixed(1)}`,
       ...pts.map((p) => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`),
+      // Drop to the floor at the fast end: nothing lives to the right of it.
+      `V${innerH}`,
     ].join(" ");
   }, [frontier, timeline, geometry]);
 
@@ -520,7 +533,7 @@ export function MapChart({
       const x0 = xy(frontier[0]).x;
       return `${frontierPath} V${innerH} H${x0.toFixed(1)} Z`;
     }
-    return `${frontierPath} V${innerH} H${plotX0} Z`;
+    return `${frontierPath} H${plotX0} Z`;
   }, [frontierPath, frontier, timeline, geometry]);
 
   /** Anchor for the quiet frontier caption — the flat run nothing sits above. */
@@ -960,12 +973,15 @@ export function MapChart({
                     : Math.min(0.12, baseOp)
                 : onFrontier || isLit || isNew
                   ? Math.max(0.9, baseOp)
-                  : Math.min(0.62, baseOp);
+                  : // Bands are categories: keep them near full strength so the
+                    // red never washes out into pink.
+                    Math.max(0.82, Math.min(0.9, baseOp));
           // Timeline: damp the background cloud so the highlights carry it.
           if (timeline && !isHovered && !isOther && !onFrontier && !isLit && !isNew) {
             op = Math.min(op, 0.38);
           }
           // Hollow means "not measured yet": the model has no x position.
+          // A missing colour value is just a pale grey dot ("No data").
           const hollow = !timed;
           const stroke = compared || isHovered || isLit || alternative ? INK_900 : hollow ? c : CARD;
           const strokeW = compared ? 2 : isHovered ? 1.8 : hollow ? 1.6 : 1.5;

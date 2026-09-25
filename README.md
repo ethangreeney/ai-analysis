@@ -8,9 +8,9 @@
 
 ## Read it in a glance
 
-![Every frontier model: up is smarter, right is faster, color is the lab](docs/screenshot.png)
+![Every frontier model: up is smarter, right is faster, color is cost per task](docs/screenshot.png)
 
-**Up is smarter. Right is faster. Color is the lab.** The line is the frontier: models no other model beats on both axes. If a model isn't on the line, something is smarter *and* faster. Models not timed yet sit in their own lane on the left instead of pretending to be slow.
+**Up is smarter. Right is faster. Color is cost per task**, from blue under 10¢ to red over $3, so you can spot smart, fast *and* cheap at a glance. One click switches the colors to the lab instead. The line is the frontier: models no other model beats on both axes. If a model isn't on the line, something is smarter *and* faster. Models not timed yet sit in their own lane on the left instead of pretending to be slow.
 
 Flip the axis to **Cost** to see smart-and-cheap instead, or **Timeline** to watch the intelligence record get broken release by release.
 

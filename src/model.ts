@@ -228,6 +228,10 @@ export interface XModeConfig {
   colorValue: (m: Model) => number | null;
   colorTitle: string;
   fmtColor: (v: number) => string;
+  /** Band edges for the colour, cheap/fast → pricey/slow. Five even-ish
+      groups on the current field, in round numbers people can repeat. */
+  bands: number[];
+  bandLabels: string[];
   fmtTick: (v: number) => string;
   xTicks: number[];
   axisTitle: string;
@@ -249,6 +253,8 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     colorValue: (m) => m.costPerTask,
     colorTitle: "Cost per task",
     fmtColor: (v) => fmtCost(v),
+    bands: [0.1, 0.3, 1, 3],
+    bandLabels: ["Under 10¢", "10–30¢", "30¢–$1", "$1–3", "Over $3"],
     fmtTick: (v) => `${v}s`,
     xTicks: [5, 10, 30, 100, 200],
     axisTitle: "End-to-end response time",
@@ -270,6 +276,8 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     colorValue: (m) => m.e2eLatency,
     colorTitle: "Wait",
     fmtColor: (v) => fmtSecondsShort(v),
+    bands: [10, 20, 45, 90],
+    bandLabels: ["Under 10s", "10–20s", "20–45s", "45–90s", "Over 90s"],
     fmtTick: (v) => (v >= 1 ? `$${v}` : `$${v.toFixed(2)}`),
     xTicks: [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30],
     axisTitle: "Cost per intelligence-index task",
@@ -291,6 +299,8 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     colorValue: (m) => m.costPerTask,
     colorTitle: "Cost per task",
     fmtColor: (v) => fmtCost(v),
+    bands: [0.1, 0.3, 1, 3],
+    bandLabels: ["Under 10¢", "10–30¢", "30¢–$1", "$1–3", "Over $3"],
     fmtTick: () => "",
     xTicks: [],
     axisTitle: "Release date",
@@ -335,6 +345,20 @@ export const LABS: { name: string; color: string }[] = [
   { name: "Alibaba", color: "#ebb526" },
 ];
 export const OTHER_LAB_COLOR = "#c3c7cd";
+
+/**
+ * The third dimension: five bands from cheap (cool) to pricey (warm). Bands
+ * instead of a smooth ramp, because most frontier models sit in one narrow
+ * price range and a continuous ramp painted them all the same orange.
+ * Adjacent steps checked for colour-blind separation (all ≥ 14.7 in OKLab).
+ */
+export const BAND_COLORS = ["#1f5aa6", "#4fa3cf", "#dfbd52", "#e0692a", "#a82a2a"];
+export const NO_DATA_COLOR = "#d3d6da";
+export const bandIndex = (value: number, edges: number[]) => {
+  const i = edges.findIndex((edge) => value < edge);
+  return i === -1 ? edges.length : i;
+};
+export type ColorBy = "value" | "lab";
 const LAB_COLOR = new Map(LABS.map((l) => [l.name, l.color]));
 export const labColor = (creator: string) => LAB_COLOR.get(creator) ?? OTHER_LAB_COLOR;
 
