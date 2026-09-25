@@ -1,11 +1,6 @@
 import type { ReactNode } from "react";
-import { Model, fmtMultiple, nameParts } from "./model";
+import { Model, fmtMoney as money, fmtMultiple, shortName as short } from "./model";
 import { PROGRESS_SPANS, Progress, ProgressSpan, Gain } from "./progress";
-
-const short = (m: Model) => {
-  const { base, effort } = nameParts(m);
-  return effort ? `${base} ${effort}` : base;
-};
 
 const SPAN_AGO: Record<ProgressSpan, string> = {
   "6m": "6 months ago",
@@ -13,8 +8,6 @@ const SPAN_AGO: Record<ProgressSpan, string> = {
   "2y": "2 years ago",
 };
 
-/** Money the way people say it: 11¢, $3.44. */
-const money = (v: number) => (v < 1 ? `${Math.max(1, Math.round(v * 100))}¢` : `$${v.toFixed(2)}`);
 const seconds = (v: number) => (v < 10 ? v.toFixed(1) : Math.round(v).toString());
 
 function cheaperLine(g: Gain) {

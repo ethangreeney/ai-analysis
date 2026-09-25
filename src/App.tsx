@@ -1400,6 +1400,7 @@ export default function App() {
                   spotlightSlugs={previewSlugs ?? (comparisonOn ? null : focusSets?.all ?? null)}
                   focusSlugs={comparisonOn ? null : focusSets?.lit ?? null}
                   ghostSlugs={comparisonOn ? null : focusSets?.ghost ?? null}
+                  focusPrefix={focus?.scope === "lineup" ? focus.lineupLabel?.replace(/^All /, "") ?? null : null}
                   newestSlugs={newestSlugs}
                   recentCutoffMs={recentCutoffMs}
                   colorCap={colorCap}

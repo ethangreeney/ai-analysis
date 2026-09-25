@@ -84,6 +84,8 @@ function placeLabels(
   obstacleModels: Model[],
   textOf: (m: Model) => string,
   isKey: (m: Model) => boolean,
+  /** Drawn lines labels should not sit on, as polylines. */
+  lines: { x: number; y: number }[][] = [],
 ): Placed[] {
   const cands = models
     .map((m) => {
@@ -118,6 +120,19 @@ function placeLabels(
       y2: y + r + dotPad,
     };
   });
+  // Lines become a chain of small boxes, sampled every few pixels.
+  for (const pts of lines) {
+    for (let i = 1; i < pts.length; i += 1) {
+      const a = pts[i - 1];
+      const b = pts[i];
+      const steps = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 6));
+      for (let k = 0; k <= steps; k += 1) {
+        const x = a.x + ((b.x - a.x) * k) / steps;
+        const y = a.y + ((b.y - a.y) * k) / steps;
+        dotRects.push({ x1: x - 1, x2: x + 1, y1: y - 1, y2: y + 1 });
+      }
+    }
+  }
   const overlaps = (a: ReturnType<typeof rectFor>, b: ReturnType<typeof rectFor>) =>
     a.x1 - labelPad < b.x2 &&
     a.x2 + labelPad > b.x1 &&
@@ -188,7 +203,10 @@ export function MapChart({
   colorBy = "value",
   focusSlugs = null,
   ghostSlugs = null,
+  focusPrefix = null,
 }: {
+  /** In a lineup focus, the shared name to drop from labels ("GPT-6"). */
+  focusPrefix?: string | null;
   /** A release (or lineup) in focus: its own frontier is drawn over the map. */
   focusSlugs?: Set<string> | null;
   /** The release it replaces, drawn dashed for contrast. */
@@ -458,6 +476,40 @@ export function MapChart({
     r: sizeScale(metric.value(m)!),
   });
 
+  const groupPoints = (slugs: Set<string> | null) => {
+    // A release's settings share one date, so on the timeline its "curve"
+    // would be a vertical scribble: the highlight alone says enough there.
+    if (!slugs || timeline) return [];
+    const members = metricModels.filter((m) => slugs.has(m.slug) && hasX(m) && underCap(m));
+    if (members.length < 2) return [];
+    return sweepFrontier(members)
+      .map((m) => xy(m))
+      .sort((a, b) => a.x - b.x);
+  };
+  const focusPoints = useMemo(
+    () => groupPoints(focusSlugs),
+    [focusSlugs, metricModels, geometry, colorCap, metric, timeline, xc],
+  );
+  const ghostPoints = useMemo(
+    () => groupPoints(ghostSlugs),
+    [ghostSlugs, metricModels, geometry, colorCap, metric, timeline, xc],
+  );
+
+  /** The models a focus line actually passes through. */
+  const focusLineSlugs = useMemo(() => {
+    if (!focusSlugs) return new Set<string>();
+    const members = metricModels.filter((m) => focusSlugs.has(m.slug) && (timeline || hasX(m)) && underCap(m));
+    return new Set(sweepFrontier(members).map((m) => m.slug));
+  }, [focusSlugs, metricModels, colorCap, metric, timeline, xc]);
+  const bestOf = (slugs: Set<string> | null) =>
+    slugs
+      ? metricModels
+          .filter((m) => slugs.has(m.slug) && underCap(m))
+          .reduce<Model | null>((best, m) => (!best || metric.value(m)! > metric.value(best)! ? m : best), null)
+      : null;
+  const focusTop = useMemo(() => bestOf(focusSlugs), [focusSlugs, metricModels, colorCap, metric]);
+  const ghostTop = useMemo(() => bestOf(ghostSlugs), [ghostSlugs, metricModels, colorCap, metric]);
+
   const labeledModels = useMemo(() => {
     const bySlug = new Map<string, Model>();
     const add = (m: Model | undefined) => {
@@ -467,9 +519,12 @@ export function MapChart({
     // In focus, only the release (and the one it replaces) is named; the
     // faded field stays unlabelled so the two lines read cleanly.
     if (focusSlugs) {
-      metricModels
-        .filter((m) => focusSlugs.has(m.slug) || ghostSlugs?.has(m.slug))
-        .forEach(add);
+      // A release names each of its settings; a whole lineup names only the
+      // models its line runs through, or it turns into a wall of text.
+      const members = metricModels.filter((m) => focusSlugs.has(m.slug) && underCap(m));
+      (focusPrefix ? members.filter((m) => focusLineSlugs.has(m.slug)) : members).forEach(add);
+      // The release it replaces is named once, at its best point.
+      add(ghostTop ?? undefined);
       add(findModel(hoveredSlug));
       comparedSlugs.forEach((slug) => add(findModel(slug)));
       return [...bySlug.values()].filter(underCap);
@@ -501,7 +556,10 @@ export function MapChart({
     comparedSlugs,
     defaultRecentModels,
     focusSlugs,
+    focusLineSlugs,
+    focusPrefix,
     ghostSlugs,
+    ghostTop,
     frontier,
     hoveredSlug,
     matchedSlugs,
@@ -516,9 +574,25 @@ export function MapChart({
     xc,
   ]);
 
-  const isNewest = (m: Model) => newestSlugs.has(m.slug) && !isCompared(m.slug);
-  const labelText = (m: Model) => {
+  const isNewest = (m: Model) => newestSlugs.has(m.slug) && !isCompared(m.slug) && !focusSlugs;
+  /**
+   * What a label says. In focus the line is named once, at its best point, and
+   * every other dot on it just says its setting: "max", "high", "low".
+   */
+  const labelParts = (m: Model): { base: string; effort: string | null } => {
     const { base, effort } = nameParts(m);
+    if (!focusSlugs || isCompared(m.slug) || m.slug === hoveredSlug) return { base, effort };
+    if (ghostSlugs?.has(m.slug)) return { base, effort: null };
+    if (!focusSlugs.has(m.slug)) return { base, effort };
+    if (focusPrefix) {
+      const short = base.startsWith(`${focusPrefix} `) ? base.slice(focusPrefix.length + 1) : base;
+      return { base: short, effort };
+    }
+    if (m.slug === focusTop?.slug || !effort) return { base, effort };
+    return { base: effort, effort: null };
+  };
+  const labelText = (m: Model) => {
+    const { base, effort } = labelParts(m);
     return `${isNewest(m) ? "New " : ""}${base}${effort ? ` ${effort}` : ""}`;
   };
   const labels = useMemo(
@@ -542,15 +616,16 @@ export function MapChart({
         (m) =>
           // In focus, the release's own labels outrank everything else.
           focusSlugs
-            ? focusSlugs.has(m.slug) || isCompared(m.slug) || m.slug === hoveredSlug
+            ? focusSlugs.has(m.slug) || m.slug === ghostTop?.slug || isCompared(m.slug) || m.slug === hoveredSlug
             : isFrontier(m.slug) ||
           newestSlugs.has(m.slug) ||
           isCompared(m.slug) ||
           m.slug === hoveredSlug ||
           isAlternative(m.slug) ||
           (searchActive && isMatch(m.slug) && !ghostSlugs?.has(m.slug)),
+        focusSlugs && !comparedSlugs.length ? [focusPoints, ghostPoints] : [],
       ),
-    [labeledModels, visibleModels, geometry, comparedSlugs, newestSlugs, hoveredSlug, ghostSlugs, focusSlugs],
+    [labeledModels, visibleModels, geometry, comparedSlugs, newestSlugs, hoveredSlug, ghostSlugs, focusSlugs, focusPrefix, focusTop, ghostTop, focusPoints, ghostPoints],
   );
 
   // Frontier path. Scatter: polyline from the left edge through the frontier
@@ -582,27 +657,10 @@ export function MapChart({
    * joined point to point. No run-out to the edges: it is a line-up, not a
    * boundary of the whole field.
    */
-  const groupPath = (slugs: Set<string> | null) => {
-    // A release's settings share one date, so on the timeline its "curve"
-    // would be a vertical scribble: the highlight alone says enough there.
-    if (!slugs || timeline) return "";
-    const members = metricModels.filter(
-      (m) => slugs.has(m.slug) && (timeline || hasX(m)) && underCap(m),
-    );
-    if (members.length < 2) return "";
-    const pts = sweepFrontier(members)
-      .map((m) => xy(m))
-      .sort((a, b) => a.x - b.x);
-    return pts.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
-  };
-  const focusPath = useMemo(
-    () => groupPath(focusSlugs),
-    [focusSlugs, metricModels, geometry, colorCap, metric, timeline, xc],
-  );
-  const ghostPath = useMemo(
-    () => groupPath(ghostSlugs),
-    [ghostSlugs, metricModels, geometry, colorCap, metric, timeline, xc],
-  );
+  const toPath = (pts: { x: number; y: number }[]) =>
+    pts.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const focusPath = useMemo(() => toPath(focusPoints), [focusPoints]);
+  const ghostPath = useMemo(() => toPath(ghostPoints), [ghostPoints]);
   const focusActive = focusSlugs != null;
 
   /** The region the frontier encloses — everything you can actually get. */
@@ -1260,8 +1318,11 @@ export function MapChart({
           const isOther = isDim(m, isHovered);
           const onFrontier = isFrontier(l.slug);
           const strong = compared || isHovered || onFrontier || isNewest(m);
-          const op = isOther ? (softDim ? 0.42 : onFrontier ? 0.32 : 0.14) : strong ? 1 : 0.8;
-          const { base, effort } = nameParts(m);
+          const ghostLabel = focusActive && ghostSlugs?.has(l.slug) && !isHovered && !compared;
+          const op = isOther
+            ? softDim ? 0.42 : onFrontier ? 0.32 : 0.14
+            : ghostLabel ? 0.75 : strong ? 1 : 0.8;
+          const { base, effort } = labelParts(m);
           const key = `${viewKey}|label|${l.slug}`;
           const entering = !entered.current.has(key);
           return (
@@ -1273,7 +1334,7 @@ export function MapChart({
               dominantBaseline="middle"
               fontSize={strong ? 12 : 11.5}
               fontWeight={strong ? 560 : 480}
-              fill={isHovered || compared ? INK_900 : INK_700}
+              fill={isHovered || compared ? INK_900 : ghostLabel ? INK_500 : INK_700}
               fillOpacity={op}
               stroke={CARD}
               strokeWidth={3}

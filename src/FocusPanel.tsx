@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Model, MetricConfig, fmtCost, isPositiveFinite, nameParts } from "./model";
 import type { Focus, FocusScope } from "./releases";
-import { ago, standing, verdict } from "./ReleaseStrip";
+import { ago } from "./ReleaseStrip";
 
 const seconds = (v: number | null) =>
   isPositiveFinite(v) ? `${v < 10 ? v.toFixed(1) : Math.round(v)}s` : "—";
@@ -23,9 +24,9 @@ function Swatch({ kind }: { kind: "focus" | "ghost" | "all" }) {
 }
 
 /**
- * One release up close: where each of its settings lands, the trade-off
- * curve they make, and how that curve compares with the version it replaces
- * and with the best of everything else.
+ * One release up close. It opens on the one thing worth knowing about it; the
+ * three lines on the map carry the rest, and the per-setting numbers wait
+ * behind a toggle for anyone who wants them.
  */
 export function FocusPanel({
   focus,
@@ -48,8 +49,8 @@ export function FocusPanel({
   compact?: boolean;
 }) {
   const { release } = focus;
-  const v = verdict(release.delta, release.predecessorLabel);
-  const badge = standing(release.rank);
+  const { gist } = release;
+  const [showNumbers, setShowNumbers] = useState(false);
   const lineup = focus.scope === "lineup";
   const rows = [...focus.models].sort((a, b) => metric.value(b)! - metric.value(a)!);
   // In a lineup, drop the shared prefix: "Astra max", not "GPT-6 Astra max".
@@ -106,10 +107,10 @@ export function FocusPanel({
         </button>
         <span className="font-semibold text-ink-900">{release.family}</span>
         <span className="text-ink-700">
-          <span className="font-medium" style={v.tone ? { color: v.tone } : undefined}>
-            {v.lead}
+          <span className="font-medium" style={gist.tone ? { color: gist.tone } : undefined}>
+            {gist.lead}
           </span>
-          {v.rest}
+          {gist.rest}
         </span>
         {scopeSwitch}
         {focus.ghostLabel && (
@@ -135,30 +136,22 @@ export function FocusPanel({
         ← Latest releases
       </button>
 
-      <header className="grid gap-1">
-        <div className="flex min-w-0 items-center gap-2">
+      <header className="grid gap-1.5">
+        <div>
           <h2 className="truncate text-[17px] font-semibold leading-tight tracking-[-0.015em] text-ink-900">
             {release.family}
           </h2>
-          {badge && (
-            <span
-              className={`shrink-0 rounded-full px-1.5 py-[3px] text-[10px] font-medium leading-none ${
-                release.rank === 1 ? "bg-ink-900 text-white" : "bg-ink-50 text-ink-700"
-              }`}
-            >
-              {badge}
-            </span>
-          )}
+          <p className="mt-0.5 text-[11.5px] leading-snug text-ink-500">
+            {release.creator} · {ago(release.releaseMs)}
+          </p>
         </div>
-        <p className="text-[12px] leading-snug text-ink-500">
-          {release.creator} · {ago(release.releaseMs)}
-        </p>
-        <p className="text-[12.5px] leading-snug text-ink-700">
-          <span className="font-medium" style={v.tone ? { color: v.tone } : undefined}>
-            {v.lead}
+        <p className="text-[13.5px] leading-snug text-ink-900">
+          <span className="font-semibold" style={gist.tone ? { color: gist.tone } : undefined}>
+            {gist.lead}
           </span>
-          {v.rest}
+          {gist.rest}
         </p>
+        {gist.detail && <p className="text-[12px] leading-snug text-ink-500">{gist.detail}</p>}
       </header>
 
       {scopeSwitch}
@@ -167,23 +160,33 @@ export function FocusPanel({
         <li className="flex items-center gap-2">
           <Swatch kind="focus" />
           {focus.label}
-          {lineup ? "" : "'s settings"}
         </li>
         {focus.ghostLabel && (
-          <li className="flex items-center gap-2">
+          <li className="flex items-center gap-2 text-ink-500">
             <Swatch kind="ghost" />
-            {focus.ghostLabel}, the version it replaces
+            {focus.ghostLabel}, before
           </li>
         )}
-        <li className="flex items-center gap-2">
+        <li className="flex items-center gap-2 text-ink-500">
           <Swatch kind="all" />
-          Best of every model
+          Best of all models
         </li>
       </ul>
 
-      {!compact && (
-        <>
-          <table className="w-full table-fixed border-collapse text-[12px] tabular-nums">
+      <div>
+        <button
+          type="button"
+          onClick={() => setShowNumbers((v) => !v)}
+          aria-expanded={showNumbers}
+          className="-ml-1 flex items-center gap-1 rounded px-1 text-[11.5px] text-ink-500 transition-colors hover:text-ink-900"
+        >
+          <span aria-hidden className={`inline-block transition-transform ${showNumbers ? "rotate-90" : ""}`}>
+            ›
+          </span>
+          {showNumbers ? "Hide" : "Show"} the numbers
+        </button>
+        {showNumbers && (
+          <table className="mt-1.5 w-full table-fixed border-collapse text-[12px] tabular-nums">
             <colgroup>
               <col />
               <col className="w-[2.75rem]" />
@@ -206,6 +209,7 @@ export function FocusPanel({
                   onMouseEnter={() => onHoverModel(m.slug)}
                   onMouseLeave={() => onHoverModel(null)}
                   onClick={() => onPickModel(m)}
+                  title="Click to compare"
                 >
                   <td className="truncate py-1.5 pr-2 text-ink-900" title={m.displayName}>
                     {rowName(m)}
@@ -217,11 +221,8 @@ export function FocusPanel({
               ))}
             </tbody>
           </table>
-          <p className="text-[11.5px] leading-snug text-ink-500">
-            Point at a row to find it on the map. Click one to compare it.
-          </p>
-        </>
-      )}
+        )}
+      </div>
 
       {focus.ghostLabel && (
         <button

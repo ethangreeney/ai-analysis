@@ -88,6 +88,13 @@ export const fmtMultiple = (ratio: number) => {
         : ratio.toFixed(2).replace(/0$/, "");
   return `${r}×`;
 };
+/** Money the way people say it: 11¢, $3.44. */
+export const fmtMoney = (v: number) => (v < 1 ? `${Math.max(1, Math.round(v * 100))}¢` : `$${v.toFixed(2)}`);
+/** "GPT-6 Sol max": the name without the brackets. */
+export const shortName = (m: Model) => {
+  const { base, effort } = nameParts(m);
+  return effort ? `${base} ${effort}` : base;
+};
 const fmtScore = (v: number) => Number(v.toFixed(1)).toString();
 export const fmtDate = (ms: number | null) =>
   ms == null
