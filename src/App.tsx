@@ -1196,7 +1196,7 @@ export default function App() {
         comparisonOn ? "comparison-active" : ""
       }`}
     >
-      <div className="app-frame mx-auto max-w-[1400px] w-full px-4 sm:px-8 md:px-12 pt-6 pb-3 flex-1 flex flex-col min-h-0">
+      <div className="app-frame mx-auto max-w-[1400px] 2xl:max-w-[1840px] w-full px-4 sm:px-8 md:px-12 2xl:px-16 pt-6 pb-3 flex-1 flex flex-col min-h-0">
         <header className="shrink-0 flex flex-wrap items-start justify-between gap-x-10 gap-y-4 pb-4">
           <div className="page-in min-w-0 max-w-[30rem]">
             <h1 className="text-[24px] font-semibold leading-none tracking-[-0.03em] text-ink-900 md:text-[28px]">
