@@ -230,12 +230,14 @@ function toRelease(f: Family, all: Family[], metric: MetricConfig): Release {
 
 /**
  * The launches worth a look: recent, and good enough to matter. A 0.9B research
- * model released yesterday shouldn't push GPT-6 off the front page.
+ * model released yesterday shouldn't push GPT-6 off the front page. A release
+ * that isn't top-20 smart still earns a spot if it is much cheaper or faster
+ * than anything as smart (MiMo-V2.6-Flash), as long as it isn't a toy.
  */
 export function recentReleases(
   models: Model[],
   metric: MetricConfig,
-  { windowDays = 30, limit = 3, maxRank = 20 } = {},
+  { windowDays = 30, limit = 3, maxRank = 20, maxValueRank = 40 } = {},
 ): Release[] {
   const all = familiesOf(models, metric);
   if (!all.length) return [];
@@ -243,7 +245,11 @@ export function recentReleases(
   return all
     .filter((f) => f.releaseMs >= newest - windowDays * DAY_MS)
     .map((f) => toRelease(f, all, metric))
-    .filter((r) => r.rank <= maxRank)
+    .filter(
+      (r) =>
+        r.rank <= maxRank ||
+        ((r.gist.kind === "cheaper" || r.gist.kind === "faster") && r.rank <= maxValueRank),
+    )
     .sort((a, b) => b.releaseMs - a.releaseMs || a.rank - b.rank)
     .slice(0, limit);
 }

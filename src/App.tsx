@@ -944,7 +944,7 @@ export default function App() {
   );
 
   // Six fit the side rail; the phone header keeps it to three.
-  const releases = useMemo(() => recentReleases(allModels, metric, { limit: 6 }), [metric]);
+  const releases = useMemo(() => recentReleases(allModels, metric, { limit: 8 }), [metric]);
   const activeReleaseKey =
     releases.find(
       (release) =>
