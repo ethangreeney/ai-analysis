@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-28T22:18:39.387Z",
+  "fetchedAt": "2026-09-28T23:34:06.562Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -4787,22 +4787,6 @@
       "addedAt": "2025-08-21"
     },
     {
-      "slug": "qwen3-5-9b",
-      "name": "Qwen3.5 9B (Reasoning)",
-      "displayName": "Qwen3.5 9B",
-      "creator": "Alibaba",
-      "intelligence": 13.7,
-      "codingIndex": 28.7,
-      "costPerTask": 0.15844958949572202,
-      "e2eLatency": 73.85049618897779,
-      "reasoningTime": 57.1673192483822,
-      "pricePerMillion": 0.15125,
-      "outputTokensPerSecond": 33.337,
-      "ttft": 1.148,
-      "releaseDate": "2026-03-02",
-      "addedAt": "2026-03-02"
-    },
-    {
       "slug": "nova-2-0-omni-reasoning-medium",
       "name": "Nova 2.0 Omni (medium)",
       "displayName": "Nova 2.0 Omni (medium)",
@@ -5681,6 +5665,22 @@
       "ttft": 0,
       "releaseDate": "2025-12-31",
       "addedAt": "2025-12-31"
+    },
+    {
+      "slug": "qwen3-5-9b",
+      "name": "Qwen3.5 9B (Reasoning)",
+      "displayName": "Qwen3.5 9B",
+      "creator": "Alibaba",
+      "intelligence": 11.2,
+      "codingIndex": 28.7,
+      "costPerTask": 0.15844958949572202,
+      "e2eLatency": 73.85049618897779,
+      "reasoningTime": 57.1673192483822,
+      "pricePerMillion": 0.15125,
+      "outputTokensPerSecond": 33.337,
+      "ttft": 1.148,
+      "releaseDate": "2026-03-02",
+      "addedAt": "2026-03-02"
     },
     {
       "slug": "qwen3-next-80b-a3b-reasoning",
