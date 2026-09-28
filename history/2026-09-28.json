@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-28T23:34:06.562Z",
+  "fetchedAt": "2026-09-28T23:48:56.476Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -5673,7 +5673,7 @@
       "creator": "Alibaba",
       "intelligence": 11.2,
       "codingIndex": 28.7,
-      "costPerTask": 0.15844958949572202,
+      "costPerTask": 0.21257844933934256,
       "e2eLatency": 73.85049618897779,
       "reasoningTime": 57.1673192483822,
       "pricePerMillion": 0.15125,
