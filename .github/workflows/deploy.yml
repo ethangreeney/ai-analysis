@@ -25,11 +25,11 @@ permissions:
   pages: write
   id-token: write
 
-# cancel-in-progress lets a fresh poll replace a stuck older run. Without it a
-# single wedged run (e.g. a deploy left "waiting" after a Pages outage) holds
-# the group indefinitely and every later poll cancels itself instead.
-# A poll never cancels anything, though: it would kill a code deploy midway and
-# then skip deploying itself when the data hasn't changed. Polls just queue.
+# cancel-in-progress lets a fresh push or manual run replace a stuck older run,
+# so a single wedged run (e.g. a deploy left "waiting" after a Pages outage)
+# can't hold the group forever. A poll never cancels anything, though: it would
+# kill a code deploy midway and then skip deploying itself when the data hasn't
+# changed. Polls just queue (GitHub keeps only the newest pending one).
 concurrency:
   group: pages
   cancel-in-progress: ${{ inputs.poll != true }}
