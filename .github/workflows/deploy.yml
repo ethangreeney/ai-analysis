@@ -3,6 +3,9 @@
 # AA has no webhook, so the schedule polls four times an hour — but it only builds and
 # deploys when the fetched data actually differs from what the live site
 # serves (the build publishes its own models.json snapshot to diff against).
+# GitHub drops many scheduled runs on quiet repos (gaps of 3–8 hours), so an
+# outside cron (cron-job.org) also fires workflow_dispatch with poll=true every
+# 15 minutes. Those polls follow the same "only deploy if changed" rule.
 # Pushes and manual runs always deploy. If the fetch fails (AA markup change,
 # API outage), the job fails before deploy and the site keeps serving the
 # last good build.
@@ -17,6 +20,11 @@ on:
     # whenever Artificial Analysis has not changed.
     - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
+    inputs:
+      poll:
+        description: "Only deploy if the data changed (set by the outside poller)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write # scheduled job commits dated snapshots to history/
@@ -113,17 +121,17 @@ jobs:
           fi
 
       - name: Build
-        if: github.event_name != 'schedule' || steps.check.outputs.changed == 'true'
+        if: steps.check.outputs.changed == 'true' || (github.event_name != 'schedule' && inputs.poll != true)
         run: |
           npm run build -- --base=/ai-analysis/
           cp src/data/models.json dist/models.json
           if [ -d history ]; then cp -R history dist/history; fi
 
       - uses: actions/upload-pages-artifact@v3
-        if: github.event_name != 'schedule' || steps.check.outputs.changed == 'true'
+        if: steps.check.outputs.changed == 'true' || (github.event_name != 'schedule' && inputs.poll != true)
         with:
           path: dist
 
       - id: deployment
-        if: github.event_name != 'schedule' || steps.check.outputs.changed == 'true'
+        if: steps.check.outputs.changed == 'true' || (github.event_name != 'schedule' && inputs.poll != true)
         uses: actions/deploy-pages@v4
