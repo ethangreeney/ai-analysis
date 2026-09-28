@@ -1,0 +1,46 @@
+# Keep the data fresh even though GitHub drops most scheduled runs.
+#
+# Scheduled runs on this repo arrive hours apart, so the cron alone can leave a
+# new model undeployed for half a day. Instead, one long-lived job stays awake
+# and asks Deploy to poll (only deploying when the data changed) every 15
+# minutes. Near the six-hour job limit it queues its own successor; the
+# concurrency group holds that successor until this run ends, so exactly one
+# poller is ever running. The cron below is only a restart if the chain breaks.
+name: Poll
+
+on:
+  schedule:
+    - cron: "3,33 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write # dispatch Deploy, and this workflow's successor
+
+# Never cancel the running poller: a newer run waits as the one pending
+# successor instead (GitHub keeps at most one pending run per group).
+concurrency:
+  group: poller
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - name: Ask Deploy to check for new data every 15 minutes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          end=$((SECONDS + 340 * 60))
+          while [ "$SECONDS" -lt "$end" ]; do
+            gh workflow run deploy.yml -f poll=true || echo "Dispatch failed; trying again next round."
+            sleep 900
+          done
+
+      - name: Queue the next poller
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh workflow run poll.yml

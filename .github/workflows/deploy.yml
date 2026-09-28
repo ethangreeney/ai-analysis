@@ -1,11 +1,10 @@
 # Fetch fresh Artificial Analysis data, rebuild, and deploy to GitHub Pages.
 #
-# AA has no webhook, so the schedule polls four times an hour — but it only builds and
-# deploys when the fetched data actually differs from what the live site
-# serves (the build publishes its own models.json snapshot to diff against).
-# GitHub drops many scheduled runs on quiet repos (gaps of 3–8 hours), so an
-# outside cron (cron-job.org) also fires workflow_dispatch with poll=true every
-# 15 minutes. Those polls follow the same "only deploy if changed" rule.
+# AA has no webhook, so the Poll workflow runs this every 15 minutes with
+# poll=true — but a poll only builds and deploys when the fetched data actually
+# differs from what the live site serves (the build publishes its own
+# models.json snapshot to diff against). GitHub drops most scheduled runs on
+# this repo, which is why polling lives in a long-running job, not a cron here.
 # Pushes and manual runs always deploy. If the fetch fails (AA markup change,
 # API outage), the job fails before deploy and the site keeps serving the
 # last good build.
@@ -14,26 +13,21 @@ name: Deploy
 on:
   push:
     branches: [main]
-  schedule:
-    # GitHub can substantially delay or drop individual scheduled runs. Four
-    # staggered polls make one delayed run harmless while still skipping builds
-    # whenever Artificial Analysis has not changed.
-    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
     inputs:
       poll:
-        description: "Only deploy if the data changed (set by the outside poller)"
+        description: "Only deploy if the data changed (set by the Poll workflow)"
         type: boolean
         default: false
 
 permissions:
-  contents: write # scheduled job commits dated snapshots to history/
+  contents: write # polls commit dated snapshots to history/
   pages: write
   id-token: write
 
 # cancel-in-progress lets a fresh poll replace a stuck older run. Without it a
 # single wedged run (e.g. a deploy left "waiting" after a Pages outage) holds
-# the group indefinitely and every later scheduled run cancels itself instead.
+# the group indefinitely and every later poll cancels itself instead.
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -121,17 +115,17 @@ jobs:
           fi
 
       - name: Build
-        if: steps.check.outputs.changed == 'true' || (github.event_name != 'schedule' && inputs.poll != true)
+        if: steps.check.outputs.changed == 'true' || inputs.poll != true
         run: |
           npm run build -- --base=/ai-analysis/
           cp src/data/models.json dist/models.json
           if [ -d history ]; then cp -R history dist/history; fi
 
       - uses: actions/upload-pages-artifact@v3
-        if: steps.check.outputs.changed == 'true' || (github.event_name != 'schedule' && inputs.poll != true)
+        if: steps.check.outputs.changed == 'true' || inputs.poll != true
         with:
           path: dist
 
       - id: deployment
-        if: steps.check.outputs.changed == 'true' || (github.event_name != 'schedule' && inputs.poll != true)
+        if: steps.check.outputs.changed == 'true' || inputs.poll != true
         uses: actions/deploy-pages@v4
