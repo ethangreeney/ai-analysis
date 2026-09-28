@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-28T20:25:18.061Z",
+  "fetchedAt": "2026-09-28T21:03:28.764Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2265,10 +2265,10 @@
       "creator": "Tencent",
       "intelligence": 25.3,
       "codingIndex": 58.8,
-      "costPerTask": 0.07430984031498059,
+      "costPerTask": 0.07179763081859954,
       "e2eLatency": 32.664396509344186,
       "reasoningTime": 23.70413881867532,
-      "pricePerMillion": 0.25,
+      "pricePerMillion": 0.24075,
       "outputTokensPerSecond": 94.867,
       "ttft": 1.993,
       "releaseDate": "2026-07-06",
