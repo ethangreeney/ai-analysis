@@ -28,9 +28,11 @@ permissions:
 # cancel-in-progress lets a fresh poll replace a stuck older run. Without it a
 # single wedged run (e.g. a deploy left "waiting" after a Pages outage) holds
 # the group indefinitely and every later poll cancels itself instead.
+# A poll never cancels anything, though: it would kill a code deploy midway and
+# then skip deploying itself when the data hasn't changed. Polls just queue.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: ${{ inputs.poll != true }}
 
 jobs:
   deploy:
