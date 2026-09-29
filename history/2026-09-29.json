@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-29T05:04:44.561Z",
+  "fetchedAt": "2026-09-29T05:19:49.585Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1049,7 +1049,7 @@
       "creator": "OpenAI",
       "intelligence": 37.3,
       "codingIndex": null,
-      "costPerTask": 0.06809498628701058,
+      "costPerTask": 0.06792906856485216,
       "e2eLatency": 97.36404864452489,
       "reasoningTime": 0,
       "pricePerMillion": 0.2,
