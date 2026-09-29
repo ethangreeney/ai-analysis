@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-29T04:19:43.248Z",
+  "fetchedAt": "2026-09-29T04:34:39.835Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -537,7 +537,7 @@
       "creator": "OpenAI",
       "intelligence": 44.1,
       "codingIndex": null,
-      "costPerTask": 0.5318962692390143,
+      "costPerTask": 0.523567515784736,
       "e2eLatency": 48.495190050286986,
       "reasoningTime": 0,
       "pricePerMillion": 4,
@@ -1273,7 +1273,7 @@
       "creator": "OpenAI",
       "intelligence": 33.9,
       "codingIndex": null,
-      "costPerTask": 0.041708771594451556,
+      "costPerTask": 0.04208218646439018,
       "e2eLatency": 19.07609095736398,
       "reasoningTime": 0,
       "pricePerMillion": 0.2,
@@ -1497,7 +1497,7 @@
       "creator": "OpenAI",
       "intelligence": 32.1,
       "codingIndex": null,
-      "costPerTask": 0.02861964876935845,
+      "costPerTask": 0.029067566599182932,
       "e2eLatency": 9.130088030677081,
       "reasoningTime": 0,
       "pricePerMillion": 0.2,
