@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-29T15:22:12.440Z",
+  "fetchedAt": "2026-09-29T17:22:29.498Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2419,22 +2419,6 @@
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
-      "slug": "ling-3-0-flash",
-      "name": "Ling 3.0 Flash",
-      "displayName": "Ling 3.0 Flash",
-      "creator": "InclusionAI",
-      "intelligence": 24.9,
-      "codingIndex": 50.6,
-      "costPerTask": null,
-      "e2eLatency": 10.59758999753771,
-      "reasoningTime": 5.9639903836302,
-      "pricePerMillion": 0.11124999999999999,
-      "outputTokensPerSecond": 361.579,
-      "ttft": 1.804,
-      "releaseDate": "2026-08-04",
-      "addedAt": "2026-08-04"
-    },
-    {
       "slug": "grok-4-3-medium",
       "name": "Grok 4.3 (medium)",
       "displayName": "Grok 4.3 (medium)",
@@ -3457,6 +3441,22 @@
       "ttft": 1.21,
       "releaseDate": "2026-08-14",
       "addedAt": "2026-08-14"
+    },
+    {
+      "slug": "ling-3-0-flash",
+      "name": "Ling 3.0 Flash",
+      "displayName": "Ling 3.0 Flash",
+      "creator": "InclusionAI",
+      "intelligence": 20.1,
+      "codingIndex": 50.6,
+      "costPerTask": null,
+      "e2eLatency": 10.59758999753771,
+      "reasoningTime": 5.9639903836302,
+      "pricePerMillion": 0.11124999999999999,
+      "outputTokensPerSecond": 361.579,
+      "ttft": 1.804,
+      "releaseDate": "2026-08-04",
+      "addedAt": "2026-08-04"
     },
     {
       "slug": "gpt-5-4-nano-medium",
@@ -4780,7 +4780,7 @@
       "costPerTask": null,
       "e2eLatency": null,
       "reasoningTime": 0,
-      "pricePerMillion": 0.8475,
+      "pricePerMillion": 0.8400000000000001,
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-21",
@@ -4812,7 +4812,7 @@
       "costPerTask": null,
       "e2eLatency": null,
       "reasoningTime": 0,
-      "pricePerMillion": 0.865,
+      "pricePerMillion": 0.855,
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-21",
@@ -6201,10 +6201,10 @@
       "creator": "DeepSeek",
       "intelligence": 9.7,
       "codingIndex": 21.2,
-      "costPerTask": 0.10527388598776051,
+      "costPerTask": 0.020199039576443884,
       "e2eLatency": null,
       "reasoningTime": 0,
-      "pricePerMillion": 0.9275,
+      "pricePerMillion": 0.405,
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-25",
