@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-30T19:12:11.315Z",
+  "fetchedAt": "2026-09-30T19:27:11.033Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -41,7 +41,7 @@
       "creator": "Anthropic",
       "intelligence": 56,
       "codingIndex": null,
-      "costPerTask": 7.602633532969859,
+      "costPerTask": 7.62064302108643,
       "e2eLatency": 445.9348546124385,
       "reasoningTime": 0,
       "pricePerMillion": 4,
@@ -1301,7 +1301,7 @@
     {
       "slug": "gemini-3-6-flash",
       "name": "Gemini 3.6 Flash (High)",
-      "displayName": "Gemini 3.6 Flash",
+      "displayName": "Gemini 3.6 Flash (high)",
       "creator": "Google",
       "intelligence": 34,
       "codingIndex": 69.2,
@@ -1493,7 +1493,7 @@
     {
       "slug": "gemini-3-5-flash",
       "name": "Gemini 3.5 Flash (High)",
-      "displayName": "Gemini 3.5 Flash",
+      "displayName": "Gemini 3.5 Flash (high)",
       "creator": "Google",
       "intelligence": 32.6,
       "codingIndex": 70.1,
@@ -1621,7 +1621,7 @@
     {
       "slug": "claude-opus-4-7-non-reasoning",
       "name": "Claude Opus 4.7 (Non-reasoning, High Effort)",
-      "displayName": "Claude Opus 4.7 (Non-reasoning, high)",
+      "displayName": "Claude Opus 4.7 (non-reasoning, high)",
       "creator": "Anthropic",
       "intelligence": 30.9,
       "codingIndex": null,
@@ -1893,7 +1893,7 @@
     {
       "slug": "gpt-5-6-sol-non-reasoning",
       "name": "GPT-5.6 Sol (Non-reasoning)",
-      "displayName": "GPT-5.6 Sol (Non-reasoning)",
+      "displayName": "GPT-5.6 Sol (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 28.3,
       "codingIndex": 65.1,
@@ -1957,7 +1957,7 @@
     {
       "slug": "gpt-6-sol-non-reasoning",
       "name": "GPT-6 Sol (Non-reasoning)",
-      "displayName": "GPT-6 Sol (Non-reasoning)",
+      "displayName": "GPT-6 Sol (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 28.1,
       "codingIndex": null,
@@ -2181,7 +2181,7 @@
     {
       "slug": "claude-opus-4-6",
       "name": "Claude Opus 4.6 (Non-reasoning, High Effort)",
-      "displayName": "Claude Opus 4.6 (Non-reasoning, high)",
+      "displayName": "Claude Opus 4.6 (non-reasoning, high)",
       "creator": "Anthropic",
       "intelligence": 26.4,
       "codingIndex": null,
@@ -2437,7 +2437,7 @@
     {
       "slug": "inkling",
       "name": "Inkling (Xhigh)",
-      "displayName": "Inkling",
+      "displayName": "Inkling (xhigh)",
       "creator": "Thinking Machines",
       "intelligence": 25,
       "codingIndex": 52.1,
@@ -2501,7 +2501,7 @@
     {
       "slug": "claude-sonnet-4-6",
       "name": "Claude Sonnet 4.6 (Non-reasoning, High Effort)",
-      "displayName": "Claude Sonnet 4.6 (Non-reasoning, high)",
+      "displayName": "Claude Sonnet 4.6 (non-reasoning, high)",
       "creator": "Anthropic",
       "intelligence": 24.7,
       "codingIndex": null,
@@ -2517,7 +2517,7 @@
     {
       "slug": "deepseek-v4-1-flash-non-reasoning",
       "name": "DeepSeek V4.1 Flash (Non-reasoning)",
-      "displayName": "DeepSeek V4.1 Flash (Non-reasoning)",
+      "displayName": "DeepSeek V4.1 Flash (non-reasoning)",
       "creator": "DeepSeek",
       "intelligence": 24.7,
       "codingIndex": null,
@@ -2645,7 +2645,7 @@
     {
       "slug": "glm-5-1-non-reasoning",
       "name": "GLM-5.1 (Non-reasoning)",
-      "displayName": "GLM-5.1 (Non-reasoning)",
+      "displayName": "GLM-5.1 (non-reasoning)",
       "creator": "Z AI",
       "intelligence": 24.2,
       "codingIndex": null,
@@ -2709,7 +2709,7 @@
     {
       "slug": "claude-opus-4-5",
       "name": "Claude Opus 4.5 (Non-reasoning)",
-      "displayName": "Claude Opus 4.5 (Non-reasoning)",
+      "displayName": "Claude Opus 4.5 (non-reasoning)",
       "creator": "Anthropic",
       "intelligence": 23.7,
       "codingIndex": null,
@@ -2741,7 +2741,7 @@
     {
       "slug": "kimi-k2-6-non-reasoning",
       "name": "Kimi K2.6 (Non-reasoning)",
-      "displayName": "Kimi K2.6 (Non-reasoning)",
+      "displayName": "Kimi K2.6 (non-reasoning)",
       "creator": "Kimi",
       "intelligence": 23.6,
       "codingIndex": null,
@@ -2789,7 +2789,7 @@
     {
       "slug": "claude-sonnet-4-6-non-reasoning-low-effort",
       "name": "Claude Sonnet 4.6 (Non-reasoning, Low Effort)",
-      "displayName": "Claude Sonnet 4.6 (Non-reasoning, low)",
+      "displayName": "Claude Sonnet 4.6 (non-reasoning, low)",
       "creator": "Anthropic",
       "intelligence": 23.3,
       "codingIndex": null,
@@ -2805,7 +2805,7 @@
     {
       "slug": "claude-sonnet-5-non-reasoning",
       "name": "Claude Sonnet 5 (Non-reasoning, High Effort)",
-      "displayName": "Claude Sonnet 5 (Non-reasoning)",
+      "displayName": "Claude Sonnet 5 (non-reasoning)",
       "creator": "Anthropic",
       "intelligence": 23.2,
       "codingIndex": 66.4,
@@ -2821,7 +2821,7 @@
     {
       "slug": "gpt-5-5-non-reasoning",
       "name": "GPT-5.5 (Non-reasoning)",
-      "displayName": "GPT-5.5 (Non-reasoning)",
+      "displayName": "GPT-5.5 (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 23.2,
       "codingIndex": 56.5,
@@ -3029,7 +3029,7 @@
     {
       "slug": "glm-5-2-non-reasoning",
       "name": "GLM-5.2 (Non-reasoning)",
-      "displayName": "GLM-5.2 (Non-reasoning)",
+      "displayName": "GLM-5.2 (non-reasoning)",
       "creator": "Z AI",
       "intelligence": 22.4,
       "codingIndex": 46.5,
@@ -3157,7 +3157,7 @@
     {
       "slug": "glm-5-non-reasoning",
       "name": "GLM-5 (Non-reasoning)",
-      "displayName": "GLM-5 (Non-reasoning)",
+      "displayName": "GLM-5 (non-reasoning)",
       "creator": "Z AI",
       "intelligence": 21.8,
       "codingIndex": null,
@@ -3205,7 +3205,7 @@
     {
       "slug": "qwen3-5-397b-a17b-non-reasoning",
       "name": "Qwen3.5 397B A17B (Non-reasoning)",
-      "displayName": "Qwen3.5 397B A17B (Non-reasoning)",
+      "displayName": "Qwen3.5 397B A17B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 21.4,
       "codingIndex": null,
@@ -3301,7 +3301,7 @@
     {
       "slug": "deepseek-v4-pro-0424-non-reasoning",
       "name": "DeepSeek V4 Pro 0424 (Non-reasoning)",
-      "displayName": "DeepSeek V4 Pro (Non-reasoning)",
+      "displayName": "DeepSeek V4 Pro (non-reasoning)",
       "creator": "DeepSeek",
       "intelligence": 20.8,
       "codingIndex": null,
@@ -3317,7 +3317,7 @@
     {
       "slug": "gpt-5-6-terra-non-reasoning",
       "name": "GPT-5.6 Terra (Non-reasoning)",
-      "displayName": "GPT-5.6 Terra (Non-reasoning)",
+      "displayName": "GPT-5.6 Terra (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 20.8,
       "codingIndex": 52.3,
@@ -3445,7 +3445,7 @@
     {
       "slug": "deepseek-v4-pro-non-reasoning",
       "name": "DeepSeek V4 Pro 0813 (Non-reasoning)",
-      "displayName": "DeepSeek V4 Pro 0813 (Non-reasoning)",
+      "displayName": "DeepSeek V4 Pro 0813 (non-reasoning)",
       "creator": "DeepSeek",
       "intelligence": 20.4,
       "codingIndex": null,
@@ -3525,7 +3525,7 @@
     {
       "slug": "qwen3-8-27b-non-reasoning",
       "name": "Qwen3.8 27B (Non-reasoning)",
-      "displayName": "Qwen3.8 27B",
+      "displayName": "Qwen3.8 27B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 20.2,
       "codingIndex": 44.6,
@@ -3557,7 +3557,7 @@
     {
       "slug": "gpt-5-4-nano-medium",
       "name": "GPT-5.4 nano (Medium)",
-      "displayName": "GPT-5.4 nano",
+      "displayName": "GPT-5.4 nano (medium)",
       "creator": "OpenAI",
       "intelligence": 20,
       "codingIndex": null,
@@ -3573,7 +3573,7 @@
     {
       "slug": "qwen3-6-27b-non-reasoning",
       "name": "Qwen3.6 27B (Non-reasoning)",
-      "displayName": "Qwen3.6 27B (Non-reasoning)",
+      "displayName": "Qwen3.6 27B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 19.8,
       "codingIndex": 46.6,
@@ -3637,7 +3637,7 @@
     {
       "slug": "kimi-k2-5-non-reasoning",
       "name": "Kimi K2.5 (Non-reasoning)",
-      "displayName": "Kimi K2.5 (Non-reasoning)",
+      "displayName": "Kimi K2.5 (non-reasoning)",
       "creator": "Kimi",
       "intelligence": 19.4,
       "codingIndex": null,
@@ -3653,7 +3653,7 @@
     {
       "slug": "qwen3-5-27b-non-reasoning",
       "name": "Qwen3.5 27B (Non-reasoning)",
-      "displayName": "Qwen3.5 27B (Non-reasoning)",
+      "displayName": "Qwen3.5 27B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 19.4,
       "codingIndex": null,
@@ -3669,7 +3669,7 @@
     {
       "slug": "claude-4-5-sonnet",
       "name": "Claude 4.5 Sonnet (Non-reasoning)",
-      "displayName": "Claude 4.5 Sonnet (Non-reasoning)",
+      "displayName": "Claude 4.5 Sonnet (non-reasoning)",
       "creator": "Anthropic",
       "intelligence": 19.3,
       "codingIndex": null,
@@ -3733,7 +3733,7 @@
     {
       "slug": "deepseek-v4-flash-0420-non-reasoning",
       "name": "DeepSeek V4 Flash 0420 (Non-reasoning)",
-      "displayName": "DeepSeek V4 Flash (Non-reasoning)",
+      "displayName": "DeepSeek V4 Flash (non-reasoning)",
       "creator": "DeepSeek",
       "intelligence": 18.9,
       "codingIndex": null,
@@ -3765,7 +3765,7 @@
     {
       "slug": "claude-4-1-opus",
       "name": "Claude 4.1 Opus (Non-reasoning)",
-      "displayName": "Claude 4.1 Opus (Non-reasoning)",
+      "displayName": "Claude 4.1 Opus (non-reasoning)",
       "creator": "Anthropic",
       "intelligence": 18.6,
       "codingIndex": null,
@@ -3845,7 +3845,7 @@
     {
       "slug": "gpt-6-luna-non-reasoning",
       "name": "GPT-6 Luna (Non-reasoning)",
-      "displayName": "GPT-6 Luna (Non-reasoning)",
+      "displayName": "GPT-6 Luna (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 18.3,
       "codingIndex": null,
@@ -3861,7 +3861,7 @@
     {
       "slug": "mimo-v2-5-pro-non-reasoning",
       "name": "MiMo-V2.5-Pro (Non-reasoning)",
-      "displayName": "MiMo-V2.5-Pro (Non-reasoning)",
+      "displayName": "MiMo-V2.5-Pro (non-reasoning)",
       "creator": "Xiaomi",
       "intelligence": 18.3,
       "codingIndex": null,
@@ -3877,7 +3877,7 @@
     {
       "slug": "gpt-5-4-non-reasoning",
       "name": "GPT-5.4 (Non-reasoning)",
-      "displayName": "GPT-5.4 (Non-reasoning)",
+      "displayName": "GPT-5.4 (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 18.2,
       "codingIndex": null,
@@ -3909,7 +3909,7 @@
     {
       "slug": "gemini-3-flash",
       "name": "Gemini 3 Flash Preview (Non-reasoning)",
-      "displayName": "Gemini 3 Flash (Non-reasoning)",
+      "displayName": "Gemini 3 Flash (non-reasoning)",
       "creator": "Google",
       "intelligence": 17.9,
       "codingIndex": null,
@@ -3957,7 +3957,7 @@
     {
       "slug": "qwen3-5-122b-a10b-non-reasoning",
       "name": "Qwen3.5 122B A10B (Non-reasoning)",
-      "displayName": "Qwen3.5 122B A10B (Non-reasoning)",
+      "displayName": "Qwen3.5 122B A10B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 17.7,
       "codingIndex": 43.3,
@@ -3989,7 +3989,7 @@
     {
       "slug": "glm-4-7-non-reasoning",
       "name": "GLM-4.7 (Non-reasoning)",
-      "displayName": "GLM-4.7 (Non-reasoning)",
+      "displayName": "GLM-4.7 (non-reasoning)",
       "creator": "Z AI",
       "intelligence": 17.4,
       "codingIndex": null,
@@ -4005,7 +4005,7 @@
     {
       "slug": "gpt-5-2-non-reasoning",
       "name": "GPT-5.2 (Non-reasoning)",
-      "displayName": "GPT-5.2 (Non-reasoning)",
+      "displayName": "GPT-5.2 (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 17,
       "codingIndex": null,
@@ -4021,7 +4021,7 @@
     {
       "slug": "hy3-non-reasoning",
       "name": "Hy3-preview (Non-reasoning)",
-      "displayName": "Hy3-preview (Non-reasoning)",
+      "displayName": "Hy3-preview (non-reasoning)",
       "creator": "Tencent",
       "intelligence": 17,
       "codingIndex": null,
@@ -4149,7 +4149,7 @@
     {
       "slug": "claude-4-opus",
       "name": "Claude 4 Opus (Non-reasoning)",
-      "displayName": "Claude 4 Opus (Non-reasoning)",
+      "displayName": "Claude 4 Opus (non-reasoning)",
       "creator": "Anthropic",
       "intelligence": 16.6,
       "codingIndex": null,
@@ -4165,7 +4165,7 @@
     {
       "slug": "claude-4-sonnet",
       "name": "Claude 4 Sonnet (Non-reasoning)",
-      "displayName": "Claude 4 Sonnet (Non-reasoning)",
+      "displayName": "Claude 4 Sonnet (non-reasoning)",
       "creator": "Anthropic",
       "intelligence": 16.6,
       "codingIndex": null,
@@ -4261,7 +4261,7 @@
     {
       "slug": "deepseek-v3-2",
       "name": "DeepSeek V3.2 (Non-reasoning)",
-      "displayName": "DeepSeek V3.2 (Non-reasoning)",
+      "displayName": "DeepSeek V3.2 (non-reasoning)",
       "creator": "DeepSeek",
       "intelligence": 16,
       "codingIndex": null,
@@ -4277,7 +4277,7 @@
     {
       "slug": "mimo-v2-flash",
       "name": "MiMo-V2-Flash (Non-reasoning)",
-      "displayName": "MiMo-V2-Flash (Non-reasoning)",
+      "displayName": "MiMo-V2-Flash (non-reasoning)",
       "creator": "Xiaomi",
       "intelligence": 16,
       "codingIndex": 49.8,
@@ -4373,7 +4373,7 @@
     {
       "slug": "gpt-5-6-luna-non-reasoning",
       "name": "GPT-5.6 Luna (Non-reasoning)",
-      "displayName": "GPT-5.6 Luna (Non-reasoning)",
+      "displayName": "GPT-5.6 Luna (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 15.5,
       "codingIndex": 39.3,
@@ -4389,7 +4389,7 @@
     {
       "slug": "claude-4-5-haiku",
       "name": "Claude 4.5 Haiku (Non-reasoning)",
-      "displayName": "Claude 4.5 Haiku (Non-reasoning)",
+      "displayName": "Claude 4.5 Haiku (non-reasoning)",
       "creator": "Anthropic",
       "intelligence": 15.4,
       "codingIndex": null,
@@ -4405,7 +4405,7 @@
     {
       "slug": "claude-3-7-sonnet",
       "name": "Claude 3.7 Sonnet (Non-reasoning)",
-      "displayName": "Claude 3.7 Sonnet (Non-reasoning)",
+      "displayName": "Claude 3.7 Sonnet (non-reasoning)",
       "creator": "Anthropic",
       "intelligence": 15.3,
       "codingIndex": null,
@@ -4453,7 +4453,7 @@
     {
       "slug": "qwen3-6-35b-a3b-non-reasoning",
       "name": "Qwen3.6 35B A3B (Non-reasoning)",
-      "displayName": "Qwen3.6 35B A3B (Non-reasoning)",
+      "displayName": "Qwen3.6 35B A3B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 15.2,
       "codingIndex": 28.1,
@@ -4469,7 +4469,7 @@
     {
       "slug": "qwen3-5-35b-a3b-non-reasoning",
       "name": "Qwen3.5 35B A3B (Non-reasoning)",
-      "displayName": "Qwen3.5 35B A3B (Non-reasoning)",
+      "displayName": "Qwen3.5 35B A3B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 15.1,
       "codingIndex": 37,
@@ -4501,7 +4501,7 @@
     {
       "slug": "glm-4-6",
       "name": "GLM-4.6 (Non-reasoning)",
-      "displayName": "GLM-4.6 (Non-reasoning)",
+      "displayName": "GLM-4.6 (non-reasoning)",
       "creator": "Z AI",
       "intelligence": 14.9,
       "codingIndex": null,
@@ -4597,7 +4597,7 @@
     {
       "slug": "grok-4-20-0309-non-reasoning",
       "name": "Grok 4.20 0309 (Non-reasoning)",
-      "displayName": "Grok 4.20 0309 (Non-reasoning)",
+      "displayName": "Grok 4.20 0309 (non-reasoning)",
       "creator": "SpaceXAI",
       "intelligence": 14.6,
       "codingIndex": null,
@@ -4693,7 +4693,7 @@
     {
       "slug": "grok-4-20-non-reasoning",
       "name": "Grok 4.20 0309 v2 (Non-reasoning)",
-      "displayName": "Grok 4.20 0309 v2 (Non-reasoning)",
+      "displayName": "Grok 4.20 0309 v2 (non-reasoning)",
       "creator": "SpaceXAI",
       "intelligence": 14.2,
       "codingIndex": null,
@@ -4757,7 +4757,7 @@
     {
       "slug": "grok-4-3-non-reasoning",
       "name": "Grok 4.3 (Non-reasoning)",
-      "displayName": "Grok 4.3 (Non-reasoning)",
+      "displayName": "Grok 4.3 (non-reasoning)",
       "creator": "SpaceXAI",
       "intelligence": 14,
       "codingIndex": 35.2,
@@ -4773,7 +4773,7 @@
     {
       "slug": "deepseek-v3-1-terminus",
       "name": "DeepSeek V3.1 Terminus (Non-reasoning)",
-      "displayName": "DeepSeek V3.1 Terminus (Non-reasoning)",
+      "displayName": "DeepSeek V3.1 Terminus (non-reasoning)",
       "creator": "DeepSeek",
       "intelligence": 13.9,
       "codingIndex": null,
@@ -4789,7 +4789,7 @@
     {
       "slug": "deepseek-v3-2-0925",
       "name": "DeepSeek V3.2 Exp (Non-reasoning)",
-      "displayName": "DeepSeek V3.2 Exp (Non-reasoning)",
+      "displayName": "DeepSeek V3.2 Exp (non-reasoning)",
       "creator": "DeepSeek",
       "intelligence": 13.9,
       "codingIndex": null,
@@ -4805,7 +4805,7 @@
     {
       "slug": "gemma-4-31b-non-reasoning",
       "name": "Gemma 4 31B (Non-reasoning)",
-      "displayName": "Gemma 4 31B (Non-reasoning)",
+      "displayName": "Gemma 4 31B (non-reasoning)",
       "creator": "Google",
       "intelligence": 13.9,
       "codingIndex": 33.2,
@@ -4853,7 +4853,7 @@
     {
       "slug": "deepseek-v3-1",
       "name": "DeepSeek V3.1 (Non-reasoning)",
-      "displayName": "DeepSeek V3.1 (Non-reasoning)",
+      "displayName": "DeepSeek V3.1 (non-reasoning)",
       "creator": "DeepSeek",
       "intelligence": 13.7,
       "codingIndex": null,
@@ -4933,7 +4933,7 @@
     {
       "slug": "qwen3-vl-235b-a22b-reasoning",
       "name": "Qwen3 VL 235B A22B (Reasoning)",
-      "displayName": "Qwen3 VL 235B A22B (Reasoning)",
+      "displayName": "Qwen3 VL 235B A22B",
       "creator": "Alibaba",
       "intelligence": 13.4,
       "codingIndex": null,
@@ -4949,7 +4949,7 @@
     {
       "slug": "gpt-5-1-non-reasoning",
       "name": "GPT-5.1 (Non-reasoning)",
-      "displayName": "GPT-5.1 (Non-reasoning)",
+      "displayName": "GPT-5.1 (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 13.3,
       "codingIndex": null,
@@ -4965,7 +4965,7 @@
     {
       "slug": "qwen3-5-9b-non-reasoning",
       "name": "Qwen3.5 9B (Non-reasoning)",
-      "displayName": "Qwen3.5 9B (Non-reasoning)",
+      "displayName": "Qwen3.5 9B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 13.3,
       "codingIndex": 23.5,
@@ -5045,7 +5045,7 @@
     {
       "slug": "gemma-4-26b-a4b-non-reasoning",
       "name": "Gemma 4 26B A4B (Non-reasoning)",
-      "displayName": "Gemma 4 26B A4B (Non-reasoning)",
+      "displayName": "Gemma 4 26B A4B (non-reasoning)",
       "creator": "Google",
       "intelligence": 13.1,
       "codingIndex": null,
@@ -5301,7 +5301,7 @@
     {
       "slug": "gemini-2-5-flash-preview-09-2025",
       "name": "Gemini 2.5 Flash Preview (Sep '25) (Non-reasoning)",
-      "displayName": "Gemini 2.5 Flash (Sep) (Non-reasoning)",
+      "displayName": "Gemini 2.5 Flash (Sep) (non-reasoning)",
       "creator": "Google",
       "intelligence": 12.4,
       "codingIndex": null,
@@ -5429,7 +5429,7 @@
     {
       "slug": "qwen3-vl-32b-reasoning",
       "name": "Qwen3 VL 32B (Reasoning)",
-      "displayName": "Qwen3 VL 32B (Reasoning)",
+      "displayName": "Qwen3 VL 32B",
       "creator": "Alibaba",
       "intelligence": 11.9,
       "codingIndex": null,
@@ -5509,7 +5509,7 @@
     {
       "slug": "gpt-5-4-nano-non-reasoning",
       "name": "GPT-5.4 nano (Non-reasoning)",
-      "displayName": "GPT-5.4 nano (Non-reasoning)",
+      "displayName": "GPT-5.4 nano (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 11.7,
       "codingIndex": null,
@@ -5685,7 +5685,7 @@
     {
       "slug": "grok-4-1-fast",
       "name": "Grok 4.1 Fast (Non-reasoning)",
-      "displayName": "Grok 4.1 Fast (Non-reasoning)",
+      "displayName": "Grok 4.1 Fast (non-reasoning)",
       "creator": "SpaceXAI",
       "intelligence": 11.3,
       "codingIndex": null,
@@ -5733,7 +5733,7 @@
     {
       "slug": "k-exaone-non-reasoning",
       "name": "K-EXAONE (Non-reasoning)",
-      "displayName": "K-EXAONE (Non-reasoning)",
+      "displayName": "K-EXAONE (non-reasoning)",
       "creator": "LG AI Research",
       "intelligence": 11.2,
       "codingIndex": null,
@@ -5765,7 +5765,7 @@
     {
       "slug": "qwen3-next-80b-a3b-reasoning",
       "name": "Qwen3 Next 80B A3B (Reasoning)",
-      "displayName": "Qwen3 Next 80B A3B (Reasoning)",
+      "displayName": "Qwen3 Next 80B A3B",
       "creator": "Alibaba",
       "intelligence": 11.2,
       "codingIndex": 17.4,
@@ -5797,7 +5797,7 @@
     {
       "slug": "gpt-5-4-mini-non-reasoning",
       "name": "GPT-5.4 mini (Non-reasoning)",
-      "displayName": "GPT-5.4 mini (Non-reasoning)",
+      "displayName": "GPT-5.4 mini (non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 11.1,
       "codingIndex": null,
@@ -5829,7 +5829,7 @@
     {
       "slug": "grok-4-fast",
       "name": "Grok 4 Fast (Non-reasoning)",
-      "displayName": "Grok 4 Fast (Non-reasoning)",
+      "displayName": "Grok 4 Fast (non-reasoning)",
       "creator": "SpaceXAI",
       "intelligence": 11.1,
       "codingIndex": null,
@@ -5941,7 +5941,7 @@
     {
       "slug": "qwen3-5-4b-non-reasoning",
       "name": "Qwen3.5 4B (Non-reasoning)",
-      "displayName": "Qwen3.5 4B (Non-reasoning)",
+      "displayName": "Qwen3.5 4B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 10.8,
       "codingIndex": 20.3,
@@ -5973,7 +5973,7 @@
     {
       "slug": "glm-4-7-flash-non-reasoning",
       "name": "GLM-4.7-Flash (Non-reasoning)",
-      "displayName": "GLM-4.7-Flash (Non-reasoning)",
+      "displayName": "GLM-4.7-Flash (non-reasoning)",
       "creator": "Z AI",
       "intelligence": 10.6,
       "codingIndex": null,
@@ -6165,7 +6165,7 @@
     {
       "slug": "nova-2-0-pro",
       "name": "Nova 2.0 Pro Preview (Non-reasoning)",
-      "displayName": "Nova 2.0 Pro Preview (Non-reasoning)",
+      "displayName": "Nova 2.0 Pro Preview (non-reasoning)",
       "creator": "Amazon",
       "intelligence": 10,
       "codingIndex": 20.9,
@@ -6181,7 +6181,7 @@
     {
       "slug": "gemini-2-5-flash",
       "name": "Gemini 2.5 Flash (Non-reasoning)",
-      "displayName": "Gemini 2.5 Flash (Non-reasoning)",
+      "displayName": "Gemini 2.5 Flash (non-reasoning)",
       "creator": "Google",
       "intelligence": 9.9,
       "codingIndex": null,
@@ -6421,7 +6421,7 @@
     {
       "slug": "qwen3-vl-30b-a3b-reasoning",
       "name": "Qwen3 VL 30B A3B (Reasoning)",
-      "displayName": "Qwen3 VL 30B A3B (Reasoning)",
+      "displayName": "Qwen3 VL 30B A3B",
       "creator": "Alibaba",
       "intelligence": 9.5,
       "codingIndex": null,
@@ -6469,7 +6469,7 @@
     {
       "slug": "gemma-4-12b-non-reasoning",
       "name": "Gemma 4 12B (Non-reasoning)",
-      "displayName": "Gemma 4 12B (Non-reasoning)",
+      "displayName": "Gemma 4 12B (non-reasoning)",
       "creator": "Google",
       "intelligence": 9.4,
       "codingIndex": null,
@@ -6485,7 +6485,7 @@
     {
       "slug": "gemini-2-5-flash-lite-preview-09-2025",
       "name": "Gemini 2.5 Flash-Lite Preview (Sep '25) (Non-reasoning)",
-      "displayName": "Gemini 2.5 Flash-Lite (Sep) (Non-reasoning)",
+      "displayName": "Gemini 2.5 Flash-Lite (Sep) (non-reasoning)",
       "creator": "Google",
       "intelligence": 9.3,
       "codingIndex": null,
@@ -6741,7 +6741,7 @@
     {
       "slug": "mistral-small-4-non-reasoning",
       "name": "Mistral Small 4 (Non-reasoning)",
-      "displayName": "Mistral Small 4 (Non-reasoning)",
+      "displayName": "Mistral Small 4 (non-reasoning)",
       "creator": "Mistral",
       "intelligence": 9,
       "codingIndex": null,
@@ -6949,7 +6949,7 @@
     {
       "slug": "gemini-2-5-flash-04-2025",
       "name": "Gemini 2.5 Flash Preview (Non-reasoning)",
-      "displayName": "Gemini 2.5 Flash (Apr) (Non-reasoning)",
+      "displayName": "Gemini 2.5 Flash (Apr) (non-reasoning)",
       "creator": "Google",
       "intelligence": 8.7,
       "codingIndex": null,
@@ -6965,7 +6965,7 @@
     {
       "slug": "minicpm5-1b-non-reasoning",
       "name": "MiniCPM5-1B (Non-reasoning)",
-      "displayName": "MiniCPM5-1B (Non-reasoning)",
+      "displayName": "MiniCPM5-1B (non-reasoning)",
       "creator": "OpenBMB",
       "intelligence": 8.7,
       "codingIndex": null,
@@ -6981,7 +6981,7 @@
     {
       "slug": "nova-2-0-lite",
       "name": "Nova 2.0 Lite (Non-reasoning)",
-      "displayName": "Nova 2.0 Lite (Non-reasoning)",
+      "displayName": "Nova 2.0 Lite (non-reasoning)",
       "creator": "Amazon",
       "intelligence": 8.7,
       "codingIndex": null,
@@ -7109,7 +7109,7 @@
     {
       "slug": "glm-4-6v",
       "name": "GLM-4.6V (Non-reasoning)",
-      "displayName": "GLM-4.6V (Non-reasoning)",
+      "displayName": "GLM-4.6V (non-reasoning)",
       "creator": "Z AI",
       "intelligence": 8.4,
       "codingIndex": null,
@@ -7189,7 +7189,7 @@
     {
       "slug": "qwen3-235b-a22b-instruct",
       "name": "Qwen3 235B A22B (Non-reasoning)",
-      "displayName": "Qwen3 235B (Non-reasoning)",
+      "displayName": "Qwen3 235B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 8.3,
       "codingIndex": null,
@@ -7269,7 +7269,7 @@
     {
       "slug": "nova-2-0-omni",
       "name": "Nova 2.0 Omni (Non-reasoning)",
-      "displayName": "Nova 2.0 Omni (Non-reasoning)",
+      "displayName": "Nova 2.0 Omni (non-reasoning)",
       "creator": "Amazon",
       "intelligence": 8.2,
       "codingIndex": null,
@@ -7301,7 +7301,7 @@
     {
       "slug": "qwen3-vl-8b-reasoning",
       "name": "Qwen3 VL 8B (Reasoning)",
-      "displayName": "Qwen3 VL 8B (Reasoning)",
+      "displayName": "Qwen3 VL 8B",
       "creator": "Alibaba",
       "intelligence": 8.2,
       "codingIndex": null,
@@ -7445,7 +7445,7 @@
     {
       "slug": "solar-pro-2-preview",
       "name": "Solar Pro 2 (Preview) (Non-reasoning)",
-      "displayName": "Solar Pro 2 (Preview) (Non-reasoning)",
+      "displayName": "Solar Pro 2 (Preview) (non-reasoning)",
       "creator": "Upstage",
       "intelligence": 7.9,
       "codingIndex": null,
@@ -7541,7 +7541,7 @@
     {
       "slug": "qwen3-omni-30b-a3b-reasoning",
       "name": "Qwen3 Omni 30B A3B (Reasoning)",
-      "displayName": "Qwen3 Omni 30B A3B (Reasoning)",
+      "displayName": "Qwen3 Omni 30B A3B",
       "creator": "Alibaba",
       "intelligence": 7.8,
       "codingIndex": null,
@@ -7781,7 +7781,7 @@
     {
       "slug": "gemma-4-e4b-non-reasoning",
       "name": "Gemma 4 E4B (Non-reasoning)",
-      "displayName": "Gemma 4 E4B (Non-reasoning)",
+      "displayName": "Gemma 4 E4B (non-reasoning)",
       "creator": "Google",
       "intelligence": 7.5,
       "codingIndex": null,
@@ -7845,7 +7845,7 @@
     {
       "slug": "qwen3-30b-a3b-2507",
       "name": "Qwen3 30B A3B 2507 Instruct",
-      "displayName": "Qwen3 30B A3B 2507 (Non-reasoning)",
+      "displayName": "Qwen3 30B A3B 2507 (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 7.5,
       "codingIndex": null,
@@ -7909,7 +7909,7 @@
     {
       "slug": "hermes-4-llama-3-1-405b",
       "name": "Hermes 4 - Llama-3.1 405B (Non-reasoning)",
-      "displayName": "Hermes 4 405B (Non-reasoning)",
+      "displayName": "Hermes 4 405B (non-reasoning)",
       "creator": "Nous Research",
       "intelligence": 7.4,
       "codingIndex": null,
@@ -7925,7 +7925,7 @@
     {
       "slug": "llama-nemotron-super-49b-v1-5",
       "name": "Llama Nemotron Super 49B v1.5 (Non-reasoning)",
-      "displayName": "Llama Nemotron Super 49B v1.5 (Non-reasoning)",
+      "displayName": "Llama Nemotron Super 49B v1.5 (non-reasoning)",
       "creator": "NVIDIA",
       "intelligence": 7.4,
       "codingIndex": null,
@@ -8069,7 +8069,7 @@
     {
       "slug": "llama-3-3-nemotron-super-49b",
       "name": "Llama 3.3 Nemotron Super 49B v1 (Non-reasoning)",
-      "displayName": "Llama 3.3 Nemotron Super 49B (Non-reasoning)",
+      "displayName": "Llama 3.3 Nemotron Super 49B (non-reasoning)",
       "creator": "NVIDIA",
       "intelligence": 7.3,
       "codingIndex": null,
@@ -8085,7 +8085,7 @@
     {
       "slug": "qwen3-32b-instruct",
       "name": "Qwen3 32B (Non-reasoning)",
-      "displayName": "Qwen3 32B (Non-reasoning)",
+      "displayName": "Qwen3 32B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 7.3,
       "codingIndex": null,
@@ -8373,7 +8373,7 @@
     {
       "slug": "qwen3-vl-4b-reasoning",
       "name": "Qwen3 VL 4B (Reasoning)",
-      "displayName": "Qwen3 VL 4B (Reasoning)",
+      "displayName": "Qwen3 VL 4B",
       "creator": "Alibaba",
       "intelligence": 7,
       "codingIndex": null,
@@ -8389,7 +8389,7 @@
     {
       "slug": "solar-pro-2",
       "name": "Solar Pro 2 (Non-reasoning)",
-      "displayName": "Solar Pro 2 (Non-reasoning)",
+      "displayName": "Solar Pro 2 (non-reasoning)",
       "creator": "Upstage",
       "intelligence": 7,
       "codingIndex": null,
@@ -8501,7 +8501,7 @@
     {
       "slug": "nvidia-nemotron-3-nano-30b-a3b",
       "name": "NVIDIA Nemotron 3 Nano 30B A3B (Non-reasoning)",
-      "displayName": "Nemotron 3 Nano (Non-reasoning)",
+      "displayName": "Nemotron 3 Nano (non-reasoning)",
       "creator": "NVIDIA",
       "intelligence": 6.8,
       "codingIndex": null,
@@ -8517,7 +8517,7 @@
     {
       "slug": "nvidia-nemotron-nano-9b-v2",
       "name": "NVIDIA Nemotron Nano 9B V2 (Non-reasoning)",
-      "displayName": "NVIDIA Nemotron Nano 9B V2 (Non-reasoning)",
+      "displayName": "NVIDIA Nemotron Nano 9B V2 (non-reasoning)",
       "creator": "NVIDIA",
       "intelligence": 6.8,
       "codingIndex": null,
@@ -8533,7 +8533,7 @@
     {
       "slug": "gemini-2-5-flash-lite",
       "name": "Gemini 2.5 Flash-Lite (Non-reasoning)",
-      "displayName": "Gemini 2.5 Flash-Lite (Non-reasoning)",
+      "displayName": "Gemini 2.5 Flash-Lite (non-reasoning)",
       "creator": "Google",
       "intelligence": 6.7,
       "codingIndex": null,
@@ -8549,7 +8549,7 @@
     {
       "slug": "glm-4-5v",
       "name": "GLM-4.5V (Non-reasoning)",
-      "displayName": "GLM-4.5V (Non-reasoning)",
+      "displayName": "GLM-4.5V (non-reasoning)",
       "creator": "Z AI",
       "intelligence": 6.7,
       "codingIndex": null,
@@ -8597,7 +8597,7 @@
     {
       "slug": "hermes-4-llama-3-1-70b",
       "name": "Hermes 4 - Llama-3.1 70B (Non-reasoning)",
-      "displayName": "Hermes 4 70B (Non-reasoning)",
+      "displayName": "Hermes 4 70B (non-reasoning)",
       "creator": "Nous Research",
       "intelligence": 6.7,
       "codingIndex": null,
@@ -8661,7 +8661,7 @@
     {
       "slug": "qwen3-14b-instruct",
       "name": "Qwen3 14B (Non-reasoning)",
-      "displayName": "Qwen3 14B (Non-reasoning)",
+      "displayName": "Qwen3 14B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 6.7,
       "codingIndex": null,
@@ -8677,7 +8677,7 @@
     {
       "slug": "qwen3-4b-2507-instruct",
       "name": "Qwen3 4B 2507 Instruct",
-      "displayName": "Qwen3 4B 2507 (Non-reasoning)",
+      "displayName": "Qwen3 4B 2507 (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 6.7,
       "codingIndex": null,
@@ -8773,7 +8773,7 @@
     {
       "slug": "qwen3-30b-a3b-instruct",
       "name": "Qwen3 30B A3B (Non-reasoning)",
-      "displayName": "Qwen3 30B (Non-reasoning)",
+      "displayName": "Qwen3 30B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 6.6,
       "codingIndex": null,
@@ -8789,7 +8789,7 @@
     {
       "slug": "qwen3-4b-instruct",
       "name": "Qwen3 4B (Non-reasoning)",
-      "displayName": "Qwen3 4B (Non-reasoning)",
+      "displayName": "Qwen3 4B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 6.6,
       "codingIndex": null,
@@ -8837,7 +8837,7 @@
     {
       "slug": "gemma-4-e2b-non-reasoning",
       "name": "Gemma 4 E2B (Non-reasoning)",
-      "displayName": "Gemma 4 E2B (Non-reasoning)",
+      "displayName": "Gemma 4 E2B (non-reasoning)",
       "creator": "Google",
       "intelligence": 6.5,
       "codingIndex": null,
@@ -9013,7 +9013,7 @@
     {
       "slug": "exaone-4-0-32b",
       "name": "EXAONE 4.0 32B (Non-reasoning)",
-      "displayName": "EXAONE 4.0 32B (Non-reasoning)",
+      "displayName": "EXAONE 4.0 32B (non-reasoning)",
       "creator": "LG AI Research",
       "intelligence": 6.3,
       "codingIndex": null,
@@ -9093,7 +9093,7 @@
     {
       "slug": "qwen3-5-2b-non-reasoning",
       "name": "Qwen3.5 2B (Non-reasoning)",
-      "displayName": "Qwen3.5 2B (Non-reasoning)",
+      "displayName": "Qwen3.5 2B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 6.2,
       "codingIndex": 2.4,
@@ -9109,7 +9109,7 @@
     {
       "slug": "deephermes-3-mistral-24b-preview",
       "name": "DeepHermes 3 - Mistral 24B Preview (Non-reasoning)",
-      "displayName": "DeepHermes 3 - Mistral 24B",
+      "displayName": "DeepHermes 3 - Mistral 24B (non-reasoning)",
       "creator": "Nous Research",
       "intelligence": 6.1,
       "codingIndex": null,
@@ -9269,7 +9269,7 @@
     {
       "slug": "qwen3-8b-instruct",
       "name": "Qwen3 8B (Non-reasoning)",
-      "displayName": "Qwen3 8B (Non-reasoning)",
+      "displayName": "Qwen3 8B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 6,
       "codingIndex": null,
@@ -9461,7 +9461,7 @@
     {
       "slug": "nvidia-nemotron-nano-12b-v2-vl",
       "name": "NVIDIA Nemotron Nano 12B v2 VL (Non-reasoning)",
-      "displayName": "NVIDIA Nemotron Nano 12B v2 VL (Non-reasoning)",
+      "displayName": "NVIDIA Nemotron Nano 12B v2 VL (non-reasoning)",
       "creator": "NVIDIA",
       "intelligence": 5.8,
       "codingIndex": null,
@@ -9957,7 +9957,7 @@
     {
       "slug": "qwen3-5-0-8b-non-reasoning",
       "name": "Qwen3.5 0.8B (Non-reasoning)",
-      "displayName": "Qwen3.5 0.8B (Non-reasoning)",
+      "displayName": "Qwen3.5 0.8B (non-reasoning)",
       "creator": "Alibaba",
       "intelligence": 5.4,
       "codingIndex": 1.2,
@@ -10133,7 +10133,7 @@
     {
       "slug": "exaone-4-0-1-2b",
       "name": "Exaone 4.0 1.2B (Non-reasoning)",
-      "displayName": "Exaone 4.0 1.2B (Non-reasoning)",
+      "displayName": "Exaone 4.0 1.2B (non-reasoning)",
       "creator": "LG AI Research",
       "intelligence": 5.2,
       "codingIndex": null,
@@ -10309,7 +10309,7 @@
     {
       "slug": "deephermes-3-llama-3-1-8b-preview",
       "name": "DeepHermes 3 - Llama-3.1 8B Preview (Non-reasoning)",
-      "displayName": "DeepHermes 3 - Llama-3.1 8B",
+      "displayName": "DeepHermes 3 - Llama-3.1 8B (non-reasoning)",
       "creator": "Nous Research",
       "intelligence": 5.1,
       "codingIndex": null,
@@ -10501,7 +10501,7 @@
     {
       "slug": "granite-3-3-8b-instruct",
       "name": "Granite 3.3 8B (Non-reasoning)",
-      "displayName": "Granite 3.3 8B",
+      "displayName": "Granite 3.3 8B (non-reasoning)",
       "creator": "IBM",
       "intelligence": 4.9,
       "codingIndex": null,
