@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-30T02:24:11.865Z",
+  "fetchedAt": "2026-09-30T02:39:15.238Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1737,7 +1737,7 @@
       "creator": "Kimi",
       "intelligence": 30.1,
       "codingIndex": 72,
-      "costPerTask": null,
+      "costPerTask": 1.1463056165227514,
       "e2eLatency": 71.0858511171912,
       "reasoningTime": 52.33778843735296,
       "pricePerMillion": 6,
@@ -2297,7 +2297,7 @@
       "creator": "Thinking Machines",
       "intelligence": 25.7,
       "codingIndex": 52.9,
-      "costPerTask": null,
+      "costPerTask": 0.0894649973284348,
       "e2eLatency": 14.210414706882062,
       "reasoningTime": 9.728852079905778,
       "pricePerMillion": 0.5249999999999999,
@@ -2569,7 +2569,7 @@
       "creator": "DeepSeek",
       "intelligence": 24.4,
       "codingIndex": 52,
-      "costPerTask": null,
+      "costPerTask": 0.12711665874155298,
       "e2eLatency": null,
       "reasoningTime": null,
       "pricePerMillion": 0.1433,
