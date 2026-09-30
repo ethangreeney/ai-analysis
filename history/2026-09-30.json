@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-30T18:42:08.331Z",
+  "fetchedAt": "2026-09-30T19:12:11.315Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -100,7 +100,7 @@
     },
     {
       "slug": "gpt-6-astra",
-      "name": "GPT-6 Astra (max)",
+      "name": "GPT-6 Astra (Max)",
       "displayName": "GPT-6 Astra (max)",
       "creator": "OpenAI",
       "intelligence": 52.7,
@@ -116,7 +116,7 @@
     },
     {
       "slug": "gpt-6-astra-xhigh",
-      "name": "GPT-6 Astra (xhigh)",
+      "name": "GPT-6 Astra (Xhigh)",
       "displayName": "GPT-6 Astra (xhigh)",
       "creator": "OpenAI",
       "intelligence": 52.4,
@@ -148,7 +148,7 @@
     },
     {
       "slug": "gpt-6-1-sol",
-      "name": "GPT-6.1 Sol (max)",
+      "name": "GPT-6.1 Sol (Max)",
       "displayName": "GPT-6.1 Sol (max)",
       "creator": "OpenAI",
       "intelligence": 51.8,
@@ -196,7 +196,7 @@
     },
     {
       "slug": "gpt-6-1-sol-xhigh",
-      "name": "GPT-6.1 Sol (xhigh)",
+      "name": "GPT-6.1 Sol (Xhigh)",
       "displayName": "GPT-6.1 Sol (xhigh)",
       "creator": "OpenAI",
       "intelligence": 51,
@@ -212,7 +212,7 @@
     },
     {
       "slug": "gpt-6-astra-high",
-      "name": "GPT-6 Astra (high)",
+      "name": "GPT-6 Astra (High)",
       "displayName": "GPT-6 Astra (high)",
       "creator": "OpenAI",
       "intelligence": 50.9,
@@ -244,7 +244,7 @@
     },
     {
       "slug": "gpt-6-1-sol-high",
-      "name": "GPT-6.1 Sol (high)",
+      "name": "GPT-6.1 Sol (High)",
       "displayName": "GPT-6.1 Sol (high)",
       "creator": "OpenAI",
       "intelligence": 50.2,
@@ -292,7 +292,7 @@
     },
     {
       "slug": "gpt-6-astra-medium",
-      "name": "GPT-6 Astra (medium)",
+      "name": "GPT-6 Astra (Medium)",
       "displayName": "GPT-6 Astra (medium)",
       "creator": "OpenAI",
       "intelligence": 49.6,
@@ -340,7 +340,7 @@
     },
     {
       "slug": "muse-spark-1-3",
-      "name": "Muse Spark 1.3 (max)",
+      "name": "Muse Spark 1.3 (Max)",
       "displayName": "Muse Spark 1.3 (max)",
       "creator": "Meta",
       "intelligence": 48.1,
@@ -356,7 +356,7 @@
     },
     {
       "slug": "gpt-6-1-sol-medium",
-      "name": "GPT-6.1 Sol (medium)",
+      "name": "GPT-6.1 Sol (Medium)",
       "displayName": "GPT-6.1 Sol (medium)",
       "creator": "OpenAI",
       "intelligence": 47.8,
@@ -372,7 +372,7 @@
     },
     {
       "slug": "gpt-6-sol",
-      "name": "GPT-6 Sol (max)",
+      "name": "GPT-6 Sol (Max)",
       "displayName": "GPT-6 Sol (max)",
       "creator": "OpenAI",
       "intelligence": 47.5,
@@ -388,7 +388,7 @@
     },
     {
       "slug": "gpt-5-6-sol",
-      "name": "GPT-5.6 Sol (max)",
+      "name": "GPT-5.6 Sol (Max)",
       "displayName": "GPT-5.6 Sol (max)",
       "creator": "OpenAI",
       "intelligence": 47,
@@ -436,7 +436,7 @@
     },
     {
       "slug": "grok-4-7",
-      "name": "Grok 4.7 (xhigh)",
+      "name": "Grok 4.7 (Xhigh)",
       "displayName": "Grok 4.7 (xhigh)",
       "creator": "SpaceXAI",
       "intelligence": 46.4,
@@ -452,7 +452,7 @@
     },
     {
       "slug": "grok-4-7-high",
-      "name": "Grok 4.7 (high)",
+      "name": "Grok 4.7 (High)",
       "displayName": "Grok 4.7 (high)",
       "creator": "SpaceXAI",
       "intelligence": 46.3,
@@ -484,7 +484,7 @@
     },
     {
       "slug": "gpt-6-astra-low",
-      "name": "GPT-6 Astra (low)",
+      "name": "GPT-6 Astra (Low)",
       "displayName": "GPT-6 Astra (low)",
       "creator": "OpenAI",
       "intelligence": 45.8,
@@ -516,7 +516,7 @@
     },
     {
       "slug": "muse-spark-1-3-xhigh",
-      "name": "Muse Spark 1.3 (xhigh)",
+      "name": "Muse Spark 1.3 (Xhigh)",
       "displayName": "Muse Spark 1.3 (xhigh)",
       "creator": "Meta",
       "intelligence": 45.1,
@@ -548,7 +548,7 @@
     },
     {
       "slug": "glm-5-3",
-      "name": "GLM-5.3 (max)",
+      "name": "GLM-5.3 (Max)",
       "displayName": "GLM-5.3 (max)",
       "creator": "Z AI",
       "intelligence": 44.8,
@@ -564,7 +564,7 @@
     },
     {
       "slug": "grok-4-6",
-      "name": "Grok 4.6 (high)",
+      "name": "Grok 4.6 (High)",
       "displayName": "Grok 4.6 (high)",
       "creator": "SpaceXAI",
       "intelligence": 44.3,
@@ -580,7 +580,7 @@
     },
     {
       "slug": "grok-4-6-xhigh",
-      "name": "Grok 4.6 (xhigh)",
+      "name": "Grok 4.6 (Xhigh)",
       "displayName": "Grok 4.6 (xhigh)",
       "creator": "SpaceXAI",
       "intelligence": 44.2,
@@ -596,7 +596,7 @@
     },
     {
       "slug": "gpt-6-sol-xhigh",
-      "name": "GPT-6 Sol (xhigh)",
+      "name": "GPT-6 Sol (Xhigh)",
       "displayName": "GPT-6 Sol (xhigh)",
       "creator": "OpenAI",
       "intelligence": 44.1,
@@ -612,7 +612,7 @@
     },
     {
       "slug": "gpt-5-6-sol-xhigh",
-      "name": "GPT-5.6 Sol (xhigh)",
+      "name": "GPT-5.6 Sol (Xhigh)",
       "displayName": "GPT-5.6 Sol (xhigh)",
       "creator": "OpenAI",
       "intelligence": 44,
@@ -644,7 +644,7 @@
     },
     {
       "slug": "kimi-k3",
-      "name": "Kimi K3 (max)",
+      "name": "Kimi K3 (Max)",
       "displayName": "Kimi K3 (max)",
       "creator": "Kimi",
       "intelligence": 43.6,
@@ -660,7 +660,7 @@
     },
     {
       "slug": "gpt-6-sol-high",
-      "name": "GPT-6 Sol (high)",
+      "name": "GPT-6 Sol (High)",
       "displayName": "GPT-6 Sol (high)",
       "creator": "OpenAI",
       "intelligence": 42.8,
@@ -676,7 +676,7 @@
     },
     {
       "slug": "grok-4-6-medium",
-      "name": "Grok 4.6 (medium)",
+      "name": "Grok 4.6 (Medium)",
       "displayName": "Grok 4.6 (medium)",
       "creator": "SpaceXAI",
       "intelligence": 42.8,
@@ -708,7 +708,7 @@
     },
     {
       "slug": "gpt-5-6-sol-high",
-      "name": "GPT-5.6 Sol (high)",
+      "name": "GPT-5.6 Sol (High)",
       "displayName": "GPT-5.6 Sol (high)",
       "creator": "OpenAI",
       "intelligence": 42.3,
@@ -724,7 +724,7 @@
     },
     {
       "slug": "gpt-5-6-terra",
-      "name": "GPT-5.6 Terra (max)",
+      "name": "GPT-5.6 Terra (Max)",
       "displayName": "GPT-5.6 Terra (max)",
       "creator": "OpenAI",
       "intelligence": 42.1,
@@ -740,7 +740,7 @@
     },
     {
       "slug": "gpt-6-1-sol-low",
-      "name": "GPT-6.1 Sol (low)",
+      "name": "GPT-6.1 Sol (Low)",
       "displayName": "GPT-6.1 Sol (low)",
       "creator": "OpenAI",
       "intelligence": 42.1,
@@ -788,7 +788,7 @@
     },
     {
       "slug": "gemini-3-8-flash",
-      "name": "Gemini 3.8 Flash (high)",
+      "name": "Gemini 3.8 Flash (High)",
       "displayName": "Gemini 3.8 Flash (high)",
       "creator": "Google",
       "intelligence": 40.9,
@@ -868,7 +868,7 @@
     },
     {
       "slug": "gemini-3-8-flash-medium",
-      "name": "Gemini 3.8 Flash (medium)",
+      "name": "Gemini 3.8 Flash (Medium)",
       "displayName": "Gemini 3.8 Flash (medium)",
       "creator": "Google",
       "intelligence": 39.8,
@@ -884,7 +884,7 @@
     },
     {
       "slug": "gpt-6-sol-medium",
-      "name": "GPT-6 Sol (medium)",
+      "name": "GPT-6 Sol (Medium)",
       "displayName": "GPT-6 Sol (medium)",
       "creator": "OpenAI",
       "intelligence": 39.8,
@@ -916,7 +916,7 @@
     },
     {
       "slug": "gemini-3-7-flash-medium",
-      "name": "Gemini 3.7 Flash (medium)",
+      "name": "Gemini 3.7 Flash (Medium)",
       "displayName": "Gemini 3.7 Flash (medium)",
       "creator": "Google",
       "intelligence": 39.6,
@@ -932,7 +932,7 @@
     },
     {
       "slug": "muse-spark-1-2",
-      "name": "Muse Spark 1.2 (xhigh)",
+      "name": "Muse Spark 1.2 (Xhigh)",
       "displayName": "Muse Spark 1.2 (xhigh)",
       "creator": "Meta",
       "intelligence": 39.6,
@@ -980,7 +980,7 @@
     },
     {
       "slug": "gpt-5-6-sol-medium",
-      "name": "GPT-5.6 Sol (medium)",
+      "name": "GPT-5.6 Sol (Medium)",
       "displayName": "GPT-5.6 Sol (medium)",
       "creator": "OpenAI",
       "intelligence": 39.2,
@@ -996,7 +996,7 @@
     },
     {
       "slug": "gemini-3-7-flash",
-      "name": "Gemini 3.7 Flash (high)",
+      "name": "Gemini 3.7 Flash (High)",
       "displayName": "Gemini 3.7 Flash (high)",
       "creator": "Google",
       "intelligence": 39.1,
@@ -1012,7 +1012,7 @@
     },
     {
       "slug": "gpt-5-4",
-      "name": "GPT-5.4 (xhigh)",
+      "name": "GPT-5.4 (Xhigh)",
       "displayName": "GPT-5.4 (xhigh)",
       "creator": "OpenAI",
       "intelligence": 39,
@@ -1028,7 +1028,7 @@
     },
     {
       "slug": "grok-4-5",
-      "name": "Grok 4.5 (high)",
+      "name": "Grok 4.5 (High)",
       "displayName": "Grok 4.5 (high)",
       "creator": "SpaceXAI",
       "intelligence": 38.8,
@@ -1044,7 +1044,7 @@
     },
     {
       "slug": "gpt-5-5",
-      "name": "GPT-5.5 (xhigh)",
+      "name": "GPT-5.5 (Xhigh)",
       "displayName": "GPT-5.5 (xhigh)",
       "creator": "OpenAI",
       "intelligence": 38.4,
@@ -1076,7 +1076,7 @@
     },
     {
       "slug": "gpt-5-6-terra-xhigh",
-      "name": "GPT-5.6 Terra (xhigh)",
+      "name": "GPT-5.6 Terra (Xhigh)",
       "displayName": "GPT-5.6 Terra (xhigh)",
       "creator": "OpenAI",
       "intelligence": 38,
@@ -1108,7 +1108,7 @@
     },
     {
       "slug": "gpt-5-6-luna",
-      "name": "GPT-5.6 Luna (max)",
+      "name": "GPT-5.6 Luna (Max)",
       "displayName": "GPT-5.6 Luna (max)",
       "creator": "OpenAI",
       "intelligence": 37.3,
@@ -1124,7 +1124,7 @@
     },
     {
       "slug": "gpt-6-luna",
-      "name": "GPT-6 Luna (max)",
+      "name": "GPT-6 Luna (Max)",
       "displayName": "GPT-6 Luna (max)",
       "creator": "OpenAI",
       "intelligence": 37.3,
@@ -1140,7 +1140,7 @@
     },
     {
       "slug": "gpt-5-5-high",
-      "name": "GPT-5.5 (high)",
+      "name": "GPT-5.5 (High)",
       "displayName": "GPT-5.5 (high)",
       "creator": "OpenAI",
       "intelligence": 37,
@@ -1156,7 +1156,7 @@
     },
     {
       "slug": "gemini-3-7-flash-low",
-      "name": "Gemini 3.7 Flash (low)",
+      "name": "Gemini 3.7 Flash (Low)",
       "displayName": "Gemini 3.7 Flash (low)",
       "creator": "Google",
       "intelligence": 36.9,
@@ -1188,7 +1188,7 @@
     },
     {
       "slug": "grok-4-6-low",
-      "name": "Grok 4.6 (low)",
+      "name": "Grok 4.6 (Low)",
       "displayName": "Grok 4.6 (low)",
       "creator": "SpaceXAI",
       "intelligence": 35.1,
@@ -1220,7 +1220,7 @@
     },
     {
       "slug": "gpt-5-6-luna-xhigh",
-      "name": "GPT-5.6 Luna (xhigh)",
+      "name": "GPT-5.6 Luna (Xhigh)",
       "displayName": "GPT-5.6 Luna (xhigh)",
       "creator": "OpenAI",
       "intelligence": 34.6,
@@ -1268,7 +1268,7 @@
     },
     {
       "slug": "glm-5-3-low",
-      "name": "GLM-5.3 (low)",
+      "name": "GLM-5.3 (Low)",
       "displayName": "GLM-5.3 (low)",
       "creator": "Z AI",
       "intelligence": 34.3,
@@ -1284,7 +1284,7 @@
     },
     {
       "slug": "gpt-5-6-terra-high",
-      "name": "GPT-5.6 Terra (high)",
+      "name": "GPT-5.6 Terra (High)",
       "displayName": "GPT-5.6 Terra (high)",
       "creator": "OpenAI",
       "intelligence": 34.2,
@@ -1300,7 +1300,7 @@
     },
     {
       "slug": "gemini-3-6-flash",
-      "name": "Gemini 3.6 Flash (high)",
+      "name": "Gemini 3.6 Flash (High)",
       "displayName": "Gemini 3.6 Flash",
       "creator": "Google",
       "intelligence": 34,
@@ -1316,7 +1316,7 @@
     },
     {
       "slug": "gpt-6-luna-xhigh",
-      "name": "GPT-6 Luna (xhigh)",
+      "name": "GPT-6 Luna (Xhigh)",
       "displayName": "GPT-6 Luna (xhigh)",
       "creator": "OpenAI",
       "intelligence": 33.9,
@@ -1332,7 +1332,7 @@
     },
     {
       "slug": "gpt-6-sol-low",
-      "name": "GPT-6 Sol (low)",
+      "name": "GPT-6 Sol (Low)",
       "displayName": "GPT-6 Sol (low)",
       "creator": "OpenAI",
       "intelligence": 33.9,
@@ -1364,7 +1364,7 @@
     },
     {
       "slug": "gpt-5-5-medium",
-      "name": "GPT-5.5 (medium)",
+      "name": "GPT-5.5 (Medium)",
       "displayName": "GPT-5.5 (medium)",
       "creator": "OpenAI",
       "intelligence": 33.8,
@@ -1380,7 +1380,7 @@
     },
     {
       "slug": "glm-5-2",
-      "name": "GLM-5.2 (max)",
+      "name": "GLM-5.2 (Max)",
       "displayName": "GLM-5.2 (max)",
       "creator": "Z AI",
       "intelligence": 33.7,
@@ -1396,7 +1396,7 @@
     },
     {
       "slug": "muse-spark-1-1",
-      "name": "Muse Spark 1.1 (xhigh)",
+      "name": "Muse Spark 1.1 (Xhigh)",
       "displayName": "Muse Spark 1.1 (xhigh)",
       "creator": "Meta",
       "intelligence": 33.7,
@@ -1412,7 +1412,7 @@
     },
     {
       "slug": "qwen3-8-27b",
-      "name": "Qwen3.8 27B (xhigh)",
+      "name": "Qwen3.8 27B (Xhigh)",
       "displayName": "Qwen3.8 27B (xhigh)",
       "creator": "Alibaba",
       "intelligence": 33.7,
@@ -1428,7 +1428,7 @@
     },
     {
       "slug": "gemini-3-5-flash-medium",
-      "name": "Gemini 3.5 Flash (medium)",
+      "name": "Gemini 3.5 Flash (Medium)",
       "displayName": "Gemini 3.5 Flash (medium)",
       "creator": "Google",
       "intelligence": 33.6,
@@ -1460,7 +1460,7 @@
     },
     {
       "slug": "gemini-3-8-flash-low",
-      "name": "Gemini 3.8 Flash (low)",
+      "name": "Gemini 3.8 Flash (Low)",
       "displayName": "Gemini 3.8 Flash (low)",
       "creator": "Google",
       "intelligence": 33.5,
@@ -1476,7 +1476,7 @@
     },
     {
       "slug": "gpt-5-6-sol-low",
-      "name": "GPT-5.6 Sol (low)",
+      "name": "GPT-5.6 Sol (Low)",
       "displayName": "GPT-5.6 Sol (low)",
       "creator": "OpenAI",
       "intelligence": 33.5,
@@ -1492,7 +1492,7 @@
     },
     {
       "slug": "gemini-3-5-flash",
-      "name": "Gemini 3.5 Flash (high)",
+      "name": "Gemini 3.5 Flash (High)",
       "displayName": "Gemini 3.5 Flash",
       "creator": "Google",
       "intelligence": 32.6,
@@ -1508,7 +1508,7 @@
     },
     {
       "slug": "gpt-5-3-codex",
-      "name": "GPT-5.3 Codex (xhigh)",
+      "name": "GPT-5.3 Codex (Xhigh)",
       "displayName": "GPT-5.3 Codex (xhigh)",
       "creator": "OpenAI",
       "intelligence": 32.5,
@@ -1540,7 +1540,7 @@
     },
     {
       "slug": "gpt-5-6-luna-high",
-      "name": "GPT-5.6 Luna (high)",
+      "name": "GPT-5.6 Luna (High)",
       "displayName": "GPT-5.6 Luna (high)",
       "creator": "OpenAI",
       "intelligence": 32.1,
@@ -1556,7 +1556,7 @@
     },
     {
       "slug": "gpt-6-luna-high",
-      "name": "GPT-6 Luna (high)",
+      "name": "GPT-6 Luna (High)",
       "displayName": "GPT-6 Luna (high)",
       "creator": "OpenAI",
       "intelligence": 32.1,
@@ -1636,7 +1636,7 @@
     },
     {
       "slug": "gpt-5-5-low",
-      "name": "GPT-5.5 (low)",
+      "name": "GPT-5.5 (Low)",
       "displayName": "GPT-5.5 (low)",
       "creator": "OpenAI",
       "intelligence": 30.7,
@@ -1684,7 +1684,7 @@
     },
     {
       "slug": "gpt-5-2",
-      "name": "GPT-5.2 (xhigh)",
+      "name": "GPT-5.2 (Xhigh)",
       "displayName": "GPT-5.2 (xhigh)",
       "creator": "OpenAI",
       "intelligence": 30.4,
@@ -1732,7 +1732,7 @@
     },
     {
       "slug": "gpt-5-6-terra-medium",
-      "name": "GPT-5.6 Terra (medium)",
+      "name": "GPT-5.6 Terra (Medium)",
       "displayName": "GPT-5.6 Terra (medium)",
       "creator": "OpenAI",
       "intelligence": 30.1,
@@ -1748,7 +1748,7 @@
     },
     {
       "slug": "kimi-k3-low",
-      "name": "Kimi K3 (low)",
+      "name": "Kimi K3 (Low)",
       "displayName": "Kimi K3 (low)",
       "creator": "Kimi",
       "intelligence": 30.1,
@@ -1780,7 +1780,7 @@
     },
     {
       "slug": "gpt-6-luna-medium",
-      "name": "GPT-6 Luna (medium)",
+      "name": "GPT-6 Luna (Medium)",
       "displayName": "GPT-6 Luna (medium)",
       "creator": "OpenAI",
       "intelligence": 29.5,
@@ -1860,7 +1860,7 @@
     },
     {
       "slug": "gpt-5-2-codex",
-      "name": "GPT-5.2 Codex (xhigh)",
+      "name": "GPT-5.2 Codex (Xhigh)",
       "displayName": "GPT-5.2 Codex (xhigh)",
       "creator": "OpenAI",
       "intelligence": 28.5,
@@ -1908,7 +1908,7 @@
     },
     {
       "slug": "nex-n2-pro",
-      "name": "Nex-N2-Pro (based on Qwen3.5-397B-A17B)",
+      "name": "Nex-N2-Pro (Based on Qwen3.5-397B-A17B)",
       "displayName": "Nex-N2-Pro",
       "creator": "Nex AGI",
       "intelligence": 28.2,
@@ -1972,7 +1972,7 @@
     },
     {
       "slug": "gemini-3-pro",
-      "name": "Gemini 3 Pro Preview (high)",
+      "name": "Gemini 3 Pro Preview (High)",
       "displayName": "Gemini 3 Pro Preview (high)",
       "creator": "Google",
       "intelligence": 28,
@@ -2004,7 +2004,7 @@
     },
     {
       "slug": "gpt-5-4-low",
-      "name": "GPT-5.4 (low)",
+      "name": "GPT-5.4 (Low)",
       "displayName": "GPT-5.4 (low)",
       "creator": "OpenAI",
       "intelligence": 27.6,
@@ -2020,7 +2020,7 @@
     },
     {
       "slug": "qwen3-8-27b-medium",
-      "name": "Qwen3.8 27B (medium)",
+      "name": "Qwen3.8 27B (Medium)",
       "displayName": "Qwen3.8 27B (medium)",
       "creator": "Alibaba",
       "intelligence": 27.6,
@@ -2036,7 +2036,7 @@
     },
     {
       "slug": "gpt-5-6-terra-low",
-      "name": "GPT-5.6 Terra (low)",
+      "name": "GPT-5.6 Terra (Low)",
       "displayName": "GPT-5.6 Terra (low)",
       "creator": "OpenAI",
       "intelligence": 27.5,
@@ -2052,7 +2052,7 @@
     },
     {
       "slug": "jt-4-1-flash-236b-a21b",
-      "name": "JT-4.1 Flash 236B A21B (non-reasoning)",
+      "name": "JT-4.1 Flash 236B A21B (Non-reasoning)",
       "displayName": "JT-4.1 Flash 236B A21B (non-reasoning)",
       "creator": "China Mobile",
       "intelligence": 27.3,
@@ -2116,7 +2116,7 @@
     },
     {
       "slug": "quasar-438b",
-      "name": "Quasar 438B (max, based on GLM-5.2)",
+      "name": "Quasar 438B (Max, Based on GLM-5.2)",
       "displayName": "Quasar 438B (max)",
       "creator": "Multiverse Computing",
       "intelligence": 26.7,
@@ -2148,7 +2148,7 @@
     },
     {
       "slug": "gpt-5-2-medium",
-      "name": "GPT-5.2 (medium)",
+      "name": "GPT-5.2 (Medium)",
       "displayName": "GPT-5.2 (medium)",
       "creator": "OpenAI",
       "intelligence": 26.5,
@@ -2212,7 +2212,7 @@
     },
     {
       "slug": "qwen3-8-27b-low",
-      "name": "Qwen3.8 27B (low)",
+      "name": "Qwen3.8 27B (Low)",
       "displayName": "Qwen3.8 27B (low)",
       "creator": "Alibaba",
       "intelligence": 26.2,
@@ -2420,7 +2420,7 @@
     },
     {
       "slug": "gpt-5-6-luna-medium",
-      "name": "GPT-5.6 Luna (medium)",
+      "name": "GPT-5.6 Luna (Medium)",
       "displayName": "GPT-5.6 Luna (medium)",
       "creator": "OpenAI",
       "intelligence": 25,
@@ -2436,7 +2436,7 @@
     },
     {
       "slug": "inkling",
-      "name": "Inkling (xhigh)",
+      "name": "Inkling (Xhigh)",
       "displayName": "Inkling",
       "creator": "Thinking Machines",
       "intelligence": 25,
@@ -2452,7 +2452,7 @@
     },
     {
       "slug": "gpt-5-codex",
-      "name": "GPT-5 Codex (high)",
+      "name": "GPT-5 Codex (High)",
       "displayName": "GPT-5 Codex (high)",
       "creator": "OpenAI",
       "intelligence": 24.9,
@@ -2468,7 +2468,7 @@
     },
     {
       "slug": "grok-4-3",
-      "name": "Grok 4.3 (high)",
+      "name": "Grok 4.3 (High)",
       "displayName": "Grok 4.3 (high)",
       "creator": "SpaceXAI",
       "intelligence": 24.9,
@@ -2484,7 +2484,7 @@
     },
     {
       "slug": "grok-4-3-medium",
-      "name": "Grok 4.3 (medium)",
+      "name": "Grok 4.3 (Medium)",
       "displayName": "Grok 4.3 (medium)",
       "creator": "SpaceXAI",
       "intelligence": 24.8,
@@ -2516,7 +2516,7 @@
     },
     {
       "slug": "deepseek-v4-1-flash-non-reasoning",
-      "name": "DeepSeek V4.1 Flash (Non-Reasoning)",
+      "name": "DeepSeek V4.1 Flash (Non-reasoning)",
       "displayName": "DeepSeek V4.1 Flash (Non-reasoning)",
       "creator": "DeepSeek",
       "intelligence": 24.7,
@@ -2532,7 +2532,7 @@
     },
     {
       "slug": "gpt-5-1",
-      "name": "GPT-5.1 (high)",
+      "name": "GPT-5.1 (High)",
       "displayName": "GPT-5.1 (high)",
       "creator": "OpenAI",
       "intelligence": 24.7,
@@ -2612,7 +2612,7 @@
     },
     {
       "slug": "grok-4-3-low",
-      "name": "Grok 4.3 (low)",
+      "name": "Grok 4.3 (Low)",
       "displayName": "Grok 4.3 (low)",
       "creator": "SpaceXAI",
       "intelligence": 24.3,
@@ -2660,7 +2660,7 @@
     },
     {
       "slug": "gpt-5-4-mini",
-      "name": "GPT-5.4 mini (xhigh)",
+      "name": "GPT-5.4 mini (Xhigh)",
       "displayName": "GPT-5.4 mini (xhigh)",
       "creator": "OpenAI",
       "intelligence": 24.1,
@@ -2692,7 +2692,7 @@
     },
     {
       "slug": "gemini-3-5-flash-minimal",
-      "name": "Gemini 3.5 Flash (minimal)",
+      "name": "Gemini 3.5 Flash (Minimal)",
       "displayName": "Gemini 3.5 Flash (minimal)",
       "creator": "Google",
       "intelligence": 23.8,
@@ -2724,7 +2724,7 @@
     },
     {
       "slug": "gpt-5-1-codex",
-      "name": "GPT-5.1 Codex (high)",
+      "name": "GPT-5.1 Codex (High)",
       "displayName": "GPT-5.1 Codex (high)",
       "creator": "OpenAI",
       "intelligence": 23.7,
@@ -2836,7 +2836,7 @@
     },
     {
       "slug": "gpt-5",
-      "name": "GPT-5 (high)",
+      "name": "GPT-5 (High)",
       "displayName": "GPT-5 (high)",
       "creator": "OpenAI",
       "intelligence": 23,
@@ -2852,7 +2852,7 @@
     },
     {
       "slug": "gpt-5-medium",
-      "name": "GPT-5 (medium)",
+      "name": "GPT-5 (Medium)",
       "displayName": "GPT-5 (medium)",
       "creator": "OpenAI",
       "intelligence": 22.9,
@@ -3060,7 +3060,7 @@
     },
     {
       "slug": "gemini-3-pro-low",
-      "name": "Gemini 3 Pro Preview (low)",
+      "name": "Gemini 3 Pro Preview (Low)",
       "displayName": "Gemini 3 Pro Preview (low)",
       "creator": "Google",
       "intelligence": 22.3,
@@ -3252,7 +3252,7 @@
     },
     {
       "slug": "gpt-5-6-luna-low",
-      "name": "GPT-5.6 Luna (low)",
+      "name": "GPT-5.6 Luna (Low)",
       "displayName": "GPT-5.6 Luna (low)",
       "creator": "OpenAI",
       "intelligence": 21,
@@ -3268,7 +3268,7 @@
     },
     {
       "slug": "gpt-6-luna-low",
-      "name": "GPT-6 Luna (low)",
+      "name": "GPT-6 Luna (Low)",
       "displayName": "GPT-6 Luna (low)",
       "creator": "OpenAI",
       "intelligence": 20.9,
@@ -3332,7 +3332,7 @@
     },
     {
       "slug": "gpt-5-low",
-      "name": "GPT-5 (low)",
+      "name": "GPT-5 (Low)",
       "displayName": "GPT-5 (low)",
       "creator": "OpenAI",
       "intelligence": 20.8,
@@ -3380,7 +3380,7 @@
     },
     {
       "slug": "gpt-5-4-nano",
-      "name": "GPT-5.4 nano (xhigh)",
+      "name": "GPT-5.4 nano (Xhigh)",
       "displayName": "GPT-5.4 nano (xhigh)",
       "creator": "OpenAI",
       "intelligence": 20.7,
@@ -3412,7 +3412,7 @@
     },
     {
       "slug": "gpt-5-mini-medium",
-      "name": "GPT-5 mini (medium)",
+      "name": "GPT-5 mini (Medium)",
       "displayName": "GPT-5 mini (medium)",
       "creator": "OpenAI",
       "intelligence": 20.6,
@@ -3460,7 +3460,7 @@
     },
     {
       "slug": "gpt-5-1-codex-mini",
-      "name": "GPT-5.1 Codex mini (high)",
+      "name": "GPT-5.1 Codex mini (High)",
       "displayName": "GPT-5.1 Codex mini (high)",
       "creator": "OpenAI",
       "intelligence": 20.4,
@@ -3556,7 +3556,7 @@
     },
     {
       "slug": "gpt-5-4-nano-medium",
-      "name": "GPT-5.4 nano (medium)",
+      "name": "GPT-5.4 nano (Medium)",
       "displayName": "GPT-5.4 nano",
       "creator": "OpenAI",
       "intelligence": 20,
@@ -3588,7 +3588,7 @@
     },
     {
       "slug": "gpt-5-4-mini-medium",
-      "name": "GPT-5.4 mini (medium)",
+      "name": "GPT-5.4 mini (Medium)",
       "displayName": "GPT-5.4 mini (medium)",
       "creator": "OpenAI",
       "intelligence": 19.7,
@@ -3972,7 +3972,7 @@
     },
     {
       "slug": "muse-glimmer",
-      "name": "Muse Glimmer (high)",
+      "name": "Muse Glimmer (High)",
       "displayName": "Muse Glimmer (high)",
       "creator": "Meta",
       "intelligence": 17.5,
@@ -4100,7 +4100,7 @@
     },
     {
       "slug": "gpt-5-mini",
-      "name": "GPT-5 mini (high)",
+      "name": "GPT-5 mini (High)",
       "displayName": "GPT-5 mini (high)",
       "creator": "OpenAI",
       "intelligence": 16.8,
@@ -4132,7 +4132,7 @@
     },
     {
       "slug": "o4-mini",
-      "name": "o4-mini (high)",
+      "name": "o4-mini (High)",
       "displayName": "o4-mini (high)",
       "creator": "OpenAI",
       "intelligence": 16.7,
@@ -4580,7 +4580,7 @@
     },
     {
       "slug": "grok-3-mini-reasoning",
-      "name": "Grok 3 mini Reasoning (high)",
+      "name": "Grok 3 mini Reasoning (High)",
       "displayName": "Grok 3 mini Reasoning (high)",
       "creator": "SpaceXAI",
       "intelligence": 14.6,
@@ -4724,7 +4724,7 @@
     },
     {
       "slug": "nova-2-0-pro-reasoning-medium",
-      "name": "Nova 2.0 Pro Preview (medium)",
+      "name": "Nova 2.0 Pro Preview (Medium)",
       "displayName": "Nova 2.0 Pro Preview (medium)",
       "creator": "Amazon",
       "intelligence": 14.2,
@@ -4868,7 +4868,7 @@
     },
     {
       "slug": "nova-2-0-omni-reasoning-medium",
-      "name": "Nova 2.0 Omni (medium)",
+      "name": "Nova 2.0 Omni (Medium)",
       "displayName": "Nova 2.0 Omni (medium)",
       "creator": "Amazon",
       "intelligence": 13.6,
@@ -4916,7 +4916,7 @@
     },
     {
       "slug": "nova-2-0-lite-reasoning",
-      "name": "Nova 2.0 Lite (high)",
+      "name": "Nova 2.0 Lite (High)",
       "displayName": "Nova 2.0 Lite (high)",
       "creator": "Amazon",
       "intelligence": 13.4,
@@ -5076,7 +5076,7 @@
     },
     {
       "slug": "gpt-5-nano",
-      "name": "GPT-5 nano (high)",
+      "name": "GPT-5 nano (High)",
       "displayName": "GPT-5 nano (high)",
       "creator": "OpenAI",
       "intelligence": 13,
@@ -5124,7 +5124,7 @@
     },
     {
       "slug": "nova-2-0-pro-reasoning-low",
-      "name": "Nova 2.0 Pro Preview (low)",
+      "name": "Nova 2.0 Pro Preview (Low)",
       "displayName": "Nova 2.0 Pro Preview (low)",
       "creator": "Amazon",
       "intelligence": 12.8,
@@ -5220,7 +5220,7 @@
     },
     {
       "slug": "gpt-5-nano-medium",
-      "name": "GPT-5 nano (medium)",
+      "name": "GPT-5 nano (Medium)",
       "displayName": "GPT-5 nano (medium)",
       "creator": "OpenAI",
       "intelligence": 12.5,
@@ -5252,7 +5252,7 @@
     },
     {
       "slug": "nova-2-0-lite-reasoning-medium",
-      "name": "Nova 2.0 Lite (medium)",
+      "name": "Nova 2.0 Lite (Medium)",
       "displayName": "Nova 2.0 Lite (medium)",
       "creator": "Amazon",
       "intelligence": 12.5,
@@ -5460,7 +5460,7 @@
     },
     {
       "slug": "nova-2-0-lite-reasoning-low",
-      "name": "Nova 2.0 Lite (low)",
+      "name": "Nova 2.0 Lite (Low)",
       "displayName": "Nova 2.0 Lite (low)",
       "creator": "Amazon",
       "intelligence": 11.8,
@@ -5508,7 +5508,7 @@
     },
     {
       "slug": "gpt-5-4-nano-non-reasoning",
-      "name": "GPT-5.4 nano (Non-Reasoning)",
+      "name": "GPT-5.4 nano (Non-reasoning)",
       "displayName": "GPT-5.4 nano (Non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 11.7,
@@ -5524,7 +5524,7 @@
     },
     {
       "slug": "hypernova-60b",
-      "name": "HyperNova 60B 2605 (high, based on gpt-oss-120b)",
+      "name": "HyperNova 60B 2605 (High, Based on gpt-oss-120b)",
       "displayName": "HyperNova 60B 2605 (high)",
       "creator": "Multiverse Computing",
       "intelligence": 11.7,
@@ -5572,7 +5572,7 @@
     },
     {
       "slug": "gpt-oss-120b",
-      "name": "gpt-oss-120b (high)",
+      "name": "gpt-oss-120b (High)",
       "displayName": "gpt-oss-120b (high)",
       "creator": "OpenAI",
       "intelligence": 11.6,
@@ -5636,7 +5636,7 @@
     },
     {
       "slug": "gpt-5-minimal",
-      "name": "GPT-5 (minimal)",
+      "name": "GPT-5 (Minimal)",
       "displayName": "GPT-5 (minimal)",
       "creator": "OpenAI",
       "intelligence": 11.4,
@@ -5796,7 +5796,7 @@
     },
     {
       "slug": "gpt-5-4-mini-non-reasoning",
-      "name": "GPT-5.4 mini (Non-Reasoning)",
+      "name": "GPT-5.4 mini (Non-reasoning)",
       "displayName": "GPT-5.4 mini (Non-reasoning)",
       "creator": "OpenAI",
       "intelligence": 11.1,
@@ -5860,7 +5860,7 @@
     },
     {
       "slug": "nova-2-0-omni-reasoning-low",
-      "name": "Nova 2.0 Omni (low)",
+      "name": "Nova 2.0 Omni (Low)",
       "displayName": "Nova 2.0 Omni (low)",
       "creator": "Amazon",
       "intelligence": 11.1,
@@ -5892,7 +5892,7 @@
     },
     {
       "slug": "o3-mini-high",
-      "name": "o3-mini (high)",
+      "name": "o3-mini (High)",
       "displayName": "o3-mini (high)",
       "creator": "OpenAI",
       "intelligence": 11,
@@ -5988,7 +5988,7 @@
     },
     {
       "slug": "intellect-3",
-      "name": "INTELLECT-3 (based on GLM-4.5-Air)",
+      "name": "INTELLECT-3 (Based on GLM-4.5-Air)",
       "displayName": "INTELLECT-3",
       "creator": "Prime Intellect",
       "intelligence": 10.6,
@@ -6100,7 +6100,7 @@
     },
     {
       "slug": "gpt-oss-120b-low",
-      "name": "gpt-oss-120b (low)",
+      "name": "gpt-oss-120b (Low)",
       "displayName": "gpt-oss-120b (low)",
       "creator": "OpenAI",
       "intelligence": 10.2,
@@ -6116,7 +6116,7 @@
     },
     {
       "slug": "gpt-oss-20b-low",
-      "name": "gpt-oss-20b (low)",
+      "name": "gpt-oss-20b (Low)",
       "displayName": "gpt-oss-20b (low)",
       "creator": "OpenAI",
       "intelligence": 10,
@@ -6196,7 +6196,7 @@
     },
     {
       "slug": "gpt-5-mini-minimal",
-      "name": "GPT-5 mini (minimal)",
+      "name": "GPT-5 mini (Minimal)",
       "displayName": "GPT-5 mini (minimal)",
       "creator": "OpenAI",
       "intelligence": 9.9,
@@ -6212,7 +6212,7 @@
     },
     {
       "slug": "k2-v2",
-      "name": "K2-V2 (high)",
+      "name": "K2-V2 (High)",
       "displayName": "K2-V2 (high)",
       "creator": "Institute of Foundation Models",
       "intelligence": 9.9,
@@ -6676,7 +6676,7 @@
     },
     {
       "slug": "gpt-oss-20b",
-      "name": "gpt-oss-20b (high)",
+      "name": "gpt-oss-20b (High)",
       "displayName": "gpt-oss-20b (high)",
       "creator": "OpenAI",
       "intelligence": 9,
@@ -6692,7 +6692,7 @@
     },
     {
       "slug": "k2-v2-medium",
-      "name": "K2-V2 (medium)",
+      "name": "K2-V2 (Medium)",
       "displayName": "K2-V2 (medium)",
       "creator": "Institute of Foundation Models",
       "intelligence": 9,
@@ -6884,7 +6884,7 @@
     },
     {
       "slug": "sarvam-105b",
-      "name": "Sarvam 105B (high)",
+      "name": "Sarvam 105B (High)",
       "displayName": "Sarvam 105B (high)",
       "creator": "Sarvam",
       "intelligence": 8.8,
@@ -8004,7 +8004,7 @@
     },
     {
       "slug": "k2-v2-low",
-      "name": "K2-V2 (low)",
+      "name": "K2-V2 (Low)",
       "displayName": "K2-V2 (low)",
       "creator": "Institute of Foundation Models",
       "intelligence": 7.3,
@@ -8244,7 +8244,7 @@
     },
     {
       "slug": "gpt-5-nano-minimal",
-      "name": "GPT-5 nano (minimal)",
+      "name": "GPT-5 nano (Minimal)",
       "displayName": "GPT-5 nano (minimal)",
       "creator": "OpenAI",
       "intelligence": 7.1,
@@ -8804,7 +8804,7 @@
     },
     {
       "slug": "sarvam-30b",
-      "name": "Sarvam 30B (high)",
+      "name": "Sarvam 30B (High)",
       "displayName": "Sarvam 30B (high)",
       "creator": "Sarvam",
       "intelligence": 6.6,
@@ -10116,7 +10116,7 @@
     },
     {
       "slug": "sarvam-m-reasoning",
-      "name": "Sarvam M (Reasoning, based on Mistral Small 3.1)",
+      "name": "Sarvam M (Reasoning, Based on Mistral Small 3.1)",
       "displayName": "Sarvam M",
       "creator": "Sarvam",
       "intelligence": 5.3,
