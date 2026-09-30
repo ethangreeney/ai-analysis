@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-30T18:26:59.608Z",
+  "fetchedAt": "2026-09-30T18:42:08.331Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -948,7 +948,7 @@
     },
     {
       "slug": "deepseek-v4-1-flash",
-      "name": "DeepSeek V4.1 Flash (Reasoning, Max Effort)",
+      "name": "DeepSeek V4.1 Flash (Max)",
       "displayName": "DeepSeek V4.1 Flash (max)",
       "creator": "DeepSeek",
       "intelligence": 39.5,
@@ -1172,7 +1172,7 @@
     },
     {
       "slug": "deepseek-v4-pro",
-      "name": "DeepSeek V4 Pro 0813 (Reasoning, Max Effort)",
+      "name": "DeepSeek V4 Pro 0813 (Max)",
       "displayName": "DeepSeek V4 Pro 0813 (max)",
       "creator": "DeepSeek",
       "intelligence": 36,
@@ -1204,7 +1204,7 @@
     },
     {
       "slug": "deepseek-v4-flash-vision",
-      "name": "DeepSeek V4 Flash Vision (Reasoning, Max Effort)",
+      "name": "DeepSeek V4 Flash Vision (Max)",
       "displayName": "DeepSeek V4 Flash Vision (max)",
       "creator": "DeepSeek",
       "intelligence": 34.8,
@@ -1252,7 +1252,7 @@
     },
     {
       "slug": "deepseek-v4-flash",
-      "name": "DeepSeek V4 Flash 0731 (Reasoning, Max Effort)",
+      "name": "DeepSeek V4 Flash 0731 (Max)",
       "displayName": "DeepSeek V4 Flash 0731 (max)",
       "creator": "DeepSeek",
       "intelligence": 34.3,
@@ -1668,7 +1668,7 @@
     },
     {
       "slug": "deepseek-v4-pro-0424",
-      "name": "DeepSeek V4 Pro 0424 (Reasoning, Max Effort)",
+      "name": "DeepSeek V4 Pro 0424 (Max)",
       "displayName": "DeepSeek V4 Pro (max)",
       "creator": "DeepSeek",
       "intelligence": 30.4,
@@ -1716,7 +1716,7 @@
     },
     {
       "slug": "deepseek-v4-pro-0424-high",
-      "name": "DeepSeek V4 Pro 0424 (Reasoning, High Effort)",
+      "name": "DeepSeek V4 Pro 0424 (High)",
       "displayName": "DeepSeek V4 Pro (high)",
       "creator": "DeepSeek",
       "intelligence": 30.1,
@@ -2580,7 +2580,7 @@
     },
     {
       "slug": "deepseek-v4-flash-0420-high",
-      "name": "DeepSeek V4 Flash 0420 (Reasoning, High Effort)",
+      "name": "DeepSeek V4 Flash 0420 (High)",
       "displayName": "DeepSeek V4 Flash (high)",
       "creator": "DeepSeek",
       "intelligence": 24.4,
@@ -2628,7 +2628,7 @@
     },
     {
       "slug": "deepseek-v4-flash-0420",
-      "name": "DeepSeek V4 Flash 0420 (Reasoning, Max Effort)",
+      "name": "DeepSeek V4 Flash 0420 (Max)",
       "displayName": "DeepSeek V4 Flash (max)",
       "creator": "DeepSeek",
       "intelligence": 24.2,
