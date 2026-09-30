@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-30T00:23:43.247Z",
+  "fetchedAt": "2026-09-30T02:24:11.865Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1235,22 +1235,6 @@
       "addedAt": "2026-07-09"
     },
     {
-      "slug": "kimi-k3-low",
-      "name": "Kimi K3 (low)",
-      "displayName": "Kimi K3 (low)",
-      "creator": "Kimi",
-      "intelligence": 34.5,
-      "codingIndex": 72,
-      "costPerTask": null,
-      "e2eLatency": 71.0858511171912,
-      "reasoningTime": 52.33778843735296,
-      "pricePerMillion": 6,
-      "outputTokensPerSecond": 39.899,
-      "ttft": 2.961,
-      "releaseDate": "2026-07-16",
-      "addedAt": "2026-07-16"
-    },
-    {
       "slug": "claude-sonnet-5-xhigh",
       "name": "Claude Sonnet 5 (Adaptive Reasoning, Xhigh Effort)",
       "displayName": "Claude Sonnet 5 (xhigh)",
@@ -1747,6 +1731,22 @@
       "addedAt": "2026-07-09"
     },
     {
+      "slug": "kimi-k3-low",
+      "name": "Kimi K3 (low)",
+      "displayName": "Kimi K3 (low)",
+      "creator": "Kimi",
+      "intelligence": 30.1,
+      "codingIndex": 72,
+      "costPerTask": null,
+      "e2eLatency": 71.0858511171912,
+      "reasoningTime": 52.33778843735296,
+      "pricePerMillion": 6,
+      "outputTokensPerSecond": 39.899,
+      "ttft": 2.961,
+      "releaseDate": "2026-07-16",
+      "addedAt": "2026-07-16"
+    },
+    {
       "slug": "gemini-3-1-pro-preview",
       "name": "Gemini 3.1 Pro Preview",
       "displayName": "Gemini 3.1 Pro Preview",
@@ -1985,22 +1985,6 @@
       "ttft": 0,
       "releaseDate": "2026-02-11",
       "addedAt": "2026-02-11"
-    },
-    {
-      "slug": "inkling-small",
-      "name": "Inkling Small",
-      "displayName": "Inkling Small",
-      "creator": "Thinking Machines",
-      "intelligence": 27.8,
-      "codingIndex": 52.9,
-      "costPerTask": null,
-      "e2eLatency": 14.210414706882062,
-      "reasoningTime": 9.728852079905778,
-      "pricePerMillion": 0.5249999999999999,
-      "outputTokensPerSecond": 218.927,
-      "ttft": 1.747,
-      "releaseDate": "2026-07-30",
-      "addedAt": "2026-07-30"
     },
     {
       "slug": "gpt-5-4-low",
@@ -2243,22 +2227,6 @@
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
-      "slug": "deepseek-v4-flash-0420-high",
-      "name": "DeepSeek V4 Flash 0420 (Reasoning, High Effort)",
-      "displayName": "DeepSeek V4 Flash (high)",
-      "creator": "DeepSeek",
-      "intelligence": 26,
-      "codingIndex": 52,
-      "costPerTask": null,
-      "e2eLatency": null,
-      "reasoningTime": null,
-      "pricePerMillion": 0.1433,
-      "outputTokensPerSecond": 0,
-      "ttft": 0,
-      "releaseDate": "2026-04-24",
-      "addedAt": "2026-04-24"
-    },
-    {
       "slug": "gpt-5-5-instant-06-26",
       "name": "GPT-5.5 Instant (June 2026)",
       "displayName": "GPT-5.5 Instant (June 2026)",
@@ -2321,6 +2289,22 @@
       "ttft": 0,
       "releaseDate": "2026-04-07",
       "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "inkling-small",
+      "name": "Inkling Small",
+      "displayName": "Inkling Small",
+      "creator": "Thinking Machines",
+      "intelligence": 25.7,
+      "codingIndex": 52.9,
+      "costPerTask": null,
+      "e2eLatency": 14.210414706882062,
+      "reasoningTime": 9.728852079905778,
+      "pricePerMillion": 0.5249999999999999,
+      "outputTokensPerSecond": 218.927,
+      "ttft": 1.747,
+      "releaseDate": "2026-07-30",
+      "addedAt": "2026-07-30"
     },
     {
       "slug": "hy3",
@@ -2577,6 +2561,22 @@
       "ttft": 1.377,
       "releaseDate": "2026-09-10",
       "addedAt": "2026-09-10"
+    },
+    {
+      "slug": "deepseek-v4-flash-0420-high",
+      "name": "DeepSeek V4 Flash 0420 (Reasoning, High Effort)",
+      "displayName": "DeepSeek V4 Flash (high)",
+      "creator": "DeepSeek",
+      "intelligence": 24.4,
+      "codingIndex": 52,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0.1433,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-04-24",
+      "addedAt": "2026-04-24"
     },
     {
       "slug": "claude-sonnet-5-low",
@@ -3683,22 +3683,6 @@
       "addedAt": "2026-06-29"
     },
     {
-      "slug": "gemma-4-31b",
-      "name": "Gemma 4 31B (Reasoning)",
-      "displayName": "Gemma 4 31B",
-      "creator": "Google",
-      "intelligence": 19,
-      "codingIndex": 43.4,
-      "costPerTask": null,
-      "e2eLatency": 63.868510495939454,
-      "reasoningTime": 48.80652298488317,
-      "pricePerMillion": 0,
-      "outputTokensPerSecond": 34.993,
-      "ttft": 0.974,
-      "releaseDate": "2026-04-02",
-      "addedAt": "2026-05-15T00:00:00.000Z"
-    },
-    {
       "slug": "claude-4-sonnet-thinking",
       "name": "Claude 4 Sonnet (Reasoning)",
       "displayName": "Claude 4 Sonnet",
@@ -4545,6 +4529,22 @@
       "ttft": 0.298,
       "releaseDate": "2026-08-25",
       "addedAt": "2026-08-25"
+    },
+    {
+      "slug": "gemma-4-31b",
+      "name": "Gemma 4 31B (Reasoning)",
+      "displayName": "Gemma 4 31B",
+      "creator": "Google",
+      "intelligence": 14.7,
+      "codingIndex": 43.4,
+      "costPerTask": null,
+      "e2eLatency": 63.868510495939454,
+      "reasoningTime": 48.80652298488317,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 34.993,
+      "ttft": 0.974,
+      "releaseDate": "2026-04-02",
+      "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
       "slug": "grok-3-mini-reasoning",
