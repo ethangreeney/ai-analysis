@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-30T03:09:13.631Z",
+  "fetchedAt": "2026-09-30T03:24:38.001Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1349,7 +1349,7 @@
     {
       "slug": "jt236b",
       "name": "JT-4.1 Flash 236B A21B",
-      "displayName": "JT-4.1 Flash",
+      "displayName": "JT-4.1 Flash 236B A21B",
       "creator": "China Mobile",
       "intelligence": 33.9,
       "codingIndex": null,
@@ -2053,7 +2053,7 @@
     {
       "slug": "jt-4-1-flash-236b-a21b",
       "name": "JT-4.1 Flash 236B A21B (non-reasoning)",
-      "displayName": "JT-4.1 Flash 236B A21B",
+      "displayName": "JT-4.1 Flash 236B A21B (non-reasoning)",
       "creator": "China Mobile",
       "intelligence": 27.3,
       "codingIndex": 52.4,
@@ -3449,7 +3449,7 @@
       "creator": "DeepSeek",
       "intelligence": 20.4,
       "codingIndex": null,
-      "costPerTask": 2.3779822889100966,
+      "costPerTask": 0.47742401619163854,
       "e2eLatency": 4.5402397996032855,
       "reasoningTime": 0,
       "pricePerMillion": 1.98,
