@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-30T20:27:23.892Z",
+  "fetchedAt": "2026-09-30T22:27:32.148Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -5113,10 +5113,10 @@
       "creator": "NVIDIA",
       "intelligence": 12.9,
       "codingIndex": 26.8,
-      "costPerTask": 0.10037244756930194,
+      "costPerTask": 0.09309918417597017,
       "e2eLatency": 8.862948500133953,
       "reasoningTime": 6.615760208107133,
-      "pricePerMillion": 0.10750000000000001,
+      "pricePerMillion": 0.095,
       "outputTokensPerSecond": 290.707,
       "ttft": 0.451,
       "releaseDate": "2026-08-11",
