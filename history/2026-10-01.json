@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-01T06:28:55.058Z",
+  "fetchedAt": "2026-10-01T06:59:01.413Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1364,7 +1364,7 @@
     },
     {
       "slug": "jt236b",
-      "name": "JT-4.1 Flash 236B A21B",
+      "name": "JT-4.1 Flash 236B A21B (Reasoning)",
       "displayName": "JT-4.1 Flash 236B A21B",
       "creator": "China Mobile",
       "intelligence": 33.9,
@@ -2100,7 +2100,7 @@
     },
     {
       "slug": "kimi-k2-6",
-      "name": "Kimi K2.6",
+      "name": "Kimi K2.6 (Reasoning)",
       "displayName": "Kimi K2.6",
       "creator": "Kimi",
       "intelligence": 27,
@@ -2276,7 +2276,7 @@
     },
     {
       "slug": "mimo-v2-5-pro",
-      "name": "MiMo-V2.5-Pro",
+      "name": "MiMo-V2.5-Pro (Reasoning)",
       "displayName": "MiMo-V2.5-Pro",
       "creator": "Xiaomi",
       "intelligence": 26,
@@ -5012,7 +5012,7 @@
     },
     {
       "slug": "exaone-4-5-33b",
-      "name": "EXAONE 4.5 33B",
+      "name": "EXAONE 4.5 33B (Reasoning)",
       "displayName": "EXAONE 4.5 33B",
       "creator": "LG AI Research",
       "intelligence": 13.2,
