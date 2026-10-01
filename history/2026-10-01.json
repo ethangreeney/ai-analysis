@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-01T00:12:48.206Z",
+  "fetchedAt": "2026-10-01T02:43:13.815Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -391,7 +391,7 @@
       "name": "GPT-6 Sol (Max)",
       "displayName": "GPT-6 Sol (max)",
       "creator": "OpenAI",
-      "intelligence": 47.5,
+      "intelligence": 47.6,
       "codingIndex": null,
       "costPerTask": 1.049410804880785,
       "e2eLatency": 185.77272989363175,
@@ -595,6 +595,22 @@
       "addedAt": "2026-08-12"
     },
     {
+      "slug": "gpt-6-sol-xhigh",
+      "name": "GPT-6 Sol (Xhigh)",
+      "displayName": "GPT-6 Sol (xhigh)",
+      "creator": "OpenAI",
+      "intelligence": 44.2,
+      "codingIndex": null,
+      "costPerTask": 0.523567515784736,
+      "e2eLatency": 59.495002610735895,
+      "reasoningTime": 0,
+      "pricePerMillion": 4,
+      "outputTokensPerSecond": 72.464,
+      "ttft": 33.86,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
+    },
+    {
       "slug": "grok-4-6-xhigh",
       "name": "Grok 4.6 (Xhigh)",
       "displayName": "Grok 4.6 (xhigh)",
@@ -609,22 +625,6 @@
       "ttft": 32.095,
       "releaseDate": "2026-08-12",
       "addedAt": "2026-08-12"
-    },
-    {
-      "slug": "gpt-6-sol-xhigh",
-      "name": "GPT-6 Sol (Xhigh)",
-      "displayName": "GPT-6 Sol (xhigh)",
-      "creator": "OpenAI",
-      "intelligence": 44.1,
-      "codingIndex": null,
-      "costPerTask": 0.523567515784736,
-      "e2eLatency": 59.495002610735895,
-      "reasoningTime": 0,
-      "pricePerMillion": 4,
-      "outputTokensPerSecond": 72.464,
-      "ttft": 33.86,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
     },
     {
       "slug": "gpt-5-6-sol-xhigh",
@@ -675,22 +675,6 @@
       "addedAt": "2026-07-16"
     },
     {
-      "slug": "gpt-6-sol-high",
-      "name": "GPT-6 Sol (High)",
-      "displayName": "GPT-6 Sol (high)",
-      "creator": "OpenAI",
-      "intelligence": 42.8,
-      "codingIndex": null,
-      "costPerTask": 0.3753396394543572,
-      "e2eLatency": 27.07977762191953,
-      "reasoningTime": 0,
-      "pricePerMillion": 4,
-      "outputTokensPerSecond": 71.276,
-      "ttft": 14.075,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
-    },
-    {
       "slug": "grok-4-6-medium",
       "name": "Grok 4.6 (Medium)",
       "displayName": "Grok 4.6 (medium)",
@@ -705,6 +689,22 @@
       "ttft": 21.839,
       "releaseDate": "2026-08-12",
       "addedAt": "2026-08-12"
+    },
+    {
+      "slug": "gpt-6-sol-high",
+      "name": "GPT-6 Sol (High)",
+      "displayName": "GPT-6 Sol (high)",
+      "creator": "OpenAI",
+      "intelligence": 42.4,
+      "codingIndex": null,
+      "costPerTask": 0.3753396394543572,
+      "e2eLatency": 27.07977762191953,
+      "reasoningTime": 0,
+      "pricePerMillion": 4,
+      "outputTokensPerSecond": 71.276,
+      "ttft": 14.075,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
     },
     {
       "slug": "claude-opus-5-5-low",
@@ -1091,6 +1091,22 @@
       "addedAt": "2026-06-30"
     },
     {
+      "slug": "gpt-6-luna",
+      "name": "GPT-6 Luna (Max)",
+      "displayName": "GPT-6 Luna (max)",
+      "creator": "OpenAI",
+      "intelligence": 38.1,
+      "codingIndex": null,
+      "costPerTask": 0.06792906856485216,
+      "e2eLatency": 127.82186737105009,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.2,
+      "outputTokensPerSecond": 129.064,
+      "ttft": 76.752,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
+    },
+    {
       "slug": "gpt-5-6-terra-xhigh",
       "name": "GPT-5.6 Terra (Xhigh)",
       "displayName": "GPT-5.6 Terra (xhigh)",
@@ -1137,22 +1153,6 @@
       "ttft": 0,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
-    },
-    {
-      "slug": "gpt-6-luna",
-      "name": "GPT-6 Luna (Max)",
-      "displayName": "GPT-6 Luna (max)",
-      "creator": "OpenAI",
-      "intelligence": 37.3,
-      "codingIndex": null,
-      "costPerTask": 0.06792906856485216,
-      "e2eLatency": 127.82186737105009,
-      "reasoningTime": 0,
-      "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 129.064,
-      "ttft": 76.752,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
     },
     {
       "slug": "gpt-5-5-high",
@@ -1251,6 +1251,22 @@
       "addedAt": "2026-07-09"
     },
     {
+      "slug": "gpt-6-luna-xhigh",
+      "name": "GPT-6 Luna (Xhigh)",
+      "displayName": "GPT-6 Luna (xhigh)",
+      "creator": "OpenAI",
+      "intelligence": 34.6,
+      "codingIndex": null,
+      "costPerTask": 0.04208218646439018,
+      "e2eLatency": 24.674298319018448,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.2,
+      "outputTokensPerSecond": 130.153,
+      "ttft": 16.828,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
+    },
+    {
       "slug": "claude-sonnet-5-xhigh",
       "name": "Claude Sonnet 5 (Adaptive Reasoning, Xhigh Effort)",
       "displayName": "Claude Sonnet 5 (xhigh)",
@@ -1315,6 +1331,22 @@
       "addedAt": "2026-07-09"
     },
     {
+      "slug": "gpt-6-sol-low",
+      "name": "GPT-6 Sol (Low)",
+      "displayName": "GPT-6 Sol (low)",
+      "creator": "OpenAI",
+      "intelligence": 34.2,
+      "codingIndex": null,
+      "costPerTask": 0.1326186130291875,
+      "e2eLatency": 11.009256529346633,
+      "reasoningTime": 0,
+      "pricePerMillion": 4,
+      "outputTokensPerSecond": 67.577,
+      "ttft": 1.81,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
+    },
+    {
       "slug": "gemini-3-6-flash",
       "name": "Gemini 3.6 Flash (High)",
       "displayName": "Gemini 3.6 Flash (high)",
@@ -1329,38 +1361,6 @@
       "ttft": 0,
       "releaseDate": "2026-07-21",
       "addedAt": "2026-07-21"
-    },
-    {
-      "slug": "gpt-6-luna-xhigh",
-      "name": "GPT-6 Luna (Xhigh)",
-      "displayName": "GPT-6 Luna (xhigh)",
-      "creator": "OpenAI",
-      "intelligence": 33.9,
-      "codingIndex": null,
-      "costPerTask": 0.04208218646439018,
-      "e2eLatency": 24.674298319018448,
-      "reasoningTime": 0,
-      "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 130.153,
-      "ttft": 16.828,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
-    },
-    {
-      "slug": "gpt-6-sol-low",
-      "name": "GPT-6 Sol (Low)",
-      "displayName": "GPT-6 Sol (low)",
-      "creator": "OpenAI",
-      "intelligence": 33.9,
-      "codingIndex": null,
-      "costPerTask": 0.1326186130291875,
-      "e2eLatency": 11.009256529346633,
-      "reasoningTime": 0,
-      "pricePerMillion": 4,
-      "outputTokensPerSecond": 67.577,
-      "ttft": 1.81,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
     },
     {
       "slug": "jt236b",
@@ -1507,6 +1507,22 @@
       "addedAt": "2026-07-09"
     },
     {
+      "slug": "gpt-6-luna-high",
+      "name": "GPT-6 Luna (High)",
+      "displayName": "GPT-6 Luna (high)",
+      "creator": "OpenAI",
+      "intelligence": 32.9,
+      "codingIndex": null,
+      "costPerTask": 0.029067566599182932,
+      "e2eLatency": 16.063536386663337,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.2,
+      "outputTokensPerSecond": 132.981,
+      "ttft": 7.572,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
+    },
+    {
       "slug": "gemini-3-5-flash",
       "name": "Gemini 3.5 Flash (High)",
       "displayName": "Gemini 3.5 Flash (high)",
@@ -1569,22 +1585,6 @@
       "ttft": 0,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
-    },
-    {
-      "slug": "gpt-6-luna-high",
-      "name": "GPT-6 Luna (High)",
-      "displayName": "GPT-6 Luna (high)",
-      "creator": "OpenAI",
-      "intelligence": 32.1,
-      "codingIndex": null,
-      "costPerTask": 0.029067566599182932,
-      "e2eLatency": 16.063536386663337,
-      "reasoningTime": 0,
-      "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 132.981,
-      "ttft": 7.572,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
     },
     {
       "slug": "claude-opus-4-6-adaptive",
@@ -1779,6 +1779,22 @@
       "addedAt": "2026-07-16"
     },
     {
+      "slug": "gpt-6-luna-medium",
+      "name": "GPT-6 Luna (Medium)",
+      "displayName": "GPT-6 Luna (medium)",
+      "creator": "OpenAI",
+      "intelligence": 29.9,
+      "codingIndex": null,
+      "costPerTask": 0.01756122553820397,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0.2,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
+    },
+    {
       "slug": "gemini-3-1-pro-preview",
       "name": "Gemini 3.1 Pro Preview",
       "displayName": "Gemini 3.1 Pro Preview",
@@ -1793,22 +1809,6 @@
       "ttft": 24.435,
       "releaseDate": "2026-02-19",
       "addedAt": "2026-05-15T00:00:00.000Z"
-    },
-    {
-      "slug": "gpt-6-luna-medium",
-      "name": "GPT-6 Luna (Medium)",
-      "displayName": "GPT-6 Luna (medium)",
-      "creator": "OpenAI",
-      "intelligence": 29.5,
-      "codingIndex": null,
-      "costPerTask": 0.01756122553820397,
-      "e2eLatency": null,
-      "reasoningTime": null,
-      "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 0,
-      "ttft": 0,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
     },
     {
       "slug": "qwen3-7-max",
@@ -1891,6 +1891,22 @@
       "addedAt": "2025-12-11"
     },
     {
+      "slug": "gpt-6-sol-non-reasoning",
+      "name": "GPT-6 Sol (Non-reasoning)",
+      "displayName": "GPT-6 Sol (non-reasoning)",
+      "creator": "OpenAI",
+      "intelligence": 28.5,
+      "codingIndex": null,
+      "costPerTask": 0.333379364253275,
+      "e2eLatency": 8.732773630168419,
+      "reasoningTime": 0,
+      "pricePerMillion": 4,
+      "outputTokensPerSecond": 72.364,
+      "ttft": 1.067,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
+    },
+    {
       "slug": "qwen3-6-max",
       "name": "Qwen3.6 Max Preview",
       "displayName": "Qwen3.6 Max Preview",
@@ -1969,22 +1985,6 @@
       "ttft": 1.587,
       "releaseDate": "2026-06-30",
       "addedAt": "2026-06-30"
-    },
-    {
-      "slug": "gpt-6-sol-non-reasoning",
-      "name": "GPT-6 Sol (Non-reasoning)",
-      "displayName": "GPT-6 Sol (non-reasoning)",
-      "creator": "OpenAI",
-      "intelligence": 28.1,
-      "codingIndex": null,
-      "costPerTask": 0.333379364253275,
-      "e2eLatency": 8.732773630168419,
-      "reasoningTime": 0,
-      "pricePerMillion": 4,
-      "outputTokensPerSecond": 72.364,
-      "ttft": 1.067,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
     },
     {
       "slug": "gemini-3-pro",
@@ -3235,6 +3235,22 @@
       "addedAt": "2025-12-01"
     },
     {
+      "slug": "gpt-6-luna-low",
+      "name": "GPT-6 Luna (Low)",
+      "displayName": "GPT-6 Luna (low)",
+      "creator": "OpenAI",
+      "intelligence": 21.5,
+      "codingIndex": null,
+      "costPerTask": 0.0045215478273067,
+      "e2eLatency": 6.181724963204511,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.2,
+      "outputTokensPerSecond": 123.74,
+      "ttft": 2.276,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
+    },
+    {
       "slug": "qwen3-5-397b-a17b-non-reasoning",
       "name": "Qwen3.5 397B A17B (Non-reasoning)",
       "displayName": "Qwen3.5 397B A17B (non-reasoning)",
@@ -3297,22 +3313,6 @@
       "ttft": 0,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
-    },
-    {
-      "slug": "gpt-6-luna-low",
-      "name": "GPT-6 Luna (Low)",
-      "displayName": "GPT-6 Luna (low)",
-      "creator": "OpenAI",
-      "intelligence": 20.9,
-      "codingIndex": null,
-      "costPerTask": 0.0045215478273067,
-      "e2eLatency": 6.181724963204511,
-      "reasoningTime": 0,
-      "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 123.74,
-      "ttft": 2.276,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
     },
     {
       "slug": "minimax-m2-1",
@@ -3859,6 +3859,22 @@
       "addedAt": "2025-09-30"
     },
     {
+      "slug": "gpt-6-luna-non-reasoning",
+      "name": "GPT-6 Luna (Non-reasoning)",
+      "displayName": "GPT-6 Luna (non-reasoning)",
+      "creator": "OpenAI",
+      "intelligence": 18.5,
+      "codingIndex": null,
+      "costPerTask": 0.01146983124544933,
+      "e2eLatency": 4.587109962469651,
+      "reasoningTime": 0,
+      "pricePerMillion": 0.2,
+      "outputTokensPerSecond": 127.005,
+      "ttft": 0.823,
+      "releaseDate": "2026-09-22",
+      "addedAt": "2026-09-22"
+    },
+    {
       "slug": "qwen3-5-397b-a17b",
       "name": "Qwen3.5 397B A17B (Reasoning)",
       "displayName": "Qwen3.5 397B A17B",
@@ -3873,22 +3889,6 @@
       "ttft": 1.69,
       "releaseDate": "2026-02-16",
       "addedAt": "2026-05-15T00:00:00.000Z"
-    },
-    {
-      "slug": "gpt-6-luna-non-reasoning",
-      "name": "GPT-6 Luna (Non-reasoning)",
-      "displayName": "GPT-6 Luna (non-reasoning)",
-      "creator": "OpenAI",
-      "intelligence": 18.3,
-      "codingIndex": null,
-      "costPerTask": 0.01146983124544933,
-      "e2eLatency": 4.587109962469651,
-      "reasoningTime": 0,
-      "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 127.005,
-      "ttft": 0.823,
-      "releaseDate": "2026-09-22",
-      "addedAt": "2026-09-22"
     },
     {
       "slug": "mimo-v2-5-pro-non-reasoning",
