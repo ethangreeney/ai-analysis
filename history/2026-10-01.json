@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-01T16:15:27.377Z",
+  "fetchedAt": "2026-10-01T18:00:49.042Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -737,6 +737,22 @@
       "ttft": 0,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
+    },
+    {
+      "slug": "grok-4-7-low",
+      "name": "Grok 4.7 (Low)",
+      "displayName": "Grok 4.7 (Low)",
+      "creator": "SpaceXAI",
+      "intelligence": 42.2,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 3,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-09-21",
+      "addedAt": "2026-09-21"
     },
     {
       "slug": "gpt-5-6-terra",
