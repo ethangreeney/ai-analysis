@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-02T22:20:40.306Z",
+  "fetchedAt": "2026-10-02T22:35:50.698Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -3513,10 +3513,10 @@
       "creator": "DeepSeek",
       "intelligence": 20.4,
       "codingIndex": null,
-      "costPerTask": 0.47742401619163854,
+      "costPerTask": 0.3296953563474809,
       "e2eLatency": 5.325375262959867,
       "reasoningTime": 0,
-      "pricePerMillion": 1.98,
+      "pricePerMillion": 1.4275,
       "outputTokensPerSecond": 154.714,
       "ttft": 1.05,
       "releaseDate": "2026-08-13",
