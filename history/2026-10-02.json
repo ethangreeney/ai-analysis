@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-02T00:01:56.648Z",
+  "fetchedAt": "2026-10-02T02:17:18.874Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -6856,7 +6856,7 @@
       "displayName": "Gemma 4 E4B",
       "creator": "Google",
       "intelligence": 8.9,
-      "codingIndex": 9.4,
+      "codingIndex": null,
       "costPerTask": null,
       "e2eLatency": 36.37792288230665,
       "reasoningTime": 28.410027118245377,
