@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-02T21:05:33.320Z",
+  "fetchedAt": "2026-10-02T21:50:34.598Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1395,9 +1395,9 @@
       "addedAt": "2026-07-21"
     },
     {
-      "slug": "jt236b",
+      "slug": "jt-4-1-flash-236b-a21b",
       "name": "JT-4.1 Flash 236B A21B (Reasoning)",
-      "displayName": "JT-4.1 Flash 236B A21B",
+      "displayName": "JT-4.1 Flash 236B A21B (non-reasoning)",
       "creator": "China Mobile",
       "intelligence": 33.9,
       "codingIndex": null,
@@ -2099,9 +2099,9 @@
       "addedAt": "2026-07-09"
     },
     {
-      "slug": "jt-4-1-flash-236b-a21b",
+      "slug": "jt-4-1-flash-236b-a21b-non-reasoning",
       "name": "JT-4.1 Flash 236B A21B (Non-reasoning)",
-      "displayName": "JT-4.1 Flash 236B A21B (non-reasoning)",
+      "displayName": "JT-4.1 Flash 236B A21B (Non-reasoning)",
       "creator": "China Mobile",
       "intelligence": 27.3,
       "codingIndex": 52.4,
