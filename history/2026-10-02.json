@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-10-02T18:35:10.905Z",
+  "fetchedAt": "2026-10-02T19:05:12.903Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
       "slug": "claude-opus-5-5",
-      "name": "Claude Opus 5.5 (Adaptive Reasoning, Max Effort, Default Fallback)",
+      "name": "Claude Opus 5.5 (Max, Default Fallback)",
       "displayName": "Claude Opus 5.5 (max with fallback)",
       "creator": "Anthropic",
       "intelligence": 57.6,
@@ -20,7 +20,7 @@
     },
     {
       "slug": "claude-opus-5-5-xhigh",
-      "name": "Claude Opus 5.5 (Adaptive Reasoning, Xhigh Effort, Default Fallback)",
+      "name": "Claude Opus 5.5 (Xhigh, Default Fallback)",
       "displayName": "Claude Opus 5.5 (xhigh with fallback)",
       "creator": "Anthropic",
       "intelligence": 56,
@@ -36,7 +36,7 @@
     },
     {
       "slug": "claude-sonnet-5-5",
-      "name": "Claude Sonnet 5.5 (Adaptive Reasoning, Max Effort, Default Fallback)",
+      "name": "Claude Sonnet 5.5 (Max, Default Fallback)",
       "displayName": "Claude Sonnet 5.5 (max with fallback)",
       "creator": "Anthropic",
       "intelligence": 56,
@@ -52,7 +52,7 @@
     },
     {
       "slug": "claude-opus-5-5-high",
-      "name": "Claude Opus 5.5 (Adaptive Reasoning, High Effort, Default Fallback)",
+      "name": "Claude Opus 5.5 (High, Default Fallback)",
       "displayName": "Claude Opus 5.5 (high with fallback)",
       "creator": "Anthropic",
       "intelligence": 53.6,
@@ -68,7 +68,7 @@
     },
     {
       "slug": "claude-fable-5-1",
-      "name": "Claude Fable 5.1 (Adaptive Reasoning, Max Effort, Default Fallback)",
+      "name": "Claude Fable 5.1 (Max, Default Fallback)",
       "displayName": "Claude Fable 5.1 (max with fallback)",
       "creator": "Anthropic",
       "intelligence": 53.4,
@@ -84,7 +84,7 @@
     },
     {
       "slug": "claude-fable-5-1-xhigh",
-      "name": "Claude Fable 5.1 (Adaptive Reasoning, Xhigh Effort, Default Fallback)",
+      "name": "Claude Fable 5.1 (Xhigh, Default Fallback)",
       "displayName": "Claude Fable 5.1 (xhigh with fallback)",
       "creator": "Anthropic",
       "intelligence": 53.2,
@@ -148,7 +148,7 @@
     },
     {
       "slug": "claude-sonnet-5-5-xhigh",
-      "name": "Claude Sonnet 5.5 (Adaptive Reasoning, Xhigh Effort, Default Fallback)",
+      "name": "Claude Sonnet 5.5 (Xhigh, Default Fallback)",
       "displayName": "Claude Sonnet 5.5 (xhigh with fallback)",
       "creator": "Anthropic",
       "intelligence": 51.9,
@@ -180,7 +180,7 @@
     },
     {
       "slug": "claude-fable-5-1-high",
-      "name": "Claude Fable 5.1 (Adaptive Reasoning, High Effort, Default Fallback)",
+      "name": "Claude Fable 5.1 (High, Default Fallback)",
       "displayName": "Claude Fable 5.1 (high with fallback)",
       "creator": "Anthropic",
       "intelligence": 51.2,
@@ -196,7 +196,7 @@
     },
     {
       "slug": "claude-opus-5-5-medium",
-      "name": "Claude Opus 5.5 (Adaptive Reasoning, Medium Effort, Default Fallback)",
+      "name": "Claude Opus 5.5 (Medium, Default Fallback)",
       "displayName": "Claude Opus 5.5 (medium with fallback)",
       "creator": "Anthropic",
       "intelligence": 51.2,
@@ -244,7 +244,7 @@
     },
     {
       "slug": "claude-opus-5",
-      "name": "Claude Opus 5 (Adaptive Reasoning, Max Effort)",
+      "name": "Claude Opus 5 (Max)",
       "displayName": "Claude Opus 5 (max)",
       "creator": "Anthropic",
       "intelligence": 50.8,
@@ -276,7 +276,7 @@
     },
     {
       "slug": "claude-opus-5-xhigh",
-      "name": "Claude Opus 5 (Adaptive Reasoning, Xhigh Effort)",
+      "name": "Claude Opus 5 (Xhigh)",
       "displayName": "Claude Opus 5 (xhigh)",
       "creator": "Anthropic",
       "intelligence": 49.7,
@@ -292,7 +292,7 @@
     },
     {
       "slug": "claude-fable-5",
-      "name": "Claude Fable 5 (Adaptive Reasoning, Max Effort, Opus 4.8 Fallback)",
+      "name": "Claude Fable 5 (Max, Opus 4.8 Fallback)",
       "displayName": "Claude Fable 5 (with fallback)",
       "creator": "Anthropic",
       "intelligence": 49.6,
@@ -324,7 +324,7 @@
     },
     {
       "slug": "claude-fable-5-1-medium",
-      "name": "Claude Fable 5.1 (Adaptive Reasoning, Medium Effort, Default Fallback)",
+      "name": "Claude Fable 5.1 (Medium, Default Fallback)",
       "displayName": "Claude Fable 5.1 (medium with fallback)",
       "creator": "Anthropic",
       "intelligence": 48.9,
@@ -340,7 +340,7 @@
     },
     {
       "slug": "claude-opus-5-high",
-      "name": "Claude Opus 5 (Adaptive Reasoning, High Effort)",
+      "name": "Claude Opus 5 (High)",
       "displayName": "Claude Opus 5 (high)",
       "creator": "Anthropic",
       "intelligence": 48.1,
@@ -420,7 +420,7 @@
     },
     {
       "slug": "claude-fable-5-1-low",
-      "name": "Claude Fable 5.1 (Adaptive Reasoning, Low Effort, Default Fallback)",
+      "name": "Claude Fable 5.1 (Low, Default Fallback)",
       "displayName": "Claude Fable 5.1 (low with fallback)",
       "creator": "Anthropic",
       "intelligence": 46.8,
@@ -436,7 +436,7 @@
     },
     {
       "slug": "claude-sonnet-5-5-high",
-      "name": "Claude Sonnet 5.5 (Adaptive Reasoning, High Effort, Default Fallback)",
+      "name": "Claude Sonnet 5.5 (High, Default Fallback)",
       "displayName": "Claude Sonnet 5.5 (high with fallback)",
       "creator": "Anthropic",
       "intelligence": 46.8,
@@ -548,7 +548,7 @@
     },
     {
       "slug": "claude-opus-5-medium",
-      "name": "Claude Opus 5 (Adaptive Reasoning, Medium Effort)",
+      "name": "Claude Opus 5 (Medium)",
       "displayName": "Claude Opus 5 (medium)",
       "creator": "Anthropic",
       "intelligence": 44.8,
@@ -708,7 +708,7 @@
     },
     {
       "slug": "claude-opus-5-5-low",
-      "name": "Claude Opus 5.5 (Adaptive Reasoning, Low Effort, Default Fallback)",
+      "name": "Claude Opus 5.5 (Low, Default Fallback)",
       "displayName": "Claude Opus 5.5 (low with fallback)",
       "creator": "Anthropic",
       "intelligence": 42.3,
@@ -788,7 +788,7 @@
     },
     {
       "slug": "claude-opus-4-8",
-      "name": "Claude Opus 4.8 (Adaptive Reasoning, Max Effort)",
+      "name": "Claude Opus 4.8 (Max)",
       "displayName": "Claude Opus 4.8 (max)",
       "creator": "Anthropic",
       "intelligence": 41.8,
@@ -836,7 +836,7 @@
     },
     {
       "slug": "claude-sonnet-5-5-medium",
-      "name": "Claude Sonnet 5.5 (Adaptive Reasoning, Medium Effort, Default Fallback)",
+      "name": "Claude Sonnet 5.5 (Medium, Default Fallback)",
       "displayName": "Claude Sonnet 5.5 (medium with fallback)",
       "creator": "Anthropic",
       "intelligence": 40.8,
@@ -852,7 +852,7 @@
     },
     {
       "slug": "claude-opus-4-7",
-      "name": "Claude Opus 4.7 (Adaptive Reasoning, Max Effort)",
+      "name": "Claude Opus 4.7 (Max)",
       "displayName": "Claude Opus 4.7 (max)",
       "creator": "Anthropic",
       "intelligence": 40.7,
@@ -996,7 +996,7 @@
     },
     {
       "slug": "claude-opus-5-low",
-      "name": "Claude Opus 5 (Adaptive Reasoning, Low Effort)",
+      "name": "Claude Opus 5 (Low)",
       "displayName": "Claude Opus 5 (low)",
       "creator": "Anthropic",
       "intelligence": 39.4,
@@ -1092,7 +1092,7 @@
     },
     {
       "slug": "claude-sonnet-5",
-      "name": "Claude Sonnet 5 (Adaptive Reasoning, Max Effort)",
+      "name": "Claude Sonnet 5 (Max)",
       "displayName": "Claude Sonnet 5 (max)",
       "creator": "Anthropic",
       "intelligence": 38.2,
@@ -1220,7 +1220,7 @@
     },
     {
       "slug": "claude-sonnet-5-5-low",
-      "name": "Claude Sonnet 5.5 (Adaptive Reasoning, Low Effort, Default Fallback)",
+      "name": "Claude Sonnet 5.5 (Low, Default Fallback)",
       "displayName": "Claude Sonnet 5.5 (low with fallback)",
       "creator": "Anthropic",
       "intelligence": 35.9,
@@ -1300,7 +1300,7 @@
     },
     {
       "slug": "claude-sonnet-5-xhigh",
-      "name": "Claude Sonnet 5 (Adaptive Reasoning, Xhigh Effort)",
+      "name": "Claude Sonnet 5 (Xhigh)",
       "displayName": "Claude Sonnet 5 (xhigh)",
       "creator": "Anthropic",
       "intelligence": 34.4,
@@ -1620,7 +1620,7 @@
     },
     {
       "slug": "claude-opus-4-6-adaptive",
-      "name": "Claude Opus 4.6 (Adaptive Reasoning, Max Effort)",
+      "name": "Claude Opus 4.6 (Max)",
       "displayName": "Claude Opus 4.6 (max)",
       "creator": "Anthropic",
       "intelligence": 31.9,
@@ -1636,7 +1636,7 @@
     },
     {
       "slug": "claude-sonnet-5-high",
-      "name": "Claude Sonnet 5 (Adaptive Reasoning, High Effort)",
+      "name": "Claude Sonnet 5 (High)",
       "displayName": "Claude Sonnet 5 (high)",
       "creator": "Anthropic",
       "intelligence": 31.7,
@@ -1668,7 +1668,7 @@
     },
     {
       "slug": "claude-opus-4-7-non-reasoning",
-      "name": "Claude Opus 4.7 (Non-reasoning, High Effort)",
+      "name": "Claude Opus 4.7 (Non-reasoning, High)",
       "displayName": "Claude Opus 4.7 (non-reasoning, high)",
       "creator": "Anthropic",
       "intelligence": 30.9,
@@ -1748,7 +1748,7 @@
     },
     {
       "slug": "claude-sonnet-4-6-adaptive",
-      "name": "Claude Sonnet 4.6 (Adaptive Reasoning, Max Effort)",
+      "name": "Claude Sonnet 4.6 (Max)",
       "displayName": "Claude Sonnet 4.6 (max)",
       "creator": "Anthropic",
       "intelligence": 30.1,
@@ -2004,7 +2004,7 @@
     },
     {
       "slug": "claude-sonnet-5-medium",
-      "name": "Claude Sonnet 5 (Adaptive Reasoning, Medium Effort)",
+      "name": "Claude Sonnet 5 (Medium)",
       "displayName": "Claude Sonnet 5 (medium)",
       "creator": "Anthropic",
       "intelligence": 28.1,
@@ -2228,7 +2228,7 @@
     },
     {
       "slug": "claude-opus-4-6",
-      "name": "Claude Opus 4.6 (Non-reasoning, High Effort)",
+      "name": "Claude Opus 4.6 (Non-reasoning, High)",
       "displayName": "Claude Opus 4.6 (non-reasoning, high)",
       "creator": "Anthropic",
       "intelligence": 26.4,
@@ -2548,7 +2548,7 @@
     },
     {
       "slug": "claude-sonnet-4-6",
-      "name": "Claude Sonnet 4.6 (Non-reasoning, High Effort)",
+      "name": "Claude Sonnet 4.6 (Non-reasoning, High)",
       "displayName": "Claude Sonnet 4.6 (non-reasoning, high)",
       "creator": "Anthropic",
       "intelligence": 24.7,
@@ -2644,7 +2644,7 @@
     },
     {
       "slug": "claude-sonnet-5-low",
-      "name": "Claude Sonnet 5 (Adaptive Reasoning, Low Effort)",
+      "name": "Claude Sonnet 5 (Low)",
       "displayName": "Claude Sonnet 5 (low)",
       "creator": "Anthropic",
       "intelligence": 24.3,
@@ -2852,7 +2852,7 @@
     },
     {
       "slug": "claude-sonnet-4-6-non-reasoning-low-effort",
-      "name": "Claude Sonnet 4.6 (Non-reasoning, Low Effort)",
+      "name": "Claude Sonnet 4.6 (Non-reasoning, Low)",
       "displayName": "Claude Sonnet 4.6 (non-reasoning, low)",
       "creator": "Anthropic",
       "intelligence": 23.3,
@@ -2868,7 +2868,7 @@
     },
     {
       "slug": "claude-sonnet-5-non-reasoning",
-      "name": "Claude Sonnet 5 (Non-reasoning, High Effort)",
+      "name": "Claude Sonnet 5 (Non-reasoning, High)",
       "displayName": "Claude Sonnet 5 (non-reasoning)",
       "creator": "Anthropic",
       "intelligence": 23.2,
