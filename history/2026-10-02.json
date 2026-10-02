@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-02T06:17:53.005Z",
+  "fetchedAt": "2026-10-02T07:03:03.560Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -439,7 +439,7 @@
       "name": "Claude Sonnet 5.5 (Adaptive Reasoning, High Effort, Default Fallback)",
       "displayName": "Claude Sonnet 5.5 (high with fallback)",
       "creator": "Anthropic",
-      "intelligence": 46.7,
+      "intelligence": 46.8,
       "codingIndex": null,
       "costPerTask": 1.079758672715514,
       "e2eLatency": 17.14666445730428,
@@ -835,6 +835,22 @@
       "addedAt": "2026-09-02"
     },
     {
+      "slug": "claude-sonnet-5-5-medium",
+      "name": "Claude Sonnet 5.5 (Adaptive Reasoning, Medium Effort, Default Fallback)",
+      "displayName": "Claude Sonnet 5.5 (medium with fallback)",
+      "creator": "Anthropic",
+      "intelligence": 40.8,
+      "codingIndex": null,
+      "costPerTask": 0.5861822401191022,
+      "e2eLatency": 6.7803641064636295,
+      "reasoningTime": 0,
+      "pricePerMillion": 4,
+      "outputTokensPerSecond": 111.866,
+      "ttft": 1.285,
+      "releaseDate": "2026-09-28",
+      "addedAt": "2026-09-28"
+    },
+    {
       "slug": "claude-opus-4-7",
       "name": "Claude Opus 4.7 (Adaptive Reasoning, Max Effort)",
       "displayName": "Claude Opus 4.7 (max)",
@@ -849,22 +865,6 @@
       "ttft": 0,
       "releaseDate": "2026-04-16",
       "addedAt": "2026-05-15T00:00:00.000Z"
-    },
-    {
-      "slug": "claude-sonnet-5-5-medium",
-      "name": "Claude Sonnet 5.5 (Adaptive Reasoning, Medium Effort, Default Fallback)",
-      "displayName": "Claude Sonnet 5.5 (medium with fallback)",
-      "creator": "Anthropic",
-      "intelligence": 40.7,
-      "codingIndex": null,
-      "costPerTask": 0.5861822401191022,
-      "e2eLatency": 6.7803641064636295,
-      "reasoningTime": 0,
-      "pricePerMillion": 4,
-      "outputTokensPerSecond": 111.866,
-      "ttft": 1.285,
-      "releaseDate": "2026-09-28",
-      "addedAt": "2026-09-28"
     },
     {
       "slug": "qwen3-8-max-0803",
@@ -1217,6 +1217,22 @@
       "ttft": 1.174,
       "releaseDate": "2026-08-13",
       "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "claude-sonnet-5-5-low",
+      "name": "Claude Sonnet 5.5 (Adaptive Reasoning, Low Effort, Default Fallback)",
+      "displayName": "Claude Sonnet 5.5 (low with fallback)",
+      "creator": "Anthropic",
+      "intelligence": 35.9,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": 6.989135270056024,
+      "reasoningTime": 0,
+      "pricePerMillion": 4,
+      "outputTokensPerSecond": 110.722,
+      "ttft": 0.917,
+      "releaseDate": "2026-09-28",
+      "addedAt": "2026-09-28"
     },
     {
       "slug": "grok-4-6-low",
