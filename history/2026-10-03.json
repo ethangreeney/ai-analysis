@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-03T09:37:24.811Z",
+  "fetchedAt": "2026-10-03T10:22:47.249Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -817,6 +817,22 @@
       "ttft": 2.992,
       "releaseDate": "2026-08-26",
       "addedAt": "2026-08-26"
+    },
+    {
+      "slug": "ling-3-1-flash",
+      "name": "Ling 3.1 Flash",
+      "displayName": "Ling 3.1 Flash",
+      "creator": "InclusionAI",
+      "intelligence": 41.1,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0.45,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-01",
+      "addedAt": "2026-10-01"
     },
     {
       "slug": "gemini-3-8-flash",
