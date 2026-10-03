@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-03T10:22:47.249Z",
+  "fetchedAt": "2026-10-03T10:52:51.595Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -825,10 +825,10 @@
       "creator": "InclusionAI",
       "intelligence": 41.1,
       "codingIndex": null,
-      "costPerTask": null,
+      "costPerTask": 0.9856894983836784,
       "e2eLatency": null,
       "reasoningTime": null,
-      "pricePerMillion": 0.45,
+      "pricePerMillion": 0.44999999999999996,
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-10-01",
