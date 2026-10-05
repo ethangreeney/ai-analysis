@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-05T12:15:05.488Z",
+  "fetchedAt": "2026-10-05T14:15:34.268Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -3027,22 +3027,6 @@
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
-      "slug": "a-x-k2",
-      "name": "A.X-K2",
-      "displayName": "A.X-K2",
-      "creator": "SK Telecom",
-      "intelligence": 22.7,
-      "codingIndex": 38.8,
-      "costPerTask": null,
-      "e2eLatency": null,
-      "reasoningTime": null,
-      "pricePerMillion": 0,
-      "outputTokensPerSecond": 0,
-      "ttft": 0,
-      "releaseDate": "2026-08-12",
-      "addedAt": "2026-08-12"
-    },
-    {
       "slug": "gpt-5-5-instant-05-26",
       "name": "GPT-5.5 Instant (May 2026)",
       "displayName": "GPT-5.5 Instant (May 2026)",
@@ -3265,6 +3249,22 @@
       "ttft": 0,
       "releaseDate": "2026-03-27",
       "addedAt": "2026-03-27"
+    },
+    {
+      "slug": "a-x-k2",
+      "name": "A.X-K2",
+      "displayName": "A.X-K2",
+      "creator": "SK Telecom",
+      "intelligence": 21.5,
+      "codingIndex": 38.8,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-08-12",
+      "addedAt": "2026-08-12"
     },
     {
       "slug": "deepseek-v3-2-reasoning",
