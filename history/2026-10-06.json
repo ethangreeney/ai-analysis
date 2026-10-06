@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-06T20:08:58.775Z",
+  "fetchedAt": "2026-10-06T21:09:16.261Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -13,7 +13,7 @@
       "e2eLatency": 746.3140705530141,
       "reasoningTime": 0,
       "pricePerMillion": 8,
-      "outputTokensPerSecond": 97.159,
+      "outputTokensPerSecond": 96.823,
       "ttft": 470.118,
       "releaseDate": "2026-09-22",
       "addedAt": "2026-09-22"
@@ -109,7 +109,7 @@
       "e2eLatency": 317.22501346496887,
       "reasoningTime": 0,
       "pricePerMillion": 20,
-      "outputTokensPerSecond": 56.212,
+      "outputTokensPerSecond": 50.735,
       "ttft": 205.366,
       "releaseDate": "2026-09-03",
       "addedAt": "2026-09-03"
@@ -141,7 +141,7 @@
       "e2eLatency": 197.75939446816326,
       "reasoningTime": 0,
       "pricePerMillion": 20,
-      "outputTokensPerSecond": 52.208,
+      "outputTokensPerSecond": 51.52,
       "ttft": 78.083,
       "releaseDate": "2026-09-03",
       "addedAt": "2026-09-03"
@@ -173,7 +173,7 @@
       "e2eLatency": 290.6452571196192,
       "reasoningTime": 0,
       "pricePerMillion": 4,
-      "outputTokensPerSecond": 57.698,
+      "outputTokensPerSecond": 57.423,
       "ttft": 179.839,
       "releaseDate": "2026-09-29",
       "addedAt": "2026-09-29"
@@ -221,7 +221,7 @@
       "e2eLatency": 160.24053028486665,
       "reasoningTime": 0,
       "pricePerMillion": 4,
-      "outputTokensPerSecond": 54.387,
+      "outputTokensPerSecond": 53.637,
       "ttft": 70.341,
       "releaseDate": "2026-09-29",
       "addedAt": "2026-09-29"
@@ -237,7 +237,7 @@
       "e2eLatency": 80.43848809459936,
       "reasoningTime": 0,
       "pricePerMillion": 20,
-      "outputTokensPerSecond": 46.849,
+      "outputTokensPerSecond": 46.72,
       "ttft": 29.236,
       "releaseDate": "2026-09-03",
       "addedAt": "2026-09-03"
@@ -269,7 +269,7 @@
       "e2eLatency": 70.38004993974451,
       "reasoningTime": 0,
       "pricePerMillion": 4,
-      "outputTokensPerSecond": 50.099,
+      "outputTokensPerSecond": 50.004,
       "ttft": 22.581,
       "releaseDate": "2026-09-29",
       "addedAt": "2026-09-29"
@@ -317,7 +317,7 @@
       "e2eLatency": 14.303392343766216,
       "reasoningTime": 0,
       "pricePerMillion": 20,
-      "outputTokensPerSecond": 49.953,
+      "outputTokensPerSecond": 49.051,
       "ttft": 4.602,
       "releaseDate": "2026-09-03",
       "addedAt": "2026-09-03"
@@ -333,7 +333,7 @@
       "e2eLatency": 14.85723325422519,
       "reasoningTime": 0,
       "pricePerMillion": 20,
-      "outputTokensPerSecond": 49.016,
+      "outputTokensPerSecond": 48.589,
       "ttft": 3.043,
       "releaseDate": "2026-09-01",
       "addedAt": "2026-09-01"
@@ -365,8 +365,8 @@
       "e2eLatency": 59.667800884828324,
       "reasoningTime": 10.64694445826266,
       "pricePerMillion": 2,
-      "outputTokensPerSecond": 122.652,
-      "ttft": 23.611,
+      "outputTokensPerSecond": 115.306,
+      "ttft": 26.027,
       "releaseDate": "2026-09-02",
       "addedAt": "2026-09-02"
     },
@@ -381,7 +381,7 @@
       "e2eLatency": 15.657273329932348,
       "reasoningTime": 0,
       "pricePerMillion": 4,
-      "outputTokensPerSecond": 48.646,
+      "outputTokensPerSecond": 48.426,
       "ttft": 4.26,
       "releaseDate": "2026-09-29",
       "addedAt": "2026-09-29"
@@ -430,7 +430,7 @@
       "reasoningTime": 0,
       "pricePerMillion": 20,
       "outputTokensPerSecond": 47.119,
-      "ttft": 2.117,
+      "ttft": 2.106,
       "releaseDate": "2026-09-01",
       "addedAt": "2026-09-01"
     },
@@ -461,7 +461,7 @@
       "e2eLatency": 48.8361372266194,
       "reasoningTime": 0,
       "pricePerMillion": 3,
-      "outputTokensPerSecond": 70.728,
+      "outputTokensPerSecond": 69.431,
       "ttft": 8.037,
       "releaseDate": "2026-09-21",
       "addedAt": "2026-09-21"
@@ -477,8 +477,8 @@
       "e2eLatency": 69.70129988109805,
       "reasoningTime": 0,
       "pricePerMillion": 3,
-      "outputTokensPerSecond": 71.076,
-      "ttft": 5.91,
+      "outputTokensPerSecond": 66.455,
+      "ttft": 6.88,
       "releaseDate": "2026-09-21",
       "addedAt": "2026-09-21"
     },
@@ -493,7 +493,7 @@
       "e2eLatency": 61.372307224874234,
       "reasoningTime": 44.51583058829937,
       "pricePerMillion": 0.54375,
-      "outputTokensPerSecond": 42.329,
+      "outputTokensPerSecond": 40.885,
       "ttft": 4.565,
       "releaseDate": "2026-09-21",
       "addedAt": "2026-09-21"
@@ -509,8 +509,8 @@
       "e2eLatency": 11.538895399355713,
       "reasoningTime": 0,
       "pricePerMillion": 20,
-      "outputTokensPerSecond": 48.827,
-      "ttft": 1.383,
+      "outputTokensPerSecond": 47.6,
+      "ttft": 1.408,
       "releaseDate": "2026-09-03",
       "addedAt": "2026-09-03"
     },
@@ -525,8 +525,8 @@
       "e2eLatency": 68.7238520243017,
       "reasoningTime": 52.78528547784136,
       "pricePerMillion": 3,
-      "outputTokensPerSecond": 36.928,
-      "ttft": 1.74,
+      "outputTokensPerSecond": 36.737,
+      "ttft": 1.696,
       "releaseDate": "2026-09-02",
       "addedAt": "2026-08-03"
     },
@@ -541,8 +541,8 @@
       "e2eLatency": 45.22980598439113,
       "reasoningTime": 9.12326221071298,
       "pricePerMillion": 2,
-      "outputTokensPerSecond": 137.279,
-      "ttft": 22.672,
+      "outputTokensPerSecond": 133.758,
+      "ttft": 24.712,
       "releaseDate": "2026-09-02",
       "addedAt": "2026-09-02"
     },
@@ -653,8 +653,8 @@
       "e2eLatency": 31.482955205490192,
       "reasoningTime": 22.925070858792175,
       "pricePerMillion": 1.425,
-      "outputTokensPerSecond": 89.573,
-      "ttft": 1.851,
+      "outputTokensPerSecond": 89.534,
+      "ttft": 1.849,
       "releaseDate": "2026-09-18",
       "addedAt": "2026-09-18"
     },
@@ -669,8 +669,8 @@
       "e2eLatency": 61.50849087021879,
       "reasoningTime": 45.799254000975,
       "pricePerMillion": 6,
-      "outputTokensPerSecond": 45.111,
-      "ttft": 3.291,
+      "outputTokensPerSecond": 45.073,
+      "ttft": 2.953,
       "releaseDate": "2026-07-16",
       "addedAt": "2026-07-16"
     },
@@ -765,7 +765,7 @@
       "e2eLatency": 122.50500163604826,
       "reasoningTime": 0,
       "pricePerMillion": 4.5,
-      "outputTokensPerSecond": 111.22,
+      "outputTokensPerSecond": 103.757,
       "ttft": 83.831,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
@@ -781,7 +781,7 @@
       "e2eLatency": 12.86371994816314,
       "reasoningTime": 0,
       "pricePerMillion": 4,
-      "outputTokensPerSecond": 51.802,
+      "outputTokensPerSecond": 51.005,
       "ttft": 1.811,
       "releaseDate": "2026-09-29",
       "addedAt": "2026-09-29"
@@ -813,8 +813,8 @@
       "e2eLatency": 51.1772313764401,
       "reasoningTime": 38.35758347395204,
       "pricePerMillion": 0.2375,
-      "outputTokensPerSecond": 49.499,
-      "ttft": 2.69,
+      "outputTokensPerSecond": 48.776,
+      "ttft": 2.773,
       "releaseDate": "2026-08-26",
       "addedAt": "2026-08-26"
     },
@@ -829,8 +829,8 @@
       "e2eLatency": 13.629422837598431,
       "reasoningTime": 9.467118834878594,
       "pricePerMillion": 0.44999999999999996,
-      "outputTokensPerSecond": 216.869,
-      "ttft": 1.101,
+      "outputTokensPerSecond": 215.815,
+      "ttft": 1.068,
       "releaseDate": "2026-10-01",
       "addedAt": "2026-10-01"
     },
@@ -845,8 +845,8 @@
       "e2eLatency": 21.8465951084021,
       "reasoningTime": 0,
       "pricePerMillion": 1.5,
-      "outputTokensPerSecond": 199.679,
-      "ttft": 11.24,
+      "outputTokensPerSecond": 193.352,
+      "ttft": 11.478,
       "releaseDate": "2026-09-02",
       "addedAt": "2026-09-02"
     },
@@ -909,7 +909,7 @@
       "e2eLatency": 65.9215026918749,
       "reasoningTime": 50.529630797499884,
       "pricePerMillion": 3,
-      "outputTokensPerSecond": 37.156,
+      "outputTokensPerSecond": 36.988,
       "ttft": 1.734,
       "releaseDate": "2026-08-12",
       "addedAt": "2026-08-12"
@@ -957,7 +957,7 @@
       "e2eLatency": 47.927880220988904,
       "reasoningTime": 36.37334681999112,
       "pricePerMillion": 0.22999999999999998,
-      "outputTokensPerSecond": 53.529,
+      "outputTokensPerSecond": 54.854,
       "ttft": 1.548,
       "releaseDate": "2026-08-26",
       "addedAt": "2026-08-26"
@@ -1005,8 +1005,8 @@
       "e2eLatency": 12.278683907307988,
       "reasoningTime": 9.01523206504639,
       "pricePerMillion": 0.5249999999999999,
-      "outputTokensPerSecond": 212.949,
-      "ttft": 0.878,
+      "outputTokensPerSecond": 211.532,
+      "ttft": 0.838,
       "releaseDate": "2026-09-10",
       "addedAt": "2026-09-10"
     },
@@ -1149,8 +1149,8 @@
       "e2eLatency": 98.04789043507536,
       "reasoningTime": 0,
       "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 135.654,
-      "ttft": 64.041,
+      "outputTokensPerSecond": 133.905,
+      "ttft": 68.659,
       "releaseDate": "2026-09-22",
       "addedAt": "2026-09-22"
     },
@@ -1165,7 +1165,7 @@
       "e2eLatency": 32.54431289805139,
       "reasoningTime": 0,
       "pricePerMillion": 4.5,
-      "outputTokensPerSecond": 107.021,
+      "outputTokensPerSecond": 95.007,
       "ttft": 12.686,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
@@ -1245,8 +1245,8 @@
       "e2eLatency": 27.089960694081984,
       "reasoningTime": 20.34136830646562,
       "pricePerMillion": 1.98,
-      "outputTokensPerSecond": 95.609,
-      "ttft": 1.113,
+      "outputTokensPerSecond": 94.405,
+      "ttft": 1.116,
       "releaseDate": "2026-08-13",
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
@@ -1293,8 +1293,8 @@
       "e2eLatency": 11.61453752431491,
       "reasoningTime": 8.53447330585194,
       "pricePerMillion": 0.66,
-      "outputTokensPerSecond": 216.865,
-      "ttft": 0.777,
+      "outputTokensPerSecond": 215.812,
+      "ttft": 0.753,
       "releaseDate": "2026-08-21",
       "addedAt": "2026-08-21"
     },
@@ -1374,7 +1374,7 @@
       "reasoningTime": 24.410510999096644,
       "pricePerMillion": 2.15,
       "outputTokensPerSecond": 73.269,
-      "ttft": 2.737,
+      "ttft": 2.698,
       "releaseDate": "2026-08-18",
       "addedAt": "2026-08-18"
     },
@@ -1389,7 +1389,7 @@
       "e2eLatency": 7.710388469122101,
       "reasoningTime": 0,
       "pricePerMillion": 4.5,
-      "outputTokensPerSecond": 94.451,
+      "outputTokensPerSecond": 88.222,
       "ttft": 2.041,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
@@ -1502,7 +1502,7 @@
       "reasoningTime": 42.50349537369988,
       "pricePerMillion": 1.125,
       "outputTokensPerSecond": 46.77,
-      "ttft": 1.235,
+      "ttft": 1.216,
       "releaseDate": "2026-08-14",
       "addedAt": "2026-08-14"
     },
@@ -1581,7 +1581,7 @@
       "e2eLatency": 17.69040541667647,
       "reasoningTime": 0,
       "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 119.162,
+      "outputTokensPerSecond": 119.153,
       "ttft": 12.039,
       "releaseDate": "2026-09-22",
       "addedAt": "2026-09-22"
@@ -1613,7 +1613,7 @@
       "e2eLatency": 73.59751844583765,
       "reasoningTime": 0,
       "pricePerMillion": 4.8125,
-      "outputTokensPerSecond": 97.501,
+      "outputTokensPerSecond": 94.067,
       "ttft": 34.541,
       "releaseDate": "2026-02-05",
       "addedAt": "2026-02-05"
@@ -1741,8 +1741,8 @@
       "e2eLatency": 38.366286673665606,
       "reasoningTime": 16.800957508132406,
       "pricePerMillion": 0,
-      "outputTokensPerSecond": 120.243,
-      "ttft": 7.798,
+      "outputTokensPerSecond": 121.164,
+      "ttft": 6.979,
       "releaseDate": "2026-09-03",
       "addedAt": "2026-09-03"
     },
@@ -1821,7 +1821,7 @@
       "e2eLatency": 6.603862046120449,
       "reasoningTime": 0,
       "pricePerMillion": 4.5,
-      "outputTokensPerSecond": 87.051,
+      "outputTokensPerSecond": 85.576,
       "ttft": 1.326,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
@@ -1837,8 +1837,8 @@
       "e2eLatency": 63.75915656817282,
       "reasoningTime": 48.04524813533829,
       "pricePerMillion": 6,
-      "outputTokensPerSecond": 41.763,
-      "ttft": 3.019,
+      "outputTokensPerSecond": 41.182,
+      "ttft": 2.82,
       "releaseDate": "2026-07-16",
       "addedAt": "2026-07-16"
     },
@@ -1901,7 +1901,7 @@
       "e2eLatency": 27.187271514874595,
       "reasoningTime": 19.546039275899766,
       "pricePerMillion": 0.5249999999999999,
-      "outputTokensPerSecond": 80.572,
+      "outputTokensPerSecond": 77.91,
       "ttft": 1.053,
       "releaseDate": "2026-06-01",
       "addedAt": "2026-05-15T00:00:00.000Z"
@@ -2109,7 +2109,7 @@
       "e2eLatency": 50.090105712169034,
       "reasoningTime": 37.0197673953352,
       "pricePerMillion": 1.125,
-      "outputTokensPerSecond": 48.067,
+      "outputTokensPerSecond": 48.147,
       "ttft": 1.319,
       "releaseDate": "2026-08-14",
       "addedAt": "2026-08-14"
@@ -2125,7 +2125,7 @@
       "e2eLatency": 6.519741832868209,
       "reasoningTime": 0,
       "pricePerMillion": 4.5,
-      "outputTokensPerSecond": 88.577,
+      "outputTokensPerSecond": 85.087,
       "ttft": 1.144,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
@@ -2205,8 +2205,8 @@
       "e2eLatency": 17.67408919789738,
       "reasoningTime": 13.070946107917914,
       "pricePerMillion": 0.8999999999999999,
-      "outputTokensPerSecond": 149.811,
-      "ttft": 0.575,
+      "outputTokensPerSecond": 142.664,
+      "ttft": 0.562,
       "releaseDate": "2026-08-10",
       "addedAt": "2026-08-10"
     },
@@ -2302,7 +2302,7 @@
       "reasoningTime": 38.482602328486784,
       "pricePerMillion": 1.125,
       "outputTokensPerSecond": 50.063,
-      "ttft": 1.278,
+      "ttft": 1.257,
       "releaseDate": "2026-08-14",
       "addedAt": "2026-08-14"
     },
@@ -2333,7 +2333,7 @@
       "e2eLatency": 19.363803527583233,
       "reasoningTime": 14.770296891666524,
       "pricePerMillion": 11.25,
-      "outputTokensPerSecond": 118.539,
+      "outputTokensPerSecond": 116.938,
       "ttft": 0.839,
       "releaseDate": "2026-06-25",
       "addedAt": "2026-06-25"
@@ -2365,8 +2365,8 @@
       "e2eLatency": 35.301164946653884,
       "reasoningTime": 26.544164560756503,
       "pricePerMillion": 1.7125,
-      "outputTokensPerSecond": 83.19,
-      "ttft": 1.276,
+      "outputTokensPerSecond": 83.243,
+      "ttft": 1.298,
       "releaseDate": "2026-06-12",
       "addedAt": "2026-06-12"
     },
@@ -2413,8 +2413,8 @@
       "e2eLatency": 31.482766177878524,
       "reasoningTime": 22.71202924950275,
       "pricePerMillion": 0.24075,
-      "outputTokensPerSecond": 89.389,
-      "ttft": 1.962,
+      "outputTokensPerSecond": 88.202,
+      "ttft": 1.954,
       "releaseDate": "2026-07-06",
       "addedAt": "2026-07-06"
     },
@@ -2478,7 +2478,7 @@
       "reasoningTime": 36.07678594332573,
       "pricePerMillion": 0.7000000000000001,
       "outputTokensPerSecond": 55.435,
-      "ttft": 1.564,
+      "ttft": 1.48,
       "releaseDate": "2026-06-01",
       "addedAt": "2026-06-01"
     },
@@ -2525,8 +2525,8 @@
       "e2eLatency": 14.99610301433226,
       "reasoningTime": 10.543744087465743,
       "pricePerMillion": 1.7625,
-      "outputTokensPerSecond": 180.123,
-      "ttft": 2.279,
+      "outputTokensPerSecond": 179.303,
+      "ttft": 2.282,
       "releaseDate": "2026-07-15",
       "addedAt": "2026-07-15"
     },
@@ -2605,7 +2605,7 @@
       "e2eLatency": 3.3058529696302577,
       "reasoningTime": 0,
       "pricePerMillion": 0.5249999999999999,
-      "outputTokensPerSecond": 210.364,
+      "outputTokensPerSecond": 210.149,
       "ttft": 0.894,
       "releaseDate": "2026-09-10",
       "addedAt": "2026-09-10"
@@ -2653,8 +2653,8 @@
       "e2eLatency": 19.503627108266112,
       "reasoningTime": 13.953230308212946,
       "pricePerMillion": 0.11124999999999999,
-      "outputTokensPerSecond": 147.933,
-      "ttft": 1.426,
+      "outputTokensPerSecond": 148.602,
+      "ttft": 1.377,
       "releaseDate": "2026-09-10",
       "addedAt": "2026-09-10"
     },
@@ -2973,7 +2973,7 @@
       "e2eLatency": 18.104142701298347,
       "reasoningTime": 13.729823031821063,
       "pricePerMillion": 1.075,
-      "outputTokensPerSecond": 164.312,
+      "outputTokensPerSecond": 165.118,
       "ttft": 0.882,
       "releaseDate": "2026-06-04",
       "addedAt": "2026-05-15T00:00:00.000Z"
@@ -3086,7 +3086,7 @@
       "reasoningTime": 5.969857620972841,
       "pricePerMillion": 0.11124999999999999,
       "outputTokensPerSecond": 330.154,
-      "ttft": 1.171,
+      "ttft": 1.167,
       "releaseDate": "2026-09-11",
       "addedAt": "2026-09-11"
     },
@@ -3165,7 +3165,7 @@
       "e2eLatency": 10.863752554045957,
       "reasoningTime": 0,
       "pricePerMillion": 0.85,
-      "outputTokensPerSecond": 335.289,
+      "outputTokensPerSecond": 329.536,
       "ttft": 7.222,
       "releaseDate": "2026-07-21",
       "addedAt": "2026-07-21"
@@ -3309,8 +3309,8 @@
       "e2eLatency": 6.296158544460349,
       "reasoningTime": 0,
       "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 120.155,
-      "ttft": 2.226,
+      "outputTokensPerSecond": 119.116,
+      "ttft": 2.019,
       "releaseDate": "2026-09-22",
       "addedAt": "2026-09-22"
     },
@@ -3325,8 +3325,8 @@
       "e2eLatency": 8.026523071814466,
       "reasoningTime": 0,
       "pricePerMillion": 1.35,
-      "outputTokensPerSecond": 81.906,
-      "ttft": 1.573,
+      "outputTokensPerSecond": 81.384,
+      "ttft": 1.575,
       "releaseDate": "2026-02-16",
       "addedAt": "2026-02-16"
     },
@@ -3421,7 +3421,7 @@
       "e2eLatency": 5.902510768480306,
       "reasoningTime": 0,
       "pricePerMillion": 4.5,
-      "outputTokensPerSecond": 92.355,
+      "outputTokensPerSecond": 91.182,
       "ttft": 0.717,
       "releaseDate": "2026-07-09",
       "addedAt": "2026-07-09"
@@ -3549,7 +3549,7 @@
       "e2eLatency": 4.700413559207477,
       "reasoningTime": 0,
       "pricePerMillion": 1.98,
-      "outputTokensPerSecond": 166.559,
+      "outputTokensPerSecond": 165.758,
       "ttft": 0.953,
       "releaseDate": "2026-08-13",
       "addedAt": "2026-08-13"
@@ -3598,7 +3598,7 @@
       "reasoningTime": 0,
       "pricePerMillion": 1.5,
       "outputTokensPerSecond": 104.721,
-      "ttft": 1.21,
+      "ttft": 1.185,
       "releaseDate": "2026-03-30",
       "addedAt": "2026-03-30"
     },
@@ -3630,7 +3630,7 @@
       "reasoningTime": 0,
       "pricePerMillion": 1.125,
       "outputTokensPerSecond": 51.353,
-      "ttft": 1.194,
+      "ttft": 1.206,
       "releaseDate": "2026-08-14",
       "addedAt": "2026-08-14"
     },
@@ -3645,8 +3645,8 @@
       "e2eLatency": 10.062798898224832,
       "reasoningTime": 6.030454624179931,
       "pricePerMillion": 0.11124999999999999,
-      "outputTokensPerSecond": 353.139,
-      "ttft": 1.718,
+      "outputTokensPerSecond": 347.136,
+      "ttft": 1.749,
       "releaseDate": "2026-08-04",
       "addedAt": "2026-08-04"
     },
@@ -3933,8 +3933,8 @@
       "e2eLatency": 4.721094721546044,
       "reasoningTime": 0,
       "pricePerMillion": 0.2,
-      "outputTokensPerSecond": 116.073,
-      "ttft": 0.953,
+      "outputTokensPerSecond": 114.786,
+      "ttft": 0.905,
       "releaseDate": "2026-09-22",
       "addedAt": "2026-09-22"
     },
@@ -3997,8 +3997,8 @@
       "e2eLatency": 45.66682718314591,
       "reasoningTime": 39.86596636273232,
       "pricePerMillion": 0.84375,
-      "outputTokensPerSecond": 132.685,
-      "ttft": 1.002,
+      "outputTokensPerSecond": 131.878,
+      "ttft": 1.018,
       "releaseDate": "2026-04-16",
       "addedAt": "2026-04-16"
     },
@@ -4061,8 +4061,8 @@
       "e2eLatency": 5.849084243248742,
       "reasoningTime": 0,
       "pricePerMillion": 1.1,
-      "outputTokensPerSecond": 145.369,
-      "ttft": 1.045,
+      "outputTokensPerSecond": 145.971,
+      "ttft": 1.05,
       "releaseDate": "2026-02-24",
       "addedAt": "2026-02-24"
     },
@@ -4077,7 +4077,7 @@
       "e2eLatency": 23.899295856167672,
       "reasoningTime": 17.99580945133412,
       "pricePerMillion": 0.58125,
-      "outputTokensPerSecond": 109.182,
+      "outputTokensPerSecond": 108.201,
       "ttft": 0.583,
       "releaseDate": "2026-08-10",
       "addedAt": "2026-08-10"
@@ -4173,7 +4173,7 @@
       "e2eLatency": 21.675730907229475,
       "reasoningTime": 0,
       "pricePerMillion": 2,
-      "outputTokensPerSecond": 101.942,
+      "outputTokensPerSecond": 98.659,
       "ttft": 7.086,
       "releaseDate": "2025-10-15",
       "addedAt": "2026-05-15T00:00:00.000Z"
@@ -4429,8 +4429,8 @@
       "e2eLatency": 21.736769091013564,
       "reasoningTime": 15.517923457610818,
       "pricePerMillion": 1.1,
-      "outputTokensPerSecond": 131.725,
-      "ttft": 0.983,
+      "outputTokensPerSecond": 131.157,
+      "ttft": 0.979,
       "releaseDate": "2026-02-24",
       "addedAt": "2026-02-24"
     },
@@ -4493,7 +4493,7 @@
       "e2eLatency": 6.158595210329323,
       "reasoningTime": 0,
       "pricePerMillion": 2,
-      "outputTokensPerSecond": 98.275,
+      "outputTokensPerSecond": 97.723,
       "ttft": 0.542,
       "releaseDate": "2025-10-15",
       "addedAt": "2025-10-15"
@@ -4557,7 +4557,7 @@
       "e2eLatency": 5.5095480582420056,
       "reasoningTime": 0,
       "pricePerMillion": 0.84375,
-      "outputTokensPerSecond": 139.56,
+      "outputTokensPerSecond": 138.421,
       "ttft": 1.04,
       "releaseDate": "2026-04-16",
       "addedAt": "2026-04-16"
@@ -4653,8 +4653,8 @@
       "e2eLatency": 34.12158129868141,
       "reasoningTime": 26.60589700614515,
       "pricePerMillion": 0.2825,
-      "outputTokensPerSecond": 76.776,
-      "ttft": 0.264,
+      "outputTokensPerSecond": 77.432,
+      "ttft": 0.277,
       "releaseDate": "2026-08-25",
       "addedAt": "2026-08-25"
     },
@@ -4669,7 +4669,7 @@
       "e2eLatency": 64.25563048076444,
       "reasoningTime": 49.007631452861844,
       "pricePerMillion": 0,
-      "outputTokensPerSecond": 35.328,
+      "outputTokensPerSecond": 35.373,
       "ttft": 1.001,
       "releaseDate": "2026-04-02",
       "addedAt": "2026-05-15T00:00:00.000Z"
@@ -4813,7 +4813,7 @@
       "e2eLatency": 17.09639133457804,
       "reasoningTime": 11.814200198062442,
       "pricePerMillion": 3,
-      "outputTokensPerSecond": 162.857,
+      "outputTokensPerSecond": 162.625,
       "ttft": 0.595,
       "releaseDate": "2026-04-29",
       "addedAt": "2026-05-15T00:00:00.000Z"
@@ -4829,7 +4829,7 @@
       "e2eLatency": 32.21230850889513,
       "reasoningTime": 16.247115495916102,
       "pricePerMillion": 3.4375,
-      "outputTokensPerSecond": 128.334,
+      "outputTokensPerSecond": 124.832,
       "ttft": 12.799,
       "releaseDate": "2025-11-27",
       "addedAt": "2026-05-15T00:00:00.000Z"
@@ -4909,8 +4909,8 @@
       "e2eLatency": 13.006989831054634,
       "reasoningTime": 0,
       "pricePerMillion": 0.2125,
-      "outputTokensPerSecond": 39.075,
-      "ttft": 0.896,
+      "outputTokensPerSecond": 40.68,
+      "ttft": 0.953,
       "releaseDate": "2026-04-02",
       "addedAt": "2026-04-02"
     },
@@ -5021,8 +5021,8 @@
       "e2eLatency": 29.56198393053498,
       "reasoningTime": 10.530402874827981,
       "pricePerMillion": 0.85,
-      "outputTokensPerSecond": 237.924,
-      "ttft": 11.306,
+      "outputTokensPerSecond": 224.702,
+      "ttft": 10.521,
       "releaseDate": "2025-10-29",
       "addedAt": "2025-10-29"
     },
@@ -5149,8 +5149,8 @@
       "e2eLatency": 6.157524365567826,
       "reasoningTime": 0,
       "pricePerMillion": 0.1975,
-      "outputTokensPerSecond": 97.189,
-      "ttft": 0.666,
+      "outputTokensPerSecond": 98.089,
+      "ttft": 0.66,
       "releaseDate": "2026-04-02",
       "addedAt": "2026-04-02"
     },
@@ -5165,8 +5165,8 @@
       "e2eLatency": 145.84295683977632,
       "reasoningTime": 115.99884558822106,
       "pricePerMillion": 0.06,
-      "outputTokensPerSecond": 18.905,
-      "ttft": 0.574,
+      "outputTokensPerSecond": 19.681,
+      "ttft": 0.58,
       "releaseDate": "2026-03-02",
       "addedAt": "2026-03-02"
     },
@@ -5197,8 +5197,8 @@
       "e2eLatency": 8.742713567742378,
       "reasoningTime": 6.547500041393863,
       "pricePerMillion": 0.095,
-      "outputTokensPerSecond": 294.287,
-      "ttft": 0.394,
+      "outputTokensPerSecond": 296.409,
+      "ttft": 0.392,
       "releaseDate": "2026-08-11",
       "addedAt": "2026-08-11"
     },
@@ -5245,7 +5245,7 @@
       "e2eLatency": 17.708466014976906,
       "reasoningTime": 13.135906146381542,
       "pricePerMillion": 0.44999999999999996,
-      "outputTokensPerSecond": 150.46,
+      "outputTokensPerSecond": 149.872,
       "ttft": 0.846,
       "releaseDate": "2026-03-11",
       "addedAt": "2026-03-11"
@@ -5357,7 +5357,7 @@
       "e2eLatency": 31.292358733905445,
       "reasoningTime": 10.889987459924358,
       "pricePerMillion": 0.85,
-      "outputTokensPerSecond": 206.099,
+      "outputTokensPerSecond": 202.672,
       "ttft": 11.237,
       "releaseDate": "2025-10-29",
       "addedAt": "2025-10-29"
@@ -5389,7 +5389,7 @@
       "e2eLatency": 3.993651648145147,
       "reasoningTime": 0,
       "pricePerMillion": 0.275,
-      "outputTokensPerSecond": 219.316,
+      "outputTokensPerSecond": 217.617,
       "ttft": 1.041,
       "releaseDate": "2026-03-30",
       "addedAt": "2026-03-30"
@@ -5566,7 +5566,7 @@
       "reasoningTime": 11.678734772334233,
       "pricePerMillion": 0.85,
       "outputTokensPerSecond": 207.703,
-      "ttft": 3.763,
+      "ttft": 3.775,
       "releaseDate": "2025-10-29",
       "addedAt": "2025-10-29"
     },
@@ -5677,8 +5677,8 @@
       "e2eLatency": 14.315733452164821,
       "reasoningTime": 10.762586791731826,
       "pricePerMillion": 0.26125,
-      "outputTokensPerSecond": 188.682,
-      "ttft": 0.501,
+      "outputTokensPerSecond": 186.012,
+      "ttft": 0.502,
       "releaseDate": "2025-08-05",
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
@@ -5805,7 +5805,7 @@
       "e2eLatency": 15.281298046132699,
       "reasoningTime": 11.678726160106143,
       "pricePerMillion": 0.26249999999999996,
-      "outputTokensPerSecond": 164.388,
+      "outputTokensPerSecond": 163.865,
       "ttft": 0.542,
       "releaseDate": "2026-03-16",
       "addedAt": "2026-03-16"
@@ -5853,7 +5853,7 @@
       "e2eLatency": 40.61422166601002,
       "reasoningTime": 31.21090886000804,
       "pricePerMillion": 0.15125,
-      "outputTokensPerSecond": 76.823,
+      "outputTokensPerSecond": 74.133,
       "ttft": 0.911,
       "releaseDate": "2026-03-02",
       "addedAt": "2026-03-02"
@@ -5869,8 +5869,8 @@
       "e2eLatency": 15.15954831523796,
       "reasoningTime": 10.270774004990352,
       "pricePerMillion": 0.4125,
-      "outputTokensPerSecond": 195.854,
-      "ttft": 1.194,
+      "outputTokensPerSecond": 188.431,
+      "ttft": 1.172,
       "releaseDate": "2025-09-11",
       "addedAt": "2025-09-11"
     },
@@ -5917,8 +5917,8 @@
       "e2eLatency": 57.30843822946606,
       "reasoningTime": 45.05345300677296,
       "pricePerMillion": 0.1075,
-      "outputTokensPerSecond": 45.108,
-      "ttft": 0.413,
+      "outputTokensPerSecond": 47.469,
+      "ttft": 0.401,
       "releaseDate": "2026-08-25",
       "addedAt": "2026-08-25"
     },
@@ -5949,8 +5949,8 @@
       "e2eLatency": 45.47975926767948,
       "reasoningTime": 34.32333144214359,
       "pricePerMillion": 0,
-      "outputTokensPerSecond": 58.815,
-      "ttft": 1.54,
+      "outputTokensPerSecond": 59.495,
+      "ttft": 1.577,
       "releaseDate": "2026-08-06",
       "addedAt": "2026-08-06"
     },
@@ -6045,8 +6045,8 @@
       "e2eLatency": 29.75553590013862,
       "reasoningTime": 0,
       "pricePerMillion": 0.06,
-      "outputTokensPerSecond": 18.217,
-      "ttft": 0.699,
+      "outputTokensPerSecond": 19.659,
+      "ttft": 0.671,
       "releaseDate": "2026-03-02",
       "addedAt": "2026-03-02"
     },
@@ -6061,8 +6061,8 @@
       "e2eLatency": 8.727382819017553,
       "reasoningTime": 6.00331758881405,
       "pricePerMillion": 0.3875,
-      "outputTokensPerSecond": 347.601,
-      "ttft": 1.075,
+      "outputTokensPerSecond": 344.301,
+      "ttft": 1.084,
       "releaseDate": "2026-04-01",
       "addedAt": "2026-04-01"
     },
@@ -6173,8 +6173,8 @@
       "e2eLatency": 9.69112846894368,
       "reasoningTime": 7.468701059154936,
       "pricePerMillion": 0.42,
-      "outputTokensPerSecond": 267.311,
-      "ttft": 0.209,
+      "outputTokensPerSecond": 267.719,
+      "ttft": 0.212,
       "releaseDate": "2026-04-29",
       "addedAt": "2026-04-29"
     },
@@ -6205,7 +6205,7 @@
       "e2eLatency": 11.833601729460288,
       "reasoningTime": 8.852745494768273,
       "pricePerMillion": 0.24874999999999997,
-      "outputTokensPerSecond": 208.554,
+      "outputTokensPerSecond": 203.902,
       "ttft": 0.495,
       "releaseDate": "2025-08-05",
       "addedAt": "2025-08-05"
@@ -6221,8 +6221,8 @@
       "e2eLatency": 10.781518765907137,
       "reasoningTime": 7.915641372725702,
       "pricePerMillion": 0.10625000000000001,
-      "outputTokensPerSecond": 254.773,
-      "ttft": 0.444,
+      "outputTokensPerSecond": 251.835,
+      "ttft": 0.456,
       "releaseDate": "2025-08-05",
       "addedAt": "2025-08-05"
     },
@@ -6269,7 +6269,7 @@
       "e2eLatency": 5.618243987860733,
       "reasoningTime": 0,
       "pricePerMillion": 3.4375,
-      "outputTokensPerSecond": 123.453,
+      "outputTokensPerSecond": 120.829,
       "ttft": 0.716,
       "releaseDate": "2025-11-27",
       "addedAt": "2025-11-27"
@@ -6333,7 +6333,7 @@
       "e2eLatency": 30.695898045260357,
       "reasoningTime": 24.2008802546083,
       "pricePerMillion": 0,
-      "outputTokensPerSecond": 89.743,
+      "outputTokensPerSecond": 85.394,
       "ttft": 0.245,
       "releaseDate": "2026-06-09",
       "addedAt": "2026-06-09"
@@ -6461,7 +6461,7 @@
       "e2eLatency": 4.992128934849134,
       "reasoningTime": 0,
       "pricePerMillion": 0.4125,
-      "outputTokensPerSecond": 188.228,
+      "outputTokensPerSecond": 186.884,
       "ttft": 1.076,
       "releaseDate": "2025-09-11",
       "addedAt": "2025-09-11"
@@ -6573,7 +6573,7 @@
       "e2eLatency": 6.694713066332023,
       "reasoningTime": 0,
       "pricePerMillion": 0.15000000000000002,
-      "outputTokensPerSecond": 142.123,
+      "outputTokensPerSecond": 140.784,
       "ttft": 1.423,
       "releaseDate": "2026-06-03",
       "addedAt": "2026-06-03"
@@ -6605,8 +6605,8 @@
       "e2eLatency": 7.1806888030762615,
       "reasoningTime": 0,
       "pricePerMillion": 0.75,
-      "outputTokensPerSecond": 80.277,
-      "ttft": 0.689,
+      "outputTokensPerSecond": 79.072,
+      "ttft": 0.688,
       "releaseDate": "2025-12-02",
       "addedAt": "2025-12-02"
     },
@@ -6685,7 +6685,7 @@
       "e2eLatency": 6.768303096979272,
       "reasoningTime": 0,
       "pricePerMillion": 0.5625,
-      "outputTokensPerSecond": 112.385,
+      "outputTokensPerSecond": 110.869,
       "ttft": 0.926,
       "releaseDate": "2026-02-03",
       "addedAt": "2026-02-03"
@@ -6701,8 +6701,8 @@
       "e2eLatency": 12.066185384960814,
       "reasoningTime": 9.229971420768559,
       "pricePerMillion": 0.0525,
-      "outputTokensPerSecond": 229.044,
-      "ttft": 0.234,
+      "outputTokensPerSecond": 230.803,
+      "ttft": 0.23,
       "releaseDate": "2026-08-25",
       "addedAt": "2026-08-25"
     },
@@ -6781,8 +6781,8 @@
       "e2eLatency": 14.019364061978658,
       "reasoningTime": 10.531587380782918,
       "pricePerMillion": 0.0975,
-      "outputTokensPerSecond": 227.873,
-      "ttft": 0.41,
+      "outputTokensPerSecond": 231.256,
+      "ttft": 0.412,
       "releaseDate": "2025-08-05",
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
@@ -6845,7 +6845,7 @@
       "e2eLatency": 3.8254788582546184,
       "reasoningTime": 0,
       "pricePerMillion": 0.26249999999999996,
-      "outputTokensPerSecond": 156.626,
+      "outputTokensPerSecond": 154.734,
       "ttft": 0.481,
       "releaseDate": "2026-03-16",
       "addedAt": "2026-03-16"
@@ -6909,7 +6909,7 @@
       "e2eLatency": 71.68076912793127,
       "reasoningTime": 56.26997520954509,
       "pricePerMillion": 0.04,
-      "outputTokensPerSecond": 34.85,
+      "outputTokensPerSecond": 32.147,
       "ttft": 0.748,
       "releaseDate": "2026-04-03",
       "addedAt": "2026-04-03"
@@ -6941,8 +6941,8 @@
       "e2eLatency": 15.580169770160317,
       "reasoningTime": 11.65491014492831,
       "pricePerMillion": 0.08750000000000001,
-      "outputTokensPerSecond": 190.23,
-      "ttft": 0.59,
+      "outputTokensPerSecond": 193.399,
+      "ttft": 0.587,
       "releaseDate": "2025-12-15",
       "addedAt": "2025-12-15"
     },
@@ -7085,8 +7085,8 @@
       "e2eLatency": 3.949944777159075,
       "reasoningTime": 0,
       "pricePerMillion": 0.85,
-      "outputTokensPerSecond": 210.315,
-      "ttft": 0.84,
+      "outputTokensPerSecond": 209.667,
+      "ttft": 0.832,
       "releaseDate": "2025-10-29",
       "addedAt": "2025-10-29"
     },
@@ -7438,7 +7438,7 @@
       "reasoningTime": 0,
       "pricePerMillion": 0.3125,
       "outputTokensPerSecond": 44.983,
-      "ttft": 0.626,
+      "ttft": 0.615,
       "releaseDate": "2025-04-05",
       "addedAt": "2025-04-05"
     },
@@ -7693,8 +7693,8 @@
       "e2eLatency": 7.969901734792537,
       "reasoningTime": 0,
       "pricePerMillion": 0.7124999999999999,
-      "outputTokensPerSecond": 76.868,
-      "ttft": 0.642,
+      "outputTokensPerSecond": 78.296,
+      "ttft": 0.637,
       "releaseDate": "2024-12-06",
       "addedAt": "2024-12-06"
     },
@@ -7886,7 +7886,7 @@
       "reasoningTime": 0,
       "pricePerMillion": 0.04,
       "outputTokensPerSecond": 33.648,
-      "ttft": 0.407,
+      "ttft": 0.425,
       "releaseDate": "2026-04-03",
       "addedAt": "2026-04-03"
     },
@@ -7901,8 +7901,8 @@
       "e2eLatency": 60.90502631277598,
       "reasoningTime": 46.7920873494208,
       "pricePerMillion": 1.5,
-      "outputTokensPerSecond": 43.103,
-      "ttft": 0.731,
+      "outputTokensPerSecond": 42.745,
+      "ttft": 0.744,
       "releaseDate": "2025-08-27",
       "addedAt": "2025-08-27"
     },
@@ -8013,8 +8013,8 @@
       "e2eLatency": 14.359072816655445,
       "reasoningTime": 0,
       "pricePerMillion": 1.5,
-      "outputTokensPerSecond": 41.975,
-      "ttft": 0.656,
+      "outputTokensPerSecond": 41.779,
+      "ttft": 0.662,
       "releaseDate": "2025-08-27",
       "addedAt": "2025-08-27"
     },
@@ -8413,7 +8413,7 @@
       "e2eLatency": 9.741742942237238,
       "reasoningTime": 0,
       "pricePerMillion": 4.375,
-      "outputTokensPerSecond": 61.217,
+      "outputTokensPerSecond": 60.229,
       "ttft": 0.419,
       "releaseDate": "2025-03-13",
       "addedAt": "2025-03-13"
@@ -8590,7 +8590,7 @@
       "reasoningTime": 0,
       "pricePerMillion": 0.08750000000000001,
       "outputTokensPerSecond": 232.751,
-      "ttft": 0.431,
+      "ttft": 0.437,
       "releaseDate": "2025-12-15",
       "addedAt": "2025-12-15"
     },
@@ -9086,7 +9086,7 @@
       "reasoningTime": 0,
       "pricePerMillion": 0.325,
       "outputTokensPerSecond": 1838.385,
-      "ttft": 0.407,
+      "ttft": 0.399,
       "releaseDate": "2026-07-24",
       "addedAt": "2026-07-24"
     },
@@ -9133,8 +9133,8 @@
       "e2eLatency": 11.831269453555366,
       "reasoningTime": 0,
       "pricePerMillion": 0,
-      "outputTokensPerSecond": 46.889,
-      "ttft": 0.326,
+      "outputTokensPerSecond": 46.83,
+      "ttft": 0.325,
       "releaseDate": "2024-02-26",
       "addedAt": "2024-02-26"
     },
@@ -9453,7 +9453,7 @@
       "e2eLatency": 2.5433324027355972,
       "reasoningTime": 0,
       "pricePerMillion": 0.061250000000000006,
-      "outputTokensPerSecond": 258.186,
+      "outputTokensPerSecond": 255.876,
       "ttft": 0.589,
       "releaseDate": "2024-12-03",
       "addedAt": "2024-12-03"
@@ -9581,8 +9581,8 @@
       "e2eLatency": 31.568567693488916,
       "reasoningTime": 0,
       "pricePerMillion": 0,
-      "outputTokensPerSecond": 17.102,
-      "ttft": 0.38,
+      "outputTokensPerSecond": 17.061,
+      "ttft": 0.376,
       "releaseDate": "2025-02-26",
       "addedAt": "2025-02-26"
     },
@@ -9805,8 +9805,8 @@
       "e2eLatency": 28.52734319900002,
       "reasoningTime": 21.763157244000006,
       "pricePerMillion": 0.35000000000000003,
-      "outputTokensPerSecond": 94.186,
-      "ttft": 0.799,
+      "outputTokensPerSecond": 94.178,
+      "ttft": 0.813,
       "releaseDate": "2025-03-10",
       "addedAt": "2025-03-10"
     },
@@ -9918,7 +9918,7 @@
       "reasoningTime": 0,
       "pricePerMillion": 0.15,
       "outputTokensPerSecond": 103.901,
-      "ttft": 0.471,
+      "ttft": 0.478,
       "releaseDate": "2025-12-02",
       "addedAt": "2025-12-02"
     },
@@ -10813,7 +10813,7 @@
       "e2eLatency": 2.8091565650567443,
       "reasoningTime": 0,
       "pricePerMillion": 0.1,
-      "outputTokensPerSecond": 257.801,
+      "outputTokensPerSecond": 255.843,
       "ttft": 0.646,
       "releaseDate": "2025-12-02",
       "addedAt": "2025-12-02"
@@ -10877,8 +10877,8 @@
       "e2eLatency": null,
       "reasoningTime": 0,
       "pricePerMillion": 0,
-      "outputTokensPerSecond": 131.46,
-      "ttft": 0.244,
+      "outputTokensPerSecond": 132.096,
+      "ttft": 0.241,
       "releaseDate": "2026-02-17",
       "addedAt": "2026-02-17"
     },
