@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-07T23:13:18.122Z",
+  "fetchedAt": "2026-10-07T23:43:26.203Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -677,7 +677,7 @@
     {
       "slug": "claude-haiku-5-5",
       "name": "Claude Haiku 5.5 (Max)",
-      "displayName": "Claude Haiku 5.5 (max with fallback)",
+      "displayName": "Claude Haiku 5.5 (max)",
       "creator": "Anthropic",
       "intelligence": 43.4,
       "codingIndex": null,
@@ -837,7 +837,7 @@
     {
       "slug": "claude-haiku-5-5-xhigh",
       "name": "Claude Haiku 5.5 (Xhigh)",
-      "displayName": "Claude Haiku 5.5 (xhigh with fallback)",
+      "displayName": "Claude Haiku 5.5 (xhigh)",
       "creator": "Anthropic",
       "intelligence": 41.2,
       "codingIndex": null,
@@ -1221,7 +1221,7 @@
     {
       "slug": "claude-haiku-5-5-high",
       "name": "Claude Haiku 5.5 (High)",
-      "displayName": "Claude Haiku 5.5 (high with fallback)",
+      "displayName": "Claude Haiku 5.5 (high)",
       "creator": "Anthropic",
       "intelligence": 37.8,
       "codingIndex": null,
@@ -1381,7 +1381,7 @@
     {
       "slug": "claude-haiku-5-5-medium",
       "name": "Claude Haiku 5.5 (Medium)",
-      "displayName": "Claude Haiku 5.5 (medium with fallback)",
+      "displayName": "Claude Haiku 5.5 (medium)",
       "creator": "Anthropic",
       "intelligence": 34.5,
       "codingIndex": null,
@@ -1957,7 +1957,7 @@
     {
       "slug": "claude-haiku-5-5-low",
       "name": "Claude Haiku 5.5 (Low)",
-      "displayName": "Claude Haiku 5.5 (low with fallback)",
+      "displayName": "Claude Haiku 5.5 (low)",
       "creator": "Anthropic",
       "intelligence": 29.4,
       "codingIndex": null,
