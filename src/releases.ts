@@ -31,7 +31,7 @@ export function verdict(delta: number | null, predecessor: string | null) {
  * waiting. Failing those, it is judged against the version it replaces.
  */
 export interface Gist {
-  kind: "top" | "cheaper" | "faster" | "step";
+  kind: "top" | "cheaper" | "faster" | "step" | "frontier" | "behind" | "unmeasured";
   lead: string;
   rest: string;
   tone: string | null;
@@ -62,11 +62,27 @@ export interface Release {
   predecessorLabel: string | null;
   /** Flagship minus predecessor on the active metric. */
   delta: number | null;
+  /** The one-line reason it matters, whatever view you're on. */
   gist: Gist;
+  /** How it moved against the version it replaces. */
+  step: Gist;
+  /** Where it stands on each scatter view's trade-off. */
+  standing: Record<Axis, Gist>;
 }
 
-/** "GPT-5.6 Sol" and "GPT-6 Sol" are the same line; only the numbers differ. */
-const lineOf = (family: string) => family.replace(/\d+(?:\.\d+)*/g, "#").toLowerCase();
+export type Axis = "cost" | "speed";
+
+/**
+ * "GPT-5.6 Sol" and "GPT-6 Sol" are the same line; only the numbers differ.
+ * Word order doesn't matter either: "Claude 4.5 Haiku" became "Claude Haiku 5.5".
+ */
+const lineOf = (family: string) =>
+  family
+    .toLowerCase()
+    .replace(/\d+(?:\.\d+)*/g, "#")
+    .split(/\s+/)
+    .sort()
+    .join(" ");
 
 const versionOf = (family: string) =>
   (family.match(/\d+(?:\.\d+)*/g) ?? []).join(".").split(".").filter(Boolean).map(Number);
@@ -158,7 +174,97 @@ function bestWin(f: Family, all: Family[], metric: MetricConfig, value: (m: Mode
   return win;
 }
 
-function gistOf(f: Family, all: Family[], metric: MetricConfig, rank: number, delta: number | null, predLabel: string | null): Gist {
+const AXES: Record<
+  Axis,
+  { value: (m: Model) => number | null; win: "cheaper" | "faster"; worse: string; noun: string; fmt: (v: number) => string }
+> = {
+  cost: { value: (m) => m.costPerTask, win: "cheaper", worse: "pricier", noun: "cost", fmt: fmtMoney },
+  speed: { value: (m) => m.e2eLatency, win: "faster", worse: "slower", noun: "speed", fmt: fmtSecondsShort },
+};
+
+const possessive = (creator: string) => (creator.endsWith("s") ? `${creator}'` : `${creator}'s`);
+
+/** How it moved against the version it replaces, or for a new line, the lab's best. */
+function stepOf(
+  f: Family,
+  metric: MetricConfig,
+  delta: number | null,
+  pred: Family | null,
+  sameLine: boolean,
+): Gist {
+  if (pred && delta != null && !sameLine) {
+    // A brand-new line (Gemini 4 Argon) has no older version: measure it
+    // against everything its lab shipped before, not one arbitrary model.
+    const points = `${Math.abs(delta).toFixed(1)} points ${delta >= 0 ? "above" : "below"} ${pred.family}, ${possessive(f.creator)} previous best.`;
+    return delta >= 0.5
+      ? { kind: "step", lead: `${possessive(f.creator)} smartest yet`, rest: "", tone: UP, detail: points }
+      : { kind: "step", lead: "A new line", rest: ` from ${f.creator}`, tone: null, detail: points };
+  }
+  const v = verdict(delta, pred?.family ?? null);
+  return {
+    kind: "step",
+    lead: v.lead,
+    rest: v.rest,
+    tone: v.tone,
+    detail:
+      delta != null && pred && Math.abs(delta) >= 0.05
+        ? `${Math.abs(delta).toFixed(1)} points ${delta > 0 ? "above" : "below"} ${pred.family} on ${metric.noun}.`
+        : null,
+  };
+}
+
+/**
+ * Where a release stands on one trade-off. Best case it beats everything that
+ * came before it as smart by a wide margin; otherwise it sits on today's
+ * frontier, just behind it, or some multiple off the best at its level.
+ */
+function standingOf(f: Family, all: Family[], metric: MetricConfig, axis: Axis): Gist {
+  const { value, win, worse, noun, fmt } = AXES[axis];
+  const measured = f.models.filter((m) => isPositiveFinite(value(m)));
+  if (!measured.length) {
+    return { kind: "unmeasured", lead: `${noun[0].toUpperCase()}${noun.slice(1)} not measured yet`, rest: "", tone: null, detail: null };
+  }
+  const wins = bestWin(f, all, metric, value);
+  const smart = metric.noun === "intelligence" ? " than anything as smart" : " than anything as good";
+  if (wins && wins.ratio >= NOTABLE) {
+    const [you, them] = [fmt(value(wins.model)!), fmt(value(wins.rival)!)];
+    return {
+      kind: win,
+      lead: `${fmtMultiple(wins.ratio)} ${win}`,
+      rest: smart,
+      tone: UP,
+      detail:
+        axis === "cost"
+          ? `${shortName(wins.model)} matches ${shortName(wins.rival)} for ${you} a task instead of ${them}.`
+          : `${shortName(wins.model)} matches ${shortName(wins.rival)} in ${you} instead of ${them}.`,
+    };
+  }
+  // Against everything on the map today, not just what came before.
+  const others = all
+    .filter((o) => o.key !== f.key)
+    .flatMap((o) => o.models)
+    .filter((m) => isPositiveFinite(value(m)));
+  let closest: { model: Model; rival: Model | null; gap: number } | null = null;
+  for (const model of measured) {
+    const rival = others
+      .filter((m) => metric.value(m)! >= metric.value(model)!)
+      .reduce<Model | null>((best, m) => (!best || value(m)! < value(best)! ? m : best), null);
+    const gap = rival ? value(model)! / value(rival)! : 0;
+    if (!closest || gap < closest.gap) closest = { model, rival, gap };
+  }
+  const { model, rival, gap } = closest!;
+  const frontier = `${noun} frontier`;
+  if (!rival || gap <= 1) {
+    return { kind: "frontier", lead: "On the", rest: ` ${frontier}`, tone: UP, detail: `Nothing as smart as ${shortName(model)} is ${win}.` };
+  }
+  const detail = `${shortName(rival)} is as smart as ${shortName(model)} at ${fmt(value(rival)!)}${axis === "cost" ? " a task" : ""} instead of ${fmt(value(model)!)}.`;
+  // Compare as displayed, so a "1.5×" gap never reads as more than "just behind".
+  return Number(gap.toFixed(1)) <= NOTABLE
+    ? { kind: "behind", lead: "Just behind", rest: ` the ${frontier}`, tone: null, detail }
+    : { kind: "behind", lead: `${fmtMultiple(gap)} ${worse}`, rest: " than the best at its level", tone: null, detail };
+}
+
+function gistOf(f: Family, all: Family[], metric: MetricConfig, rank: number, step: Gist, standing: Record<Axis, Gist>): Gist {
   if (rank === 1) {
     const runnerUp = all
       .filter((o) => o.key !== f.key)
@@ -173,38 +279,11 @@ function gistOf(f: Family, all: Family[], metric: MetricConfig, rank: number, de
         : null,
     };
   }
-  const cheaper = bestWin(f, all, metric, (m) => m.costPerTask);
-  const faster = bestWin(f, all, metric, (m) => m.e2eLatency);
-  const best = [cheaper && { kind: "cheaper" as const, ...cheaper }, faster && { kind: "faster" as const, ...faster }]
-    .filter((w): w is NonNullable<typeof w> => !!w && w.ratio >= NOTABLE)
-    .sort((a, b) => b.ratio - a.ratio)[0];
-  if (best) {
-    const [you, them] =
-      best.kind === "cheaper"
-        ? [fmtMoney(best.model.costPerTask!), fmtMoney(best.rival.costPerTask!)]
-        : [fmtSecondsShort(best.model.e2eLatency!), fmtSecondsShort(best.rival.e2eLatency!)];
-    return {
-      kind: best.kind,
-      lead: `${fmtMultiple(best.ratio)} ${best.kind}`,
-      rest: metric.noun === "intelligence" ? " than anything as smart" : " than anything as good",
-      tone: UP,
-      detail:
-        best.kind === "cheaper"
-          ? `${shortName(best.model)} matches ${shortName(best.rival)} for ${you} a task instead of ${them}.`
-          : `${shortName(best.model)} matches ${shortName(best.rival)} in ${you} instead of ${them}.`,
-    };
-  }
-  const v = verdict(delta, predLabel);
-  return {
-    kind: "step",
-    lead: v.lead,
-    rest: v.rest,
-    tone: v.tone,
-    detail:
-      delta != null && predLabel && Math.abs(delta) >= 0.05
-        ? `${Math.abs(delta).toFixed(1)} points ${delta > 0 ? "above" : "below"} ${predLabel} on ${metric.noun}.`
-        : null,
-  };
+  // A big win on price or speed is the headline even on the other views:
+  // MiMo-V2.6-Pro matters for its price, wherever you're looking.
+  const wins = [standing.cost, standing.speed].filter((g) => g.kind === "cheaper" || g.kind === "faster");
+  const ratio = (g: Gist) => parseFloat(g.lead);
+  return wins.sort((a, b) => ratio(b) - ratio(a))[0] ?? step;
 }
 
 function toRelease(f: Family, all: Family[], metric: MetricConfig): Release {
@@ -213,6 +292,9 @@ function toRelease(f: Family, all: Family[], metric: MetricConfig): Release {
   const predecessor = pred ? matchVariant(flagship, pred.models) : null;
   const rank = 1 + all.filter((other) => other.best > f.best).length;
   const delta = predecessor ? metric.value(flagship)! - metric.value(predecessor)! : null;
+  const sameLine = pred != null && lineOf(pred.family) === lineOf(f.family);
+  const step = stepOf(f, metric, delta, pred, sameLine);
+  const standing = { cost: standingOf(f, all, metric, "cost"), speed: standingOf(f, all, metric, "speed") };
   return {
     key: f.key,
     family: f.family,
@@ -224,8 +306,25 @@ function toRelease(f: Family, all: Family[], metric: MetricConfig): Release {
     predecessor,
     predecessorLabel: pred ? pred.family : null,
     delta,
-    gist: gistOf(f, all, metric, rank, delta, pred ? pred.family : null),
+    gist: gistOf(f, all, metric, rank, step, standing),
+    step,
+    standing,
   };
+}
+
+/**
+ * The second line under a release: what it means on the view you're looking
+ * at. On Cost it's where it sits on the price trade-off, on Speed the wait
+ * trade-off, unless that's already the headline, in which case it says how it
+ * moved against the version it replaces. On Timeline it's its overall rank.
+ */
+export function viewLine(release: Release, view: Axis | "timeline"): Gist | null {
+  if (view === "timeline") {
+    if (release.gist.kind === "top") return release.step;
+    return { kind: "step", lead: `#${release.rank}`, rest: " overall", tone: null, detail: null };
+  }
+  const line = release.standing[view];
+  return line.kind === release.gist.kind ? (release.gist.kind === "step" ? null : release.step) : line;
 }
 
 /**

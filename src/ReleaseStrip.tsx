@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { MetricConfig } from "./model";
-import type { Release } from "./releases";
+import { viewLine, type Axis, type Gist, type Release } from "./releases";
 
 const DAY_MS = 86_400_000;
 
@@ -24,6 +24,16 @@ const agoShort = (ms: number) => {
   return fmtDay(ms);
 };
 
+/** The quieter line that changes with the view: Cost, Speed or Timeline. */
+export function ViewLine({ line, truncate = false, className = "" }: { line: Gist; truncate?: boolean; className?: string }) {
+  return (
+    <span className={`mt-0.5 block text-[11.5px] leading-snug text-ink-500 ${truncate ? "truncate" : ""} ${className}`}>
+      <span className="font-medium text-ink-700">{line.lead}</span>
+      {line.rest}
+    </span>
+  );
+}
+
 /**
  * The front door for "something new came out — is it any good?". One row per
  * launch: its name, and the one reason it matters. Clicking a row puts that
@@ -32,6 +42,7 @@ const agoShort = (ms: number) => {
 export function ReleaseStrip({
   releases,
   metric,
+  view,
   activeKey,
   onOpen,
   onPreview,
@@ -42,6 +53,8 @@ export function ReleaseStrip({
   variant?: "header" | "rail";
   releases: Release[];
   metric: MetricConfig;
+  /** The chart view, which picks each row's second line. */
+  view: Axis | "timeline";
   activeKey: string | null;
   onOpen: (release: Release) => void;
   onPreview: (release: Release | null) => void;
@@ -70,6 +83,7 @@ export function ReleaseStrip({
         {releases.map((release, index) => {
           const active = release.key === activeKey;
           const { gist } = release;
+          const line = viewLine(release, view);
           return (
             <li key={release.key} className="release-row" style={{ animationDelay: `${80 + index * 50}ms` }}>
               <button
@@ -83,7 +97,9 @@ export function ReleaseStrip({
                 onFocus={() => onPreview(release)}
                 onBlur={() => onPreview(null)}
                 aria-pressed={active}
-                title={`${release.creator}, #${release.rank} on ${metric.noun}.${gist.detail ? ` ${gist.detail}` : ""}`}
+                title={[`${release.creator}, #${release.rank} on ${metric.noun}.`, gist.detail, line?.detail]
+                  .filter(Boolean)
+                  .join(" ")}
                 aria-label={`${release.family} by ${release.creator}, released ${fmtDay(release.releaseMs)}. ${
                   gist.lead
                 }${gist.rest}. Show it on the map.`}
@@ -108,6 +124,7 @@ export function ReleaseStrip({
                     </span>
                     {gist.rest}
                   </span>
+                  {line && <ViewLine line={line} truncate={!rail} />}
                 </span>
                 <span
                   aria-hidden

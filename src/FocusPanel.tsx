@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Model, MetricConfig, fmtCost, isPositiveFinite, nameParts } from "./model";
-import type { Focus, FocusScope } from "./releases";
-import { ago } from "./ReleaseStrip";
+import { viewLine, type Axis, type Focus, type FocusScope } from "./releases";
+import { ago, ViewLine } from "./ReleaseStrip";
 
 const seconds = (v: number | null) =>
   isPositiveFinite(v) ? `${v < 10 ? v.toFixed(1) : Math.round(v)}s` : "—";
@@ -36,8 +36,10 @@ export function FocusPanel({
   onCompare,
   onHoverModel,
   onPickModel,
+  view,
   compact = false,
 }: {
+  view: Axis | "timeline";
   focus: Focus;
   metric: MetricConfig;
   onScope: (scope: FocusScope) => void;
@@ -50,6 +52,7 @@ export function FocusPanel({
 }) {
   const { release } = focus;
   const { gist } = release;
+  const line = viewLine(release, view);
   const [showNumbers, setShowNumbers] = useState(false);
   const lineup = focus.scope === "lineup";
   const rows = [...focus.models].sort((a, b) => metric.value(b)! - metric.value(a)!);
@@ -151,7 +154,12 @@ export function FocusPanel({
           </span>
           {gist.rest}
         </p>
-        {gist.detail && <p className="text-[12px] leading-snug text-ink-500">{gist.detail}</p>}
+        {line && <ViewLine line={line} className="!mt-0 text-[12.5px]" />}
+        {(gist.detail || line?.detail) && (
+          <p className="text-[12px] leading-snug text-ink-500">
+            {[gist.detail, line?.detail].filter(Boolean).join(" ")}
+          </p>
+        )}
       </header>
 
       {scopeSwitch}

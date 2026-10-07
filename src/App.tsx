@@ -944,7 +944,7 @@ export default function App() {
   );
 
   // Six fit the side rail; the phone header keeps it to three.
-  const releases = useMemo(() => recentReleases(allModels, metric, { limit: 8 }), [metric]);
+  const releases = useMemo(() => recentReleases(allModels, metric, { limit: 7 }), [metric]);
   const activeReleaseKey =
     releases.find(
       (release) =>
@@ -1214,6 +1214,7 @@ export default function App() {
       <FocusPanel
         focus={focus}
         metric={metric}
+        view={xMode}
         compact={compact}
         onScope={setFocusScope}
         onClose={() => setFocusKey(null)}
@@ -1229,6 +1230,7 @@ export default function App() {
       variant={variant}
       releases={variant === "rail" ? releases : releases.slice(0, 3)}
       metric={metric}
+      view={xMode}
       activeKey={focusKey ?? activeReleaseKey}
       onOpen={openRelease}
       onPreview={(release) =>
