@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-07T19:42:52.245Z",
+  "fetchedAt": "2026-10-07T19:57:55.637Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -681,7 +681,7 @@
       "creator": "Anthropic",
       "intelligence": 43.4,
       "codingIndex": null,
-      "costPerTask": 0.21276971216992022,
+      "costPerTask": null,
       "e2eLatency": null,
       "reasoningTime": null,
       "pricePerMillion": 0.2,
@@ -841,7 +841,7 @@
       "creator": "Anthropic",
       "intelligence": 41.2,
       "codingIndex": null,
-      "costPerTask": 0.12378561092096102,
+      "costPerTask": null,
       "e2eLatency": null,
       "reasoningTime": null,
       "pricePerMillion": 0.2,
