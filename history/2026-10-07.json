@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-07T18:42:34.648Z",
+  "fetchedAt": "2026-10-07T19:12:36.428Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -675,6 +675,22 @@
       "addedAt": "2026-07-16"
     },
     {
+      "slug": "claude-haiku-5-5",
+      "name": "Claude Haiku 5.5 (Max, Default Fallback)",
+      "displayName": "Claude Haiku 5.5 (Max, Default Fallback)",
+      "creator": "Anthropic",
+      "intelligence": 43.4,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-07",
+      "addedAt": "2026-10-07"
+    },
+    {
       "slug": "grok-4-6-medium",
       "name": "Grok 4.6 (Medium)",
       "displayName": "Grok 4.6 (medium)",
@@ -817,6 +833,22 @@
       "ttft": 2.699,
       "releaseDate": "2026-08-26",
       "addedAt": "2026-08-26"
+    },
+    {
+      "slug": "claude-haiku-5-5-xhigh",
+      "name": "Claude Haiku 5.5 (Xhigh, Default Fallback)",
+      "displayName": "Claude Haiku 5.5 (Xhigh, Default Fallback)",
+      "creator": "Anthropic",
+      "intelligence": 41.2,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-07",
+      "addedAt": "2026-10-07"
     },
     {
       "slug": "ling-3-1-flash",
@@ -1187,6 +1219,22 @@
       "addedAt": "2026-09-21"
     },
     {
+      "slug": "claude-haiku-5-5-high",
+      "name": "Claude Haiku 5.5 (High, Default Fallback)",
+      "displayName": "Claude Haiku 5.5 (High, Default Fallback)",
+      "creator": "Anthropic",
+      "intelligence": 37.8,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-07",
+      "addedAt": "2026-10-07"
+    },
+    {
       "slug": "gpt-5-6-luna",
       "name": "GPT-5.6 Luna (Max)",
       "displayName": "GPT-5.6 Luna (max)",
@@ -1329,6 +1377,22 @@
       "ttft": 16.763,
       "releaseDate": "2026-09-22",
       "addedAt": "2026-09-22"
+    },
+    {
+      "slug": "claude-haiku-5-5-medium",
+      "name": "Claude Haiku 5.5 (Medium, Default Fallback)",
+      "displayName": "Claude Haiku 5.5 (Medium, Default Fallback)",
+      "creator": "Anthropic",
+      "intelligence": 34.5,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-07",
+      "addedAt": "2026-10-07"
     },
     {
       "slug": "claude-sonnet-5-xhigh",
@@ -1889,6 +1953,22 @@
       "ttft": 0,
       "releaseDate": "2026-05-19",
       "addedAt": "2026-05-15T00:00:00.000Z"
+    },
+    {
+      "slug": "claude-haiku-5-5-low",
+      "name": "Claude Haiku 5.5 (Low, Default Fallback)",
+      "displayName": "Claude Haiku 5.5 (Low, Default Fallback)",
+      "creator": "Anthropic",
+      "intelligence": 29.4,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-07",
+      "addedAt": "2026-10-07"
     },
     {
       "slug": "minimax-m3",
