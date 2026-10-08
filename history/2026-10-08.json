@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-08T06:29:16.526Z",
+  "fetchedAt": "2026-10-08T07:14:30.997Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -820,7 +820,7 @@
     },
     {
       "slug": "glm-5-3-flash",
-      "name": "GLM 5.3 Flash",
+      "name": "GLM-5.3-Flash",
       "displayName": "GLM-5.3-Flash",
       "creator": "Z AI",
       "intelligence": 41.8,
