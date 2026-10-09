@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-09T20:20:23.368Z",
+  "fetchedAt": "2026-10-09T21:05:26.687Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -6301,8 +6301,8 @@
       "e2eLatency": 11.79023164375088,
       "reasoningTime": 8.807329559800708,
       "pricePerMillion": 0.115,
-      "outputTokensPerSecond": 248.422,
-      "ttft": 0.435,
+      "outputTokensPerSecond": 254.58,
+      "ttft": 0.401,
       "releaseDate": "2025-08-05",
       "addedAt": "2025-08-05"
     },
@@ -6765,8 +6765,8 @@
       "e2eLatency": 7.185121304886897,
       "reasoningTime": 0,
       "pricePerMillion": 0.675,
-      "outputTokensPerSecond": 81.961,
-      "ttft": 0.975,
+      "outputTokensPerSecond": 69.547,
+      "ttft": 0.795,
       "releaseDate": "2026-02-03",
       "addedAt": "2026-02-03"
     },
@@ -6861,8 +6861,8 @@
       "e2eLatency": 14.646277998251755,
       "reasoningTime": 11.13167055380141,
       "pricePerMillion": 0.10625000000000001,
-      "outputTokensPerSecond": 193.869,
-      "ttft": 0.421,
+      "outputTokensPerSecond": 205.753,
+      "ttft": 0.396,
       "releaseDate": "2025-08-05",
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
