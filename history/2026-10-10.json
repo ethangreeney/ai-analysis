@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-10-10T00:05:59.687Z",
+  "fetchedAt": "2026-10-10T00:20:59.534Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
       "slug": "claude-opus-5-5",
       "name": "Claude Opus 5.5 (Max, Default Fallback)",
-      "displayName": "Claude Opus 5.5 (max with fallback)",
+      "displayName": "Legal",
       "creator": "Anthropic",
       "intelligence": 57.6,
       "codingIndex": null,
