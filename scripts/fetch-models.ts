@@ -159,8 +159,14 @@ function scrapeModels(html: string): Map<string, ScrapedRow> {
     const start = nextEntryStarts[i];
     const end = nextEntryStarts[i + 1] ?? html.length;
     const entry = html.slice(start, end);
-    const slug = entry.match(slugRe)?.[1];
-    if (!slug) continue;
+    // Only real model records: they open with a UUID id and their own slug.
+    // Page chrome also uses {"id": (e.g. "$undefined" on the FAQ block), and
+    // such a slice can run for hundreds of KB, mention a model's slug, and
+    // later hit an unrelated "shortName" — which once renamed Opus 5.5 "Legal".
+    if (!/^\{\\"id\\":\\"[0-9a-f]{8}-/.test(entry)) continue;
+    const slugMatch = entry.match(slugRe);
+    const slug = slugMatch?.[1];
+    if (!slug || slugMatch!.index! > 600) continue;
 
     const current = result.get(slug) ?? { slug };
     result.set(slug, current);
