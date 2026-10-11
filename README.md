@@ -1,4 +1,4 @@
-# Smart, fast, and cheap.
+# AI Bench
 
 **Which AI model should you actually use?** One map of every frontier model on the three things that matter: how smart it is, how long you wait, and what a task really costs.
 
