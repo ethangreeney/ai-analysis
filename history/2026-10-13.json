@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-13T00:31:58.080Z",
+  "fetchedAt": "2026-10-13T02:47:32.406Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1177,7 +1177,7 @@
       "creator": "Mistral",
       "intelligence": 38.4,
       "codingIndex": null,
-      "costPerTask": 1.1317590533008346,
+      "costPerTask": 1.1341017484612892,
       "e2eLatency": null,
       "reasoningTime": null,
       "pricePerMillion": 2.065,
