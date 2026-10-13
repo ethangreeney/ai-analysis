@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-13T19:04:54.859Z",
+  "fetchedAt": "2026-10-13T23:35:39.528Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -4185,10 +4185,10 @@
       "creator": "Meta",
       "intelligence": 17.5,
       "codingIndex": 49,
-      "costPerTask": 0.05670634665029995,
+      "costPerTask": 0.05354887073483047,
       "e2eLatency": 19.83844927227351,
       "reasoningTime": 15.081436080218772,
-      "pricePerMillion": 0.58125,
+      "pricePerMillion": 0.5249999999999999,
       "outputTokensPerSecond": 148.98,
       "ttft": 0.403,
       "releaseDate": "2026-08-10",
