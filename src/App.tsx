@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { MapChart } from "./MapChart";
 import { Changelog } from "./Changelog";
 import { ComparisonCard } from "./ComparisonCard";
@@ -22,6 +22,8 @@ import {
   RelativeStat,
   relativeStats,
   allModels,
+  matchesWeights,
+  type Weights,
   fetchedAtMs,
   intelligenceIndexVersion,
   fmtCost,
@@ -87,7 +89,9 @@ function readHash() {
   const f = p.get("f");
   const focusKey = f && allModels.some((m) => `${m.creator}|${familyOf(m)}` === f) ? f : null;
   const focusScope: FocusScope = p.get("fs") === "lineup" ? "lineup" : "release";
-  return { y, x, q, cap, comparedSlugs, c, focusKey, focusScope };
+  const wRaw = p.get("w");
+  const w: Weights = wRaw === "open" || wRaw === "closed" ? wRaw : "all";
+  return { y, x, q, cap, comparedSlugs, c, focusKey, focusScope, w };
 }
 const initial = readHash();
 
@@ -163,7 +167,7 @@ function SegmentSwitch<T extends string>({
   onChange,
   ariaLabel,
 }: {
-  options: { value: T; label: string }[];
+  options: { value: T; label: ReactNode }[];
   value: T;
   onChange: (value: T) => void;
   ariaLabel?: string;
@@ -664,7 +668,7 @@ function SearchBox({
           }}
           placeholder={placeholder}
           aria-label="Search models"
-          className="h-8 w-full rounded-full border border-ink-100 bg-card pl-8 pr-8 text-[12px] text-ink-900 shadow-[0_1px_2px_rgba(14,15,17,0.04)] placeholder:text-ink-500 transition-[border-color,box-shadow] focus:border-ink-300 focus:shadow-[0_0_0_4px_rgba(14,15,17,0.04)] focus:outline-none sm:w-60"
+          className="h-8 w-full rounded-full border border-ink-100 bg-card pl-8 pr-8 text-[12px] text-ink-900 shadow-[0_1px_2px_rgba(14,15,17,0.04)] placeholder:text-ink-500 transition-[border-color,box-shadow] focus:border-ink-300 focus:shadow-[0_0_0_4px_rgba(14,15,17,0.04)] focus:outline-none sm:w-60 lg:w-44 xl:w-60"
         />
         {active && (
           <button
@@ -721,12 +725,24 @@ export default function App() {
   const [yMetric, setYMetric] = useState<YMetric>(initial.y);
   const [xMode, setXMode] = useState<XMode>(initial.x);
   const [colorBy, setColorBy] = useState<ColorBy>(initial.c);
+  const [weights, setWeights] = useState<Weights>(initial.w);
+  /** Everything the page works from: all models, or only open or closed ones. */
+  const models = useMemo(() => allModels.filter((m) => matchesWeights(m, weights)), [weights]);
   // A release in focus: its own frontier drawn over the map, details in the rail.
   const [focusKey, setFocusKey] = useState<string | null>(initial.focusKey);
   const [focusScope, setFocusScope] = useState<FocusScope>(initial.focusScope);
   // Cap on whatever the color ramp encodes — cost per task in Speed and
   // Timeline views, wait in Cost view. Cleared when the axis changes meaning.
   const [colorCap, setColorCap] = useState<number | null>(initial.cap);
+  /** Switching weights drops whatever the new set no longer includes. */
+  const changeWeights = (next: Weights) => {
+    setWeights(next);
+    const kept = (slug: string) => allModels.some((m) => m.slug === slug && matchesWeights(m, next));
+    setComparedSlugs((slugs) => slugs.filter(kept));
+    setFocusKey((key) =>
+      key && allModels.some((m) => `${m.creator}|${familyOf(m)}` === key && matchesWeights(m, next)) ? key : null,
+    );
+  };
   const changeXMode = (next: XMode) => {
     setXMode(next);
     setColorCap(null);
@@ -771,8 +787,8 @@ export default function App() {
   const timeline = xMode === "timeline";
 
   const metricModels = useMemo(
-    () => allModels.filter((m) => isPositiveFinite(metric.value(m))),
-    [metric],
+    () => models.filter((m) => isPositiveFinite(metric.value(m))),
+    [metric, models],
   );
   const viewModels = useMemo(
     () => metricModels.filter((m) => !timeline || m.releaseMs != null),
@@ -781,9 +797,9 @@ export default function App() {
   const comparedModels = useMemo(
     () =>
       comparedSlugs
-        .map((slug) => allModels.find((m) => m.slug === slug))
+        .map((slug) => models.find((m) => m.slug === slug))
         .filter((m): m is Model => m != null),
-    [comparedSlugs],
+    [comparedSlugs, models],
   );
   const baselineModel = comparedModels[0] ?? null;
   const candidateModel = comparedModels[1] ?? null;
@@ -919,8 +935,8 @@ export default function App() {
   // Keep the newest marker singular even when many variants launch together.
   // Fall back to first-seen timestamps only when release dates are absent.
   const newestSlugs = useMemo(() => {
-    const hasReleaseDates = allModels.some((m) => m.releaseMs != null);
-    const dated = allModels
+    const hasReleaseDates = models.some((m) => m.releaseMs != null);
+    const dated = models
       .map((m) => ({
         m,
         t: hasReleaseDates ? m.releaseMs : m.addedAt ? Date.parse(m.addedAt) : NaN,
@@ -944,7 +960,7 @@ export default function App() {
   );
 
   // Six fit the side rail; the phone header keeps it to three.
-  const releases = useMemo(() => recentReleases(allModels, metric, { limit: 7 }), [metric]);
+  const releases = useMemo(() => recentReleases(models, metric, { limit: 7 }), [metric, models]);
   const activeReleaseKey =
     releases.find(
       (release) =>
@@ -953,14 +969,14 @@ export default function App() {
     )?.key ?? null;
   /** A release opens as the upgrade question: what it replaces → the release. */
   const openModelAsUpgrade = (model: Model) => {
-    const before = predecessorOf(model, allModels, metric);
+    const before = predecessorOf(model, models, metric);
     setQuery("");
     setPreviewSlugs(null);
     setComparedSlugs(before ? [before.slug, model.slug] : [model.slug]);
   };
   const [progressSpan, setProgressSpan] = useState<ProgressSpan>("1y");
   const progress = useMemo(
-    () => (xMode === "timeline" ? progressSince(allModels, metric, progressSpan) : null),
+    () => (xMode === "timeline" ? progressSince(models, metric, progressSpan) : null),
     [xMode, metric, progressSpan],
   );
   const compareModels = (pair: [Model, Model]) => {
@@ -969,7 +985,7 @@ export default function App() {
     setComparedSlugs([pair[0].slug, pair[1].slug]);
   };
   const focus = useMemo(
-    () => (focusKey ? focusFor(focusKey, focusScope, allModels, metric) : null),
+    () => (focusKey ? focusFor(focusKey, focusScope, models, metric) : null),
     [focusKey, focusScope, metric],
   );
   const focusSets = useMemo(() => {
@@ -1004,7 +1020,7 @@ export default function App() {
     const q = query.trim().toLowerCase();
     if (!q) return null;
     return new Set(
-      allModels
+      models
         .filter(
           (m) =>
             m.displayName.toLowerCase().includes(q) ||
@@ -1094,6 +1110,7 @@ export default function App() {
       setColorBy(h.c);
       setFocusKey(h.focusKey);
       setFocusScope(h.focusScope);
+      setWeights(h.w);
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -1112,6 +1129,7 @@ export default function App() {
       if (comparedSlugs[1]) p.set("to", comparedSlugs[1]);
       if (colorCap != null) p.set("cap", colorCap.toPrecision(3));
       if (colorBy === "lab") p.set("c", "lab");
+      if (weights !== "all") p.set("w", weights);
       if (focusKey) {
         p.set("f", focusKey);
         if (focusScope === "lineup") p.set("fs", "lineup");
@@ -1127,7 +1145,7 @@ export default function App() {
       }
     }, 200);
     return () => clearTimeout(timer);
-  }, [yMetric, xMode, query, comparedSlugs, colorCap, colorBy, focusKey, focusScope]);
+  }, [yMetric, xMode, query, comparedSlugs, colorCap, colorBy, focusKey, focusScope, weights]);
 
   useEffect(() => setCopyState("idle"), [yMetric, xMode, query, comparedSlugs]);
   useEffect(() => {
@@ -1238,10 +1256,10 @@ export default function App() {
       }
       allReleases={
         <Changelog
-          models={allModels}
+          models={models}
           panelWidth={variant === "rail" ? "w-[16rem] 2xl:w-[18rem]" : "w-80"}
           onSelect={(slug) => {
-            const model = allModels.find((m) => m.slug === slug);
+            const model = models.find((m) => m.slug === slug);
             if (model) focusModelFamily(model);
           }}
         />
@@ -1293,6 +1311,24 @@ export default function App() {
             }))}
             value={xMode}
             onChange={changeXMode}
+          />
+          <SegmentSwitch
+            ariaLabel="Model weights"
+            options={[
+              { value: "all" as Weights, label: "All" },
+              {
+                value: "open" as Weights,
+                // "Open" alone where the toolbar is tight (1024–1279px).
+                label: (
+                  <>
+                    Open<span className="lg:max-xl:hidden"> weights</span>
+                  </>
+                ),
+              },
+              { value: "closed" as Weights, label: "Closed" },
+            ]}
+            value={weights}
+            onChange={changeWeights}
           />
           <span className="mx-1 hidden h-4 w-px bg-ink-100 lg:block" aria-hidden />
           <div className="hidden lg:block">
@@ -1393,7 +1429,7 @@ export default function App() {
                 <MapChart
                   height={chartHeight}
                   width={chartWidth}
-                  models={allModels}
+                  models={models}
                   yMetric={yMetric}
                   xMode={xMode}
                   onHover={setHoveredSlug}
@@ -1510,7 +1546,7 @@ export default function App() {
                     if (key === "none") return !isPositiveFinite(v);
                     return isPositiveFinite(v) && bandIndex(v, xc.bands) === Number(key);
                   };
-                  setPreviewSlugs(new Set(allModels.filter(inGroup).map((m) => m.slug)));
+                  setPreviewSlugs(new Set(models.filter(inGroup).map((m) => m.slug)));
                 }}
               />
             </div>

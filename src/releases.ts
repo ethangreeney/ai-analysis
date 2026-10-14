@@ -218,6 +218,17 @@ function stepOf(
  * came before it as smart by a wide margin; otherwise it sits on today's
  * frontier, just behind it, or some multiple off the best at its level.
  */
+/**
+ * "open" or "closed" when the map is filtered to one kind of model, so the
+ * top headline says "the smartest open model yet" instead of overclaiming.
+ */
+function weightsOf(all: Family[]): "open" | "closed" | null {
+  const models = all.flatMap((f) => f.models);
+  if (models.every((m) => m.openWeights === true)) return "open";
+  if (models.every((m) => m.openWeights === false)) return "closed";
+  return null;
+}
+
 function standingOf(f: Family, all: Family[], metric: MetricConfig, axis: Axis): Gist {
   const { value, win, worse, noun, fmt } = AXES[axis];
   const measured = f.models.filter((m) => isPositiveFinite(value(m)));
@@ -225,6 +236,7 @@ function standingOf(f: Family, all: Family[], metric: MetricConfig, axis: Axis):
     return { kind: "unmeasured", lead: `${noun[0].toUpperCase()}${noun.slice(1)} not measured yet`, rest: "", tone: null, detail: null };
   }
   const wins = bestWin(f, all, metric, value);
+  // When filtered, "anything" means anything on the map; the toggle says which.
   const smart = metric.noun === "intelligence" ? " than anything as smart" : " than anything as good";
   if (wins && wins.ratio >= NOTABLE) {
     const [you, them] = [fmt(value(wins.model)!), fmt(value(wins.rival)!)];
@@ -271,7 +283,10 @@ function gistOf(f: Family, all: Family[], metric: MetricConfig, rank: number, st
       .reduce<Family | null>((best, o) => (!best || o.best > best.best ? o : best), null);
     return {
       kind: "top",
-      lead: metric.noun === "intelligence" ? "The smartest model yet" : `The best at ${metric.noun.replace(/ score$/, "")} yet`,
+      lead: ((kind) =>
+        metric.noun === "intelligence"
+          ? `The smartest ${kind ? `${kind} ` : ""}model yet`
+          : `The best ${kind ? `${kind} model ` : ""}at ${metric.noun.replace(/ score$/, "")} yet`)(weightsOf(all)),
       rest: "",
       tone: UP,
       detail: runnerUp

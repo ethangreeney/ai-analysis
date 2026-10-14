@@ -16,6 +16,8 @@ export interface Model {
   ttft: number;
   releaseDate?: string;
   addedAt?: string;
+  /** Weights published for anyone to run; null when AA doesn't say. */
+  openWeights?: boolean | null;
   /** Derived client-side: releaseDate parsed to epoch ms, null when absent. */
   releaseMs: number | null;
 }
@@ -42,6 +44,11 @@ export const isPositiveFinite = (value: number | null | undefined): value is num
  */
 const tidyName = (name: string) =>
   name.replace(/ with fallback\)/, ")").replace(/\s*\(with fallback\)\s*$/, "");
+
+/** Which models the map shows: all of them, or only open- or closed-weight ones. */
+export type Weights = "all" | "open" | "closed";
+export const matchesWeights = (m: Model, w: Weights) =>
+  w === "all" || (w === "open" ? m.openWeights === true : m.openWeights === false);
 
 export const allModels: Model[] = raw.models
   .filter((m) => isPositiveFinite(m.intelligence))

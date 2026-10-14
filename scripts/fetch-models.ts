@@ -49,6 +49,8 @@ interface ScrapedRow {
   e2eReasoningTime?: number;
   e2eAnswerTime?: number;
   intelligence?: number;
+  /** AA's "Open Weights / Proprietary" flag, from the site's model records. */
+  openWeights?: boolean;
 }
 
 interface FallbackMetricsSnapshot {
@@ -99,6 +101,8 @@ export interface Model {
   outputTokensPerSecond: number;
   ttft: number;
   releaseDate?: string;
+  // Weights published for anyone to download and run; null when AA doesn't say.
+  openWeights: boolean | null;
 }
 
 function findAllRegex(text: string, re: RegExp): { index: number; match: RegExpExecArray }[] {
@@ -207,6 +211,9 @@ function scrapeModels(html: string): Map<string, ScrapedRow> {
 
     const intelligence = entry.match(/\\"intelligenceIndex\\":([0-9.eE+\-]+)/)?.[1];
     if (intelligence) current.intelligence = parseFloat(intelligence);
+
+    const openWeights = entry.match(/\\"isOpenWeights\\":(true|false)/)?.[1];
+    if (openWeights) current.openWeights = openWeights === "true";
   }
 
   const ldScripts = findAllRegex(
@@ -565,6 +572,7 @@ async function main() {
       outputTokensPerSecond: api?.median_output_tokens_per_second ?? 0,
       ttft: api?.median_time_to_first_token_seconds ?? 0,
       releaseDate: api?.release_date ?? sc?.releaseDate,
+      openWeights: sc?.openWeights ?? null,
     });
     if (!positiveFinite(sc?.costPerTask)) missingCost.push(slug);
   }
