@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-14T01:15:57.822Z",
+  "fetchedAt": "2026-10-14T01:21:04.730Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1429,6 +1429,23 @@
       "releaseDate": "2026-09-28",
       "openWeights": false,
       "addedAt": "2026-09-28"
+    },
+    {
+      "slug": "agnes-2-5-pro-beta",
+      "name": "Agnes 2.5 Pro Beta",
+      "displayName": "Agnes 2.5 Pro Beta",
+      "creator": "Sapiens AI",
+      "intelligence": 35.2,
+      "codingIndex": 62.3,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0.15,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-08-26",
+      "openWeights": null,
+      "addedAt": "2026-08-26"
     },
     {
       "slug": "grok-4-6-low",
