@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-14T02:51:13.933Z",
+  "fetchedAt": "2026-10-14T03:36:17.028Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1438,8 +1438,8 @@
       "intelligence": 35.2,
       "codingIndex": 62.3,
       "costPerTask": null,
-      "e2eLatency": null,
-      "reasoningTime": null,
+      "e2eLatency": 29.803721588653094,
+      "reasoningTime": 19.570917534122472,
       "pricePerMillion": 0.15000000000000002,
       "outputTokensPerSecond": 125.189,
       "ttft": 3.732,
