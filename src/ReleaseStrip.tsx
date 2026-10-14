@@ -54,7 +54,7 @@ export function ReleaseStrip({
   releases: Release[];
   metric: MetricConfig;
   /** The chart view, which picks each row's second line. */
-  view: Axis | "timeline";
+  view: Axis | "timeline" | "open";
   activeKey: string | null;
   onOpen: (release: Release) => void;
   onPreview: (release: Release | null) => void;

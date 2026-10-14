@@ -6,6 +6,9 @@ import {
   XMode,
   Y_METRICS,
   X_MODES,
+  isTimeline,
+  OPEN_COLOR,
+  CLOSED_COLOR,
   isPositiveFinite,
   labColor,
   BAND_COLORS,
@@ -239,7 +242,9 @@ export function MapChart({
 }) {
   const metric = Y_METRICS[yMetric];
   const xc = X_MODES[xMode];
-  const timeline = xMode === "timeline";
+  const timeline = isTimeline(xMode);
+  // Open vs closed: colour by weights, one record line per side.
+  const split = xMode === "open";
   // A search re-frames the map around its matches; a spotlight only lights
   // models up where they already sit, so pointing at something never moves it.
   const highlight = matchedSlugs ?? spotlightSlugs;
@@ -272,7 +277,8 @@ export function MapChart({
 
   const W = width;
   const H = height;
-  const M = { top: 30, right: 40, bottom: 60, left: 84 };
+  // Open vs closed names each record line in the right margin, so it needs room.
+  const M = { top: 30, right: split ? 64 : 40, bottom: 60, left: 84 };
   const innerW = W - M.left - M.right;
   const innerH = H - M.top - M.bottom;
   const untimedX = LANE_W / 2;
@@ -356,7 +362,19 @@ export function MapChart({
     () => (colorCap == null ? fullFrontier : sweepFrontier((timeline ? metricModels : xModels.filter(inPack)).filter(underCap))),
     [colorCap, fullFrontier, metric, metricModels, packFloor, timeline, xModels, xc],
   );
-  const frontierSlugs = useMemo(() => new Set(frontier.map((m) => m.slug)), [frontier]);
+  /** Open vs closed: each side's own record line. */
+  const sides = useMemo(() => {
+    if (!split) return null;
+    const pool = metricModels.filter(underCap);
+    return {
+      open: sweepFrontier(pool.filter((m) => m.openWeights === true)),
+      closed: sweepFrontier(pool.filter((m) => m.openWeights === false)),
+    };
+  }, [split, metricModels, colorCap, metric]);
+  const frontierSlugs = useMemo(
+    () => new Set((sides ? [...sides.open, ...sides.closed] : frontier).map((m) => m.slug)),
+    [frontier, sides],
+  );
   const isFrontier = (slug: string) => frontierSlugs.has(slug);
 
   /** Everything the view would show with no cap; the cap subtracts from this. */
@@ -455,6 +473,7 @@ export function MapChart({
   const geometry = [innerW, innerH, xMin, xMax, metricMin, metricMax, plotX0].join(":");
 
   const markerColor = (m: Model) => {
+    if (split) return m.openWeights === true ? OPEN_COLOR : m.openWeights === false ? CLOSED_COLOR : NO_DATA_COLOR;
     if (colorBy === "lab") return labColor(m.creator);
     const v = xc.colorValue(m);
     return isPositiveFinite(v) ? BAND_COLORS[bandIndex(v, xc.bands)] : NO_DATA_COLOR;
@@ -529,7 +548,7 @@ export function MapChart({
       comparedSlugs.forEach((slug) => add(findModel(slug)));
       return [...bySlug.values()].filter(underCap);
     }
-    frontier.forEach(add);
+    (sides ? [...sides.open, ...sides.closed] : frontier).forEach(add);
     metricModels.filter((m) => newestSlugs.has(m.slug) && inPack(m)).forEach(add);
     add(findModel(hoveredSlug));
     comparedSlugs.forEach((slug) => add(findModel(slug)));
@@ -633,16 +652,23 @@ export function MapChart({
   // so everything right of the line reads as "no model lives here". Timeline:
   // a staircase — hold each record's level until the next record ships, then
   // step up; extend the last record to the right edge.
+  /** Timeline record line: hold each record until the next one ships. */
+  const staircase = (records: Model[]) => {
+    if (records.length === 0) return "";
+    const pts = records.map((m) => xy(m));
+    let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+    for (let i = 1; i < pts.length; i++) {
+      d += ` H${pts[i].x.toFixed(1)} V${pts[i].y.toFixed(1)}`;
+    }
+    return `${d} H${innerW}`;
+  };
+  const sidePaths = useMemo(
+    () => (sides ? { open: staircase(sides.open), closed: staircase(sides.closed) } : null),
+    [sides, geometry],
+  );
   const frontierPath = useMemo(() => {
     if (frontier.length === 0) return "";
-    if (timeline) {
-      const pts = frontier.map((m) => xy(m));
-      let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
-      for (let i = 1; i < pts.length; i++) {
-        d += ` H${pts[i].x.toFixed(1)} V${pts[i].y.toFixed(1)}`;
-      }
-      return `${d} H${innerW}`;
-    }
+    if (timeline) return staircase(frontier);
     const pts = [...frontier].reverse().map((m) => xy(m));
     return [
       `M${plotX0},${pts[0].y.toFixed(1)}`,
@@ -999,7 +1025,52 @@ export function MapChart({
 
         {/* Frontier / record guide line — drawn in left to right whenever the
             view changes, so the eye follows it rather than finding it. */}
-        {frontier.length > 1 && (
+        {sidePaths && (
+          <g
+            style={{
+              pointerEvents: "none",
+              opacity: comparisonActive ? 0.3 : hoveredSlug ? 0.55 : 1,
+              transition: "opacity 240ms ease-out",
+            }}
+          >
+            {(["closed", "open"] as const).map((side) => (
+              <path
+                key={`side-${side}-${viewKey}`}
+                className="frontier-draw"
+                d={sidePaths[side]}
+                fill="none"
+                stroke={side === "open" ? OPEN_COLOR : CLOSED_COLOR}
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ))}
+            {/* Name each line where it ends, so the chart reads without the key. */}
+            {(["closed", "open"] as const).map((side) => {
+              const last = sides![side][sides![side].length - 1];
+              if (!last) return null;
+              return (
+                <text
+                  key={`side-tag-${side}-${viewKey}`}
+                  className="label-in"
+                  x={innerW + 6}
+                  y={xy(last).y}
+                  dominantBaseline="middle"
+                  textAnchor="start"
+                  fontSize={11.5}
+                  fontWeight={600}
+                  fill={side === "open" ? OPEN_COLOR : CLOSED_COLOR}
+                  stroke={CARD}
+                  strokeWidth={3}
+                  paintOrder="stroke"
+                >
+                  {side === "open" ? "Open" : "Closed"}
+                </text>
+              );
+            })}
+          </g>
+        )}
+        {!sidePaths && frontier.length > 1 && (
           <g
             style={{
               pointerEvents: "none",

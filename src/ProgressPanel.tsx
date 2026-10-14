@@ -20,11 +20,7 @@ function fasterLine(g: Gain) {
   return `${short(g.now)} writes ${Math.round(g.nowValue)} tokens a second instead of ${Math.round(g.thenValue)}.`;
 }
 
-/**
- * The timeline's headline: how far the field moved in a chosen window. Each
- * row is a real pair of models, so pointing at it lights both up and clicking
- * opens that exact comparison.
- */
+/** The timeline's headline: how far the field moved in a chosen window. */
 export function ProgressPanel({
   progress,
   span,
@@ -39,7 +35,7 @@ export function ProgressPanel({
   onCompare: (pair: [Model, Model]) => void;
 }) {
   const ago = SPAN_AGO[span];
-  const rows: { key: string; head: ReactNode; detail: string; pair: [Model, Model] }[] = [
+  const rows: ReadoutRow[] = [
     {
       key: "rank",
       head: (
@@ -79,13 +75,13 @@ export function ProgressPanel({
   }
 
   return (
-    <section
-      aria-label="Progress over time"
-      className="progress-panel w-[22.5rem] rounded-lg border border-ink-100 bg-card/95 p-3 backdrop-blur"
-      style={{ boxShadow: "0 1px 2px rgba(14,15,17,0.04), 0 8px 24px rgba(14,15,17,0.06)" }}
-    >
-      <div className="flex items-center justify-between gap-3 px-1">
-        <h2 className="text-[13px] font-semibold tracking-[-0.01em] text-ink-900">How far AI has come</h2>
+    <Readout
+      label="Progress over time"
+      title="How far AI has come"
+      rows={rows.map((row) => ({ ...row, key: `${span}-${row.key}` }))}
+      onPreview={onPreview}
+      onCompare={onCompare}
+      controls={
         <div className="flex rounded-md bg-ink-50 p-0.5" role="group" aria-label="Time window">
           {PROGRESS_SPANS.map((s) => (
             <button
@@ -103,10 +99,52 @@ export function ProgressPanel({
             </button>
           ))}
         </div>
+      }
+    />
+  );
+}
+
+export interface ReadoutRow {
+  key: string;
+  head: ReactNode;
+  detail: string;
+  /** The two models behind the claim: pointing lights them, clicking compares. */
+  pair: [Model, Model];
+}
+
+/**
+ * A small floating card of plain-language findings over the chart. Each row
+ * is a real pair of models, so pointing at it lights both up and clicking
+ * opens that exact comparison.
+ */
+export function Readout({
+  label,
+  title,
+  controls,
+  rows,
+  onPreview,
+  onCompare,
+}: {
+  label: string;
+  title: ReactNode;
+  controls?: ReactNode;
+  rows: ReadoutRow[];
+  onPreview: (pair: [Model, Model] | null) => void;
+  onCompare: (pair: [Model, Model]) => void;
+}) {
+  return (
+    <section
+      aria-label={label}
+      className="progress-panel w-[22.5rem] rounded-lg border border-ink-100 bg-card/95 p-3 backdrop-blur"
+      style={{ boxShadow: "0 1px 2px rgba(14,15,17,0.04), 0 8px 24px rgba(14,15,17,0.06)" }}
+    >
+      <div className="flex items-center justify-between gap-3 px-1">
+        <h2 className="text-[13px] font-semibold tracking-[-0.01em] text-ink-900">{title}</h2>
+        {controls}
       </div>
       <ul className="mt-1.5 grid gap-0.5">
         {rows.map((row) => (
-          <li key={`${span}-${row.key}`} className="progress-row">
+          <li key={row.key} className="progress-row">
             <button
               type="button"
               onMouseEnter={() => onPreview(row.pair)}

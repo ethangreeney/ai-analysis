@@ -39,7 +39,7 @@ export function FocusPanel({
   view,
   compact = false,
 }: {
-  view: Axis | "timeline";
+  view: Axis | "timeline" | "open";
   focus: Focus;
   metric: MetricConfig;
   onScope: (scope: FocusScope) => void;

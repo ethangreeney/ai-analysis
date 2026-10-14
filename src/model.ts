@@ -45,11 +45,6 @@ export const isPositiveFinite = (value: number | null | undefined): value is num
 const tidyName = (name: string) =>
   name.replace(/ with fallback\)/, ")").replace(/\s*\(with fallback\)\s*$/, "");
 
-/** Which models the map shows: all of them, or only open- or closed-weight ones. */
-export type Weights = "all" | "open" | "closed";
-export const matchesWeights = (m: Model, w: Weights) =>
-  w === "all" || (w === "open" ? m.openWeights === true : m.openWeights === false);
-
 export const allModels: Model[] = raw.models
   .filter((m) => isPositiveFinite(m.intelligence))
   .map((m) => {
@@ -234,7 +229,13 @@ export const Y_METRICS: Record<YMetric, MetricConfig> = {
   },
 };
 
-export type XMode = "speed" | "cost" | "timeline";
+export type XMode = "speed" | "cost" | "timeline" | "open";
+/** Views that put release date on the x axis. */
+export const isTimeline = (x: XMode) => x === "timeline" || x === "open";
+
+/** Open vs closed view: one colour per side, from opposite ends of the wheel. */
+export const OPEN_COLOR = "#e0692a";
+export const CLOSED_COLOR = "#1f5aa6";
 
 export interface XModeConfig {
   label: string;
@@ -329,6 +330,29 @@ export const X_MODES: Record<XMode, XModeConfig> = {
       "Every benchmarked model by release date. Up is intelligence, right is newer, color is task cost.",
     footnote:
       "Every model with a published release date; the dashed line steps through successive record holders.",
+  },
+  open: {
+    label: "Open vs closed",
+    xValue: (m) => m.releaseMs,
+    colorValue: (m) => m.costPerTask,
+    colorTitle: "Cost per task",
+    fmtColor: (v) => fmtCost(v),
+    bands: [0.1, 0.3, 1, 3],
+    bandLabels: ["Under 10¢", "10–30¢", "30¢–$1", "$1–3", "Over $3"],
+    fmtTick: () => "",
+    xTicks: [],
+    axisTitle: "Release date",
+    leftCap: "← Older",
+    rightCap: "Newer →",
+    railCap: null,
+    railDefault: () => false,
+    frontierLabel: "record lines",
+    frontierNote: (noun) =>
+      `Each line steps up when an open (orange) or closed (blue) model sets a new ${noun} record for its side.`,
+    subtitle:
+      "Open-weight and closed models by release date, each with its own record line.",
+    footnote:
+      "Open weights per Artificial Analysis; models it doesn't classify are grey.",
   },
 };
 

@@ -4,6 +4,8 @@ import { Changelog } from "./Changelog";
 import { ComparisonCard } from "./ComparisonCard";
 import { ReleaseStrip } from "./ReleaseStrip";
 import { ProgressPanel } from "./ProgressPanel";
+import { OpenClosedPanel } from "./OpenClosedPanel";
+import { openVsClosed } from "./openVsClosed";
 import { PROGRESS_SPANS, ProgressSpan, progressSince } from "./progress";
 import {
   focusFor,
@@ -22,8 +24,9 @@ import {
   RelativeStat,
   relativeStats,
   allModels,
-  matchesWeights,
-  type Weights,
+  isTimeline,
+  OPEN_COLOR,
+  CLOSED_COLOR,
   fetchedAtMs,
   intelligenceIndexVersion,
   fmtCost,
@@ -73,7 +76,7 @@ function readHash() {
   const p = new URLSearchParams(window.location.hash.slice(1));
   const y: YMetric = p.get("y") === "coding" ? "coding" : "intelligence";
   const xRaw = p.get("x");
-  const x: XMode = xRaw === "cost" || xRaw === "timeline" ? xRaw : "speed";
+  const x: XMode = xRaw === "cost" || xRaw === "timeline" || xRaw === "open" ? xRaw : "speed";
   const q = p.get("q") ?? "";
   const capRaw = Number(p.get("cap"));
   const cap = isPositiveFinite(capRaw) ? capRaw : null;
@@ -89,9 +92,7 @@ function readHash() {
   const f = p.get("f");
   const focusKey = f && allModels.some((m) => `${m.creator}|${familyOf(m)}` === f) ? f : null;
   const focusScope: FocusScope = p.get("fs") === "lineup" ? "lineup" : "release";
-  const wRaw = p.get("w");
-  const w: Weights = wRaw === "open" || wRaw === "closed" ? wRaw : "all";
-  return { y, x, q, cap, comparedSlugs, c, focusKey, focusScope, w };
+  return { y, x, q, cap, comparedSlugs, c, focusKey, focusScope };
 }
 const initial = readHash();
 
@@ -240,14 +241,22 @@ function ColorKey({
   colorBy,
   onColorBy,
   onPreview,
+  split = false,
 }: {
+  /** Open vs closed view: the colours mean weights, so there's nothing to switch. */
+  split?: boolean;
   xc: XModeConfig;
   colorBy: ColorBy;
   onColorBy: (c: ColorBy) => void;
   onPreview: (key: string | null) => void;
 }) {
-  const items =
-    colorBy === "lab"
+  const items = split
+    ? [
+        { key: "open", label: "Open weights", color: OPEN_COLOR },
+        { key: "closed", label: "Closed", color: CLOSED_COLOR },
+        { key: "none", label: "Not classified", color: NO_DATA_COLOR },
+      ]
+    : colorBy === "lab"
       ? [...LABS, { name: "Other", color: OTHER_LAB_COLOR }].map((l) => ({
           key: l.name,
           label: l.name,
@@ -260,6 +269,7 @@ function ColorKey({
   const valueLabel = xc.colorTitle === "Wait" ? "Wait" : "Cost";
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+      {!split && (
       <div
         role="group"
         aria-label="Colour dots by"
@@ -286,13 +296,14 @@ function ColorKey({
           </button>
         ))}
       </div>
+      )}
       <ul
         className="flex flex-wrap items-center gap-x-3 gap-y-1"
-        aria-label={colorBy === "lab" ? "Labs" : `${xc.colorTitle} bands`}
+        aria-label={split ? "Model weights" : colorBy === "lab" ? "Labs" : `${xc.colorTitle} bands`}
       >
         {items.map((item) => (
           <li
-            key={`${colorBy}-${item.key}`}
+            key={`${split ? "split" : colorBy}-${item.key}`}
             className="flex cursor-default items-center gap-1.5 text-[11.5px] tabular-nums text-ink-700 transition-colors hover:text-ink-900"
             onMouseEnter={() => onPreview(item.key)}
             onMouseLeave={() => onPreview(null)}
@@ -725,24 +736,13 @@ export default function App() {
   const [yMetric, setYMetric] = useState<YMetric>(initial.y);
   const [xMode, setXMode] = useState<XMode>(initial.x);
   const [colorBy, setColorBy] = useState<ColorBy>(initial.c);
-  const [weights, setWeights] = useState<Weights>(initial.w);
-  /** Everything the page works from: all models, or only open or closed ones. */
-  const models = useMemo(() => allModels.filter((m) => matchesWeights(m, weights)), [weights]);
+  const models = allModels;
   // A release in focus: its own frontier drawn over the map, details in the rail.
   const [focusKey, setFocusKey] = useState<string | null>(initial.focusKey);
   const [focusScope, setFocusScope] = useState<FocusScope>(initial.focusScope);
   // Cap on whatever the color ramp encodes — cost per task in Speed and
   // Timeline views, wait in Cost view. Cleared when the axis changes meaning.
   const [colorCap, setColorCap] = useState<number | null>(initial.cap);
-  /** Switching weights drops whatever the new set no longer includes. */
-  const changeWeights = (next: Weights) => {
-    setWeights(next);
-    const kept = (slug: string) => allModels.some((m) => m.slug === slug && matchesWeights(m, next));
-    setComparedSlugs((slugs) => slugs.filter(kept));
-    setFocusKey((key) =>
-      key && allModels.some((m) => `${m.creator}|${familyOf(m)}` === key && matchesWeights(m, next)) ? key : null,
-    );
-  };
   const changeXMode = (next: XMode) => {
     setXMode(next);
     setColorCap(null);
@@ -784,7 +784,7 @@ export default function App() {
 
   const metric = Y_METRICS[yMetric];
   const xc = X_MODES[xMode];
-  const timeline = xMode === "timeline";
+  const timeline = isTimeline(xMode);
 
   const metricModels = useMemo(
     () => models.filter((m) => isPositiveFinite(metric.value(m))),
@@ -977,7 +977,11 @@ export default function App() {
   const [progressSpan, setProgressSpan] = useState<ProgressSpan>("1y");
   const progress = useMemo(
     () => (xMode === "timeline" ? progressSince(models, metric, progressSpan) : null),
-    [xMode, metric, progressSpan],
+    [xMode, metric, progressSpan, models],
+  );
+  const openClosed = useMemo(
+    () => (xMode === "open" ? openVsClosed(models, metric) : null),
+    [xMode, metric, models],
   );
   const compareModels = (pair: [Model, Model]) => {
     setQuery("");
@@ -1110,7 +1114,6 @@ export default function App() {
       setColorBy(h.c);
       setFocusKey(h.focusKey);
       setFocusScope(h.focusScope);
-      setWeights(h.w);
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -1129,7 +1132,6 @@ export default function App() {
       if (comparedSlugs[1]) p.set("to", comparedSlugs[1]);
       if (colorCap != null) p.set("cap", colorCap.toPrecision(3));
       if (colorBy === "lab") p.set("c", "lab");
-      if (weights !== "all") p.set("w", weights);
       if (focusKey) {
         p.set("f", focusKey);
         if (focusScope === "lineup") p.set("fs", "lineup");
@@ -1145,7 +1147,7 @@ export default function App() {
       }
     }, 200);
     return () => clearTimeout(timer);
-  }, [yMetric, xMode, query, comparedSlugs, colorCap, colorBy, focusKey, focusScope, weights]);
+  }, [yMetric, xMode, query, comparedSlugs, colorCap, colorBy, focusKey, focusScope]);
 
   useEffect(() => setCopyState("idle"), [yMetric, xMode, query, comparedSlugs]);
   useEffect(() => {
@@ -1312,24 +1314,6 @@ export default function App() {
             value={xMode}
             onChange={changeXMode}
           />
-          <SegmentSwitch
-            ariaLabel="Model weights"
-            options={[
-              { value: "all" as Weights, label: "All" },
-              {
-                value: "open" as Weights,
-                // "Open" alone where the toolbar is tight (1024–1279px).
-                label: (
-                  <>
-                    Open<span className="lg:max-xl:hidden"> weights</span>
-                  </>
-                ),
-              },
-              { value: "closed" as Weights, label: "Closed" },
-            ]}
-            value={weights}
-            onChange={changeWeights}
-          />
           <span className="mx-1 hidden h-4 w-px bg-ink-100 lg:block" aria-hidden />
           <div className="hidden lg:block">
             <ColorLegend
@@ -1450,6 +1434,21 @@ export default function App() {
                   referenceLabel={`${PROGRESS_SPANS.find((s) => s.key === progressSpan)!.label} ago`}
                 />
               </div>
+              {openClosed && !comparisonOn && (
+                <div
+                  className="absolute z-10 hidden lg:block"
+                  style={{ left: `${(112 / chartWidth) * 100}%`, top: 24 }}
+                >
+                  <OpenClosedPanel
+                    data={openClosed}
+                    metric={metric}
+                    onPreview={(pair) =>
+                      setPreviewSlugs(pair ? new Set(pair.map((m) => m.slug)) : null)
+                    }
+                    onCompare={compareModels}
+                  />
+                </div>
+              )}
               {progress && !comparisonOn && (
                 <div
                   className="absolute z-10 hidden lg:block"
@@ -1534,12 +1533,15 @@ export default function App() {
             <div className="w-full md:w-auto">
               <ColorKey
                 xc={xc}
+                split={xMode === "open"}
                 colorBy={colorBy}
                 onColorBy={setColorBy}
                 onPreview={(key) => {
                   if (key == null) return setPreviewSlugs(null);
                   const named = new Set(LABS.map((l) => l.name));
                   const inGroup = (m: Model) => {
+                    if (xMode === "open")
+                      return key === "open" ? m.openWeights === true : key === "closed" ? m.openWeights === false : m.openWeights == null;
                     if (colorBy === "lab")
                       return key === "Other" ? !named.has(m.creator) : m.creator === key;
                     const v = xc.colorValue(m);
