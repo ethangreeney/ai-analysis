@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-14T00:50:54.645Z",
+  "fetchedAt": "2026-10-14T01:15:57.822Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -16,6 +16,7 @@
       "outputTokensPerSecond": 96.384,
       "ttft": 480.021,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -32,6 +33,7 @@
       "outputTokensPerSecond": 76.377,
       "ttft": 61.14,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-17"
     },
     {
@@ -48,6 +50,7 @@
       "outputTokensPerSecond": 132.174,
       "ttft": 262.379,
       "releaseDate": "2026-09-28",
+      "openWeights": false,
       "addedAt": "2026-09-28"
     },
     {
@@ -64,6 +67,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-10-12",
+      "openWeights": false,
       "addedAt": "2026-10-12"
     },
     {
@@ -80,6 +84,7 @@
       "outputTokensPerSecond": 70.137,
       "ttft": 17.127,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-17"
     },
     {
@@ -96,6 +101,7 @@
       "outputTokensPerSecond": 65.095,
       "ttft": 167.926,
       "releaseDate": "2026-09-01",
+      "openWeights": false,
       "addedAt": "2026-09-01"
     },
     {
@@ -112,6 +118,7 @@
       "outputTokensPerSecond": 53.201,
       "ttft": 38.199,
       "releaseDate": "2026-09-01",
+      "openWeights": false,
       "addedAt": "2026-09-01"
     },
     {
@@ -128,6 +135,7 @@
       "outputTokensPerSecond": 53.968,
       "ttft": 169.627,
       "releaseDate": "2026-09-03",
+      "openWeights": false,
       "addedAt": "2026-09-03"
     },
     {
@@ -144,6 +152,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-30",
+      "openWeights": false,
       "addedAt": "2026-09-30"
     },
     {
@@ -160,6 +169,7 @@
       "outputTokensPerSecond": 50.626,
       "ttft": 71.619,
       "releaseDate": "2026-09-03",
+      "openWeights": false,
       "addedAt": "2026-09-03"
     },
     {
@@ -176,6 +186,7 @@
       "outputTokensPerSecond": 112.749,
       "ttft": 31.103,
       "releaseDate": "2026-10-12",
+      "openWeights": false,
       "addedAt": "2026-10-12"
     },
     {
@@ -192,6 +203,7 @@
       "outputTokensPerSecond": 94.551,
       "ttft": 17.044,
       "releaseDate": "2026-09-28",
+      "openWeights": false,
       "addedAt": "2026-09-28"
     },
     {
@@ -208,6 +220,7 @@
       "outputTokensPerSecond": 57.129,
       "ttft": 169.668,
       "releaseDate": "2026-09-29",
+      "openWeights": false,
       "addedAt": "2026-09-29"
     },
     {
@@ -224,6 +237,7 @@
       "outputTokensPerSecond": 48.133,
       "ttft": 2.769,
       "releaseDate": "2026-09-01",
+      "openWeights": false,
       "addedAt": "2026-09-01"
     },
     {
@@ -240,6 +254,7 @@
       "outputTokensPerSecond": 69.974,
       "ttft": 8.559,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-17"
     },
     {
@@ -256,6 +271,7 @@
       "outputTokensPerSecond": 52.472,
       "ttft": 66.211,
       "releaseDate": "2026-09-29",
+      "openWeights": false,
       "addedAt": "2026-09-29"
     },
     {
@@ -272,6 +288,7 @@
       "outputTokensPerSecond": 49.34,
       "ttft": 24.033,
       "releaseDate": "2026-09-03",
+      "openWeights": false,
       "addedAt": "2026-09-03"
     },
     {
@@ -288,6 +305,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-24",
+      "openWeights": false,
       "addedAt": "2026-07-24"
     },
     {
@@ -304,6 +322,7 @@
       "outputTokensPerSecond": 51.572,
       "ttft": 19.368,
       "releaseDate": "2026-09-29",
+      "openWeights": false,
       "addedAt": "2026-09-29"
     },
     {
@@ -320,6 +339,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-24",
+      "openWeights": false,
       "addedAt": "2026-07-24"
     },
     {
@@ -336,6 +356,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-09",
+      "openWeights": false,
       "addedAt": "2026-06-11T22:09:33.687Z"
     },
     {
@@ -352,6 +373,7 @@
       "outputTokensPerSecond": 47.334,
       "ttft": 4.954,
       "releaseDate": "2026-09-03",
+      "openWeights": false,
       "addedAt": "2026-09-03"
     },
     {
@@ -368,6 +390,7 @@
       "outputTokensPerSecond": 50.803,
       "ttft": 2.111,
       "releaseDate": "2026-09-01",
+      "openWeights": false,
       "addedAt": "2026-09-01"
     },
     {
@@ -384,6 +407,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-24",
+      "openWeights": false,
       "addedAt": "2026-07-24"
     },
     {
@@ -400,6 +424,7 @@
       "outputTokensPerSecond": 111.562,
       "ttft": 35.339,
       "releaseDate": "2026-09-02",
+      "openWeights": false,
       "addedAt": "2026-09-02"
     },
     {
@@ -416,6 +441,7 @@
       "outputTokensPerSecond": 52.466,
       "ttft": 4.451,
       "releaseDate": "2026-09-29",
+      "openWeights": false,
       "addedAt": "2026-09-29"
     },
     {
@@ -432,6 +458,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -448,6 +475,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -464,6 +492,7 @@
       "outputTokensPerSecond": 46.655,
       "ttft": 0.519,
       "releaseDate": "2026-09-01",
+      "openWeights": false,
       "addedAt": "2026-09-01"
     },
     {
@@ -480,6 +509,7 @@
       "outputTokensPerSecond": 90.223,
       "ttft": 5.568,
       "releaseDate": "2026-09-28",
+      "openWeights": false,
       "addedAt": "2026-09-28"
     },
     {
@@ -496,6 +526,7 @@
       "outputTokensPerSecond": 62.857,
       "ttft": 14.926,
       "releaseDate": "2026-09-21",
+      "openWeights": false,
       "addedAt": "2026-09-21"
     },
     {
@@ -512,6 +543,7 @@
       "outputTokensPerSecond": 65.323,
       "ttft": 9.405,
       "releaseDate": "2026-09-21",
+      "openWeights": false,
       "addedAt": "2026-09-21"
     },
     {
@@ -528,6 +560,7 @@
       "outputTokensPerSecond": 37.353,
       "ttft": 2.599,
       "releaseDate": "2026-09-21",
+      "openWeights": true,
       "addedAt": "2026-09-21"
     },
     {
@@ -544,6 +577,7 @@
       "outputTokensPerSecond": 46.379,
       "ttft": 1.559,
       "releaseDate": "2026-09-03",
+      "openWeights": false,
       "addedAt": "2026-09-03"
     },
     {
@@ -560,6 +594,7 @@
       "outputTokensPerSecond": 39.759,
       "ttft": 1.809,
       "releaseDate": "2026-09-02",
+      "openWeights": false,
       "addedAt": "2026-08-03"
     },
     {
@@ -576,6 +611,7 @@
       "outputTokensPerSecond": 206.386,
       "ttft": 17.374,
       "releaseDate": "2026-09-02",
+      "openWeights": false,
       "addedAt": "2026-09-02"
     },
     {
@@ -592,6 +628,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-24",
+      "openWeights": false,
       "addedAt": "2026-07-24"
     },
     {
@@ -608,6 +645,7 @@
       "outputTokensPerSecond": 68.859,
       "ttft": 3.013,
       "releaseDate": "2026-08-18",
+      "openWeights": true,
       "addedAt": "2026-08-18"
     },
     {
@@ -624,6 +662,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-12",
+      "openWeights": false,
       "addedAt": "2026-08-12"
     },
     {
@@ -640,6 +679,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -656,6 +696,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-12",
+      "openWeights": false,
       "addedAt": "2026-08-12"
     },
     {
@@ -672,6 +713,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -688,6 +730,7 @@
       "outputTokensPerSecond": 87.35,
       "ttft": 1.81,
       "releaseDate": "2026-09-18",
+      "openWeights": false,
       "addedAt": "2026-09-18"
     },
     {
@@ -704,6 +747,7 @@
       "outputTokensPerSecond": 45.319,
       "ttft": 2.437,
       "releaseDate": "2026-07-16",
+      "openWeights": true,
       "addedAt": "2026-07-16"
     },
     {
@@ -720,6 +764,7 @@
       "outputTokensPerSecond": 239.259,
       "ttft": 232.911,
       "releaseDate": "2026-10-07",
+      "openWeights": false,
       "addedAt": "2026-10-07"
     },
     {
@@ -736,6 +781,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-12",
+      "openWeights": false,
       "addedAt": "2026-08-12"
     },
     {
@@ -752,6 +798,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -768,6 +815,7 @@
       "outputTokensPerSecond": 69.83,
       "ttft": 3.162,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-17"
     },
     {
@@ -784,6 +832,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -800,6 +849,7 @@
       "outputTokensPerSecond": 59.837,
       "ttft": 2.599,
       "releaseDate": "2026-09-21",
+      "openWeights": false,
       "addedAt": "2026-09-21"
     },
     {
@@ -816,6 +866,7 @@
       "outputTokensPerSecond": 106.176,
       "ttft": 74.913,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -832,6 +883,7 @@
       "outputTokensPerSecond": 49.406,
       "ttft": 1.425,
       "releaseDate": "2026-09-29",
+      "openWeights": false,
       "addedAt": "2026-09-29"
     },
     {
@@ -848,6 +900,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-28",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -864,6 +917,7 @@
       "outputTokensPerSecond": 61.378,
       "ttft": 2.36,
       "releaseDate": "2026-08-26",
+      "openWeights": true,
       "addedAt": "2026-08-26"
     },
     {
@@ -880,6 +934,7 @@
       "outputTokensPerSecond": 166.009,
       "ttft": 41.19,
       "releaseDate": "2026-10-07",
+      "openWeights": false,
       "addedAt": "2026-10-07"
     },
     {
@@ -896,6 +951,7 @@
       "outputTokensPerSecond": 216,
       "ttft": 1.096,
       "releaseDate": "2026-10-01",
+      "openWeights": false,
       "addedAt": "2026-10-01"
     },
     {
@@ -912,6 +968,7 @@
       "outputTokensPerSecond": 139.125,
       "ttft": 14.411,
       "releaseDate": "2026-09-02",
+      "openWeights": false,
       "addedAt": "2026-09-02"
     },
     {
@@ -928,6 +985,7 @@
       "outputTokensPerSecond": 88.569,
       "ttft": 0.632,
       "releaseDate": "2026-09-28",
+      "openWeights": false,
       "addedAt": "2026-09-28"
     },
     {
@@ -944,6 +1002,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-16",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -960,6 +1019,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-03",
+      "openWeights": false,
       "addedAt": "2026-08-03"
     },
     {
@@ -976,6 +1036,7 @@
       "outputTokensPerSecond": 40.127,
       "ttft": 1.991,
       "releaseDate": "2026-08-12",
+      "openWeights": true,
       "addedAt": "2026-08-12"
     },
     {
@@ -992,6 +1053,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-02",
+      "openWeights": false,
       "addedAt": "2026-09-02"
     },
     {
@@ -1008,6 +1070,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -1024,6 +1087,7 @@
       "outputTokensPerSecond": 53.089,
       "ttft": 1.309,
       "releaseDate": "2026-08-26",
+      "openWeights": true,
       "addedAt": "2026-08-26"
     },
     {
@@ -1040,6 +1104,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-13",
+      "openWeights": false,
       "addedAt": "2026-08-13"
     },
     {
@@ -1056,6 +1121,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-05",
+      "openWeights": false,
       "addedAt": "2026-08-05"
     },
     {
@@ -1072,6 +1138,7 @@
       "outputTokensPerSecond": 186.081,
       "ttft": 0.865,
       "releaseDate": "2026-09-10",
+      "openWeights": true,
       "addedAt": "2026-09-10"
     },
     {
@@ -1088,6 +1155,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-24",
+      "openWeights": false,
       "addedAt": "2026-07-24"
     },
     {
@@ -1104,6 +1172,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1120,6 +1189,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-13",
+      "openWeights": false,
       "addedAt": "2026-08-13"
     },
     {
@@ -1136,6 +1206,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-05",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1152,6 +1223,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-08",
+      "openWeights": false,
       "addedAt": "2026-07-08"
     },
     {
@@ -1168,6 +1240,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-23",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1184,6 +1257,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-10-06",
+      "openWeights": false,
       "addedAt": "2026-10-06"
     },
     {
@@ -1200,6 +1274,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-30",
+      "openWeights": false,
       "addedAt": "2026-06-30"
     },
     {
@@ -1216,6 +1291,7 @@
       "outputTokensPerSecond": 128.218,
       "ttft": 86.841,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -1232,6 +1308,7 @@
       "outputTokensPerSecond": 94.613,
       "ttft": 7.787,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1248,6 +1325,7 @@
       "outputTokensPerSecond": 50.549,
       "ttft": 2.417,
       "releaseDate": "2026-09-21",
+      "openWeights": true,
       "addedAt": "2026-09-21"
     },
     {
@@ -1264,6 +1342,7 @@
       "outputTokensPerSecond": 156.669,
       "ttft": 14.707,
       "releaseDate": "2026-10-07",
+      "openWeights": false,
       "addedAt": "2026-10-07"
     },
     {
@@ -1280,6 +1359,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1296,6 +1376,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-23",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1312,6 +1393,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-13",
+      "openWeights": false,
       "addedAt": "2026-08-13"
     },
     {
@@ -1328,6 +1410,7 @@
       "outputTokensPerSecond": 95.247,
       "ttft": 1.133,
       "releaseDate": "2026-08-13",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1344,6 +1427,7 @@
       "outputTokensPerSecond": 87.735,
       "ttft": 0.63,
       "releaseDate": "2026-09-28",
+      "openWeights": false,
       "addedAt": "2026-09-28"
     },
     {
@@ -1360,6 +1444,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-12",
+      "openWeights": false,
       "addedAt": "2026-08-12"
     },
     {
@@ -1376,6 +1461,7 @@
       "outputTokensPerSecond": 177.72,
       "ttft": 0.843,
       "releaseDate": "2026-08-21",
+      "openWeights": false,
       "addedAt": "2026-08-21"
     },
     {
@@ -1392,6 +1478,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1408,6 +1495,7 @@
       "outputTokensPerSecond": 122.594,
       "ttft": 19.953,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -1424,6 +1512,7 @@
       "outputTokensPerSecond": 147.94,
       "ttft": 6.691,
       "releaseDate": "2026-10-07",
+      "openWeights": false,
       "addedAt": "2026-10-07"
     },
     {
@@ -1440,6 +1529,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-30",
+      "openWeights": false,
       "addedAt": "2026-06-30"
     },
     {
@@ -1456,6 +1546,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-31",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1472,6 +1563,7 @@
       "outputTokensPerSecond": 77.533,
       "ttft": 3.146,
       "releaseDate": "2026-08-18",
+      "openWeights": true,
       "addedAt": "2026-08-18"
     },
     {
@@ -1488,6 +1580,7 @@
       "outputTokensPerSecond": 94.564,
       "ttft": 1.843,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1504,6 +1597,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -1520,6 +1614,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-21",
+      "openWeights": false,
       "addedAt": "2026-07-21"
     },
     {
@@ -1536,6 +1631,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1552,6 +1648,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-23",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1568,6 +1665,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-16",
+      "openWeights": true,
       "addedAt": "2026-06-16"
     },
     {
@@ -1584,6 +1682,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1600,6 +1699,7 @@
       "outputTokensPerSecond": 46.587,
       "ttft": 1.212,
       "releaseDate": "2026-08-14",
+      "openWeights": true,
       "addedAt": "2026-08-14"
     },
     {
@@ -1616,6 +1716,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-19",
+      "openWeights": false,
       "addedAt": "2026-05-19"
     },
     {
@@ -1632,6 +1733,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-12",
+      "openWeights": true,
       "addedAt": "2026-08-12"
     },
     {
@@ -1648,6 +1750,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-02",
+      "openWeights": false,
       "addedAt": "2026-09-02"
     },
     {
@@ -1664,6 +1767,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1680,6 +1784,7 @@
       "outputTokensPerSecond": 120.07,
       "ttft": 9.984,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -1696,6 +1801,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-19",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1712,6 +1818,7 @@
       "outputTokensPerSecond": 92.374,
       "ttft": 27.31,
       "releaseDate": "2026-02-05",
+      "openWeights": false,
       "addedAt": "2026-02-05"
     },
     {
@@ -1728,6 +1835,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-14",
+      "openWeights": false,
       "addedAt": "2026-07-14"
     },
     {
@@ -1744,6 +1852,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1760,6 +1869,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-05",
+      "openWeights": false,
       "addedAt": "2026-02-05"
     },
     {
@@ -1776,6 +1886,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-30",
+      "openWeights": false,
       "addedAt": "2026-06-30"
     },
     {
@@ -1792,6 +1903,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-08",
+      "openWeights": false,
       "addedAt": "2026-04-08"
     },
     {
@@ -1808,6 +1920,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-16",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1824,6 +1937,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-23",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1840,6 +1954,7 @@
       "outputTokensPerSecond": 109.365,
       "ttft": 2.558,
       "releaseDate": "2026-09-03",
+      "openWeights": true,
       "addedAt": "2026-09-03"
     },
     {
@@ -1856,6 +1971,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-24",
+      "openWeights": true,
       "addedAt": "2026-04-24"
     },
     {
@@ -1872,6 +1988,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-11",
+      "openWeights": false,
       "addedAt": "2025-12-11"
     },
     {
@@ -1888,6 +2005,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-17",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1904,6 +2022,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-24",
+      "openWeights": true,
       "addedAt": "2026-04-24"
     },
     {
@@ -1920,6 +2039,7 @@
       "outputTokensPerSecond": 93.226,
       "ttft": 1.693,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -1936,6 +2056,7 @@
       "outputTokensPerSecond": 42.31,
       "ttft": 2.481,
       "releaseDate": "2026-07-16",
+      "openWeights": true,
       "addedAt": "2026-07-16"
     },
     {
@@ -1952,6 +2073,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -1968,6 +2090,7 @@
       "outputTokensPerSecond": 135.384,
       "ttft": 17.559,
       "releaseDate": "2026-02-19",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -1984,6 +2107,7 @@
       "outputTokensPerSecond": 145.419,
       "ttft": 3.584,
       "releaseDate": "2026-10-07",
+      "openWeights": false,
       "addedAt": "2026-10-07"
     },
     {
@@ -2000,6 +2124,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-19",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2016,6 +2141,7 @@
       "outputTokensPerSecond": 100.64,
       "ttft": 0.808,
       "releaseDate": "2026-06-01",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2032,6 +2158,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-24",
+      "openWeights": false,
       "addedAt": "2025-11-24"
     },
     {
@@ -2048,6 +2175,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-18",
+      "openWeights": false,
       "addedAt": "2026-03-18"
     },
     {
@@ -2064,6 +2192,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-11",
+      "openWeights": false,
       "addedAt": "2025-12-11"
     },
     {
@@ -2080,6 +2209,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -2096,6 +2226,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-20",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2112,6 +2243,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -2128,6 +2260,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-02",
+      "openWeights": true,
       "addedAt": "2026-06-02"
     },
     {
@@ -2144,6 +2277,7 @@
       "outputTokensPerSecond": 89.687,
       "ttft": 1.042,
       "releaseDate": "2026-08-06",
+      "openWeights": false,
       "addedAt": "2026-08-06"
     },
     {
@@ -2160,6 +2294,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-30",
+      "openWeights": false,
       "addedAt": "2026-06-30"
     },
     {
@@ -2176,6 +2311,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-18",
+      "openWeights": false,
       "addedAt": "2025-11-18"
     },
     {
@@ -2192,6 +2328,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-11",
+      "openWeights": true,
       "addedAt": "2026-02-11"
     },
     {
@@ -2208,6 +2345,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-05",
+      "openWeights": false,
       "addedAt": "2026-03-05"
     },
     {
@@ -2224,6 +2362,7 @@
       "outputTokensPerSecond": 44.601,
       "ttft": 1.172,
       "releaseDate": "2026-08-14",
+      "openWeights": true,
       "addedAt": "2026-08-14"
     },
     {
@@ -2240,6 +2379,7 @@
       "outputTokensPerSecond": 91.578,
       "ttft": 1.356,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -2256,6 +2396,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -2272,6 +2413,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-16",
+      "openWeights": false,
       "addedAt": "2026-06-16"
     },
     {
@@ -2288,6 +2430,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-20",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2304,6 +2447,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-02",
+      "openWeights": false,
       "addedAt": "2026-04-02"
     },
     {
@@ -2320,6 +2464,7 @@
       "outputTokensPerSecond": 144.169,
       "ttft": 0.557,
       "releaseDate": "2026-08-10",
+      "openWeights": false,
       "addedAt": "2026-08-10"
     },
     {
@@ -2336,6 +2481,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-15",
+      "openWeights": false,
       "addedAt": "2026-03-15"
     },
     {
@@ -2352,6 +2498,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-11",
+      "openWeights": false,
       "addedAt": "2025-12-11"
     },
     {
@@ -2368,6 +2515,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-30",
+      "openWeights": false,
       "addedAt": "2026-08-30"
     },
     {
@@ -2384,6 +2532,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-05",
+      "openWeights": false,
       "addedAt": "2026-02-05"
     },
     {
@@ -2400,6 +2549,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-17",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2416,6 +2566,7 @@
       "outputTokensPerSecond": 47.106,
       "ttft": 1.266,
       "releaseDate": "2026-08-14",
+      "openWeights": true,
       "addedAt": "2026-08-14"
     },
     {
@@ -2432,6 +2583,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-07",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2448,6 +2600,7 @@
       "outputTokensPerSecond": 157.785,
       "ttft": 0.745,
       "releaseDate": "2026-06-25",
+      "openWeights": false,
       "addedAt": "2026-06-25"
     },
     {
@@ -2464,6 +2617,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-22",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2480,6 +2634,7 @@
       "outputTokensPerSecond": 58.561,
       "ttft": 1.142,
       "releaseDate": "2026-06-12",
+      "openWeights": true,
       "addedAt": "2026-06-12"
     },
     {
@@ -2496,6 +2651,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-07",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2512,6 +2668,7 @@
       "outputTokensPerSecond": 185.663,
       "ttft": 2.558,
       "releaseDate": "2026-07-30",
+      "openWeights": true,
       "addedAt": "2026-07-30"
     },
     {
@@ -2528,6 +2685,7 @@
       "outputTokensPerSecond": 90.282,
       "ttft": 1.867,
       "releaseDate": "2026-07-06",
+      "openWeights": true,
       "addedAt": "2026-07-06"
     },
     {
@@ -2544,6 +2702,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-03",
+      "openWeights": true,
       "addedAt": "2026-09-03"
     },
     {
@@ -2560,6 +2719,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-10",
+      "openWeights": false,
       "addedAt": "2026-03-10"
     },
     {
@@ -2576,6 +2736,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-22",
+      "openWeights": true,
       "addedAt": "2026-04-22"
     },
     {
@@ -2592,6 +2753,7 @@
       "outputTokensPerSecond": 55.01,
       "ttft": 1.695,
       "releaseDate": "2026-06-01",
+      "openWeights": false,
       "addedAt": "2026-06-01"
     },
     {
@@ -2608,6 +2770,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-27",
+      "openWeights": false,
       "addedAt": "2026-03-27"
     },
     {
@@ -2624,6 +2787,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -2640,6 +2804,7 @@
       "outputTokensPerSecond": 210.492,
       "ttft": 2.38,
       "releaseDate": "2026-07-15",
+      "openWeights": true,
       "addedAt": "2026-07-15"
     },
     {
@@ -2656,6 +2821,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-23",
+      "openWeights": false,
       "addedAt": "2025-09-23"
     },
     {
@@ -2672,6 +2838,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-30",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2688,6 +2855,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-30",
+      "openWeights": false,
       "addedAt": "2026-04-30"
     },
     {
@@ -2704,6 +2872,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-17",
+      "openWeights": false,
       "addedAt": "2026-02-17"
     },
     {
@@ -2720,6 +2889,7 @@
       "outputTokensPerSecond": 172.759,
       "ttft": 0.825,
       "releaseDate": "2026-09-10",
+      "openWeights": true,
       "addedAt": "2026-09-10"
     },
     {
@@ -2736,6 +2906,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-13",
+      "openWeights": false,
       "addedAt": "2025-11-13"
     },
     {
@@ -2752,6 +2923,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-12",
+      "openWeights": true,
       "addedAt": "2026-08-12"
     },
     {
@@ -2768,6 +2940,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-10",
+      "openWeights": true,
       "addedAt": "2026-09-10"
     },
     {
@@ -2784,6 +2957,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-24",
+      "openWeights": true,
       "addedAt": "2026-04-24"
     },
     {
@@ -2800,6 +2974,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-30",
+      "openWeights": false,
       "addedAt": "2026-06-30"
     },
     {
@@ -2816,6 +2991,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-30",
+      "openWeights": false,
       "addedAt": "2026-04-30"
     },
     {
@@ -2832,6 +3008,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-24",
+      "openWeights": true,
       "addedAt": "2026-04-24"
     },
     {
@@ -2848,6 +3025,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-07",
+      "openWeights": true,
       "addedAt": "2026-04-07"
     },
     {
@@ -2864,6 +3042,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-17",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -2880,6 +3059,7 @@
       "outputTokensPerSecond": 77.778,
       "ttft": 1.016,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -2896,6 +3076,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-19",
+      "openWeights": false,
       "addedAt": "2026-03-19"
     },
     {
@@ -2912,6 +3093,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-19",
+      "openWeights": false,
       "addedAt": "2026-05-19"
     },
     {
@@ -2928,6 +3110,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-24",
+      "openWeights": false,
       "addedAt": "2025-11-24"
     },
     {
@@ -2944,6 +3127,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-13",
+      "openWeights": false,
       "addedAt": "2025-11-13"
     },
     {
@@ -2960,6 +3144,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-20",
+      "openWeights": true,
       "addedAt": "2026-04-20"
     },
     {
@@ -2976,6 +3161,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-01",
+      "openWeights": false,
       "addedAt": "2026-04-01"
     },
     {
@@ -2992,6 +3178,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-27",
+      "openWeights": true,
       "addedAt": "2026-01-27"
     },
     {
@@ -3008,6 +3195,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-17",
+      "openWeights": false,
       "addedAt": "2026-02-17"
     },
     {
@@ -3024,6 +3212,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-30",
+      "openWeights": false,
       "addedAt": "2026-06-30"
     },
     {
@@ -3040,6 +3229,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-23",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -3056,6 +3246,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -3072,6 +3263,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -3088,6 +3280,7 @@
       "outputTokensPerSecond": 151.67,
       "ttft": 0.832,
       "releaseDate": "2026-06-04",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -3104,6 +3297,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-24",
+      "openWeights": true,
       "addedAt": "2026-02-24"
     },
     {
@@ -3120,6 +3314,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-05",
+      "openWeights": false,
       "addedAt": "2025-08-05"
     },
     {
@@ -3136,6 +3331,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-12",
+      "openWeights": true,
       "addedAt": "2026-02-12"
     },
     {
@@ -3152,6 +3348,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-18",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -3168,6 +3365,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-05",
+      "openWeights": false,
       "addedAt": "2026-05-05"
     },
     {
@@ -3184,6 +3382,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-23",
+      "openWeights": true,
       "addedAt": "2026-04-23"
     },
     {
@@ -3200,6 +3399,7 @@
       "outputTokensPerSecond": 285.88,
       "ttft": 1.107,
       "releaseDate": "2026-09-11",
+      "openWeights": true,
       "addedAt": "2026-09-11"
     },
     {
@@ -3216,6 +3416,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-10",
+      "openWeights": false,
       "addedAt": "2025-07-10"
     },
     {
@@ -3232,6 +3433,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-16",
+      "openWeights": true,
       "addedAt": "2026-06-16"
     },
     {
@@ -3248,6 +3450,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-16",
+      "openWeights": true,
       "addedAt": "2025-12-16"
     },
     {
@@ -3264,6 +3467,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-18",
+      "openWeights": false,
       "addedAt": "2025-11-18"
     },
     {
@@ -3280,6 +3484,7 @@
       "outputTokensPerSecond": 392.6,
       "ttft": 5.023,
       "releaseDate": "2026-07-21",
+      "openWeights": false,
       "addedAt": "2026-07-21"
     },
     {
@@ -3296,6 +3501,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-22",
+      "openWeights": true,
       "addedAt": "2025-12-22"
     },
     {
@@ -3312,6 +3518,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-06",
+      "openWeights": true,
       "addedAt": "2025-11-06"
     },
     {
@@ -3328,6 +3535,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-10",
+      "openWeights": false,
       "addedAt": "2025-06-10"
     },
     {
@@ -3344,6 +3552,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-20",
+      "openWeights": true,
       "addedAt": "2026-08-20"
     },
     {
@@ -3360,6 +3569,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-11",
+      "openWeights": true,
       "addedAt": "2026-02-11"
     },
     {
@@ -3376,6 +3586,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-27",
+      "openWeights": false,
       "addedAt": "2026-03-27"
     },
     {
@@ -3392,6 +3603,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-12",
+      "openWeights": true,
       "addedAt": "2026-08-12"
     },
     {
@@ -3408,6 +3620,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-01",
+      "openWeights": true,
       "addedAt": "2025-12-01"
     },
     {
@@ -3424,6 +3637,7 @@
       "outputTokensPerSecond": 107.857,
       "ttft": 2.85,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -3440,6 +3654,7 @@
       "outputTokensPerSecond": 57.515,
       "ttft": 1.62,
       "releaseDate": "2026-02-16",
+      "openWeights": true,
       "addedAt": "2026-02-16"
     },
     {
@@ -3456,6 +3671,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-22",
+      "openWeights": true,
       "addedAt": "2026-04-22"
     },
     {
@@ -3472,6 +3688,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-26",
+      "openWeights": false,
       "addedAt": "2026-01-26"
     },
     {
@@ -3488,6 +3705,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -3504,6 +3722,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-23",
+      "openWeights": true,
       "addedAt": "2025-12-23"
     },
     {
@@ -3520,6 +3739,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-24",
+      "openWeights": true,
       "addedAt": "2026-04-24"
     },
     {
@@ -3536,6 +3756,7 @@
       "outputTokensPerSecond": 95.143,
       "ttft": 0.75,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -3552,6 +3773,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -3568,6 +3790,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-16",
+      "openWeights": true,
       "addedAt": "2025-12-16"
     },
     {
@@ -3584,6 +3807,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-29",
+      "openWeights": false,
       "addedAt": "2025-09-29"
     },
     {
@@ -3600,6 +3824,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-17",
+      "openWeights": false,
       "addedAt": "2026-03-17"
     },
     {
@@ -3616,6 +3841,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-22",
+      "openWeights": false,
       "addedAt": "2025-05-22"
     },
     {
@@ -3632,6 +3858,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -3648,6 +3875,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-03",
+      "openWeights": true,
       "addedAt": "2026-09-03"
     },
     {
@@ -3664,6 +3892,7 @@
       "outputTokensPerSecond": 91.096,
       "ttft": 1.121,
       "releaseDate": "2026-08-13",
+      "openWeights": true,
       "addedAt": "2026-08-13"
     },
     {
@@ -3680,6 +3909,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-13",
+      "openWeights": false,
       "addedAt": "2025-11-13"
     },
     {
@@ -3696,6 +3926,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-19",
+      "openWeights": false,
       "addedAt": "2025-11-19"
     },
     {
@@ -3712,6 +3943,7 @@
       "outputTokensPerSecond": 86.113,
       "ttft": 1.157,
       "releaseDate": "2026-03-30",
+      "openWeights": false,
       "addedAt": "2026-03-30"
     },
     {
@@ -3728,6 +3960,7 @@
       "outputTokensPerSecond": 122.963,
       "ttft": 6.027,
       "releaseDate": "2025-04-16",
+      "openWeights": false,
       "addedAt": "2025-04-16"
     },
     {
@@ -3744,6 +3977,7 @@
       "outputTokensPerSecond": 51.405,
       "ttft": 1.201,
       "releaseDate": "2026-08-14",
+      "openWeights": true,
       "addedAt": "2026-08-14"
     },
     {
@@ -3760,6 +3994,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-04",
+      "openWeights": true,
       "addedAt": "2026-08-04"
     },
     {
@@ -3776,6 +4011,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-17",
+      "openWeights": false,
       "addedAt": "2026-03-17"
     },
     {
@@ -3792,6 +4028,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-22",
+      "openWeights": true,
       "addedAt": "2026-04-22"
     },
     {
@@ -3808,6 +4045,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-17",
+      "openWeights": false,
       "addedAt": "2026-03-17"
     },
     {
@@ -3824,6 +4062,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-12",
+      "openWeights": true,
       "addedAt": "2026-08-12"
     },
     {
@@ -3840,6 +4079,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-29",
+      "openWeights": true,
       "addedAt": "2026-05-29"
     },
     {
@@ -3856,6 +4096,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-27",
+      "openWeights": true,
       "addedAt": "2026-01-27"
     },
     {
@@ -3872,6 +4113,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-24",
+      "openWeights": true,
       "addedAt": "2026-02-24"
     },
     {
@@ -3888,6 +4130,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-29",
+      "openWeights": false,
       "addedAt": "2025-09-29"
     },
     {
@@ -3904,6 +4147,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-24",
+      "openWeights": true,
       "addedAt": "2026-02-24"
     },
     {
@@ -3920,6 +4164,7 @@
       "outputTokensPerSecond": 64.194,
       "ttft": 1.823,
       "releaseDate": "2026-06-29",
+      "openWeights": true,
       "addedAt": "2026-06-29"
     },
     {
@@ -3936,6 +4181,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-22",
+      "openWeights": false,
       "addedAt": "2025-05-22"
     },
     {
@@ -3952,6 +4198,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-24",
+      "openWeights": true,
       "addedAt": "2026-04-24"
     },
     {
@@ -3968,6 +4215,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-14",
+      "openWeights": false,
       "addedAt": "2026-05-14"
     },
     {
@@ -3984,6 +4232,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-05",
+      "openWeights": false,
       "addedAt": "2025-08-05"
     },
     {
@@ -4000,6 +4249,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-11",
+      "openWeights": false,
       "addedAt": "2025-11-11"
     },
     {
@@ -4016,6 +4266,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-26",
+      "openWeights": true,
       "addedAt": "2025-10-26"
     },
     {
@@ -4032,6 +4283,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-30",
+      "openWeights": true,
       "addedAt": "2025-09-30"
     },
     {
@@ -4048,6 +4300,7 @@
       "outputTokensPerSecond": 122.25,
       "ttft": 0.943,
       "releaseDate": "2026-09-22",
+      "openWeights": false,
       "addedAt": "2026-09-22"
     },
     {
@@ -4064,6 +4317,7 @@
       "outputTokensPerSecond": 56.79,
       "ttft": 1.61,
       "releaseDate": "2026-02-16",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -4080,6 +4334,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-22",
+      "openWeights": true,
       "addedAt": "2026-04-22"
     },
     {
@@ -4096,6 +4351,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-05",
+      "openWeights": false,
       "addedAt": "2026-03-05"
     },
     {
@@ -4112,6 +4368,7 @@
       "outputTokensPerSecond": 135.055,
       "ttft": 1.048,
       "releaseDate": "2026-04-16",
+      "openWeights": true,
       "addedAt": "2026-04-16"
     },
     {
@@ -4128,6 +4385,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-17",
+      "openWeights": false,
       "addedAt": "2025-12-17"
     },
     {
@@ -4144,6 +4402,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-19",
+      "openWeights": false,
       "addedAt": "2025-09-19"
     },
     {
@@ -4160,6 +4419,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-24",
+      "openWeights": false,
       "addedAt": "2025-02-24"
     },
     {
@@ -4176,6 +4436,7 @@
       "outputTokensPerSecond": 146.929,
       "ttft": 1.061,
       "releaseDate": "2026-02-24",
+      "openWeights": true,
       "addedAt": "2026-02-24"
     },
     {
@@ -4192,6 +4453,7 @@
       "outputTokensPerSecond": 144.934,
       "ttft": 0.398,
       "releaseDate": "2026-08-10",
+      "openWeights": true,
       "addedAt": "2026-08-10"
     },
     {
@@ -4208,6 +4470,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-22",
+      "openWeights": true,
       "addedAt": "2025-12-22"
     },
     {
@@ -4224,6 +4487,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-11",
+      "openWeights": false,
       "addedAt": "2025-12-11"
     },
     {
@@ -4240,6 +4504,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-23",
+      "openWeights": true,
       "addedAt": "2026-04-23"
     },
     {
@@ -4256,6 +4521,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-23",
+      "openWeights": true,
       "addedAt": "2026-04-23"
     },
     {
@@ -4272,6 +4538,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-02",
+      "openWeights": false,
       "addedAt": "2026-04-02"
     },
     {
@@ -4288,6 +4555,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-15",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -4304,6 +4572,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-11",
+      "openWeights": false,
       "addedAt": "2025-11-11"
     },
     {
@@ -4320,6 +4589,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -4336,6 +4606,7 @@
       "outputTokensPerSecond": 64.424,
       "ttft": 0.668,
       "releaseDate": "2026-04-02",
+      "openWeights": true,
       "addedAt": "2026-04-02"
     },
     {
@@ -4352,6 +4623,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-16",
+      "openWeights": false,
       "addedAt": "2025-04-16"
     },
     {
@@ -4368,6 +4640,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-22",
+      "openWeights": false,
       "addedAt": "2025-05-22"
     },
     {
@@ -4384,6 +4657,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-22",
+      "openWeights": false,
       "addedAt": "2025-05-22"
     },
     {
@@ -4400,6 +4674,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-29",
+      "openWeights": true,
       "addedAt": "2025-09-29"
     },
     {
@@ -4416,6 +4691,7 @@
       "outputTokensPerSecond": 122.203,
       "ttft": 2.101,
       "releaseDate": "2026-05-08",
+      "openWeights": true,
       "addedAt": "2026-05-08"
     },
     {
@@ -4432,6 +4708,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-02",
+      "openWeights": true,
       "addedAt": "2026-02-02"
     },
     {
@@ -4448,6 +4725,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-03",
+      "openWeights": false,
       "addedAt": "2025-11-03"
     },
     {
@@ -4464,6 +4742,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-05",
+      "openWeights": false,
       "addedAt": "2025-06-05"
     },
     {
@@ -4480,6 +4759,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-01",
+      "openWeights": true,
       "addedAt": "2025-12-01"
     },
     {
@@ -4496,6 +4776,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-16",
+      "openWeights": true,
       "addedAt": "2025-12-16"
     },
     {
@@ -4512,6 +4793,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-03",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -4528,6 +4810,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-03",
+      "openWeights": true,
       "addedAt": "2026-09-03"
     },
     {
@@ -4544,6 +4827,7 @@
       "outputTokensPerSecond": 131.85,
       "ttft": 1.001,
       "releaseDate": "2026-02-24",
+      "openWeights": true,
       "addedAt": "2026-02-24"
     },
     {
@@ -4560,6 +4844,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-23",
+      "openWeights": false,
       "addedAt": "2025-09-23"
     },
     {
@@ -4576,6 +4861,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-25",
+      "openWeights": false,
       "addedAt": "2025-09-25"
     },
     {
@@ -4592,6 +4878,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-09",
+      "openWeights": false,
       "addedAt": "2026-07-09"
     },
     {
@@ -4608,6 +4895,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-15",
+      "openWeights": false,
       "addedAt": "2025-10-15"
     },
     {
@@ -4624,6 +4912,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-24",
+      "openWeights": false,
       "addedAt": "2025-02-24"
     },
     {
@@ -4640,6 +4929,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-05",
+      "openWeights": true,
       "addedAt": "2025-09-05"
     },
     {
@@ -4656,6 +4946,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-12-05",
+      "openWeights": false,
       "addedAt": "2024-12-05"
     },
     {
@@ -4672,6 +4963,7 @@
       "outputTokensPerSecond": 138.889,
       "ttft": 1.057,
       "releaseDate": "2026-04-16",
+      "openWeights": true,
       "addedAt": "2026-04-16"
     },
     {
@@ -4688,6 +4980,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-24",
+      "openWeights": true,
       "addedAt": "2026-02-24"
     },
     {
@@ -4704,6 +4997,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-25",
+      "openWeights": false,
       "addedAt": "2025-03-25"
     },
     {
@@ -4720,6 +5014,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-30",
+      "openWeights": true,
       "addedAt": "2025-09-30"
     },
     {
@@ -4736,6 +5031,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-19",
+      "openWeights": true,
       "addedAt": "2026-01-19"
     },
     {
@@ -4752,6 +5048,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-22",
+      "openWeights": true,
       "addedAt": "2025-09-22"
     },
     {
@@ -4768,6 +5065,7 @@
       "outputTokensPerSecond": 35.194,
       "ttft": 0.982,
       "releaseDate": "2026-04-02",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -4784,6 +5082,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-19",
+      "openWeights": false,
       "addedAt": "2025-02-19"
     },
     {
@@ -4800,6 +5099,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-10",
+      "openWeights": false,
       "addedAt": "2026-03-10"
     },
     {
@@ -4816,6 +5116,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-01",
+      "openWeights": true,
       "addedAt": "2025-12-01"
     },
     {
@@ -4832,6 +5133,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-06",
+      "openWeights": false,
       "addedAt": "2025-05-06"
     },
     {
@@ -4848,6 +5150,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-31",
+      "openWeights": true,
       "addedAt": "2025-12-31"
     },
     {
@@ -4864,6 +5167,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-13",
+      "openWeights": false,
       "addedAt": "2025-11-13"
     },
     {
@@ -4880,6 +5184,7 @@
       "outputTokensPerSecond": 147.099,
       "ttft": 1.398,
       "releaseDate": "2026-06-03",
+      "openWeights": true,
       "addedAt": "2026-06-03"
     },
     {
@@ -4896,6 +5201,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-07",
+      "openWeights": false,
       "addedAt": "2026-04-07"
     },
     {
@@ -4912,6 +5218,7 @@
       "outputTokensPerSecond": 165.29,
       "ttft": 0.643,
       "releaseDate": "2026-04-29",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -4928,6 +5235,7 @@
       "outputTokensPerSecond": 129.959,
       "ttft": 13.779,
       "releaseDate": "2025-11-27",
+      "openWeights": false,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -4944,6 +5252,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-28",
+      "openWeights": false,
       "addedAt": "2025-08-28"
     },
     {
@@ -4960,6 +5269,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-30",
+      "openWeights": false,
       "addedAt": "2026-04-30"
     },
     {
@@ -4976,6 +5286,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-22",
+      "openWeights": true,
       "addedAt": "2025-09-22"
     },
     {
@@ -4992,6 +5303,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-29",
+      "openWeights": true,
       "addedAt": "2025-09-29"
     },
     {
@@ -5008,6 +5320,7 @@
       "outputTokensPerSecond": 46.065,
       "ttft": 1.051,
       "releaseDate": "2026-04-02",
+      "openWeights": true,
       "addedAt": "2026-04-02"
     },
     {
@@ -5024,6 +5337,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-30",
+      "openWeights": true,
       "addedAt": "2025-09-30"
     },
     {
@@ -5040,6 +5354,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-20",
+      "openWeights": false,
       "addedAt": "2026-02-20"
     },
     {
@@ -5056,6 +5371,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-21",
+      "openWeights": true,
       "addedAt": "2025-08-21"
     },
     {
@@ -5072,6 +5388,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-26",
+      "openWeights": false,
       "addedAt": "2025-11-26"
     },
     {
@@ -5088,6 +5405,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-21",
+      "openWeights": true,
       "addedAt": "2025-08-21"
     },
     {
@@ -5104,6 +5422,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-25",
+      "openWeights": true,
       "addedAt": "2025-11-25"
     },
     {
@@ -5120,6 +5439,7 @@
       "outputTokensPerSecond": 200.904,
       "ttft": 9.836,
       "releaseDate": "2025-10-29",
+      "openWeights": false,
       "addedAt": "2025-10-29"
     },
     {
@@ -5136,6 +5456,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-23",
+      "openWeights": true,
       "addedAt": "2025-09-23"
     },
     {
@@ -5152,6 +5473,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-13",
+      "openWeights": false,
       "addedAt": "2025-11-13"
     },
     {
@@ -5168,6 +5490,7 @@
       "outputTokensPerSecond": 93.074,
       "ttft": 0.376,
       "releaseDate": "2026-03-02",
+      "openWeights": true,
       "addedAt": "2026-03-02"
     },
     {
@@ -5184,6 +5507,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-09",
+      "openWeights": true,
       "addedAt": "2026-04-09"
     },
     {
@@ -5200,6 +5524,7 @@
       "outputTokensPerSecond": 200.036,
       "ttft": 0.28,
       "releaseDate": "2026-05-20",
+      "openWeights": true,
       "addedAt": "2026-05-20"
     },
     {
@@ -5216,6 +5541,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-28",
+      "openWeights": true,
       "addedAt": "2025-05-28"
     },
     {
@@ -5232,6 +5558,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-20",
+      "openWeights": false,
       "addedAt": "2025-05-20"
     },
     {
@@ -5248,6 +5575,7 @@
       "outputTokensPerSecond": 101.282,
       "ttft": 0.624,
       "releaseDate": "2026-04-02",
+      "openWeights": true,
       "addedAt": "2026-04-02"
     },
     {
@@ -5264,6 +5592,7 @@
       "outputTokensPerSecond": 24.818,
       "ttft": 0.537,
       "releaseDate": "2026-03-02",
+      "openWeights": true,
       "addedAt": "2026-03-02"
     },
     {
@@ -5280,6 +5609,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -5296,6 +5626,7 @@
       "outputTokensPerSecond": 299.548,
       "ttft": 0.393,
       "releaseDate": "2026-08-11",
+      "openWeights": true,
       "addedAt": "2026-08-11"
     },
     {
@@ -5312,6 +5643,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-28",
+      "openWeights": null,
       "addedAt": "2025-07-28"
     },
     {
@@ -5328,6 +5660,7 @@
       "outputTokensPerSecond": 131.265,
       "ttft": 3.235,
       "releaseDate": "2025-11-27",
+      "openWeights": false,
       "addedAt": "2025-11-27"
     },
     {
@@ -5344,6 +5677,7 @@
       "outputTokensPerSecond": 151.897,
       "ttft": 0.826,
       "releaseDate": "2026-03-11",
+      "openWeights": true,
       "addedAt": "2026-03-11"
     },
     {
@@ -5360,6 +5694,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-14",
+      "openWeights": false,
       "addedAt": "2025-04-14"
     },
     {
@@ -5376,6 +5711,7 @@
       "outputTokensPerSecond": 78.235,
       "ttft": 0.282,
       "releaseDate": "2026-08-25",
+      "openWeights": true,
       "addedAt": "2026-08-25"
     },
     {
@@ -5392,6 +5728,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-11",
+      "openWeights": true,
       "addedAt": "2025-07-11"
     },
     {
@@ -5408,6 +5745,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-25",
+      "openWeights": true,
       "addedAt": "2025-07-25"
     },
     {
@@ -5424,6 +5762,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-05",
+      "openWeights": false,
       "addedAt": "2025-09-05"
     },
     {
@@ -5440,6 +5779,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -5456,6 +5796,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-07",
+      "openWeights": true,
       "addedAt": "2026-09-07"
     },
     {
@@ -5472,6 +5813,7 @@
       "outputTokensPerSecond": 199.469,
       "ttft": 10.049,
       "releaseDate": "2025-10-29",
+      "openWeights": false,
       "addedAt": "2025-10-29"
     },
     {
@@ -5488,6 +5830,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-31",
+      "openWeights": false,
       "addedAt": "2025-01-31"
     },
     {
@@ -5504,6 +5847,7 @@
       "outputTokensPerSecond": 222.513,
       "ttft": 0.933,
       "releaseDate": "2026-03-30",
+      "openWeights": false,
       "addedAt": "2026-03-30"
     },
     {
@@ -5520,6 +5864,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-25",
+      "openWeights": false,
       "addedAt": "2025-09-25"
     },
     {
@@ -5536,6 +5881,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-19",
+      "openWeights": false,
       "addedAt": "2025-03-19"
     },
     {
@@ -5552,6 +5898,7 @@
       "outputTokensPerSecond": 722.166,
       "ttft": 2.591,
       "releaseDate": "2026-09-08",
+      "openWeights": false,
       "addedAt": "2026-09-08"
     },
     {
@@ -5568,6 +5915,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-15",
+      "openWeights": false,
       "addedAt": "2026-04-15"
     },
     {
@@ -5584,6 +5932,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-19",
+      "openWeights": false,
       "addedAt": "2025-02-19"
     },
     {
@@ -5600,6 +5949,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-20",
+      "openWeights": true,
       "addedAt": "2025-08-20"
     },
     {
@@ -5616,6 +5966,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-21",
+      "openWeights": true,
       "addedAt": "2025-07-21"
     },
     {
@@ -5632,6 +5983,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-22",
+      "openWeights": true,
       "addedAt": "2025-07-22"
     },
     {
@@ -5648,6 +6000,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-21",
+      "openWeights": true,
       "addedAt": "2025-10-21"
     },
     {
@@ -5664,6 +6017,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-18",
+      "openWeights": false,
       "addedAt": "2025-09-18"
     },
     {
@@ -5680,6 +6034,7 @@
       "outputTokensPerSecond": 202.734,
       "ttft": 3.917,
       "releaseDate": "2025-10-29",
+      "openWeights": false,
       "addedAt": "2025-10-29"
     },
     {
@@ -5696,6 +6051,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-28",
+      "openWeights": false,
       "addedAt": "2025-01-28"
     },
     {
@@ -5712,6 +6068,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-17",
+      "openWeights": false,
       "addedAt": "2025-04-17"
     },
     {
@@ -5728,6 +6085,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-17",
+      "openWeights": false,
       "addedAt": "2026-03-17"
     },
     {
@@ -5744,6 +6102,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-26",
+      "openWeights": true,
       "addedAt": "2026-05-26"
     },
     {
@@ -5760,6 +6119,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-17",
+      "openWeights": true,
       "addedAt": "2025-06-17"
     },
     {
@@ -5776,6 +6136,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-19",
+      "openWeights": true,
       "addedAt": "2026-03-19"
     },
     {
@@ -5792,6 +6153,7 @@
       "outputTokensPerSecond": 222.419,
       "ttft": 0.53,
       "releaseDate": "2025-08-05",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -5808,6 +6170,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-15",
+      "openWeights": true,
       "addedAt": "2025-12-15"
     },
     {
@@ -5824,6 +6187,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-28",
+      "openWeights": true,
       "addedAt": "2026-01-28"
     },
     {
@@ -5840,6 +6204,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-20",
+      "openWeights": true,
       "addedAt": "2025-01-20"
     },
     {
@@ -5856,6 +6221,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -5872,6 +6238,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-26",
+      "openWeights": true,
       "addedAt": "2025-12-26"
     },
     {
@@ -5888,6 +6255,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-12",
+      "openWeights": false,
       "addedAt": "2024-09-12"
     },
     {
@@ -5904,6 +6272,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-19",
+      "openWeights": false,
       "addedAt": "2025-11-19"
     },
     {
@@ -5920,6 +6289,7 @@
       "outputTokensPerSecond": 181.65,
       "ttft": 0.764,
       "releaseDate": "2026-03-16",
+      "openWeights": true,
       "addedAt": "2026-03-16"
     },
     {
@@ -5936,6 +6306,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-08",
+      "openWeights": true,
       "addedAt": "2025-12-08"
     },
     {
@@ -5952,6 +6323,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-31",
+      "openWeights": true,
       "addedAt": "2025-12-31"
     },
     {
@@ -5968,6 +6340,7 @@
       "outputTokensPerSecond": 67.191,
       "ttft": 1.02,
       "releaseDate": "2026-03-02",
+      "openWeights": true,
       "addedAt": "2026-03-02"
     },
     {
@@ -5984,6 +6357,7 @@
       "outputTokensPerSecond": 173.371,
       "ttft": 0.53,
       "releaseDate": "2025-09-11",
+      "openWeights": true,
       "addedAt": "2025-09-11"
     },
     {
@@ -6000,6 +6374,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-28",
+      "openWeights": true,
       "addedAt": "2025-07-28"
     },
     {
@@ -6016,6 +6391,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-17",
+      "openWeights": false,
       "addedAt": "2026-03-17"
     },
     {
@@ -6032,6 +6408,7 @@
       "outputTokensPerSecond": 61.931,
       "ttft": 0.347,
       "releaseDate": "2026-08-25",
+      "openWeights": true,
       "addedAt": "2026-08-25"
     },
     {
@@ -6048,6 +6425,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-19",
+      "openWeights": false,
       "addedAt": "2025-09-19"
     },
     {
@@ -6064,6 +6442,7 @@
       "outputTokensPerSecond": 16.197,
       "ttft": 15.026,
       "releaseDate": "2026-08-06",
+      "openWeights": true,
       "addedAt": "2026-08-06"
     },
     {
@@ -6080,6 +6459,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-26",
+      "openWeights": false,
       "addedAt": "2025-11-26"
     },
     {
@@ -6096,6 +6476,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-11",
+      "openWeights": false,
       "addedAt": "2025-12-11"
     },
     {
@@ -6112,6 +6493,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-31",
+      "openWeights": false,
       "addedAt": "2025-01-31"
     },
     {
@@ -6128,6 +6510,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-13",
+      "openWeights": true,
       "addedAt": "2025-10-13"
     },
     {
@@ -6144,6 +6527,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-07-23",
+      "openWeights": true,
       "addedAt": "2026-07-23"
     },
     {
@@ -6160,6 +6544,7 @@
       "outputTokensPerSecond": 19.22,
       "ttft": 0.558,
       "releaseDate": "2026-03-02",
+      "openWeights": true,
       "addedAt": "2026-03-02"
     },
     {
@@ -6176,6 +6561,7 @@
       "outputTokensPerSecond": 367.022,
       "ttft": 1.103,
       "releaseDate": "2026-04-01",
+      "openWeights": true,
       "addedAt": "2026-04-01"
     },
     {
@@ -6192,6 +6578,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-19",
+      "openWeights": true,
       "addedAt": "2026-01-19"
     },
     {
@@ -6208,6 +6595,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-27",
+      "openWeights": true,
       "addedAt": "2025-11-27"
     },
     {
@@ -6224,6 +6612,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-25",
+      "openWeights": false,
       "addedAt": "2025-09-08"
     },
     {
@@ -6240,6 +6629,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -6256,6 +6646,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-19",
+      "openWeights": false,
       "addedAt": "2025-02-19"
     },
     {
@@ -6272,6 +6663,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-17",
+      "openWeights": true,
       "addedAt": "2025-12-17"
     },
     {
@@ -6288,6 +6680,7 @@
       "outputTokensPerSecond": 239.537,
       "ttft": 0.391,
       "releaseDate": "2026-04-29",
+      "openWeights": true,
       "addedAt": "2026-04-29"
     },
     {
@@ -6304,6 +6697,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-14",
+      "openWeights": false,
       "addedAt": "2025-04-14"
     },
     {
@@ -6320,6 +6714,7 @@
       "outputTokensPerSecond": 240.891,
       "ttft": 0.497,
       "releaseDate": "2025-08-05",
+      "openWeights": true,
       "addedAt": "2025-08-05"
     },
     {
@@ -6336,6 +6731,7 @@
       "outputTokensPerSecond": 292.347,
       "ttft": 0.418,
       "releaseDate": "2025-08-05",
+      "openWeights": true,
       "addedAt": "2025-08-05"
     },
     {
@@ -6352,6 +6748,7 @@
       "outputTokensPerSecond": 51.279,
       "ttft": 0.673,
       "releaseDate": "2025-04-05",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -6368,6 +6765,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-17",
+      "openWeights": true,
       "addedAt": "2025-06-17"
     },
     {
@@ -6384,6 +6782,7 @@
       "outputTokensPerSecond": 125.893,
       "ttft": 0.746,
       "releaseDate": "2025-11-27",
+      "openWeights": false,
       "addedAt": "2025-11-27"
     },
     {
@@ -6400,6 +6799,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-20",
+      "openWeights": false,
       "addedAt": "2025-05-20"
     },
     {
@@ -6416,6 +6816,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -6432,6 +6833,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-05",
+      "openWeights": true,
       "addedAt": "2025-12-05"
     },
     {
@@ -6448,6 +6850,7 @@
       "outputTokensPerSecond": 91.752,
       "ttft": 0.227,
       "releaseDate": "2026-06-09",
+      "openWeights": true,
       "addedAt": "2026-06-09"
     },
     {
@@ -6464,6 +6867,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-23",
+      "openWeights": true,
       "addedAt": "2025-09-23"
     },
     {
@@ -6480,6 +6884,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-12",
+      "openWeights": false,
       "addedAt": "2024-09-12"
     },
     {
@@ -6496,6 +6901,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-30",
+      "openWeights": true,
       "addedAt": "2025-07-30"
     },
     {
@@ -6512,6 +6918,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-25",
+      "openWeights": true,
       "addedAt": "2025-03-25"
     },
     {
@@ -6528,6 +6935,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-21",
+      "openWeights": true,
       "addedAt": "2026-04-21"
     },
     {
@@ -6544,6 +6952,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-27",
+      "openWeights": false,
       "addedAt": "2025-02-27"
     },
     {
@@ -6560,6 +6969,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-31",
+      "openWeights": true,
       "addedAt": "2025-07-31"
     },
     {
@@ -6576,6 +6986,7 @@
       "outputTokensPerSecond": 154.427,
       "ttft": 0.568,
       "releaseDate": "2025-09-11",
+      "openWeights": true,
       "addedAt": "2025-09-11"
     },
     {
@@ -6592,6 +7003,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-10",
+      "openWeights": true,
       "addedAt": "2026-02-10"
     },
     {
@@ -6608,6 +7020,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-06-10",
+      "openWeights": true,
       "addedAt": "2026-06-10"
     },
     {
@@ -6624,6 +7037,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -6640,6 +7054,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-03",
+      "openWeights": true,
       "addedAt": "2025-10-03"
     },
     {
@@ -6656,6 +7071,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-05",
+      "openWeights": true,
       "addedAt": "2025-03-05"
     },
     {
@@ -6672,6 +7088,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-21",
+      "openWeights": false,
       "addedAt": "2025-01-21"
     },
     {
@@ -6688,6 +7105,7 @@
       "outputTokensPerSecond": 146.544,
       "ttft": 1.4,
       "releaseDate": "2026-06-03",
+      "openWeights": true,
       "addedAt": "2026-06-03"
     },
     {
@@ -6704,6 +7122,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-25",
+      "openWeights": false,
       "addedAt": "2025-09-25"
     },
     {
@@ -6720,6 +7139,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-02",
+      "openWeights": true,
       "addedAt": "2025-12-02"
     },
     {
@@ -6736,6 +7156,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-08",
+      "openWeights": true,
       "addedAt": "2025-10-08"
     },
     {
@@ -6752,6 +7173,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-12",
+      "openWeights": false,
       "addedAt": "2025-08-12"
     },
     {
@@ -6768,6 +7190,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-04",
+      "openWeights": false,
       "addedAt": "2025-12-04"
     },
     {
@@ -6784,6 +7207,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-30",
+      "openWeights": false,
       "addedAt": "2025-04-30"
     },
     {
@@ -6800,6 +7224,7 @@
       "outputTokensPerSecond": 81.918,
       "ttft": 0.793,
       "releaseDate": "2026-02-03",
+      "openWeights": true,
       "addedAt": "2026-02-03"
     },
     {
@@ -6816,6 +7241,7 @@
       "outputTokensPerSecond": 228.953,
       "ttft": 0.243,
       "releaseDate": "2026-08-25",
+      "openWeights": true,
       "addedAt": "2026-08-25"
     },
     {
@@ -6832,6 +7258,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-10",
+      "openWeights": false,
       "addedAt": "2025-06-10"
     },
     {
@@ -6848,6 +7275,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-20",
+      "openWeights": false,
       "addedAt": "2025-05-20"
     },
     {
@@ -6864,6 +7292,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-10",
+      "openWeights": false,
       "addedAt": "2025-07-10"
     },
     {
@@ -6880,6 +7309,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-27",
+      "openWeights": false,
       "addedAt": "2025-03-27"
     },
     {
@@ -6896,6 +7326,7 @@
       "outputTokensPerSecond": 253.848,
       "ttft": 0.421,
       "releaseDate": "2025-08-05",
+      "openWeights": true,
       "addedAt": "2026-05-15T00:00:00.000Z"
     },
     {
@@ -6912,6 +7343,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-05",
+      "openWeights": true,
       "addedAt": "2025-12-05"
     },
     {
@@ -6928,6 +7360,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-25",
+      "openWeights": true,
       "addedAt": "2025-07-25"
     },
     {
@@ -6944,6 +7377,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-07",
+      "openWeights": false,
       "addedAt": "2025-05-07"
     },
     {
@@ -6960,6 +7394,7 @@
       "outputTokensPerSecond": 168.035,
       "ttft": 0.655,
       "releaseDate": "2026-03-16",
+      "openWeights": true,
       "addedAt": "2026-03-16"
     },
     {
@@ -6976,6 +7411,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-10",
+      "openWeights": true,
       "addedAt": "2026-02-10"
     },
     {
@@ -6992,6 +7428,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-10-22",
+      "openWeights": false,
       "addedAt": "2024-10-22"
     },
     {
@@ -7008,6 +7445,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-05",
+      "openWeights": false,
       "addedAt": "2025-02-05"
     },
     {
@@ -7024,6 +7462,7 @@
       "outputTokensPerSecond": 32.757,
       "ttft": 0.483,
       "releaseDate": "2026-04-03",
+      "openWeights": true,
       "addedAt": "2026-04-03"
     },
     {
@@ -7040,6 +7479,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-18",
+      "openWeights": true,
       "addedAt": "2025-03-18"
     },
     {
@@ -7056,6 +7496,7 @@
       "outputTokensPerSecond": 228.841,
       "ttft": 0.487,
       "releaseDate": "2025-12-15",
+      "openWeights": true,
       "addedAt": "2025-12-15"
     },
     {
@@ -7072,6 +7513,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-25",
+      "openWeights": true,
       "addedAt": "2026-05-25"
     },
     {
@@ -7088,6 +7530,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-06",
+      "openWeights": true,
       "addedAt": "2025-08-06"
     },
     {
@@ -7104,6 +7547,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-06",
+      "openWeights": true,
       "addedAt": "2026-03-06"
     },
     {
@@ -7120,6 +7564,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-03-04",
+      "openWeights": false,
       "addedAt": "2024-03-04"
     },
     {
@@ -7136,6 +7581,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-21",
+      "openWeights": true,
       "addedAt": "2025-05-21"
     },
     {
@@ -7152,6 +7598,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-05",
+      "openWeights": false,
       "addedAt": "2025-02-05"
     },
     {
@@ -7168,6 +7615,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-17",
+      "openWeights": false,
       "addedAt": "2025-04-17"
     },
     {
@@ -7184,6 +7632,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-25",
+      "openWeights": true,
       "addedAt": "2026-05-25"
     },
     {
@@ -7200,6 +7649,7 @@
       "outputTokensPerSecond": 224.698,
       "ttft": 0.763,
       "releaseDate": "2025-10-29",
+      "openWeights": false,
       "addedAt": "2025-10-29"
     },
     {
@@ -7216,6 +7666,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-28",
+      "openWeights": false,
       "addedAt": "2025-01-28"
     },
     {
@@ -7232,6 +7683,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-09",
+      "openWeights": true,
       "addedAt": "2025-12-09"
     },
     {
@@ -7248,6 +7700,7 @@
       "outputTokensPerSecond": 79.383,
       "ttft": 0.81,
       "releaseDate": "2025-09-17",
+      "openWeights": true,
       "addedAt": "2025-09-17"
     },
     {
@@ -7264,6 +7717,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -7280,6 +7734,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-12-26",
+      "openWeights": true,
       "addedAt": "2024-12-26"
     },
     {
@@ -7296,6 +7751,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-17",
+      "openWeights": false,
       "addedAt": "2025-06-17"
     },
     {
@@ -7312,6 +7768,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-20",
+      "openWeights": true,
       "addedAt": "2025-01-20"
     },
     {
@@ -7328,6 +7785,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-08",
+      "openWeights": true,
       "addedAt": "2025-12-08"
     },
     {
@@ -7344,6 +7802,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-11-20",
+      "openWeights": false,
       "addedAt": "2024-11-20"
     },
     {
@@ -7360,6 +7819,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-08-04",
+      "openWeights": true,
       "addedAt": "2026-08-04"
     },
     {
@@ -7376,6 +7836,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-11",
+      "openWeights": true,
       "addedAt": "2026-02-11"
     },
     {
@@ -7392,6 +7853,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-21",
+      "openWeights": true,
       "addedAt": "2025-10-21"
     },
     {
@@ -7408,6 +7870,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -7424,6 +7887,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-15",
+      "openWeights": true,
       "addedAt": "2025-07-15"
     },
     {
@@ -7440,6 +7904,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-12-11",
+      "openWeights": false,
       "addedAt": "2024-12-11"
     },
     {
@@ -7456,6 +7921,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-10",
+      "openWeights": true,
       "addedAt": "2025-06-10"
     },
     {
@@ -7472,6 +7938,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-20",
+      "openWeights": true,
       "addedAt": "2025-06-20"
     },
     {
@@ -7488,6 +7955,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-26",
+      "openWeights": false,
       "addedAt": "2025-11-26"
     },
     {
@@ -7504,6 +7972,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -7520,6 +7989,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-14",
+      "openWeights": true,
       "addedAt": "2025-10-14"
     },
     {
@@ -7536,6 +8006,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-29",
+      "openWeights": true,
       "addedAt": "2025-05-29"
     },
     {
@@ -7552,6 +8023,7 @@
       "outputTokensPerSecond": 100.092,
       "ttft": 0.714,
       "releaseDate": "2025-04-05",
+      "openWeights": true,
       "addedAt": "2025-04-05"
     },
     {
@@ -7568,6 +8040,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-28",
+      "openWeights": false,
       "addedAt": "2025-01-28"
     },
     {
@@ -7584,6 +8057,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-10-22",
+      "openWeights": false,
       "addedAt": "2024-10-22"
     },
     {
@@ -7600,6 +8074,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-20",
+      "openWeights": true,
       "addedAt": "2025-01-20"
     },
     {
@@ -7616,6 +8091,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-24",
+      "openWeights": false,
       "addedAt": "2024-09-24"
     },
     {
@@ -7632,6 +8108,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-27",
+      "openWeights": true,
       "addedAt": "2025-08-27"
     },
     {
@@ -7648,6 +8125,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-03",
+      "openWeights": true,
       "addedAt": "2025-10-03"
     },
     {
@@ -7664,6 +8142,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-20",
+      "openWeights": false,
       "addedAt": "2025-05-20"
     },
     {
@@ -7680,6 +8159,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-20",
+      "openWeights": true,
       "addedAt": "2025-01-20"
     },
     {
@@ -7696,6 +8176,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-04",
+      "openWeights": true,
       "addedAt": "2026-01-04"
     },
     {
@@ -7712,6 +8193,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-02",
+      "openWeights": true,
       "addedAt": "2026-04-02"
     },
     {
@@ -7728,6 +8210,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-14",
+      "openWeights": false,
       "addedAt": "2025-04-14"
     },
     {
@@ -7744,6 +8227,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-17",
+      "openWeights": true,
       "addedAt": "2025-09-17"
     },
     {
@@ -7760,6 +8244,7 @@
       "outputTokensPerSecond": 110.933,
       "ttft": 0.951,
       "releaseDate": "2025-09-22",
+      "openWeights": true,
       "addedAt": "2025-09-22"
     },
     {
@@ -7776,6 +8261,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-06",
+      "openWeights": false,
       "addedAt": "2026-04-06"
     },
     {
@@ -7792,6 +8278,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-08-06",
+      "openWeights": false,
       "addedAt": "2024-08-06"
     },
     {
@@ -7808,6 +8295,7 @@
       "outputTokensPerSecond": 95.529,
       "ttft": 0.664,
       "releaseDate": "2024-12-06",
+      "openWeights": true,
       "addedAt": "2024-12-06"
     },
     {
@@ -7824,6 +8312,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-19",
+      "openWeights": true,
       "addedAt": "2024-09-19"
     },
     {
@@ -7840,6 +8329,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-21",
+      "openWeights": false,
       "addedAt": "2025-01-21"
     },
     {
@@ -7856,6 +8346,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-20",
+      "openWeights": true,
       "addedAt": "2026-01-20"
     },
     {
@@ -7872,6 +8363,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-10",
+      "openWeights": true,
       "addedAt": "2025-07-10"
     },
     {
@@ -7888,6 +8380,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-11",
+      "openWeights": true,
       "addedAt": "2025-08-11"
     },
     {
@@ -7904,6 +8397,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-11-18",
+      "openWeights": true,
       "addedAt": "2024-11-18"
     },
     {
@@ -7920,6 +8414,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -7936,6 +8431,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-11-27",
+      "openWeights": null,
       "addedAt": "2024-11-27"
     },
     {
@@ -7952,6 +8448,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-21",
+      "openWeights": false,
       "addedAt": "2025-01-21"
     },
     {
@@ -7968,6 +8465,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-09",
+      "openWeights": true,
       "addedAt": "2025-12-09"
     },
     {
@@ -7984,6 +8482,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-30",
+      "openWeights": true,
       "addedAt": "2025-06-30"
     },
     {
@@ -8000,6 +8499,7 @@
       "outputTokensPerSecond": 36.826,
       "ttft": 0.467,
       "releaseDate": "2026-04-03",
+      "openWeights": true,
       "addedAt": "2026-04-03"
     },
     {
@@ -8016,6 +8516,7 @@
       "outputTokensPerSecond": 42.727,
       "ttft": 0.727,
       "releaseDate": "2025-08-27",
+      "openWeights": true,
       "addedAt": "2025-08-27"
     },
     {
@@ -8032,6 +8533,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-07",
+      "openWeights": true,
       "addedAt": "2025-04-07"
     },
     {
@@ -8048,6 +8550,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-28",
+      "openWeights": true,
       "addedAt": "2025-10-28"
     },
     {
@@ -8064,6 +8567,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-29",
+      "openWeights": true,
       "addedAt": "2025-07-29"
     },
     {
@@ -8080,6 +8584,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-09",
+      "openWeights": false,
       "addedAt": "2025-07-09"
     },
     {
@@ -8096,6 +8601,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-25",
+      "openWeights": false,
       "addedAt": "2025-02-25"
     },
     {
@@ -8112,6 +8618,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-29",
+      "openWeights": true,
       "addedAt": "2026-04-29"
     },
     {
@@ -8128,6 +8635,7 @@
       "outputTokensPerSecond": 43.299,
       "ttft": 0.648,
       "releaseDate": "2025-08-27",
+      "openWeights": true,
       "addedAt": "2025-08-27"
     },
     {
@@ -8144,6 +8652,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-25",
+      "openWeights": true,
       "addedAt": "2025-07-25"
     },
     {
@@ -8160,6 +8669,7 @@
       "outputTokensPerSecond": 200.195,
       "ttft": 0.339,
       "releaseDate": "2025-08-18",
+      "openWeights": true,
       "addedAt": "2025-08-18"
     },
     {
@@ -8176,6 +8686,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-05",
+      "openWeights": false,
       "addedAt": "2025-02-05"
     },
     {
@@ -8192,6 +8703,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-05-13",
+      "openWeights": false,
       "addedAt": "2024-05-13"
     },
     {
@@ -8208,6 +8720,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-05",
+      "openWeights": true,
       "addedAt": "2025-12-05"
     },
     {
@@ -8224,6 +8737,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-30",
+      "openWeights": true,
       "addedAt": "2025-10-30"
     },
     {
@@ -8240,6 +8754,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-07-23",
+      "openWeights": true,
       "addedAt": "2024-07-23"
     },
     {
@@ -8256,6 +8771,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-20",
+      "openWeights": true,
       "addedAt": "2025-05-20"
     },
     {
@@ -8272,6 +8788,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-18",
+      "openWeights": true,
       "addedAt": "2025-03-18"
     },
     {
@@ -8288,6 +8805,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -8304,6 +8822,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -8320,6 +8839,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-14",
+      "openWeights": true,
       "addedAt": "2025-10-14"
     },
     {
@@ -8336,6 +8856,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-06-21",
+      "openWeights": false,
       "addedAt": "2024-06-21"
     },
     {
@@ -8352,6 +8873,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-15",
+      "openWeights": false,
       "addedAt": "2025-02-15"
     },
     {
@@ -8368,6 +8890,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-28",
+      "openWeights": true,
       "addedAt": "2026-05-28"
     },
     {
@@ -8384,6 +8907,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -8400,6 +8924,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-19",
+      "openWeights": true,
       "addedAt": "2025-09-19"
     },
     {
@@ -8416,6 +8941,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-30",
+      "openWeights": true,
       "addedAt": "2025-01-30"
     },
     {
@@ -8432,6 +8958,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-24",
+      "openWeights": false,
       "addedAt": "2024-09-24"
     },
     {
@@ -8448,6 +8975,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-07",
+      "openWeights": false,
       "addedAt": "2025-08-07"
     },
     {
@@ -8464,6 +8992,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-12-12",
+      "openWeights": true,
       "addedAt": "2024-12-12"
     },
     {
@@ -8480,6 +9009,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-17",
+      "openWeights": true,
       "addedAt": "2025-03-17"
     },
     {
@@ -8496,6 +9026,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-12",
+      "openWeights": true,
       "addedAt": "2025-12-12"
     },
     {
@@ -8512,6 +9043,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-11-18",
+      "openWeights": true,
       "addedAt": "2024-11-18"
     },
     {
@@ -8528,6 +9060,7 @@
       "outputTokensPerSecond": 68.08,
       "ttft": 0.357,
       "releaseDate": "2025-03-13",
+      "openWeights": true,
       "addedAt": "2025-03-13"
     },
     {
@@ -8544,6 +9077,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-11-06",
+      "openWeights": false,
       "addedAt": "2023-11-06"
     },
     {
@@ -8560,6 +9094,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-12-03",
+      "openWeights": false,
       "addedAt": "2024-12-03"
     },
     {
@@ -8576,6 +9111,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-14",
+      "openWeights": true,
       "addedAt": "2025-10-14"
     },
     {
@@ -8592,6 +9128,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-09",
+      "openWeights": false,
       "addedAt": "2025-07-09"
     },
     {
@@ -8608,6 +9145,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-08-13",
+      "openWeights": false,
       "addedAt": "2024-08-13"
     },
     {
@@ -8624,6 +9162,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-07-23",
+      "openWeights": true,
       "addedAt": "2024-07-23"
     },
     {
@@ -8640,6 +9179,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-10-15",
+      "openWeights": true,
       "addedAt": "2024-10-15"
     },
     {
@@ -8656,6 +9196,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-19",
+      "openWeights": null,
       "addedAt": "2024-09-19"
     },
     {
@@ -8672,6 +9213,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-02",
+      "openWeights": true,
       "addedAt": "2026-03-02"
     },
     {
@@ -8688,6 +9230,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-07-24",
+      "openWeights": true,
       "addedAt": "2024-07-24"
     },
     {
@@ -8704,6 +9247,7 @@
       "outputTokensPerSecond": 250.412,
       "ttft": 0.358,
       "releaseDate": "2025-12-15",
+      "openWeights": true,
       "addedAt": "2025-12-15"
     },
     {
@@ -8720,6 +9264,7 @@
       "outputTokensPerSecond": 170.213,
       "ttft": 0.753,
       "releaseDate": "2025-08-18",
+      "openWeights": true,
       "addedAt": "2025-08-18"
     },
     {
@@ -8736,6 +9281,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-17",
+      "openWeights": false,
       "addedAt": "2025-06-17"
     },
     {
@@ -8752,6 +9298,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-11",
+      "openWeights": true,
       "addedAt": "2025-08-11"
     },
     {
@@ -8768,6 +9315,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-03-14",
+      "openWeights": false,
       "addedAt": "2023-03-14"
     },
     {
@@ -8784,6 +9332,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-07-18",
+      "openWeights": false,
       "addedAt": "2024-07-18"
     },
     {
@@ -8800,6 +9349,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-27",
+      "openWeights": true,
       "addedAt": "2025-08-27"
     },
     {
@@ -8816,6 +9366,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-30",
+      "openWeights": true,
       "addedAt": "2025-01-30"
     },
     {
@@ -8832,6 +9383,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-12-03",
+      "openWeights": false,
       "addedAt": "2024-12-03"
     },
     {
@@ -8848,6 +9400,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-11-11",
+      "openWeights": true,
       "addedAt": "2024-11-11"
     },
     {
@@ -8864,6 +9417,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -8880,6 +9434,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-06",
+      "openWeights": true,
       "addedAt": "2025-08-06"
     },
     {
@@ -8896,6 +9451,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-12-10",
+      "openWeights": true,
       "addedAt": "2024-12-10"
     },
     {
@@ -8912,6 +9468,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-06",
+      "openWeights": true,
       "addedAt": "2024-09-06"
     },
     {
@@ -8928,6 +9485,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-12-19",
+      "openWeights": false,
       "addedAt": "2024-12-19"
     },
     {
@@ -8944,6 +9502,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-29",
+      "openWeights": true,
       "addedAt": "2026-04-29"
     },
     {
@@ -8960,6 +9519,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-07-23",
+      "openWeights": true,
       "addedAt": "2024-07-23"
     },
     {
@@ -8976,6 +9536,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -8992,6 +9553,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -9008,6 +9570,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-06",
+      "openWeights": true,
       "addedAt": "2026-03-06"
     },
     {
@@ -9024,6 +9587,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-20",
+      "openWeights": true,
       "addedAt": "2025-01-20"
     },
     {
@@ -9040,6 +9604,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-02",
+      "openWeights": true,
       "addedAt": "2026-04-02"
     },
     {
@@ -9056,6 +9621,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-17",
+      "openWeights": false,
       "addedAt": "2025-02-17"
     },
     {
@@ -9072,6 +9638,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-13",
+      "openWeights": true,
       "addedAt": "2026-01-13"
     },
     {
@@ -9088,6 +9655,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-20",
+      "openWeights": true,
       "addedAt": "2025-11-20"
     },
     {
@@ -9104,6 +9672,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-05-15",
+      "openWeights": false,
       "addedAt": "2024-05-15"
     },
     {
@@ -9120,6 +9689,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-25",
+      "openWeights": true,
       "addedAt": "2024-09-25"
     },
     {
@@ -9136,6 +9706,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-11-18",
+      "openWeights": false,
       "addedAt": "2024-11-18"
     },
     {
@@ -9152,6 +9723,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-18",
+      "openWeights": true,
       "addedAt": "2025-02-18"
     },
     {
@@ -9168,6 +9740,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-10-04",
+      "openWeights": false,
       "addedAt": "2024-10-04"
     },
     {
@@ -9184,6 +9757,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-01-25",
+      "openWeights": true,
       "addedAt": "2024-01-25"
     },
     {
@@ -9200,6 +9774,7 @@
       "outputTokensPerSecond": 1752.821,
       "ttft": 0.414,
       "releaseDate": "2026-07-24",
+      "openWeights": false,
       "addedAt": "2026-07-24"
     },
     {
@@ -9216,6 +9791,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-15",
+      "openWeights": true,
       "addedAt": "2025-07-15"
     },
     {
@@ -9232,6 +9808,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-03-17",
+      "openWeights": true,
       "addedAt": "2024-03-17"
     },
     {
@@ -9248,6 +9825,7 @@
       "outputTokensPerSecond": 47.776,
       "ttft": 0.338,
       "releaseDate": "2024-02-26",
+      "openWeights": true,
       "addedAt": "2024-02-26"
     },
     {
@@ -9264,6 +9842,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-06-07",
+      "openWeights": true,
       "addedAt": "2024-06-07"
     },
     {
@@ -9280,6 +9859,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-10-03",
+      "openWeights": false,
       "addedAt": "2024-10-03"
     },
     {
@@ -9296,6 +9876,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-02",
+      "openWeights": true,
       "addedAt": "2026-03-02"
     },
     {
@@ -9312,6 +9893,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-13",
+      "openWeights": true,
       "addedAt": "2025-03-13"
     },
     {
@@ -9328,6 +9910,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-07",
+      "openWeights": true,
       "addedAt": "2025-07-07"
     },
     {
@@ -9344,6 +9927,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-02",
+      "openWeights": true,
       "addedAt": "2026-03-02"
     },
     {
@@ -9360,6 +9944,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-06-17",
+      "openWeights": true,
       "addedAt": "2024-06-17"
     },
     {
@@ -9376,6 +9961,7 @@
       "outputTokensPerSecond": 56.859,
       "ttft": 8.917,
       "releaseDate": "2025-09-22",
+      "openWeights": true,
       "addedAt": "2025-09-22"
     },
     {
@@ -9392,6 +9978,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-08-15",
+      "openWeights": true,
       "addedAt": "2024-08-15"
     },
     {
@@ -9408,6 +9995,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-08-22",
+      "openWeights": true,
       "addedAt": "2024-08-22"
     },
     {
@@ -9424,6 +10012,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-06",
+      "openWeights": true,
       "addedAt": "2025-03-06"
     },
     {
@@ -9440,6 +10029,7 @@
       "outputTokensPerSecond": 60.315,
       "ttft": 0.759,
       "releaseDate": "2025-12-02",
+      "openWeights": true,
       "addedAt": "2025-12-02"
     },
     {
@@ -9456,6 +10046,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-13",
+      "openWeights": true,
       "addedAt": "2025-03-13"
     },
     {
@@ -9472,6 +10063,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": true,
       "addedAt": "2025-04-28"
     },
     {
@@ -9488,6 +10080,7 @@
       "outputTokensPerSecond": 108.002,
       "ttft": 0.885,
       "releaseDate": "2025-09-22",
+      "openWeights": true,
       "addedAt": "2025-09-22"
     },
     {
@@ -9504,6 +10097,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-03-04",
+      "openWeights": false,
       "addedAt": "2024-03-04"
     },
     {
@@ -9520,6 +10114,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-05-14",
+      "openWeights": false,
       "addedAt": "2024-05-14"
     },
     {
@@ -9536,6 +10131,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-04-29",
+      "openWeights": true,
       "addedAt": "2026-04-29"
     },
     {
@@ -9552,6 +10148,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-02-25",
+      "openWeights": true,
       "addedAt": "2026-02-25"
     },
     {
@@ -9568,6 +10165,7 @@
       "outputTokensPerSecond": 257.249,
       "ttft": 0.649,
       "releaseDate": "2024-12-03",
+      "openWeights": false,
       "addedAt": "2024-12-03"
     },
     {
@@ -9584,6 +10182,7 @@
       "outputTokensPerSecond": 44.892,
       "ttft": 0.961,
       "releaseDate": "2024-12-12",
+      "openWeights": true,
       "addedAt": "2024-12-12"
     },
     {
@@ -9600,6 +10199,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-12-06",
+      "openWeights": false,
       "addedAt": "2023-12-06"
     },
     {
@@ -9616,6 +10216,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-20",
+      "openWeights": true,
       "addedAt": "2025-05-20"
     },
     {
@@ -9632,6 +10233,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-02-26",
+      "openWeights": false,
       "addedAt": "2024-02-26"
     },
     {
@@ -9648,6 +10250,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-17",
+      "openWeights": true,
       "addedAt": "2024-09-17"
     },
     {
@@ -9664,6 +10267,7 @@
       "outputTokensPerSecond": 209.475,
       "ttft": 0.786,
       "releaseDate": "2025-10-28",
+      "openWeights": true,
       "addedAt": "2025-10-28"
     },
     {
@@ -9680,6 +10284,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-04-23",
+      "openWeights": true,
       "addedAt": "2024-04-23"
     },
     {
@@ -9696,6 +10301,7 @@
       "outputTokensPerSecond": 17.611,
       "ttft": 0.606,
       "releaseDate": "2025-02-26",
+      "openWeights": true,
       "addedAt": "2025-02-26"
     },
     {
@@ -9712,6 +10318,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-19",
+      "openWeights": true,
       "addedAt": "2024-09-19"
     },
     {
@@ -9728,6 +10335,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-08",
+      "openWeights": true,
       "addedAt": "2025-10-08"
     },
     {
@@ -9744,6 +10352,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-07-18",
+      "openWeights": true,
       "addedAt": "2023-07-18"
     },
     {
@@ -9760,6 +10369,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-25",
+      "openWeights": true,
       "addedAt": "2024-09-25"
     },
     {
@@ -9776,6 +10386,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-05-11",
+      "openWeights": true,
       "addedAt": "2026-05-11"
     },
     {
@@ -9792,6 +10403,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-04-17",
+      "openWeights": true,
       "addedAt": "2024-04-17"
     },
     {
@@ -9808,6 +10420,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-04-25",
+      "openWeights": null,
       "addedAt": "2024-04-25"
     },
     {
@@ -9824,6 +10437,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-14",
+      "openWeights": true,
       "addedAt": "2025-10-14"
     },
     {
@@ -9840,6 +10454,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-11-21",
+      "openWeights": false,
       "addedAt": "2023-11-21"
     },
     {
@@ -9856,6 +10471,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-03-04",
+      "openWeights": false,
       "addedAt": "2024-03-04"
     },
     {
@@ -9872,6 +10488,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-25",
+      "openWeights": true,
       "addedAt": "2024-09-25"
     },
     {
@@ -9888,6 +10505,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-11-26",
+      "openWeights": true,
       "addedAt": "2024-11-26"
     },
     {
@@ -9904,6 +10522,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-20",
+      "openWeights": true,
       "addedAt": "2025-11-20"
     },
     {
@@ -9920,6 +10539,7 @@
       "outputTokensPerSecond": 94.419,
       "ttft": 0.755,
       "releaseDate": "2025-03-10",
+      "openWeights": true,
       "addedAt": "2025-03-10"
     },
     {
@@ -9936,6 +10556,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-07-11",
+      "openWeights": false,
       "addedAt": "2023-07-11"
     },
     {
@@ -9952,6 +10573,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-01-20",
+      "openWeights": true,
       "addedAt": "2025-01-20"
     },
     {
@@ -9968,6 +10590,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-05-06",
+      "openWeights": true,
       "addedAt": "2024-05-06"
     },
     {
@@ -9984,6 +10607,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2022-11-30",
+      "openWeights": false,
       "addedAt": "2022-11-30"
     },
     {
@@ -10000,6 +10624,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-09",
+      "openWeights": true,
       "addedAt": "2025-09-09"
     },
     {
@@ -10016,6 +10641,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-04-18",
+      "openWeights": true,
       "addedAt": "2024-04-18"
     },
     {
@@ -10032,6 +10658,7 @@
       "outputTokensPerSecond": 114.381,
       "ttft": 0.493,
       "releaseDate": "2025-12-02",
+      "openWeights": true,
       "addedAt": "2025-12-02"
     },
     {
@@ -10048,6 +10675,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-12-11",
+      "openWeights": false,
       "addedAt": "2023-12-11"
     },
     {
@@ -10064,6 +10692,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-02-26",
+      "openWeights": false,
       "addedAt": "2024-02-26"
     },
     {
@@ -10080,6 +10709,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-04-24",
+      "openWeights": true,
       "addedAt": "2024-04-24"
     },
     {
@@ -10096,6 +10726,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-30",
+      "openWeights": false,
       "addedAt": "2024-09-30"
     },
     {
@@ -10112,6 +10743,7 @@
       "outputTokensPerSecond": 21.002,
       "ttft": 0.908,
       "releaseDate": "2024-09-25",
+      "openWeights": true,
       "addedAt": "2024-09-25"
     },
     {
@@ -10128,6 +10760,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-05-10",
+      "openWeights": false,
       "addedAt": "2023-05-10"
     },
     {
@@ -10144,6 +10777,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-11-30",
+      "openWeights": true,
       "addedAt": "2023-11-30"
     },
     {
@@ -10160,6 +10794,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-02",
+      "openWeights": true,
       "addedAt": "2026-03-02"
     },
     {
@@ -10176,6 +10811,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-04-04",
+      "openWeights": true,
       "addedAt": "2024-04-04"
     },
     {
@@ -10192,6 +10828,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-03-27",
+      "openWeights": true,
       "addedAt": "2024-03-27"
     },
     {
@@ -10208,6 +10845,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-06-17",
+      "openWeights": true,
       "addedAt": "2024-06-17"
     },
     {
@@ -10224,6 +10862,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-11-29",
+      "openWeights": true,
       "addedAt": "2023-11-29"
     },
     {
@@ -10240,6 +10879,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-15",
+      "openWeights": true,
       "addedAt": "2025-07-15"
     },
     {
@@ -10256,6 +10896,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-12-06",
+      "openWeights": false,
       "addedAt": "2023-12-06"
     },
     {
@@ -10272,6 +10913,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-07-18",
+      "openWeights": true,
       "addedAt": "2023-07-18"
     },
     {
@@ -10288,6 +10930,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-07-18",
+      "openWeights": true,
       "addedAt": "2023-07-18"
     },
     {
@@ -10304,6 +10947,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-12-18",
+      "openWeights": true,
       "addedAt": "2023-12-18"
     },
     {
@@ -10320,6 +10964,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-05-23",
+      "openWeights": true,
       "addedAt": "2025-05-23"
     },
     {
@@ -10336,6 +10981,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-15",
+      "openWeights": true,
       "addedAt": "2025-07-15"
     },
     {
@@ -10352,6 +10998,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-28",
+      "openWeights": true,
       "addedAt": "2025-10-28"
     },
     {
@@ -10368,6 +11015,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-08-22",
+      "openWeights": true,
       "addedAt": "2024-08-22"
     },
     {
@@ -10384,6 +11032,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-06",
+      "openWeights": true,
       "addedAt": "2025-03-06"
     },
     {
@@ -10400,6 +11049,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-07",
+      "openWeights": true,
       "addedAt": "2025-07-07"
     },
     {
@@ -10416,6 +11066,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-23",
+      "openWeights": true,
       "addedAt": "2025-09-23"
     },
     {
@@ -10432,6 +11083,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-05",
+      "openWeights": true,
       "addedAt": "2026-01-05"
     },
     {
@@ -10448,6 +11100,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-20",
+      "openWeights": true,
       "addedAt": "2026-01-20"
     },
     {
@@ -10464,6 +11117,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-11-20",
+      "openWeights": true,
       "addedAt": "2025-11-20"
     },
     {
@@ -10480,6 +11134,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": null,
       "addedAt": "2025-04-28"
     },
     {
@@ -10496,6 +11151,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-02",
+      "openWeights": true,
       "addedAt": "2025-09-02"
     },
     {
@@ -10512,6 +11168,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-02-13",
+      "openWeights": true,
       "addedAt": "2025-02-13"
     },
     {
@@ -10528,6 +11185,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-08-14",
+      "openWeights": true,
       "addedAt": "2025-08-14"
     },
     {
@@ -10544,6 +11202,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-22",
+      "openWeights": true,
       "addedAt": "2025-09-22"
     },
     {
@@ -10560,6 +11219,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-12-11",
+      "openWeights": true,
       "addedAt": "2023-12-11"
     },
     {
@@ -10576,6 +11236,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-03-14",
+      "openWeights": false,
       "addedAt": "2023-03-14"
     },
     {
@@ -10592,6 +11253,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-03-12",
+      "openWeights": true,
       "addedAt": "2024-03-12"
     },
     {
@@ -10608,6 +11270,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-28",
+      "openWeights": true,
       "addedAt": "2025-10-28"
     },
     {
@@ -10624,6 +11287,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-02-24",
+      "openWeights": true,
       "addedAt": "2023-02-24"
     },
     {
@@ -10640,6 +11304,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-09-27",
+      "openWeights": true,
       "addedAt": "2023-09-27"
     },
     {
@@ -10656,6 +11321,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-12-11",
+      "openWeights": true,
       "addedAt": "2025-12-11"
     },
     {
@@ -10672,6 +11338,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2023-09-25",
+      "openWeights": true,
       "addedAt": "2023-09-25"
     },
     {
@@ -10688,6 +11355,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-12",
+      "openWeights": true,
       "addedAt": "2025-03-12"
     },
     {
@@ -10704,6 +11372,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-16",
+      "openWeights": true,
       "addedAt": "2025-04-16"
     },
     {
@@ -10720,6 +11389,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-07",
+      "openWeights": true,
       "addedAt": "2025-10-07"
     },
     {
@@ -10736,6 +11406,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": null,
       "addedAt": "2025-04-28"
     },
     {
@@ -10752,6 +11423,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-09-02",
+      "openWeights": true,
       "addedAt": "2025-09-02"
     },
     {
@@ -10768,6 +11440,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-13",
+      "openWeights": true,
       "addedAt": "2025-03-13"
     },
     {
@@ -10784,6 +11457,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-12",
+      "openWeights": true,
       "addedAt": "2025-03-12"
     },
     {
@@ -10800,6 +11474,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-26",
+      "openWeights": true,
       "addedAt": "2025-06-26"
     },
     {
@@ -10816,6 +11491,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-06-26",
+      "openWeights": true,
       "addedAt": "2025-06-26"
     },
     {
@@ -10832,6 +11508,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-28",
+      "openWeights": true,
       "addedAt": "2025-10-28"
     },
     {
@@ -10848,6 +11525,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-10-28",
+      "openWeights": true,
       "addedAt": "2025-10-28"
     },
     {
@@ -10864,6 +11542,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-07-10",
+      "openWeights": true,
       "addedAt": "2025-07-10"
     },
     {
@@ -10880,6 +11559,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-01-05",
+      "openWeights": true,
       "addedAt": "2026-01-05"
     },
     {
@@ -10896,6 +11576,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-09-25",
+      "openWeights": true,
       "addedAt": "2024-09-25"
     },
     {
@@ -10912,6 +11593,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2024-04-18",
+      "openWeights": true,
       "addedAt": "2024-04-18"
     },
     {
@@ -10928,6 +11610,7 @@
       "outputTokensPerSecond": 240.1,
       "ttft": 0.423,
       "releaseDate": "2025-12-02",
+      "openWeights": true,
       "addedAt": "2025-12-02"
     },
     {
@@ -10944,6 +11627,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-03-16",
+      "openWeights": true,
       "addedAt": "2026-03-16"
     },
     {
@@ -10960,6 +11644,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": null,
       "addedAt": "2025-04-28"
     },
     {
@@ -10976,6 +11661,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-04-28",
+      "openWeights": null,
       "addedAt": "2025-04-28"
     },
     {
@@ -10992,6 +11678,7 @@
       "outputTokensPerSecond": 131.795,
       "ttft": 0.202,
       "releaseDate": "2026-02-17",
+      "openWeights": true,
       "addedAt": "2026-02-17"
     },
     {
@@ -11008,6 +11695,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2025-03-12",
+      "openWeights": true,
       "addedAt": "2025-03-12"
     },
     {
@@ -11024,6 +11712,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-09-03",
+      "openWeights": true,
       "addedAt": "2026-09-03"
     }
   ]
