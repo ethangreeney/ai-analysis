@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-15T15:11:40.241Z",
+  "fetchedAt": "2026-10-15T15:41:46.863Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2519,6 +2519,23 @@
       "addedAt": "2025-12-11"
     },
     {
+      "slug": "nemotron-3-5-super-vl",
+      "name": "Nemotron 3.5 Super VL",
+      "displayName": "Nemotron 3.5 Super VL",
+      "creator": "NVIDIA",
+      "intelligence": 26.5,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-15",
+      "openWeights": null,
+      "addedAt": "2026-10-15"
+    },
+    {
       "slug": "apodex-1-1",
       "name": "Apodex 1.1",
       "displayName": "Apodex 1.1",
@@ -3656,6 +3673,23 @@
       "releaseDate": "2026-09-22",
       "openWeights": false,
       "addedAt": "2026-09-22"
+    },
+    {
+      "slug": "nemotron-3-5-bolt-74b-a9b",
+      "name": "Nemotron 3.5 Bolt 74B-A9B",
+      "displayName": "Nemotron 3.5 Bolt 74B-A9B",
+      "creator": "NVIDIA",
+      "intelligence": 21.4,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-15",
+      "openWeights": null,
+      "addedAt": "2026-10-15"
     },
     {
       "slug": "qwen3-5-397b-a17b-non-reasoning",
