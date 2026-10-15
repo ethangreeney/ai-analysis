@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-15T21:57:43.967Z",
+  "fetchedAt": "2026-10-15T22:12:51.804Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1216,7 +1216,7 @@
       "creator": "Meta",
       "intelligence": 38.9,
       "codingIndex": null,
-      "costPerTask": null,
+      "costPerTask": 0.8435187802958677,
       "e2eLatency": null,
       "reasoningTime": null,
       "pricePerMillion": 2,
