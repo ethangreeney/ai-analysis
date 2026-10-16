@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-16T13:29:54.539Z",
+  "fetchedAt": "2026-10-16T14:15:01.682Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2027,8 +2027,8 @@
     },
     {
       "slug": "reflection-beam",
-      "name": "Reflection Beam",
-      "displayName": "Reflection Beam",
+      "name": "Beam 1.0",
+      "displayName": "Beam 1.0",
       "creator": "Reflection",
       "intelligence": 30.3,
       "codingIndex": null,
