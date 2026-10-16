@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-16T21:46:06.659Z",
+  "fetchedAt": "2026-10-16T22:01:09.683Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2032,7 +2032,7 @@
       "creator": "Reflection",
       "intelligence": 30.3,
       "codingIndex": null,
-      "costPerTask": null,
+      "costPerTask": 0.3999647425204942,
       "e2eLatency": null,
       "reasoningTime": null,
       "pricePerMillion": 2.05,
