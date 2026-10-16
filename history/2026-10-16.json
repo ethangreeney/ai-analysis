@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-16T05:28:47.762Z",
+  "fetchedAt": "2026-10-16T05:43:48.333Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2298,18 +2298,35 @@
       "addedAt": "2026-06-02"
     },
     {
-      "slug": "solar-pro4",
+      "slug": "solar-pro4-2026-08-06",
       "name": "Solar Pro 4",
       "displayName": "Solar Pro 4",
       "creator": "Upstage",
       "intelligence": 28.2,
       "codingIndex": 52.7,
       "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0.525,
+      "outputTokensPerSecond": 82.854,
+      "ttft": 1.001,
+      "releaseDate": "2026-08-06",
+      "openWeights": null,
+      "addedAt": "2026-08-06"
+    },
+    {
+      "slug": "solar-pro4",
+      "name": "Solar Pro 4",
+      "displayName": "Solar Pro 4",
+      "creator": "Upstage",
+      "intelligence": 28.1541333537469,
+      "codingIndex": null,
+      "costPerTask": null,
       "e2eLatency": 31.197240837876624,
       "reasoningTime": 23.342552022301266,
       "pricePerMillion": 0.5249999999999999,
-      "outputTokensPerSecond": 82.854,
-      "ttft": 1.001,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
       "releaseDate": "2026-08-06",
       "openWeights": false,
       "addedAt": "2026-08-06"
