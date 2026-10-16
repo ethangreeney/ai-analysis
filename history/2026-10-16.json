@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-16T12:14:42.823Z",
+  "fetchedAt": "2026-10-16T13:14:55.897Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2024,6 +2024,23 @@
       "releaseDate": "2025-12-11",
       "openWeights": false,
       "addedAt": "2025-12-11"
+    },
+    {
+      "slug": "reflection-beam",
+      "name": "Reflection Beam",
+      "displayName": "Reflection Beam",
+      "creator": "Reflection",
+      "intelligence": 30.3,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-16",
+      "openWeights": null,
+      "addedAt": "2026-10-16"
     },
     {
       "slug": "claude-sonnet-4-6-adaptive",
