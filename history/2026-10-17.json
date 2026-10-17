@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-17T00:16:35.038Z",
+  "fetchedAt": "2026-10-17T00:46:40.030Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2032,10 +2032,10 @@
       "creator": "Reflection",
       "intelligence": 30.3,
       "codingIndex": null,
-      "costPerTask": 0.9540034723497411,
-      "e2eLatency": 5.6838519850338844,
-      "reasoningTime": 4.3068432272271036,
-      "pricePerMillion": 1.5,
+      "costPerTask": 0.5657163841991104,
+      "e2eLatency": 12.300244335896423,
+      "reasoningTime": 8.776569725517138,
+      "pricePerMillion": 1.0499999999999998,
       "outputTokensPerSecond": 201.036,
       "ttft": 0.617,
       "releaseDate": "2026-10-16",
@@ -2560,7 +2560,7 @@
       "intelligence": 26.5,
       "codingIndex": null,
       "costPerTask": 0.18823665957318256,
-      "e2eLatency": 7.218963740374753,
+      "e2eLatency": 7.190960584374771,
       "reasoningTime": 5.1548294478998224,
       "pricePerMillion": 0.3125,
       "outputTokensPerSecond": 388.179,
