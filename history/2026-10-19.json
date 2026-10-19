@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-19T23:11:14.005Z",
+  "fetchedAt": "2026-10-19T23:41:16.286Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -802,6 +802,23 @@
       "addedAt": "2026-08-12"
     },
     {
+      "slug": "minimax-m3-1-flash",
+      "name": "MiniMax-M3.1-Flash",
+      "displayName": "MiniMax-M3.1-Flash",
+      "creator": "MiniMax",
+      "intelligence": 42.7,
+      "codingIndex": null,
+      "costPerTask": 0.2201135746720313,
+      "e2eLatency": 21.86071141941171,
+      "reasoningTime": 16.648852148329393,
+      "pricePerMillion": 0.26249999999999996,
+      "outputTokensPerSecond": 142.922,
+      "ttft": 0.889,
+      "releaseDate": "2026-10-19",
+      "openWeights": false,
+      "addedAt": "2026-10-19"
+    },
+    {
       "slug": "gpt-6-sol-high",
       "name": "GPT-6 Sol (High)",
       "displayName": "GPT-6 Sol (high)",
@@ -817,23 +834,6 @@
       "releaseDate": "2026-09-22",
       "openWeights": false,
       "addedAt": "2026-09-22"
-    },
-    {
-      "slug": "minimax-m3-1-flash",
-      "name": "MiniMax-M3.1-Flash",
-      "displayName": "MiniMax-M3.1-Flash",
-      "creator": "MiniMax",
-      "intelligence": 42.4,
-      "codingIndex": null,
-      "costPerTask": 0.2201135746720313,
-      "e2eLatency": 21.86071141941171,
-      "reasoningTime": 16.648852148329393,
-      "pricePerMillion": 0.26249999999999996,
-      "outputTokensPerSecond": 142.922,
-      "ttft": 0.889,
-      "releaseDate": "2026-10-19",
-      "openWeights": false,
-      "addedAt": "2026-10-19"
     },
     {
       "slug": "claude-opus-5-5-low",
