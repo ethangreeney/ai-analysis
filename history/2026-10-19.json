@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-19T12:09:27.906Z",
+  "fetchedAt": "2026-10-19T12:39:35.921Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -817,6 +817,23 @@
       "releaseDate": "2026-09-22",
       "openWeights": false,
       "addedAt": "2026-09-22"
+    },
+    {
+      "slug": "minimax-m3-1-flash",
+      "name": "MiniMax-M3.1-Flash",
+      "displayName": "MiniMax-M3.1-Flash",
+      "creator": "MiniMax",
+      "intelligence": 42.4,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0.262,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-19",
+      "openWeights": null,
+      "addedAt": "2026-10-19"
     },
     {
       "slug": "claude-opus-5-5-low",
