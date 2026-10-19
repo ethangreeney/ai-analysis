@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-19T04:38:25.203Z",
+  "fetchedAt": "2026-10-19T05:08:25.415Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -600,7 +600,7 @@
     {
       "slug": "deepseek-v4-1-flash-1017",
       "name": "DeepSeek V4.1 Flash 1017 (Max)",
-      "displayName": "DeepSeek V4.1 Flash (max)",
+      "displayName": "DeepSeek V4.1 Flash 1017 (max)",
       "creator": "DeepSeek",
       "intelligence": 45.1,
       "codingIndex": null,
