@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-20T19:44:13.983Z",
+  "fetchedAt": "2026-10-20T21:59:31.620Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1165,7 +1165,7 @@
       "creator": "DeepSeek",
       "intelligence": 39.5,
       "codingIndex": null,
-      "costPerTask": 0.485662249576018,
+      "costPerTask": 0.5710707873977727,
       "e2eLatency": 11.339460058158267,
       "reasoningTime": 8.344415002926619,
       "pricePerMillion": 0.5249999999999999,
@@ -2967,7 +2967,7 @@
       "creator": "DeepSeek",
       "intelligence": 24.7,
       "codingIndex": null,
-      "costPerTask": 0.22122822673888506,
+      "costPerTask": 0.2488243348377231,
       "e2eLatency": 1.9462964600218409,
       "reasoningTime": 0,
       "pricePerMillion": 0.5249999999999999,
