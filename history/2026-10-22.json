@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-22T11:50:01.018Z",
+  "fetchedAt": "2026-10-22T14:21:25.101Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2568,6 +2568,23 @@
       "releaseDate": "2026-03-15",
       "openWeights": false,
       "addedAt": "2026-03-15"
+    },
+    {
+      "slug": "solar-pro4",
+      "name": "Solar Pro 4",
+      "displayName": "Solar Pro 4",
+      "creator": "Upstage",
+      "intelligence": 26.6,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": 22.6266573022741,
+      "reasoningTime": 16.790226960219243,
+      "pricePerMillion": 0.5249999999999999,
+      "outputTokensPerSecond": 116.703,
+      "ttft": 0.983,
+      "releaseDate": "2026-08-06",
+      "openWeights": false,
+      "addedAt": "2026-08-06"
     },
     {
       "slug": "gpt-5-2-medium",
