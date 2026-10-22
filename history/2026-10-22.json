@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-22T14:21:25.101Z",
+  "fetchedAt": "2026-10-22T14:45:14.560Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -2576,7 +2576,7 @@
       "creator": "Upstage",
       "intelligence": 26.6,
       "codingIndex": null,
-      "costPerTask": null,
+      "costPerTask": 0.7113065897513132,
       "e2eLatency": 22.6266573022741,
       "reasoningTime": 16.790226960219243,
       "pricePerMillion": 0.5249999999999999,
