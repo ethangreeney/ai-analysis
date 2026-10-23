@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-23T17:39:31.136Z",
+  "fetchedAt": "2026-10-23T17:54:26.434Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -81,8 +81,8 @@
       "e2eLatency": null,
       "reasoningTime": null,
       "pricePerMillion": 4,
-      "outputTokensPerSecond": 0,
-      "ttft": 0,
+      "outputTokensPerSecond": 74.758,
+      "ttft": 1.922,
       "releaseDate": "2026-10-23",
       "openWeights": null,
       "addedAt": "2026-10-23"
