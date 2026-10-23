@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-23T18:09:47.432Z",
+  "fetchedAt": "2026-10-23T18:24:30.163Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -77,9 +77,9 @@
       "creator": "Kimi",
       "intelligence": 55.1,
       "codingIndex": null,
-      "costPerTask": null,
-      "e2eLatency": null,
-      "reasoningTime": null,
+      "costPerTask": 2.1145052918767275,
+      "e2eLatency": 32.78802058764118,
+      "reasoningTime": 23.762717925312934,
       "pricePerMillion": 4,
       "outputTokensPerSecond": 74.758,
       "ttft": 1.922,
