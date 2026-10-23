@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-23T17:24:23.929Z",
+  "fetchedAt": "2026-10-23T17:39:31.136Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -69,6 +69,23 @@
       "releaseDate": "2026-10-12",
       "openWeights": false,
       "addedAt": "2026-10-12"
+    },
+    {
+      "slug": "kimi-k3-1-pro",
+      "name": "Kimi K3.1 Pro",
+      "displayName": "Kimi K3.1 Pro",
+      "creator": "Kimi",
+      "intelligence": 55.1,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 4,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-23",
+      "openWeights": null,
+      "addedAt": "2026-10-23"
     },
     {
       "slug": "claude-opus-5-5-high",
