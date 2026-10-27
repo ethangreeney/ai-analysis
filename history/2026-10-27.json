@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-27T09:36:19.727Z",
+  "fetchedAt": "2026-10-27T09:51:20.284Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -808,7 +808,7 @@
       "creator": "InclusionAI",
       "intelligence": 43.9,
       "codingIndex": null,
-      "costPerTask": 1.4886425967752979,
+      "costPerTask": 1.4887147314556197,
       "e2eLatency": null,
       "reasoningTime": null,
       "pricePerMillion": 0.44999999999999996,
