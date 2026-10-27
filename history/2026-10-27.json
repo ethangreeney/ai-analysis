@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-27T22:23:12.448Z",
+  "fetchedAt": "2026-10-27T22:38:15.981Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -1726,7 +1726,7 @@
       "creator": "DeepSeek",
       "intelligence": 34.3,
       "codingIndex": 69.1,
-      "costPerTask": 0.1744055331356121,
+      "costPerTask": 0.17747618083795008,
       "e2eLatency": 20.21108083321396,
       "reasoningTime": 15.036889918571175,
       "pricePerMillion": 0.17500000000000002,
