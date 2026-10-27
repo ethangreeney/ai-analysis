@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-27T06:36:00.342Z",
+  "fetchedAt": "2026-10-27T08:21:09.715Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -5942,10 +5942,10 @@
       "creator": "IBM",
       "intelligence": 12.7,
       "codingIndex": 29.9,
-      "costPerTask": 0.0716641484962871,
+      "costPerTask": null,
       "e2eLatency": 61.41473155782638,
       "reasoningTime": 48.359705880661025,
-      "pricePerMillion": 0.2825,
+      "pricePerMillion": 0,
       "outputTokensPerSecond": 39.574,
       "ttft": 0.393,
       "releaseDate": "2026-08-25",
