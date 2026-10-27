@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-27T13:21:54.170Z",
+  "fetchedAt": "2026-10-27T13:37:45.055Z",
   "intelligenceIndexVersion": "4.3",
   "models": [
     {
@@ -815,7 +815,7 @@
       "outputTokensPerSecond": 0,
       "ttft": 0,
       "releaseDate": "2026-10-22",
-      "openWeights": false,
+      "openWeights": true,
       "addedAt": "2026-10-22"
     },
     {
