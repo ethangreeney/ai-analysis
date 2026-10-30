@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-30T13:17:12.642Z",
+  "fetchedAt": "2026-10-30T14:02:20.372Z",
   "intelligenceIndexVersion": "5.0",
   "models": [
     {
@@ -1344,6 +1344,23 @@
       "releaseDate": "2026-07-21",
       "openWeights": false,
       "addedAt": "2026-07-21"
+    },
+    {
+      "slug": "qwen3-8-27b-non-reasoning",
+      "name": "Qwen3.8 27B (Non-reasoning)",
+      "displayName": "Qwen3.8 27B (non-reasoning)",
+      "creator": "Alibaba",
+      "intelligence": 10,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": 15.712074529362848,
+      "reasoningTime": 0,
+      "pricePerMillion": 1.125,
+      "outputTokensPerSecond": 38.906,
+      "ttft": 1.207,
+      "releaseDate": "2026-08-14",
+      "openWeights": true,
+      "addedAt": "2026-08-14"
     },
     {
       "slug": "gpt-6-luna-low",
