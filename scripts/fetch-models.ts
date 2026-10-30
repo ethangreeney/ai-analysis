@@ -26,8 +26,11 @@ const OUT_PATH = resolve(__dirname, "..", "src", "data", "models.json");
 const SCREENSHOT_PATH = resolve(ROOT_PATH, "docs", "screenshot.png");
 const SCREENSHOT_VIEWPORT = { width: 1600, height: 1000 };
 const SCREENSHOT_DEVICE_SCALE = 2;
-const MIN_MODEL_ROWS = 300;
-const MIN_TIMED_ROWS = 250;
+// Intelligence Index v5 (Oct 2026) launched with ~86 scored models, all
+// released since March 2026; v4.3 had ~700. These floors catch a broken
+// scrape, not a small index, so they sit well under what v5 started with.
+const MIN_MODEL_ROWS = 50;
+const MIN_TIMED_ROWS = 30;
 
 interface ModelSeed {
   slug: string;
@@ -302,7 +305,10 @@ function loadFallbackMetrics(): Map<string, ScrapedRow & { releaseDate?: string;
     rows.set(row.slug, {
       slug: row.slug,
       displayName: row.displayName,
-      costPerTask: row.costPerTask ?? undefined,
+      // Not cost: the snapshot priced Index v4.3's tasks, and v5's task set
+      // costs more to run (Opus 5.5 max: $5.98 → $10.04), so mixing would
+      // make old figures look cheap. Latency is per query, so it still holds.
+      costPerTask: undefined,
       e2eLatencyTotal: row.e2eLatencyTotal ?? undefined,
       e2eReasoningTime: row.reasoningTime ?? undefined,
       pricePerMillion: row.pricePerMillion ?? undefined,

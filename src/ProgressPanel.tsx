@@ -24,12 +24,15 @@ function fasterLine(g: Gain) {
 export function ProgressPanel({
   progress,
   span,
+  spans,
   onSpan,
   onPreview,
   onCompare,
 }: {
   progress: Progress;
   span: ProgressSpan;
+  /** Only the windows the data reaches back to. */
+  spans: ProgressSpan[];
   onSpan: (span: ProgressSpan) => void;
   onPreview: (pair: [Model, Model] | null) => void;
   onCompare: (pair: [Model, Model]) => void;
@@ -82,8 +85,9 @@ export function ProgressPanel({
       onPreview={onPreview}
       onCompare={onCompare}
       controls={
+        spans.length > 1 && (
         <div className="flex rounded-md bg-ink-50 p-0.5" role="group" aria-label="Time window">
-          {PROGRESS_SPANS.map((s) => (
+          {PROGRESS_SPANS.filter((s) => spans.includes(s.key)).map((s) => (
             <button
               key={s.key}
               type="button"
@@ -99,6 +103,7 @@ export function ProgressPanel({
             </button>
           ))}
         </div>
+        )
       }
     />
   );

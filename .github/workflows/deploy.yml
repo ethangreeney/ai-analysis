@@ -78,7 +78,8 @@ jobs:
         run: |
           rows=$(jq '.models | length' src/data/models.json)
           timed=$(jq '[.models[] | select(.e2eLatency != null and .e2eLatency > 0)] | length' src/data/models.json)
-          if [ "$rows" -lt 300 ] || [ "$timed" -lt 250 ]; then
+          # Floors sized for Intelligence Index v5, which launched with ~86 models.
+          if [ "$rows" -lt 50 ] || [ "$timed" -lt 30 ]; then
             echo "Refusing to deploy partial data: rows=$rows timed=$timed"
             exit 1
           fi

@@ -72,9 +72,17 @@ const compactStats = (stats: RelativeStat[]) =>
     .join(" · ");
 
 // Shareable state lives in the URL hash: #y=coding&x=cost&q=claude&from=a&to=b&cap=1.5
+/**
+ * Scores with enough models to chart. Index v5 launched without a Coding
+ * Index, so the Coding switch only appears once AA publishes one again.
+ */
+const SCORE_OPTIONS = (Object.keys(Y_METRICS) as YMetric[]).filter(
+  (k) => allModels.filter((m) => isPositiveFinite(Y_METRICS[k].value(m))).length >= 10,
+);
+
 function readHash() {
   const p = new URLSearchParams(window.location.hash.slice(1));
-  const y: YMetric = p.get("y") === "coding" ? "coding" : "intelligence";
+  const y: YMetric = p.get("y") === "coding" && SCORE_OPTIONS.includes("coding") ? "coding" : "intelligence";
   const xRaw = p.get("x");
   const x: XMode = xRaw === "cost" || xRaw === "timeline" || xRaw === "open" ? xRaw : "speed";
   const q = p.get("q") ?? "";
@@ -974,7 +982,15 @@ export default function App() {
     setPreviewSlugs(null);
     setComparedSlugs(before ? [before.slug, model.slug] : [model.slug]);
   };
-  const [progressSpan, setProgressSpan] = useState<ProgressSpan>("1y");
+  const [pickedSpan, setProgressSpan] = useState<ProgressSpan>("1y");
+  /** Spans the data reaches back to: v5 scores only go back to March 2026. */
+  const progressSpans = useMemo(
+    () => PROGRESS_SPANS.filter((s) => progressSince(models, metric, s.key) != null).map((s) => s.key),
+    [models, metric],
+  );
+  const progressSpan = progressSpans.includes(pickedSpan)
+    ? pickedSpan
+    : (progressSpans[progressSpans.length - 1] ?? pickedSpan);
   const progress = useMemo(
     () => (xMode === "timeline" ? progressSince(models, metric, progressSpan) : null),
     [xMode, metric, progressSpan, models],
@@ -1458,6 +1474,7 @@ export default function App() {
                   <ProgressPanel
                     progress={progress}
                     span={progressSpan}
+                    spans={progressSpans}
                     onSpan={setProgressSpan}
                     onPreview={(pair) =>
                       setPreviewSlugs(pair ? new Set(pair.map((m) => m.slug)) : null)
@@ -1521,15 +1538,14 @@ export default function App() {
           style={{ animationDelay: "180ms" }}
         >
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <SegmentSwitch
-              ariaLabel="Score"
-              options={(Object.keys(Y_METRICS) as YMetric[]).map((k) => ({
-                value: k,
-                label: Y_METRICS[k].label,
-              }))}
-              value={yMetric}
-              onChange={setYMetric}
-            />
+            {SCORE_OPTIONS.length > 1 && (
+              <SegmentSwitch
+                ariaLabel="Score"
+                options={SCORE_OPTIONS.map((k) => ({ value: k, label: Y_METRICS[k].label }))}
+                value={yMetric}
+                onChange={setYMetric}
+              />
+            )}
             <div className="w-full md:w-auto">
               <ColorKey
                 xc={xc}

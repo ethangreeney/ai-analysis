@@ -261,6 +261,11 @@ export interface XModeConfig {
   footnote: string;
 }
 
+// Index v5's tasks cost more to run than v4.3's, so the bands sit higher:
+// five even-ish groups on the v5 field, in round numbers.
+const COST_BANDS = [0.3, 1, 2.5, 5];
+const COST_BAND_LABELS = ["Under 30¢", "30¢–$1", "$1–2.50", "$2.50–5", "Over $5"];
+
 export const X_MODES: Record<XMode, XModeConfig> = {
   speed: {
     label: "Speed",
@@ -268,8 +273,8 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     colorValue: (m) => m.costPerTask,
     colorTitle: "Cost per task",
     fmtColor: (v) => fmtCost(v),
-    bands: [0.1, 0.3, 1, 3],
-    bandLabels: ["Under 10¢", "10–30¢", "30¢–$1", "$1–3", "Over $3"],
+    bands: COST_BANDS,
+    bandLabels: COST_BAND_LABELS,
     fmtTick: (v) => `${v}s`,
     xTicks: [5, 10, 30, 100, 200],
     axisTitle: "End-to-end response time",
@@ -314,8 +319,8 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     colorValue: (m) => m.costPerTask,
     colorTitle: "Cost per task",
     fmtColor: (v) => fmtCost(v),
-    bands: [0.1, 0.3, 1, 3],
-    bandLabels: ["Under 10¢", "10–30¢", "30¢–$1", "$1–3", "Over $3"],
+    bands: COST_BANDS,
+    bandLabels: COST_BAND_LABELS,
     fmtTick: () => "",
     xTicks: [],
     axisTitle: "Release date",
@@ -337,8 +342,8 @@ export const X_MODES: Record<XMode, XModeConfig> = {
     colorValue: (m) => m.costPerTask,
     colorTitle: "Cost per task",
     fmtColor: (v) => fmtCost(v),
-    bands: [0.1, 0.3, 1, 3],
-    bandLabels: ["Under 10¢", "10–30¢", "30¢–$1", "$1–3", "Over $3"],
+    bands: COST_BANDS,
+    bandLabels: COST_BAND_LABELS,
     fmtTick: () => "",
     xTicks: [],
     axisTitle: "Release date",
