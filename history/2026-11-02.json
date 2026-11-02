@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-02T09:11:31.326Z",
+  "fetchedAt": "2026-11-02T09:26:33.432Z",
   "intelligenceIndexVersion": "5.0",
   "models": [
     {
@@ -1140,6 +1140,23 @@
       "releaseDate": "2026-09-22",
       "openWeights": false,
       "addedAt": "2026-09-22"
+    },
+    {
+      "slug": "nanbeige4-3-33b",
+      "name": "Nanbeige4.3-33B",
+      "displayName": "Nanbeige4.3-33B",
+      "creator": "Nanbeige",
+      "intelligence": 20.4,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-25",
+      "openWeights": null,
+      "addedAt": "2026-10-25"
     },
     {
       "slug": "qwen3-8-27b",
