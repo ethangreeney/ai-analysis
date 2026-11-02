@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-02T03:10:44.421Z",
+  "fetchedAt": "2026-11-02T03:40:46.623Z",
   "intelligenceIndexVersion": "5.0",
   "models": [
     {
@@ -851,6 +851,23 @@
       "releaseDate": "2026-10-19",
       "openWeights": true,
       "addedAt": "2026-10-19"
+    },
+    {
+      "slug": "deepseek-v4-1-flash-1017-high",
+      "name": "DeepSeek V4.1 Flash 1017 (High)",
+      "displayName": "DeepSeek V4.1 Flash 1017 (High)",
+      "creator": "DeepSeek",
+      "intelligence": 28.5,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 0.525,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-17",
+      "openWeights": null,
+      "addedAt": "2026-10-17"
     },
     {
       "slug": "step-5",
