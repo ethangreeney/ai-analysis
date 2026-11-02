@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-02T06:41:14.616Z",
+  "fetchedAt": "2026-11-02T07:26:24.135Z",
   "intelligenceIndexVersion": "5.0",
   "models": [
     {
@@ -35,6 +35,23 @@
       "releaseDate": "2026-09-22",
       "openWeights": false,
       "addedAt": "2026-09-22"
+    },
+    {
+      "slug": "gemini-4-carbon-medium",
+      "name": "Gemini 4 Carbon (Medium)",
+      "displayName": "Gemini 4 Carbon (medium)",
+      "creator": "Google",
+      "intelligence": 57.7,
+      "codingIndex": null,
+      "costPerTask": 6.585776867225546,
+      "e2eLatency": null,
+      "reasoningTime": null,
+      "pricePerMillion": 8,
+      "outputTokensPerSecond": 0,
+      "ttft": 0,
+      "releaseDate": "2026-10-28",
+      "openWeights": false,
+      "addedAt": "2026-10-28"
     },
     {
       "slug": "claude-opus-5-5-xhigh",
