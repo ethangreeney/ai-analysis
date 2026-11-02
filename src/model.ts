@@ -18,6 +18,8 @@ export interface Model {
   addedAt?: string;
   /** Weights published for anyone to run; null when AA doesn't say. */
   openWeights?: boolean | null;
+  /** Set when the score is converted from an older index, not measured on this one. */
+  estimatedFrom?: string;
   /** Derived client-side: releaseDate parsed to epoch ms, null when absent. */
   releaseMs: number | null;
 }
@@ -26,6 +28,8 @@ interface RawSnapshot {
   fetchedAt: string;
   /** Which revision of the AA Intelligence Index the scores were taken from. */
   intelligenceIndexVersion?: string | null;
+  /** How older-index scores were brought onto this one, for the timelines. */
+  scoreConversion?: { from: string; rmse: number } | null;
   models: Omit<Model, "releaseMs">[];
 }
 
@@ -33,6 +37,7 @@ const raw = data as RawSnapshot;
 
 export const fetchedAtMs = Date.parse(raw.fetchedAt);
 export const intelligenceIndexVersion = raw.intelligenceIndexVersion ?? null;
+export const scoreConversion = raw.scoreConversion ?? null;
 
 export const isPositiveFinite = (value: number | null | undefined): value is number =>
   typeof value === "number" && Number.isFinite(value) && value > 0;
@@ -55,6 +60,13 @@ export const allModels: Model[] = raw.models
       releaseMs: Number.isFinite(ms) ? ms : null,
     };
   });
+
+/**
+ * Models scored on the current index. Converted older scores are close but not
+ * exact, so they only fill in history on the timelines; head-to-head views and
+ * release verdicts stay on measured scores.
+ */
+export const measuredModels = allModels.filter((m) => !m.estimatedFrom);
 
 const EFFORT = /\s*\(((?:non-)?reasoning(?:, [a-z]+)?|max|xhigh|high|medium|low|minimal)\)\s*$/i;
 

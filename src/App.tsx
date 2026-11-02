@@ -24,6 +24,8 @@ import {
   RelativeStat,
   relativeStats,
   allModels,
+  measuredModels,
+  scoreConversion,
   isTimeline,
   OPEN_COLOR,
   CLOSED_COLOR,
@@ -530,7 +532,9 @@ function HoverCard({
   const other = Y_METRICS[yMetric === "intelligence" ? "coding" : "intelligence"];
   const { base, effort } = nameParts(m);
   const stats = [
-    { label: active.noun, value: fmtIndex(active.value(m)) },
+    m.estimatedFrom
+      ? { label: `est. from v${m.estimatedFrom}`, value: `~${fmtIndex(active.value(m))}` }
+      : { label: active.noun, value: fmtIndex(active.value(m)) },
     {
       label: isPositiveFinite(m.e2eLatency) ? "wait" : "not timed yet",
       value: isPositiveFinite(m.e2eLatency) ? `${m.e2eLatency.toFixed(m.e2eLatency < 10 ? 1 : 0)}s` : "—",
@@ -744,7 +748,8 @@ export default function App() {
   const [yMetric, setYMetric] = useState<YMetric>(initial.y);
   const [xMode, setXMode] = useState<XMode>(initial.x);
   const [colorBy, setColorBy] = useState<ColorBy>(initial.c);
-  const models = allModels;
+  // Timelines reach back with converted older scores; the rest stay measured.
+  const models = isTimeline(xMode) ? allModels : measuredModels;
   // A release in focus: its own frontier drawn over the map, details in the rail.
   const [focusKey, setFocusKey] = useState<string | null>(initial.focusKey);
   const [focusScope, setFocusScope] = useState<FocusScope>(initial.focusScope);
@@ -943,8 +948,8 @@ export default function App() {
   // Keep the newest marker singular even when many variants launch together.
   // Fall back to first-seen timestamps only when release dates are absent.
   const newestSlugs = useMemo(() => {
-    const hasReleaseDates = models.some((m) => m.releaseMs != null);
-    const dated = models
+    const hasReleaseDates = measuredModels.some((m) => m.releaseMs != null);
+    const dated = measuredModels
       .map((m) => ({
         m,
         t: hasReleaseDates ? m.releaseMs : m.addedAt ? Date.parse(m.addedAt) : NaN,
@@ -968,7 +973,7 @@ export default function App() {
   );
 
   // Six fit the side rail; the phone header keeps it to three.
-  const releases = useMemo(() => recentReleases(models, metric, { limit: 7 }), [metric, models]);
+  const releases = useMemo(() => recentReleases(measuredModels, metric, { limit: 7 }), [metric]);
   const activeReleaseKey =
     releases.find(
       (release) =>
@@ -977,16 +982,16 @@ export default function App() {
     )?.key ?? null;
   /** A release opens as the upgrade question: what it replaces → the release. */
   const openModelAsUpgrade = (model: Model) => {
-    const before = predecessorOf(model, models, metric);
+    const before = predecessorOf(model, measuredModels, metric);
     setQuery("");
     setPreviewSlugs(null);
     setComparedSlugs(before ? [before.slug, model.slug] : [model.slug]);
   };
   const [pickedSpan, setProgressSpan] = useState<ProgressSpan>("1y");
-  /** Spans the data reaches back to: v5 scores only go back to March 2026. */
+  /** Spans the data reaches back to. */
   const progressSpans = useMemo(
-    () => PROGRESS_SPANS.filter((s) => progressSince(models, metric, s.key) != null).map((s) => s.key),
-    [models, metric],
+    () => PROGRESS_SPANS.filter((s) => progressSince(allModels, metric, s.key) != null).map((s) => s.key),
+    [metric],
   );
   const progressSpan = progressSpans.includes(pickedSpan)
     ? pickedSpan
@@ -1005,7 +1010,7 @@ export default function App() {
     setComparedSlugs([pair[0].slug, pair[1].slug]);
   };
   const focus = useMemo(
-    () => (focusKey ? focusFor(focusKey, focusScope, models, metric) : null),
+    () => (focusKey ? focusFor(focusKey, focusScope, measuredModels, metric) : null),
     [focusKey, focusScope, metric],
   );
   const focusSets = useMemo(() => {
@@ -1274,10 +1279,10 @@ export default function App() {
       }
       allReleases={
         <Changelog
-          models={models}
+          models={measuredModels}
           panelWidth={variant === "rail" ? "w-[16rem] 2xl:w-[18rem]" : "w-80"}
           onSelect={(slug) => {
-            const model = models.find((m) => m.slug === slug);
+            const model = measuredModels.find((m) => m.slug === slug);
             if (model) focusModelFamily(model);
           }}
         />
@@ -1307,7 +1312,8 @@ export default function App() {
               className="comparison-mobile-hide mt-1 inline-block text-[11.5px] text-ink-500 transition-colors hover:text-ink-900"
             >
               Data from Artificial Analysis
-              {intelligenceIndexVersion && `, Index v${intelligenceIndexVersion}`}, updated{" "}
+              {intelligenceIndexVersion && `, Index v${intelligenceIndexVersion}`}
+              {timeline && scoreConversion && ` (older models converted from v${scoreConversion.from})`}, updated{" "}
               {fmtDate(fetchedAtMs)}
               <span className="ml-1 underline decoration-ink-300 underline-offset-2">Source</span>
             </a>

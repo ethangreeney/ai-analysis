@@ -31,6 +31,9 @@ const SCREENSHOT_DEVICE_SCALE = 2;
 // scrape, not a small index, so they sit well under what v5 started with.
 const MIN_MODEL_ROWS = 50;
 const MIN_TIMED_ROWS = 30;
+// The last snapshot scored on Index v4.3, kept so models v5 never scored
+// (everything before March 2026) can still appear on the timelines.
+const V4_ARCHIVE_PATH = resolve(ROOT_PATH, "history", "2026-10-27.json");
 
 interface ModelSeed {
   slug: string;
@@ -106,6 +109,83 @@ export interface Model {
   releaseDate?: string;
   // Weights published for anyone to download and run; null when AA doesn't say.
   openWeights: boolean | null;
+  // Set when the scores are converted from an older index rather than
+  // measured on the current one: the version they came from.
+  estimatedFrom?: string;
+  addedAt?: string;
+}
+
+interface ScoreConversion {
+  from: string;
+  /** current ≈ scale × older^exponent, fitted on models scored on both. */
+  scale: number;
+  exponent: number;
+  /** Typical miss of the fit, in current-index points. */
+  rmse: number;
+  /** Current task cost ÷ older task cost, the median over models priced on both. */
+  costRatio: number;
+  overlap: number;
+}
+
+/**
+ * Bring the models only the old index scored onto the current scale, so the
+ * timelines keep their history across AA's re-basing. The two indexes rank
+ * models almost identically (r ≈ 0.95) but the new one is harder at the low
+ * end, so a power curve fitted on the overlap maps old scores across; task
+ * costs move by the median ratio. Wait is per query, not per task, so it
+ * carries over as is.
+ */
+function convertArchive(current: Model[]): { rows: Model[]; conversion: ScoreConversion } | null {
+  if (!existsSync(V4_ARCHIVE_PATH)) return null;
+  const archive = JSON.parse(readFileSync(V4_ARCHIVE_PATH, "utf8")) as {
+    intelligenceIndexVersion: string;
+    models: Model[];
+  };
+  const old = new Map(archive.models.map((m) => [m.slug, m]));
+  const pairs = current
+    .map((m) => [old.get(m.slug), m] as const)
+    .filter((p): p is readonly [Model, Model] => positiveFinite(p[0]?.intelligence) && positiveFinite(p[1].intelligence));
+  if (pairs.length < 30) return null;
+
+  const xs = pairs.map(([o]) => Math.log(o.intelligence));
+  const ys = pairs.map(([, n]) => Math.log(n.intelligence));
+  const mx = xs.reduce((s, x) => s + x, 0) / xs.length;
+  const my = ys.reduce((s, y) => s + y, 0) / ys.length;
+  const exponent =
+    xs.reduce((s, x, i) => s + (x - mx) * (ys[i] - my), 0) / xs.reduce((s, x) => s + (x - mx) ** 2, 0);
+  const scale = Math.exp(my - exponent * mx);
+  const convert = (score: number) => scale * score ** exponent;
+  const rmse = Math.sqrt(
+    pairs.reduce((s, [o, n]) => s + (n.intelligence - convert(o.intelligence)) ** 2, 0) / pairs.length,
+  );
+  const ratios = pairs
+    .filter(([o, n]) => positiveFinite(o.costPerTask ?? undefined) && positiveFinite(n.costPerTask ?? undefined))
+    .map(([o, n]) => n.costPerTask! / o.costPerTask!)
+    .sort((a, b) => a - b);
+  const costRatio = ratios[Math.floor(ratios.length / 2)] ?? 1;
+
+  const have = new Set(current.map((m) => m.slug));
+  const rows = archive.models
+    .filter((m) => !have.has(m.slug) && positiveFinite(m.intelligence))
+    .map((m) => ({
+      ...m,
+      intelligence: Number(convert(m.intelligence).toFixed(2)),
+      codingIndex: null,
+      costPerTask: positiveFinite(m.costPerTask ?? undefined) ? Number((m.costPerTask! * costRatio).toFixed(4)) : null,
+      estimatedFrom: archive.intelligenceIndexVersion,
+    }));
+  const round = (n: number, d: number) => Number(n.toFixed(d));
+  return {
+    rows,
+    conversion: {
+      from: archive.intelligenceIndexVersion,
+      scale: round(scale, 5),
+      exponent: round(exponent, 4),
+      rmse: round(rmse, 2),
+      costRatio: round(costRatio, 3),
+      overlap: pairs.length,
+    },
+  };
 }
 
 function findAllRegex(text: string, re: RegExp): { index: number; match: RegExpExecArray }[] {
@@ -598,6 +678,18 @@ async function main() {
   warnList("rows without cost per task", missingCost);
   console.log(`built ${out.length} model rows`);
 
+  // Only once the measured rows have passed the floors above.
+  const archived = convertArchive(out);
+  if (archived) {
+    const c = archived.conversion;
+    console.log(
+      `converted ${archived.rows.length} v${c.from} rows (score ≈ ${c.scale} × old^${c.exponent}, ±${c.rmse}; cost ×${c.costRatio}; fitted on ${c.overlap})`,
+    );
+    out.push(...archived.rows);
+  } else {
+    console.warn("[warn] no older-index history converted");
+  }
+
   const fetchedAt = new Date().toISOString();
   // AA re-bases the Intelligence Index now and then (v4.1 → v4.2 moved every
   // model by 6–12 points). Record which version a snapshot was scored on so
@@ -632,14 +724,18 @@ async function main() {
       console.warn("[warn] could not read prior models.json for addedAt tracking");
     }
   }
-  const stamped = out.map((m) => ({ ...m, addedAt: prior[m.slug] ?? m.releaseDate ?? fetchedAt }));
+  const stamped = out.map((m) => ({ ...m, addedAt: prior[m.slug] ?? m.addedAt ?? m.releaseDate ?? fetchedAt }));
   const fresh = stamped.filter((m) => m.addedAt === fetchedAt).map((m) => m.slug);
   if (fresh.length) console.log(`newly added this run: ${fresh.join(", ")}`);
 
   mkdirSync(dirname(OUT_PATH), { recursive: true });
   writeFileSync(
     OUT_PATH,
-    JSON.stringify({ fetchedAt, intelligenceIndexVersion, models: stamped }, null, 2),
+    JSON.stringify(
+      { fetchedAt, intelligenceIndexVersion, scoreConversion: archived?.conversion ?? null, models: stamped },
+      null,
+      2,
+    ),
   );
   console.log(`wrote ${OUT_PATH}`);
 
