@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-02T11:11:47.302Z",
+  "fetchedAt": "2026-11-02T13:57:15.374Z",
   "intelligenceIndexVersion": "5.0",
   "models": [
     {
@@ -1514,6 +1514,23 @@
       "releaseDate": "2026-08-11",
       "openWeights": true,
       "addedAt": "2026-08-11"
+    },
+    {
+      "slug": "granite-4-2-8b",
+      "name": "Granite 4.2 8B",
+      "displayName": "Granite 4.2 8B",
+      "creator": "IBM",
+      "intelligence": 5.1,
+      "codingIndex": null,
+      "costPerTask": null,
+      "e2eLatency": 41.845121555219194,
+      "reasoningTime": 32.74698353457535,
+      "pricePerMillion": 0.1075,
+      "outputTokensPerSecond": 72.274,
+      "ttft": 0.4,
+      "releaseDate": "2026-08-25",
+      "openWeights": true,
+      "addedAt": "2026-08-25"
     },
     {
       "slug": "granite-4-2-3b",
