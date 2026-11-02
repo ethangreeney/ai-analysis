@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-02T20:51:55.649Z",
+  "fetchedAt": "2026-11-02T21:13:28.232Z",
   "intelligenceIndexVersion": "5.0",
   "scoreConversion": {
     "from": "4.3",
@@ -888,8 +888,8 @@
       "e2eLatency": null,
       "reasoningTime": null,
       "pricePerMillion": 0.5249999999999999,
-      "outputTokensPerSecond": 0,
-      "ttft": 0,
+      "outputTokensPerSecond": 171.508,
+      "ttft": 0.521,
       "releaseDate": "2026-10-17",
       "openWeights": true,
       "addedAt": "2026-10-17"
