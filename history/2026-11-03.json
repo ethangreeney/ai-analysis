@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-03T20:47:06.817Z",
+  "fetchedAt": "2026-11-03T21:02:09.840Z",
   "intelligenceIndexVersion": "5.0",
   "scoreConversion": {
     "from": "4.3",
@@ -168,7 +168,7 @@
       "name": "Gemini 4 Carbon (Low)",
       "displayName": "Gemini 4 Carbon (low)",
       "creator": "Google",
-      "intelligence": 53.7,
+      "intelligence": 54.2,
       "codingIndex": null,
       "costPerTask": null,
       "e2eLatency": null,
